@@ -1,0 +1,12 @@
+#!/bin/bash
+
+eval $(grep "^[[:space:]]*ALL_LINGUAS[[:space:]]*=[[:space:]]*\".*\"[[:space:]]*$" "configure.in")
+
+cd po || exit 1;
+
+for PO_LANG in $ALL_LINGUAS
+do
+	echo "Updating \"$PO_LANG\""
+	../intltool-update $PO_LANG || exit 1;
+	echo
+done

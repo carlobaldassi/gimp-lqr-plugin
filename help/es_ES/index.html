@@ -1,0 +1,49 @@
+<table cellspacing="1" cellpadding="1" width="100%">
+	<tbody>
+		<tr>
+			<td align="middle" width="100%"><img src="../images/wilber.png"> </td></tr>
+		<tr bgcolor="black">
+			<td align="middle" width="100%"><font color="white" size="+2">Página de ayuda de Liquid Rescale</font> </td></tr>
+		<tr>
+			<td align="left" width="100%">
+				<p>El plugin Liquid Rescale es una implementación de redimensionado independiente del contenido mediante el algoritmo seam carving desarrollado por Shai Avidan y Ariel Shamir </p>
+				<p>Está orientado al redimensionado de imágenes no uniformes mientras preserva las características de la imagen, p.e. evitando la distorsión de partes importantes de la imagen. También puede usarse para eliminar regiones de la imagen de forma consistente.</p>
+				<p>Aunque funciona de ambas maneras, el alargamiento ofrece mejores resultados si se aplica por pasos sucesivos. Se puede programar manualmente que características de la imagen deberían ser preservadas y cuales descartadas.</p>
+				<p>El plugin funciona en la capa activa. Observe abajo para una explicación completa del comportamiendo del plugin en presencia de selecciones, selecciones flotantes, máscaras rápidas y máscaras.</p>
+				<h2>Descripción del interfaz de usuario</h2>
+				<p>
+				<center><img title="Dialog example" alt="Dialog example" src="../images/dialog1.png"></center>
+				<p></p>
+				<h3>Seleccionar nueva anchura y altura</h3>
+				<p></p>
+				<p>En esta sección es posible elegir el tamaño final. Es recomendable reescalar solo en un dirección por cada vez. Si se modifican simultáneamente anchura y altura, el reescalado siempre se efectúa primeramente en anchura y posteriormente en altura (por ninguna razón en particular). El orden inverso se puede llevar a cabo simplemente aplicando el efecto dos veces, dejando la primera vez la anchura sin modificar, y la altura la segunda.</p>
+				<h3>Selección manual de características, guía rápida</h3>
+				<p>El modo más simple de seleccionar manualmente las características de la imagen que se quieren proteger o descartar es el siguiente:
+				<ul>
+					<li>Antes de invocar el plugin, elegir que capa se desea redimensionar
+					<li>Crear una nueva capa transparente para la conservación de características
+					<li>Establecer la transparencia alrededor del 50% (no es estrictamente necesario, pero ayuda)
+					<li>Tomar un color sólido, p.e. verde (#00FF00) 
+					<li>Seleccionar las regiones de imagen en las que se esta interesado pintándolas (o de otra manera)
+					<li>Repetir para cada una de las características a descartar, pero con distinto color (p.e. rojo (#FF0000))
+					<li>Cuando este hecho, seleccionar de nuevo la capa original e invocar el plugin
+					<li>Activar las opciones de preservar/descartar características y elegir apropiadamente para las capas que se colorearon</li></ul>
+				<p>Adviértase que descartar una característica implica que será suprimida si se encoge la capa, pero inflada si se alarga, en tanto que será tratada como un fondo sin relevancia que puede ser suprimido o agrandado a placer.</p>
+				<h3>Selección manual de características, descripción completa</h3>
+				<div>&nbsp;</div>
+				<div>En la sección de <strong>Selección de conservación de características</strong> es posible especificar si existen regiones de la imagen que deban ser preservadas de modificación, marcando la casilla de <em>Activar conservación de características</em>, y eligiendo una capa de entre las que pertenecen a la imagen actual (diferente de la actual, que es la que será reescalada) en el menú de <em>Capas disponibles</em>.</div>
+				<div>La intensidad del efecto para cada pixel se obtiene como la media de los canales del pixel, incluyendo su canal alfa. Así para cada capa RGB con canal alfa, el valor máximo se consigue en los pixeles blancos, mientras que los negros valen un cuarto que los blancos y los pixeles transparentes son ignorados. En general, es recomendable trabajar en monocromo, y modular la intensidad solo por la transparencia en caso de que se necesite ajuste fino, p.e. usando una máscara rápida.</div>
+				<div>El tamaño y la posición de la capa seleccionada pueden ser arbitrarios, el plugin solo tomará aquellas porciones que se solapen con la capa activa. La escala de intensidad se puede usar como parámetro global para modular la preservación de características. </div>
+				<p>La <strong>Selección de descarte de características</strong> resulta idéntica que la anterior, pero el efecto es invertido.</p>
+				<h3>Opciones avanzadas</h3>
+				<p>
+				<center><img title="Advanced options" alt="Advanced options" src="../images/dialog2.png"></center>
+				<p><strong>Actualizar energía en cada paso. </strong>Especifica si el algoritmo actualizará el mapa de energía de la imagen tras cada eliminación seam (la alteración de la imagen puede afectar al mapa de energía en el que se basa el ajustado). Marcar esta opción hace el algoritmo ligeramente más lento pero más preciso, especialmente si se está suprimiendo contenido.</p>
+				<p><strong>Redimensionar lienzo de imagen. </strong>Especifica si el lienzo de imagen debería ser redimensionado para ajustarse a la capa activa. Si esta opción está marcada, la capa activa será reposicionada para ser completamente visible.</p>
+				<p><strong>Redimensionar capas preservar/descartar. </strong>Especifica si las capas usadas para seleccionar manualmente las características de la imagen serán redimensionadas junto con la capa activa. Si esta opción está marcada, estas capas serán inicialmente recortadas al tamaño de la capa activa, para después pasar por el mismo ajustado y proceso de insertado que la capa activa.</p>
+				<p><strong>Elegir función gradiente. </strong>Es posible elegir que función se va a usar para calcular el mapa de energía de la imagen. Para cada pixel en la imagen, las componentes x,y del gradiente son calculadas desde los cuatro vecinos más cercanos del pixel. La forma exacta del mapa de energía depende de la elección de la función gradiente, y esto en suma determina que elementos de la imagen son más importantes, y por consiguiente cuales deberían ser conservados, y cuales no, y suprimidos (si se está encogiendo) o inflados (si se está agrandando). Usar la función <em>Null </em>en conjunto con la conservación de características puede usarse para sobreescribir completamente la detección automática de características, permitiendo al usuario generar su propio mapa de energía</p>
+				<h2>Comportamiento en presencia de selecciones flotantes, selecciones, canales, máscaras rápidas y máscaras</h2>
+				<p>Si el plugin es invocado sobre un selección flotante, esta se aplica inmediatamente y el plugin continúa trabajando en el resultado (una capa o un canal)</p>
+				<p>En caso de que exista una selección activa, esta se copia a un canal para respaldo y limpiada. Dicho canal es ignorado.</p>
+				<p>Si el plugin se invoca sobre un canal, este es de-seleccionado e ignorado, y el plugin continúa trabajando en la capa activa. Lo mismo sucede para máscaras rápidas, al ser estas un tipo especial de canales.</p>
+				<p>En el caso de que la capa sobre la que el plugin es invocado contenga una máscara, o si es directamente invocado sobre la máscara, la interfaz de diálogo ofrecerá entre la opción de descartar la máscara o aplicarla antes de que se ejecute el algoritmo de reescalado.</p></td></tr></tbody></table><!-- web25612.mail.ukl.yahoo.com compressed/chunked Fri Oct  5 10:15:51 GMT 2007 -->

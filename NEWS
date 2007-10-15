@@ -1,0 +1,19 @@
+Here you can collect the new features of your current plugin release.
+
+Version 0.3.0 :
+
+* Core
+  * Faster engine
+  * Different use of preserve/discard layers
+  * Works on floating selections
+  * Rigidity introduced to control the seams
+
+* Interface
+  * New interface with notebook (thanks Alexandre!)
+  * Output to new layer option
+  * Output seams option
+  * Refresh button
+  * Create new layer button
+  * More sensible strength scale
+  * Added tooltips
+

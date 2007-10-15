@@ -1,0 +1,331 @@
+# translation of pt_BR.po to Portugês brasileiro
+# translation of pt_BR.po to
+# translation of gimp22-lqr-plugin.pt_BR.po to
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: pt_BR\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-10-15 14:53+0200\n"
+"PO-Revision-Date: 2007-10-11 14:37-0300\n"
+"Last-Translator: Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>\n"
+"Language-Team: Portugês brasileiro <GNOME-l10n <gnome-l10n-br@listas.cipsga."
+"org.br>>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: ../src/interface.c:211
+msgid "GIMP LiquidRescale Plug-In"
+msgstr "Plug-in de Redimensionamento Líquido do GIMP"
+
+#: ../src/interface.c:233
+msgid "Selected layer"
+msgstr "Camada selecionada"
+
+#. Coordinates widget for selecting new size
+#: ../src/interface.c:296
+msgid "Select new width and height"
+msgstr "Selecione nova largura e altura"
+
+#: ../src/interface.c:311
+msgid "Width:"
+msgstr "Largura: "
+
+#: ../src/interface.c:313
+msgid "Height:"
+msgstr "Altura:"
+
+#. Output settings page
+#: ../src/interface.c:338
+msgid "Output"
+msgstr "Saída"
+
+#: ../src/interface.c:353
+msgid "Output on a new layer"
+msgstr "Saída em uma nova camada"
+
+#: ../src/interface.c:361
+msgid "Outputs the resulting image on a new layer"
+msgstr "Cria uma nova camada para o resultado da operação"
+
+#: ../src/interface.c:365
+msgid "Resize image canvas"
+msgstr "Redimensionar tela da imagem"
+
+#: ../src/interface.c:373
+msgid "Resize and translate the image canvas to fit the resized layer"
+msgstr ""
+"Redimensiona e reposiciona a tela da imagem para acomodar a camada "
+"redimensionada"
+
+#: ../src/interface.c:377
+msgid "Resize preserve/discard layers"
+msgstr "Redimensionar as camadas de preservar/descartar detalhes"
+
+#: ../src/interface.c:394
+msgid "Resize the layers used as masks along with the active layer"
+msgstr ""
+"Redimensiona as camadas utilizadas como máscaras junto com a camada ativa"
+
+#: ../src/interface.c:401
+msgid "Output the seams"
+msgstr "Saída das costuras"
+
+#: ../src/interface.c:410
+msgid ""
+"Creates an extra output layer with the seams, for visual inspection of what "
+"the plugin did. Use it together with \"Output on a new layer\", and resize "
+"in one direction at a time"
+msgstr ""
+"Cria uma camada extra de saída comas costuras, para inspeção visual do que o "
+"plug-in fez. Use em conjunto com \"Saída em uma nova camada\",e  "
+"redimensione em uma direção por vez."
+
+#: ../src/interface.c:433
+msgid "Color to use for the last seams"
+msgstr "Cor a usar para as últimas costuras"
+
+#: ../src/interface.c:447
+msgid "Color to use for the first seams"
+msgstr "Cor a usar para as primeiras costuras"
+
+#. Advanced settings page
+#: ../src/interface.c:452
+msgid "Advanced"
+msgstr "Avançado"
+
+#: ../src/interface.c:471
+msgid "Seams rigidity:"
+msgstr "Rigidez das costuras:"
+
+#: ../src/interface.c:474
+msgid "Increasing this value results in straighter seams"
+msgstr "O aumento deste valor resulta em costuras mais retas"
+
+#: ../src/interface.c:489
+msgid ""
+"This affects the automatic feature recognition.\n"
+"It's the function which will be applied to the components of the gradient on "
+"each pixel"
+msgstr ""
+"Isso afeta o reconhecimento automatico de detalhes.\n"
+"É a função que será aplicada nos componentes do gradiente de cada pixel"
+
+#: ../src/interface.c:499
+msgid "Gradient function:"
+msgstr "Função de gradiente:"
+
+#: ../src/interface.c:504
+msgid "Transversal absolute value"
+msgstr "Valor transversal absoluto"
+
+#: ../src/interface.c:505
+msgid "Sum of absolute values"
+msgstr "Soma de valores absolutos"
+
+#: ../src/interface.c:506
+msgid "Norm"
+msgstr "Norma"
+
+#. Null can be translated as Zero
+#: ../src/interface.c:508
+msgid "Null"
+msgstr "Nula"
+
+#. Mask page
+#: ../src/interface.c:522
+msgid "Mask"
+msgstr "Máscara"
+
+#: ../src/interface.c:530
+msgid "Select behavior for the mask"
+msgstr "Selecione o comportamento para  a máscara"
+
+#: ../src/interface.c:535
+msgid "Apply"
+msgstr "Aplicar"
+
+#: ../src/interface.c:535
+msgid "Discard"
+msgstr "Descartar"
+
+#: ../src/interface.c:1182
+msgid "Feature masks"
+msgstr "Máscaras de detalhes"
+
+#. The name of a newly created layer for preservation
+#. (here "%s" represents the selected layer's name)
+#: ../src/interface.c:1192
+#, c-format
+msgid "%s pres mask"
+msgstr "másc. de preserv. %s"
+
+#. The name of a newly created layer for discard
+#. (here "%s" represents the selected layer's name)
+#: ../src/interface.c:1201
+#, c-format
+msgid "%s disc mask"
+msgstr "másc. de desc. %s"
+
+#. Feature preservation
+#: ../src/interface.c:1223
+msgid "Feature preservation mask"
+msgstr "Seleção de preservação de detalhes"
+
+#: ../src/interface.c:1228
+#, c-format
+msgid ""
+"Extra layers are needed to activate feature preservation.\n"
+"You can create one with the \"New\" button and paint on it, then press the "
+"\"Refresh\" button.\n"
+"Note that painting in black has no effect"
+msgstr ""
+"Camadas extras são necessárias para ativar a preservação de detalhes.\n"
+"Você pode criar uma camada com o botão \"Nova\" e pintar nela, e então "
+"pressionar o botão \"Regenerar\".\n"
+"Note que pintar de preto não tem efeito."
+
+#: ../src/interface.c:1261
+msgid "Preserve features"
+msgstr "Preservar detalhes"
+
+#: ../src/interface.c:1277
+msgid "Use an extra layer to preserve selected areas from distortion"
+msgstr "Usa uma camada extra para preservar detalhes, evitando sua distorção"
+
+#: ../src/interface.c:1280 ../src/interface.c:1468
+msgid "New"
+msgstr "Nova"
+
+#: ../src/interface.c:1285
+msgid "Creates a new transparent layer ready to be used as a preservation mask"
+msgstr ""
+"Cria uma nova camada transparente, pronta para ser usada como uma máscara de "
+"preservação"
+
+#: ../src/interface.c:1324
+msgid ""
+"Layer to be used as a mask for feature preservation.\n"
+"Use the \"Refresh\" button to update the list"
+msgstr ""
+"Camada a ser usada como máscara para preservação de detalhes.\n"
+"Use o botão \"Regenerar\" para atualizar a lista"
+
+#: ../src/interface.c:1355 ../src/interface.c:1544
+msgid "Layer:"
+msgstr "Camada:"
+
+#: ../src/interface.c:1376 ../src/interface.c:1562
+msgid "Strength:"
+msgstr "Força:"
+
+#: ../src/interface.c:1380
+msgid "Overall coefficient for feature preservation intensity"
+msgstr "Coeficiente geral para intensidade da preservação de detalhes"
+
+#. Feature discard
+#: ../src/interface.c:1410
+msgid "Feature discard mask"
+msgstr "Máscara de descarte de detalhes"
+
+#: ../src/interface.c:1415
+#, c-format
+msgid ""
+"Extra layers are needed to activate feature discard.\n"
+"You can create one with the \"New\" button and paint on it, then press the "
+"\"Refresh\" button.\n"
+"Note that painting in black has no effect"
+msgstr ""
+"Camadas extras são necessárias para ativar o descarte de detalhes.\n"
+"Você pode criar uma camada com o botão \"Nova\" e pintar nela, e então "
+"pressionar o botão \"Regenerar\".\n"
+"Note que pintar de preto não tem efeito."
+
+#: ../src/interface.c:1446
+msgid "Discard features"
+msgstr "Descarte de detalhes"
+
+#: ../src/interface.c:1463
+msgid ""
+"Use an extra layer to treat selected areas as if they were meaningless "
+"(useful to remove parts of the image when shrinking)"
+msgstr ""
+"Usa uma camada extra para tratar as áreas selecionadas como se elas fossem "
+"irrelevantes (útil para remover partes da imagem ao encolher)"
+
+#: ../src/interface.c:1473
+msgid "Creates a new transparent layer ready to be used as a discard mask"
+msgstr ""
+"Cria uma nova camada transparente pronta para ser usada como máscara de "
+"descarte"
+
+#: ../src/interface.c:1511
+msgid ""
+"Layer to be used as a mask for feature discard.\n"
+"Use the \"Refresh\" button to update the list"
+msgstr ""
+"Camada a  ser usada como máscara para descarte de detalhes.\n"
+"Use o botão \"Regenerar\" para atualizar a lista"
+
+#: ../src/interface.c:1566
+msgid "Overall coefficient for feature discard intensity"
+msgstr "Coeficiente geral para intensidade de descarte de detalhes"
+
+#: ../src/main.c:156
+msgid "LiquidRescaling (content-aware rescaling)"
+msgstr "Redimensionamento Líquido (redimensionamento dependente do conteúdo)"
+
+#: ../src/main.c:160
+msgid "Liquid rescale ..."
+msgstr "Redimensionamento Líquido..."
+
+#: ../src/render.c:42
+msgid "Not enough memory"
+msgstr "Não há memória o suficiente"
+
+#: ../src/render.c:72
+msgid "Error: it seems that the selected layer is no longer valid"
+msgstr "Erro: parece que a camada selecionada não é mais válida"
+
+#: ../src/render.c:81
+msgid "Error: it seems that the preservation features layer is no longer valid"
+msgstr "Erro: parece que a camada de preservação de detalhes não é mais válida"
+
+#: ../src/render.c:91
+msgid "Error: it seems that the discard features layer is no longer valid"
+msgstr "Erro: parece que a camada de descarte de detalhes não é mais válida"
+
+#: ../src/lqr_raster.c:1026
+msgid "Resizing width..."
+msgstr "Redimensionando largura..."
+
+#: ../src/lqr_raster.c:1064
+msgid "Resizing height..."
+msgstr "Redimensionando altura..."
+
+#: ../src/lqr_external.c:56
+msgid "Parsing layer..."
+msgstr "Analisando camada..."
+
+#: ../src/lqr_external.c:188
+msgid "Applying changes..."
+msgstr "Aplicando alterações..."
+
+#: ../src/lqr_external.c:264
+msgid "Drawing seam map..."
+msgstr "Desenhando mapa de costuras..."
+
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/lqr_external.c:268
+#, c-format
+msgid "%s seam map"
+msgstr "mapa de cost. %s"
+
+#~ msgid "Not enough memory, aborting"
+#~ msgstr "Memória insuficiente, abortando"

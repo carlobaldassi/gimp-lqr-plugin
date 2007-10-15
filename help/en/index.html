@@ -1,0 +1,190 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+  <title>Help Page for gimp-lqr-plugin</title>
+</head>
+
+<body text="#000000" bgcolor="#FFFFFF" link="#0000FF"
+      vlink="#FF0000" alink="#000088">
+
+  <table width="100%" cellspacing="1" cellpadding="1">
+    <tr>
+      <td width="100%" align="center">
+	<img src="../images/wilber.png">
+      </td>
+    </tr>
+    <tr bgcolor="black">
+      <td width="100%" align="center">
+        <font size="+2" color="white">Liquid rescaling help page</font>
+      </td>
+    </tr>  
+    <tr>
+      <td width="100%" align="left">
+	<p>
+		The Liquid Rescale plugin is an implementation of the content-aware resizing by
+		seam carving algorithm by Shai Avidan and Ariel Shamir.
+	</p>
+        <p>
+		It aims at resizing pictures non uniformly while preserving the features of the picture,
+		i.e. avoiding distortion of the important parts of the picture.
+		It can also be used to remove portions of the picture in a consistent way.
+	</p>
+        <p>
+		It works both ways, but enlarging gives better results if done in successive steps.
+		It can use extra layers as masks to select what features of the image should be
+		preserved and which should be discarded.
+	</p>
+	<p>
+		The plugin works on the active layer or floating selection.
+ 		If a selection is present, it is saved to a channel.
+		If the layer has a transparency mask, an option is shown to select the behavior (apply/discard).
+	</p>
+	
+	<h2>User interface description</h2>
+	<p>
+		<center><img title="Dialog example" alt="Dialog example" src="../images/dialog1.png"></center>
+	</p>
+	
+	<h3>Select new width and height</h3>
+	<p>
+		In this section it is possible to choose the final
+		size. It is advisable to rescale always in one direction at a time. If both 
+		the width and the height are changed, rescaling is always performed on the width first,
+		then on the height (for no particular reason).
+		The reverse order can be obtained by simply applying it twice, letting the width
+		unchanged the first time, and the height the second.
+	</p>
+
+	<h3>Feature masks</h3>
+	<h4>Quick guide</h4>
+	<p>
+		The easiest way to manually select the features of the image that you want to protect
+		or discard is the following:
+		<ul>
+			<li>
+				Select the layer you want to resize (not a floating selection) and invoke the plugin
+			</li><li>
+				Press the <i>"New"</i> button in the <b>"Feature preservation mask"</b> section
+				(this will create a transparent layer, with 50% opacity, and pick an appropriate
+				color).
+			</li><li>
+				Paint on the areas of the image you want to preserve
+			</li><li>
+				Press the refresh button if you want to see the mask you painted
+			</li><li>
+				Repeat everything for the features to discard
+			</li>
+		</ul>
+	</p>
+	<p>
+		<b>Note:</b> discarding a feature implies that it will be removed if shrinking
+		the layer, but it will be inflated if enlarging it, since it will be treated
+		as unimportant background which can be removed or expanded as needed.
+	</p>
+
+	<h4>Full description</h4>
+	<p>
+		<div>
+			In the <b>"Feature preservation mask"</b> section
+			it is possible to specify if there are regions of the image which
+			should be preserved from modification, by checking the <i>"Activate feature preservation"</i>
+			box, and by choosing a layer among the ones which belong to the current image (different
+			from the active one, which is to be rescaled) in the <i>"Available layers"</i> menu.
+			The <i>"New"</i> button creates a transparent layer with 50% opacity and an appropriate name,
+			and sets it as the selected layer mask (note that this fails if the plugin is invoked on a
+			floating selection, because this does not allow to work on other layers).
+			It also sets the foreground color to green; the previous color is restored when the
+			dialog is closed.
+		</div>
+		<div>
+			The intensity of the effect of the mask on each pixel is obtained as
+			the average on the pixel's color channels, multiplied by the alpha channel. Thus for an RGB layer
+			with an alpha channel, the maximum value is achieved on white pixels, while black ones
+			and transparent ones are ignored.
+			In general, it is advisable to work in monochrome, and modulate the intensity by the transparency
+			in case fine tuning is needed, e.g. by using the quickmask.
+		</div>
+		<div>
+			The size and position of the selected layer can be arbitrary, the plugin will only use
+			those portions which overlap with the active layer.
+			The <i>"Strength"</i> scale can be used as a global parameter to modulate the feature preservation.
+			Note that the strength value automatically accounts for the size of the image,
+			but not for that of the masked areas: thinner selection areas (in the sense of the resizing) need
+			higher strength values, and vice-versa.
+		</div>
+	</p>
+	<p>
+		The <b>Feature discard selection</b> section is identical to the previous one,
+		but the effect is reversed. Also, the default color for the <i>"New"</i> button is red instead of green.
+	</p>
+
+	<h3>Output</h3>
+	<p>
+		<center><img title="Output" alt="Output" src="../images/dialog2.png"></center>
+	</p>
+	<p>
+		This page has a number of options related to the output of the plugin.
+	</p>
+	<p>
+		<b>Output on a new layer.</b>
+		Specifies if the resized image should be written on a new layer.
+		By default, it is off.
+	</p>
+	<p>
+		<b>Resize image canvas.</b>
+		Specifies whether the image canvas should be resized to meet the new size of the active
+		layer. If this option is checked, the active layer will be repositioned to be
+		fully visible.
+		By default, it is on.
+	</p>
+	<p>
+		<b>Resize preserve/discard layers.</b>
+		Specifies whether the layers used to manually select the features of the image
+		will be resized along with the active layer. If this option is checked, those
+		layers will be first cropped to the active layer's size, then they will undergo
+		the same seam carving and inserting process as the active layer.
+		By default, it is on, but it is only active when some layers are selected in
+		the <b>"Feature masks"</b> page.
+	</p>
+	<p>
+		<b>Output the seams on a new layer.</b>
+		Specifies whether to create a new layer with the seams map.
+		The seams color range can be manually choosen with the two buttons on the right.
+		The seams are computed on the original layer as far as they are needed for the new size
+		(e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining
+		areas are transparent. In order to read the result, use this option together with
+		<i>Output on a new layer</i>, and overlay the seam map to the original layer.
+		If you rescale in two directions at once, you will obtain two maps, but the second
+		one will be computed over an invisible intermediate image, so this is not very useful.
+	</p>
+	<h3>Advanced</h3>
+	<p>
+		<center><img title="Advanced" alt="Advanced" src="../images/dialog3.png"></center>
+	</p>
+	<p>
+		This page has some of options to tweak the plugin behavior.
+	</p>
+	<p>
+		<b>Seams rigidity.</b>
+		Use this value to give a negative bias to the seams which are not straight. May be useful
+		to prevent distortions in some situations.
+	</p>
+	<p>
+		<b>Gradient function.</b>
+		It is possible to choose which function
+		is to be used to calculate the energy map of the image. For each pixel in the image,
+		the x,y components of the gradient are computed from the pixel's four nearest neighbors.
+		The exact form of the energy map depends on the choice of the gradient function, and
+		this in turn determines which elements of the image are more important, and should
+		thus be preserved, and which are not, and can be removed (if shrinking) or inflated
+		(if enlarging). Using the <i>Null</i> function in conjunction with the feature preservation
+		mask can be used to override completely the automatic feature detection, thus
+		allowing the user to generate his own energy map (e.g. by another plugin).
+	</p>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

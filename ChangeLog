@@ -1,0 +1,71 @@
+2007-10-10 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* bugfix : pres./disc. layer are now reused when
+	  running with last values
+	* bugfix : progress_update called less often
+2007-10-09 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* modified : faster core engine (use pointers buffer
+	  instead of just cursors)
+	* bugfix : different transparency handling in
+	  auxiliary layers (no more averge_on_all_channels
+	  but average_on_color_channels * alpha)
+	* bugfix : all image modifications are now made inside the render
+	  function, and the undo group is limited to that, so that
+	  nothing is changed until the ok button is pressed
+	* bugfix : it is now possible to safely work while the
+	  dialog is running, e.g. create/remove layers, paint etc.
+	* new : refresh button
+	* new : new masks buttons
+	* new : rigidity setting (for getting straighter seams)
+	* new : seam map layer option (with color buttons)
+	* removed : update energy option (now is always used)
+
+2007-10-04 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* modfied : dialog with notepad (thanks Alexandre!)
+	* new : output to new layer option
+	* modfied : floating selection becomes a layer
+	* bugfix : lock alpha is disabled (but with deprecated syntax)
+
+2007-09-29 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* bugfix : memory leak in dialog (also faster now)
+	* bugfix : more sensible "strength" scale for features
+	* new (help): tooltips
+
+2007-09-25 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* added a proto-preview
+	* added sensitivity to interface elements
+	* hiding of advanced options
+	* added resize preserve/discard layers feature
+	* transveral value is the new default gradient function
+	* added null gradient function
+	* reduced memory requirements
+	* added insufficient memory handling
+	* added some more progress indicators
+
+2007-09-12 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* added preserve + discard features
+	* moved the plugin from "Image" to "Layer" menu
+
+2007-09-11 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* selctions are now saved as channels and then cleared
+	* floating selections are immediately applied
+	* quick masks and channels are ignored
+	* added "resize canvas" option
+	* updated help page
+
+2007-09-10 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* faster update in mmap
+	* faster build_vpath
+	* now deals with masks
+	* improved interface (added some options)
+
+2007-09-07 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* improved interface
+
+2007-09-05 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* undo group created
+	* better external_writeimage function
+	* introduced bias on energy
+
+2007-09-04  Carlo Baldassi  <carlobaldassi@yahoo.it>
+
+	* initial revision.

@@ -1,0 +1,7 @@
+# List of source files containing translatable strings.
+
+src/interface.c
+src/main.c
+src/render.c
+src/lqr_raster.c
+src/lqr_external.c

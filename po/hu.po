@@ -1,0 +1,317 @@
+# Hungarian translation of gimp22-lqr-plugin.
+# Copyright (C) 2007 Bálint Magyar
+# This file is distributed under the same license as the gimp22-lqr-plugin package.
+# Bálint Magyar <magyarbalint@indi.hu>, 2007.
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-10-15 14:53+0200\n"
+"PO-Revision-Date: 2007-10-03 11:07+0200\n"
+"Last-Translator: jeghegy <(null)>\n"
+"Language-Team: English <en@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/interface.c:211
+msgid "GIMP LiquidRescale Plug-In"
+msgstr "GIMP LiquidRescale Plug-In"
+
+#: ../src/interface.c:233
+msgid "Selected layer"
+msgstr "Kijelölt réteg"
+
+#. Coordinates widget for selecting new size
+#: ../src/interface.c:296
+msgid "Select new width and height"
+msgstr "Válasszon új szélességet és magasságot"
+
+#: ../src/interface.c:311
+msgid "Width:"
+msgstr "Szélesség:"
+
+#: ../src/interface.c:313
+msgid "Height:"
+msgstr "Magasság:"
+
+#. Output settings page
+#: ../src/interface.c:338
+msgid "Output"
+msgstr ""
+
+#: ../src/interface.c:353
+msgid "Output on a new layer"
+msgstr ""
+
+#: ../src/interface.c:361
+msgid "Outputs the resulting image on a new layer"
+msgstr ""
+
+#: ../src/interface.c:365
+msgid "Resize image canvas"
+msgstr "Vászon átméretezése"
+
+#: ../src/interface.c:373
+msgid "Resize and translate the image canvas to fit the resized layer"
+msgstr ""
+
+#: ../src/interface.c:377
+msgid "Resize preserve/discard layers"
+msgstr "Alakmegőrzés/alakelvetés rétegek átméretezése"
+
+#: ../src/interface.c:394
+msgid "Resize the layers used as masks along with the active layer"
+msgstr ""
+
+#: ../src/interface.c:401
+msgid "Output the seams"
+msgstr ""
+
+#: ../src/interface.c:410
+msgid ""
+"Creates an extra output layer with the seams, for visual inspection of what "
+"the plugin did. Use it together with \"Output on a new layer\", and resize "
+"in one direction at a time"
+msgstr ""
+
+#: ../src/interface.c:433
+msgid "Color to use for the last seams"
+msgstr ""
+
+#: ../src/interface.c:447
+msgid "Color to use for the first seams"
+msgstr ""
+
+#. Advanced settings page
+#: ../src/interface.c:452
+msgid "Advanced"
+msgstr ""
+
+#: ../src/interface.c:471
+msgid "Seams rigidity:"
+msgstr ""
+
+#: ../src/interface.c:474
+msgid "Increasing this value results in straighter seams"
+msgstr ""
+
+#: ../src/interface.c:489
+msgid ""
+"This affects the automatic feature recognition.\n"
+"It's the function which will be applied to the components of the gradient on "
+"each pixel"
+msgstr ""
+
+#: ../src/interface.c:499
+#, fuzzy
+msgid "Gradient function:"
+msgstr "Színátmenet függvény kiválasztása"
+
+#: ../src/interface.c:504
+msgid "Transversal absolute value"
+msgstr "Átlós abszolútérték"
+
+#: ../src/interface.c:505
+msgid "Sum of absolute values"
+msgstr "Abszolútértékek összege"
+
+#: ../src/interface.c:506
+msgid "Norm"
+msgstr "Normatíva"
+
+#. Null can be translated as Zero
+#: ../src/interface.c:508
+msgid "Null"
+msgstr "Null"
+
+#. Mask page
+#: ../src/interface.c:522
+msgid "Mask"
+msgstr ""
+
+#: ../src/interface.c:530
+msgid "Select behavior for the mask"
+msgstr "Maszk viselkedésének kiválasztása"
+
+#: ../src/interface.c:535
+msgid "Apply"
+msgstr "Alkalmaz"
+
+#: ../src/interface.c:535
+msgid "Discard"
+msgstr "Elvet"
+
+#: ../src/interface.c:1182
+msgid "Feature masks"
+msgstr ""
+
+#. The name of a newly created layer for preservation
+#. (here "%s" represents the selected layer's name)
+#: ../src/interface.c:1192
+#, c-format
+msgid "%s pres mask"
+msgstr ""
+
+#. The name of a newly created layer for discard
+#. (here "%s" represents the selected layer's name)
+#: ../src/interface.c:1201
+#, c-format
+msgid "%s disc mask"
+msgstr ""
+
+#. Feature preservation
+#: ../src/interface.c:1223
+#, fuzzy
+msgid "Feature preservation mask"
+msgstr "Alakmegőrzés kijelölése"
+
+#: ../src/interface.c:1228
+#, c-format
+msgid ""
+"Extra layers are needed to activate feature preservation.\n"
+"You can create one with the \"New\" button and paint on it, then press the "
+"\"Refresh\" button.\n"
+"Note that painting in black has no effect"
+msgstr ""
+
+#: ../src/interface.c:1261
+msgid "Preserve features"
+msgstr ""
+
+#: ../src/interface.c:1277
+msgid "Use an extra layer to preserve selected areas from distortion"
+msgstr ""
+
+#: ../src/interface.c:1280 ../src/interface.c:1468
+msgid "New"
+msgstr ""
+
+#: ../src/interface.c:1285
+msgid "Creates a new transparent layer ready to be used as a preservation mask"
+msgstr ""
+
+#: ../src/interface.c:1324
+msgid ""
+"Layer to be used as a mask for feature preservation.\n"
+"Use the \"Refresh\" button to update the list"
+msgstr ""
+
+#: ../src/interface.c:1355 ../src/interface.c:1544
+msgid "Layer:"
+msgstr ""
+
+#: ../src/interface.c:1376 ../src/interface.c:1562
+msgid "Strength:"
+msgstr ""
+
+#: ../src/interface.c:1380
+msgid "Overall coefficient for feature preservation intensity"
+msgstr "Alakmegőrzés intenzitásának együtthatója"
+
+#. Feature discard
+#: ../src/interface.c:1410
+#, fuzzy
+msgid "Feature discard mask"
+msgstr "Alakelvetés kijelölése"
+
+#: ../src/interface.c:1415
+#, c-format
+msgid ""
+"Extra layers are needed to activate feature discard.\n"
+"You can create one with the \"New\" button and paint on it, then press the "
+"\"Refresh\" button.\n"
+"Note that painting in black has no effect"
+msgstr ""
+
+#: ../src/interface.c:1446
+msgid "Discard features"
+msgstr ""
+
+#: ../src/interface.c:1463
+msgid ""
+"Use an extra layer to treat selected areas as if they were meaningless "
+"(useful to remove parts of the image when shrinking)"
+msgstr ""
+
+#: ../src/interface.c:1473
+msgid "Creates a new transparent layer ready to be used as a discard mask"
+msgstr ""
+
+#: ../src/interface.c:1511
+msgid ""
+"Layer to be used as a mask for feature discard.\n"
+"Use the \"Refresh\" button to update the list"
+msgstr ""
+
+#: ../src/interface.c:1566
+msgid "Overall coefficient for feature discard intensity"
+msgstr "Alakelvetés intenzitásának együtthatója"
+
+#: ../src/main.c:156
+msgid "LiquidRescaling (content-aware rescaling)"
+msgstr "LiquidRescaling (tartalom-érzékeny átméretezés)"
+
+#: ../src/main.c:160
+msgid "Liquid rescale ..."
+msgstr "Liquid rescale..."
+
+#: ../src/render.c:42
+msgid "Not enough memory"
+msgstr "Nincs elég memória"
+
+#: ../src/render.c:72
+msgid "Error: it seems that the selected layer is no longer valid"
+msgstr ""
+
+#: ../src/render.c:81
+msgid "Error: it seems that the preservation features layer is no longer valid"
+msgstr ""
+
+#: ../src/render.c:91
+msgid "Error: it seems that the discard features layer is no longer valid"
+msgstr ""
+
+#: ../src/lqr_raster.c:1026
+msgid "Resizing width..."
+msgstr "Szélesség átméretezése..."
+
+#: ../src/lqr_raster.c:1064
+msgid "Resizing height..."
+msgstr "Magasság átméretezése..."
+
+#: ../src/lqr_external.c:56
+msgid "Parsing layer..."
+msgstr "Réteg feldolgozása..."
+
+#: ../src/lqr_external.c:188
+msgid "Applying changes..."
+msgstr "Változások alkalmazása..."
+
+#: ../src/lqr_external.c:264
+msgid "Drawing seam map..."
+msgstr ""
+
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/lqr_external.c:268
+#, c-format
+msgid "%s seam map"
+msgstr ""
+
+#~ msgid "Not enough memory, aborting"
+#~ msgstr "Nincs elég memória, a folyamat leáll"
+
+#~ msgid "Update energy at every step"
+#~ msgstr "Energia frissítése minden lépésnél"
+
+#~ msgid "Available Layers:"
+#~ msgstr "Felhasználható rétegek:"
+
+#~ msgid "Intensity:"
+#~ msgstr "Intenzitás:"
+
+#~ msgid "Activate feature discard"
+#~ msgstr "Alakelvetés bekapcsolása"
