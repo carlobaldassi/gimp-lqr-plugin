@@ -1,7 +1,9 @@
-2007-10-10 Carlo Baldassi <carlobaldassi@yahoo.it>
-	* bugfix : pres./disc. layer are now reused when
-	  running with last values
+2007-10-14 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* bugfix : pres./disc. layer are now reused when running with
+	  last values
 	* bugfix : progress_update called less often
+	* bugfix : lqr_raster_resize can be called multiple times again
+	* modified : re-organized source files
 2007-10-09 Carlo Baldassi <carlobaldassi@yahoo.it>
 	* modified : faster core engine (use pointers buffer
 	  instead of just cursors)
