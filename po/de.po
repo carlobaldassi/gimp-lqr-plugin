@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-15 21:26+0200\n"
+"POT-Creation-Date: 2007-10-18 03:24+0200\n"
 "PO-Revision-Date: 2007-10-15 21:14+0200\n"
 "Last-Translator: Christoph Schäfer <christoph-schaefer@gmx.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -307,11 +307,11 @@ msgstr ""
 "Fehler. Die ausgewählte Ebene zum Verwerfen von Elementen ist anscheinend "
 "nicht mehr gültig"
 
-#: ../src/lqr_raster.c:1026
+#: ../src/lqr_raster.c:1029
 msgid "Resizing width..."
 msgstr "Ändere die Breite ..."
 
-#: ../src/lqr_raster.c:1064
+#: ../src/lqr_raster.c:1067
 msgid "Resizing height..."
 msgstr "Ändere die Höhe ..."
 

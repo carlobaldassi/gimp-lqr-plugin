@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-15 14:53+0200\n"
+"POT-Creation-Date: 2007-10-18 03:24+0200\n"
 "PO-Revision-Date: 2007-10-11 14:37-0300\n"
 "Last-Translator: Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>\n"
 "Language-Team: Portugês brasileiro <GNOME-l10n <gnome-l10n-br@listas.cipsga."
@@ -300,11 +300,11 @@ msgstr "Erro: parece que a camada de preservação de detalhes não é mais vál
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Erro: parece que a camada de descarte de detalhes não é mais válida"
 
-#: ../src/lqr_raster.c:1026
+#: ../src/lqr_raster.c:1029
 msgid "Resizing width..."
 msgstr "Redimensionando largura..."
 
-#: ../src/lqr_raster.c:1064
+#: ../src/lqr_raster.c:1067
 msgid "Resizing height..."
 msgstr "Redimensionando altura..."
 

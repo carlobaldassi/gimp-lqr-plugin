@@ -34,7 +34,7 @@
 #define TRY_F_N(assign) if ((assign) == FALSE) { return NULL; }
 #define TRY_F_F(assign) if ((assign) == FALSE) { return FALSE; }
 
-#if 1
+#if 0
 #define __LQR_DEBUG__
 #endif
 

@@ -595,8 +595,11 @@ lqr_raster_inflate (LqrRaster * r, gint l)
     }
 
 #ifdef __LQR_DEBUG__
-  assert (x == 0);
-  assert (y == r->h_start);
+  if (r->raw != NULL)
+    {
+      assert (x == 0);
+      assert ((y == r->h_start) || (printf("y=%i hst=%i\n", y, r->h_start) && fflush(stdout) && 0) );
+    }
 #endif // __LQR_DEBUG__
 
   /* substitute maps */

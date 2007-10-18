@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-15 14:53+0200\n"
+"POT-Creation-Date: 2007-10-18 03:24+0200\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -291,11 +291,11 @@ msgstr "Eroare: strat păstrare caracteristici nu mai este valid"
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Eroare: strat înlăturare caracteristici nu mai este valid"
 
-#: ../src/lqr_raster.c:1026
+#: ../src/lqr_raster.c:1029
 msgid "Resizing width..."
 msgstr "Redimensionare lăţime..."
 
-#: ../src/lqr_raster.c:1064
+#: ../src/lqr_raster.c:1067
 msgid "Resizing height..."
 msgstr "Redimensionare înălţime..."
 
