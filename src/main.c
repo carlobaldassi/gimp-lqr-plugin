@@ -118,7 +118,8 @@ GimpPlugInInfo PLUG_IN_INFO = {
 };
 
 MAIN ()
-     static void query (void)
+
+static void query (void)
 {
   gchar *help_path;
   gchar *help_uri;
@@ -152,7 +153,7 @@ MAIN ()
   gimp_plugin_help_register ("http://developer.gimp.org/lqr-plug-in/help",
                              help_uri);
 
-  gimp_install_procedure (PLUGIN_NAME,
+  gimp_install_procedure (PROCEDURE_NAME,
                           "LiquidRescaling (content-aware rescaling)",
                           "Resize a layer preserving its main features",
                           "Carlo Baldassi <carlobaldassi@yahoo.it>",

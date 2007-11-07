@@ -3,9 +3,6 @@ Known bugs:
 * The cancel progress signal scrambles up the internal state
   during changes apply (needs a new version of pdb, either
   supporting trapping or uncancelable progress)
-* There's a call to deprecated gimp_layer_set_preserve_trans()
-  instead of gimp_layer_set_lock_alpha(), should version-check somehow
-  (problems with packages here)
 * The "New" button is not working properly when dealing with
   floating selections
 * The seam map is not properly translated

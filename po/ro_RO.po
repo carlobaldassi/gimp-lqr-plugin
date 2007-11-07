@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-22 03:14+0200\n"
+"POT-Creation-Date: 2007-11-06 09:28+0100\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -267,11 +267,11 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficient general de intensitate anulare caracteristici"
 
-#: ../src/main.c:156
+#: ../src/main.c:164
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "LiquidRescaling (redimensionare conţinut-conştient)"
 
-#: ../src/main.c:160
+#: ../src/main.c:168
 msgid "Liquid rescale ..."
 msgstr "Redimensionare liquid ..."
 
@@ -279,15 +279,15 @@ msgstr "Redimensionare liquid ..."
 msgid "Not enough memory"
 msgstr "Memorie insuficientă"
 
-#: ../src/render.c:72
+#: ../src/render.c:73
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Eroare: stratul selectat nu mai este valid"
 
-#: ../src/render.c:81
+#: ../src/render.c:82
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr "Eroare: strat păstrare caracteristici nu mai este valid"
 
-#: ../src/render.c:91
+#: ../src/render.c:92
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Eroare: strat înlăturare caracteristici nu mai este valid"
 

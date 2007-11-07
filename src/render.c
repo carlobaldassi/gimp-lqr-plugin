@@ -53,11 +53,12 @@ render (gint32 image_ID,
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
   gchar new_layer_name[LQR_MAX_NAME_LENGTH];
+  gint ntiles;
   gint old_width, old_height;
   gint x_off, y_off, aux_x_off, aux_y_off;
   GimpRGB color_start, color_end;
 #ifdef __LQR_CLOCK__
-  double clock1, clock2, clock3;
+  double clock1, clock2, clock3, clock4;
 #endif //CLOCK
 
   if (drawable_vals->layer_ID) {
@@ -134,19 +135,14 @@ render (gint32 image_ID,
     }
 
   /* unset lock alpha */
-  /* gimp_layer_set_lock_alpha(drawable->drawable_id, FALSE); */
-  gimp_layer_set_preserve_trans (drawable->drawable_id, FALSE);
+  gimp_layer_set_lock_alpha(drawable->drawable_id, FALSE);
 
-#ifdef __LQR_CLOCK__
-  clock1 = (double) clock() / CLOCKS_PER_SEC;
-  printf ("[ begin: clock: %g ]\n", clock1);
-#endif // __LQR_CLOCK__
+  old_width = gimp_drawable_width (drawable->drawable_id);
+  old_height = gimp_drawable_height (drawable->drawable_id);
 
   if (vals->resize_aux_layers == TRUE)
     {
       gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
-      old_width = gimp_drawable_width (drawable->drawable_id);
-      old_height = gimp_drawable_height (drawable->drawable_id);
       if (vals->pres_layer_ID != 0)
         {
           gimp_drawable_offsets (vals->pres_layer_ID, &aux_x_off, &aux_y_off);
@@ -164,6 +160,14 @@ render (gint32 image_ID,
   gimp_rgba_set (&color_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
   gimp_rgba_set (&color_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
 
+  ntiles = old_width / gimp_tile_width() + 1;
+  gimp_tile_cache_size((gimp_tile_width() * gimp_tile_height() * ntiles * 4 * 2) / 1024 + 1);
+
+#ifdef __LQR_CLOCK__
+  clock1 = (double) clock() / CLOCKS_PER_SEC;
+  printf ("[ begin: clock: %g ]\n", clock1);
+#endif // __LQR_CLOCK__
+
   rasta =
     lqr_raster_new (image_ID, drawable, layer_name, vals->pres_layer_ID,
                        vals->pres_coeff, vals->disc_layer_ID,
@@ -171,6 +175,11 @@ render (gint32 image_ID,
                        vals->resize_aux_layers, vals->output_seams,
                        color_start, color_end);
   MEMCHECK (rasta != NULL);
+
+#ifdef __LQR_CLOCK__
+  clock2 = (double) clock() / CLOCKS_PER_SEC;
+  printf ("[ read: clock: %g (%g) ]\n", clock2, clock2 - clock1);
+#endif // __LQR_CLOCK__
 
   MEMCHECK (lqr_raster_resize (rasta, vals->new_width, vals->new_height));
 
@@ -188,11 +197,13 @@ render (gint32 image_ID,
   drawable = gimp_drawable_get (layer_ID);
 
 #ifdef __LQR_CLOCK__
-  clock2 = (double) clock() / CLOCKS_PER_SEC;
-  printf ("[ resized: clock : %g (%g) ]\n", clock2, clock2 - clock1);
+  clock3 = (double) clock() / CLOCKS_PER_SEC;
+  printf ("[ resized: clock : %g (%g) ]\n", clock3, clock3 - clock2);
   fflush (stdout);
 #endif // __LQR_CLOCK__
 
+  ntiles = vals->new_width / gimp_tile_width() + 1;
+  gimp_tile_cache_size((gimp_tile_width() * gimp_tile_height() * ntiles * 4 * 2) / 1024 + 1);
 
   MEMCHECK (lqr_external_writeimage (rasta, drawable));
 
@@ -217,8 +228,8 @@ render (gint32 image_ID,
   lqr_raster_destroy (rasta);
 
 #ifdef __LQR_CLOCK__
-  clock3 = (double) clock() / CLOCKS_PER_SEC;
-  printf ("[ finish: clock: %g (%g) ]\n", clock3, clock3 - clock2 );
+  clock4 = (double) clock() / CLOCKS_PER_SEC;
+  printf ("[ finish: clock: %g (%g) ]\n", clock4, clock4 - clock3 );
 #endif // __LQR_CLOCK__
 
   gimp_drawable_set_visible (layer_ID, TRUE);

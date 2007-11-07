@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-22 03:14+0200\n"
+"POT-Creation-Date: 2007-11-06 09:28+0100\n"
 "PO-Revision-Date: 2007-10-13 14:31+0200\n"
 "Last-Translator: Vincent Picavet <vpicavet@gmail.com>\n"
 "Language-Team:  <fr@li.org>\n"
@@ -279,11 +279,11 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coefficient global pour l'intensité de suppression des éléments"
 
-#: ../src/main.c:156
+#: ../src/main.c:164
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "LiquidRescaling (redimensionnement en fonction du contenu)"
 
-#: ../src/main.c:160
+#: ../src/main.c:168
 msgid "Liquid rescale ..."
 msgstr "Redimensionnement liquide ..."
 
@@ -291,16 +291,16 @@ msgstr "Redimensionnement liquide ..."
 msgid "Not enough memory"
 msgstr "Mémoire pleine"
 
-#: ../src/render.c:72
+#: ../src/render.c:73
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Erreur : il semble que le calque sélectionné n'est plus valide"
 
-#: ../src/render.c:81
+#: ../src/render.c:82
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Erreur : il semble que le calque de conservation d'éléments n'est plus valide"
 
-#: ../src/render.c:91
+#: ../src/render.c:92
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Erreur : il semble que le calque de suppression d'éléments n'est plus valide"

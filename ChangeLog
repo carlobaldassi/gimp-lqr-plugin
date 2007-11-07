@@ -1,3 +1,8 @@
+2007-11-07 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* modified : call to gimp_layer_set_lock_alpha()
+	  instead of deprecated gimp_layer_set_preserve_trans()
+	* modified : added tile cache to speed up input/output
+	  operations
 2007-10-14 Carlo Baldassi <carlobaldassi@yahoo.it>
 	* bugfix : pres./disc. layer are now reused when running with
 	  last values

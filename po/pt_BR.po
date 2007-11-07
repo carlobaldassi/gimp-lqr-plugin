@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-22 03:14+0200\n"
+"POT-Creation-Date: 2007-11-06 09:28+0100\n"
 "PO-Revision-Date: 2007-10-11 14:37-0300\n"
 "Last-Translator: Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>\n"
 "Language-Team: Portugês brasileiro <GNOME-l10n <gnome-l10n-br@listas.cipsga."
@@ -276,11 +276,11 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficiente geral para intensidade de descarte de detalhes"
 
-#: ../src/main.c:156
+#: ../src/main.c:164
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "Redimensionamento Líquido (redimensionamento dependente do conteúdo)"
 
-#: ../src/main.c:160
+#: ../src/main.c:168
 msgid "Liquid rescale ..."
 msgstr "Redimensionamento Líquido..."
 
@@ -288,15 +288,15 @@ msgstr "Redimensionamento Líquido..."
 msgid "Not enough memory"
 msgstr "Não há memória o suficiente"
 
-#: ../src/render.c:72
+#: ../src/render.c:73
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Erro: parece que a camada selecionada não é mais válida"
 
-#: ../src/render.c:81
+#: ../src/render.c:82
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr "Erro: parece que a camada de preservação de detalhes não é mais válida"
 
-#: ../src/render.c:91
+#: ../src/render.c:92
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Erro: parece que a camada de descarte de detalhes não é mais válida"
 

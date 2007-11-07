@@ -25,7 +25,7 @@ sudo checkinstall \
 	--pkggroup="universe/graphics" \
 	--pkgaltsource="http://liquidrescale.wikidot.com" \
 	--maintainer="Carlo Baldassi \<carlobaldassi@yahoo.it\>" \
-	--requires="gimp \(\>= 2.2\)" \
+	--requires="gimp \(\>= 2.4\)" \
 	--install=no \
 	-y \
 	$@ \

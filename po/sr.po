@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-22 03:14+0200\n"
+"POT-Creation-Date: 2007-11-06 09:28+0100\n"
 "PO-Revision-Date: 2007-10-04 02:41+0200\n"
 "Last-Translator: Vladimir Savic <vladimir.firefly.savic@gmail.com>\n"
 "Language-Team:  <en@li.org>\n"
@@ -252,11 +252,11 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Свеобухватни коефицијент интензитета за одбацивање својстава"
 
-#: ../src/main.c:156
+#: ../src/main.c:164
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "ТечнаПроменаВеличине (промена величине свесна садржаја слике)"
 
-#: ../src/main.c:160
+#: ../src/main.c:168
 msgid "Liquid rescale ..."
 msgstr "Течна промена величине..."
 
@@ -264,15 +264,15 @@ msgstr "Течна промена величине..."
 msgid "Not enough memory"
 msgstr "Нема довољно меморије"
 
-#: ../src/render.c:72
+#: ../src/render.c:73
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:81
+#: ../src/render.c:82
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:91
+#: ../src/render.c:92
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 

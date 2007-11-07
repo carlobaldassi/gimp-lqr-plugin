@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-22 03:14+0200\n"
+"POT-Creation-Date: 2007-11-06 09:28+0100\n"
 "PO-Revision-Date: 2007-10-03 11:07+0200\n"
 "Last-Translator: jeghegy <(null)>\n"
 "Language-Team: English <en@li.org>\n"
@@ -250,11 +250,11 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Alakelvetés intenzitásának együtthatója"
 
-#: ../src/main.c:156
+#: ../src/main.c:164
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "LiquidRescaling (tartalom-érzékeny átméretezés)"
 
-#: ../src/main.c:160
+#: ../src/main.c:168
 msgid "Liquid rescale ..."
 msgstr "Liquid rescale..."
 
@@ -262,15 +262,15 @@ msgstr "Liquid rescale..."
 msgid "Not enough memory"
 msgstr "Nincs elég memória"
 
-#: ../src/render.c:72
+#: ../src/render.c:73
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:81
+#: ../src/render.c:82
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:91
+#: ../src/render.c:92
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
