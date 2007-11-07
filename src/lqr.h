@@ -38,18 +38,16 @@
 #define __LQR_DEBUG__
 #endif
 
-#if 0
+#if 1
 #define __LQR_CLOCK__
 #endif
 
 void lqr_test_mem(gpointer pointer);
 
 /**** CLASSES DECLARATIONS ****/
-typedef struct _LqrData LqrData;
 typedef struct _LqrCursor LqrCursor;
 typedef struct _LqrRaster LqrRaster;
 
-struct _LqrData;                /* base LqrData                       */
 struct _LqrCursor;              /* a "smart" index to read the raster */
 struct _LqrRaster;              /* the multisize image raster         */
 

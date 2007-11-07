@@ -28,7 +28,7 @@
 #define __LQR_DATA_H__
 
 #ifndef __LQR_H__
-#error "lqr.h must be included prior to lqr_cursor.h"
+#error "lqr.h must be included prior to lqr_data.h"
 #endif /* __LQR_H__ */
 
 #define _LQR_DATA_MAX_BPP (4)

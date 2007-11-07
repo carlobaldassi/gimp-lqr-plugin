@@ -15,8 +15,6 @@ gimp_lqr_plugin_SOURCES = \
 	lqr.h		\
 	lqr_gradient.c  \
 	lqr_gradient.h  \
-	lqr_data.c      \
-	lqr_data.h      \
 	lqr_cursor.c    \
 	lqr_cursor.h    \
 	lqr_raster.c    \

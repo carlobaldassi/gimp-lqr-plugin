@@ -58,6 +58,7 @@ struct _LqrRaster
   gint bpp;                     /* number of bpp of the image */
 
   gint transposed;              /* flag to set transposed state */
+  gint aux;			/* flag to set if raster is auxiliary */
 
   gboolean resize_aux_layers;   /* flag to determine whether the auxiliary layers are resized */
   gboolean output_seams;        /* flag to determine whether to output the seam map */
@@ -71,12 +72,19 @@ struct _LqrRaster
   gdouble *rigidity_map;        /* the rigidity function */
   gint delta_x;                 /* max displacement of seams (currently is only meaningful if 0 or 1 */
 
-  LqrData *map;                 /* array of points */
-  LqrData **raw;                /* array of pointer to points in map, for seam computation */
+  guchar *rgb;                  /* array of rgb points */
+  gint *vs;			/* array of visibility levels */
+  gdouble *en;                  /* array of energy levels */
+  gdouble *bias;                /* array of energy levels */
+  gdouble *m;			/* array of auxiliary energy values */
+  gint *least;			/* array of array-coordinates, pointing
+				   to the least m of previious row */
+  gint *least_x;		/* array of x coordinates of the least array */
+  gint *raw;                    /* array of array-coordinates, for seam computation */
 
   LqrCursor *c;                 /* cursor to be used as image reader */
 
-  LqrData **vpath;              /* array of pointers representing a vertical seam */
+  gint *vpath;                  /* array of array-coordinates representing a vertical seam */
   gint *vpath_x;                /* array of abscisses representing a vertical seam */
 
   p_to_f gf;                    /* pointer to a gradient function */
@@ -88,7 +96,7 @@ struct _LqrRaster
 
 /* build maps */
 gboolean lqr_raster_build_maps (LqrRaster * r, gint depth);      /* build all */
-void lqr_raster_build_emap (LqrRaster * r);     /* energy (faster) */
+void lqr_raster_build_emap (LqrRaster * r);     /* energy */
 void lqr_raster_build_mmap (LqrRaster * r);     /* minpath */
 gboolean lqr_raster_build_vsmap (LqrRaster * r, gint depth);     /* visibility */
 

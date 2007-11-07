@@ -26,7 +26,6 @@
 #include <libgimp/gimp.h>
 #include "lqr.h"
 #include "lqr_gradient.h"
-#include "lqr_data.h"
 #include "lqr_cursor.h"
 #include "lqr_raster.h"
 
@@ -39,13 +38,13 @@
 /*** constructor and destructor ***/
 
 LqrCursor *
-lqr_cursor_create (LqrRaster * owner, LqrData * m)
+lqr_cursor_create (LqrRaster * owner, gint *vs)
 {
   LqrCursor *c;
 
   TRY_N_N (c = g_try_new (LqrCursor, 1));
   c->o = owner;
-  c->map = m;
+  c->vs = vs;
 #ifdef __LQR_DEBUG__
   c->initialized = 1;
 #endif
@@ -72,18 +71,18 @@ lqr_cursor_reset (LqrCursor * c)
 #endif // __LQR_DEBUG__
 
   /* reset coordinates */
-  c->x = 1;
-  c->y = 1;
+  c->x = 0;
+  c->y = 0;
 
   /* set the current point to the beginning of the map */
-  c->now = c->map;
+  c->now = 0;
 
   /* skip invisible points */
-  while ((c->now->vs != 0) && (c->now->vs < c->o->level))
+  while ((c->vs[c->now] != 0) && (c->vs[c->now] < c->o->level))
     {
       c->now++;
 #ifdef __LQR_DEBUG__
-      assert (c->now - c->map < c->o->w0);
+      assert (c->now < c->o->w0);
 #endif // __LQR_DEBUG__
     }
 }
@@ -98,15 +97,15 @@ lqr_cursor_next (LqrCursor * c)
 #endif // __LQR_DEBUG__
 
   /* update coordinates */
-  if (c->x == c->o->w)
+  if (c->x == c->o->w - 1)
     {
-      if (c->y == c->o->h)
+      if (c->y == c->o->h - 1)
         {
           /* top-right corner, do nothing */
           return;
         }
       /* end-of-line, carriage return */
-      c->x = 1;
+      c->x = 0;
       c->y++;
     }
   else
@@ -118,15 +117,15 @@ lqr_cursor_next (LqrCursor * c)
   /* first move */
   c->now++;
 #ifdef __LQR_DEBUG__
-  assert (c->now - c->map < (c->o->w0 * c->o->h0));
+  assert (c->now < (c->o->w0 * c->o->h0));
 #endif // __LQR_DEBUG__
 
   /* skip invisible points */
-  while ((c->now->vs != 0) && (c->now->vs < c->o->level))
+  while ((c->vs[c->now] != 0) && (c->vs[c->now] < c->o->level))
     {
       c->now++;
 #ifdef __LQR_DEBUG__
-      assert (c->now - c->map < (c->o->w0 * c->o->h0));
+      assert (c->now < (c->o->w0 * c->o->h0));
 #endif // __LQR_DEBUG__
     }
 }
@@ -136,15 +135,15 @@ void
 lqr_cursor_prev (LqrCursor * c)
 {
   /* update coordinates */
-  if (c->x == 1)
+  if (c->x == 0)
     {
-      if (c->y == 1)
+      if (c->y == 0)
         {
           /* bottom-right corner, do nothing */
           return;
         }
       /* carriage return */
-      c->x = c->o->w;
+      c->x = c->o->w - 1;
       c->y--;
     }
   else
@@ -156,15 +155,15 @@ lqr_cursor_prev (LqrCursor * c)
   /* first move */
   c->now--;
 #ifdef __LQR_DEBUG__
-  assert (c->now - c->map >= 0);
+  assert (c->now >= 0);
 #endif // __LQR_DEBUG__
 
   /* skip invisible points */
-  while ((c->now->vs != 0) && (c->now->vs < c->o->level))
+  while ((c->vs[c->now] != 0) && (c->vs[c->now] < c->o->level))
     {
       c->now--;
 #ifdef __LQR_DEBUG__
-      assert (c->now - c->map >= 0);
+      assert (c->now >= 0);
 #endif // __LQR_DEBUG__
     }
 }
@@ -174,57 +173,29 @@ lqr_cursor_prev (LqrCursor * c)
 /* these return pointers to neighboring data
  * it is an error to ask for out-of-bounds data */
 
-LqrData *
-lqr_cursor_right (LqrCursor * c)
-{
-  /* create an auxiliary pointer */
-  LqrData *ret = c->now;
-
-#ifdef __LQR_DEBUG__
-  assert (c->initialized);
-  assert (c->x < c->o->w);
-#endif // __LQR_DEBUG__
-
-  /* first move */
-  ret++;
-#ifdef __LQR_DEBUG__
-  assert (ret - c->map < c->o->w0 * c->o->h0);
-#endif // __LQR_DEBUG__
-
-  /* skip invisible points */
-  while ((ret->vs != 0) && ret->vs < c->o->level)
-    {
-      ret++;
-#ifdef __LQR_DEBUG__
-      assert (ret - c->map < c->o->w0 * c->o->h0);
-#endif // __LQR_DEBUG__
-    }
-  return ret;
-}
-
-LqrData *
+gint
 lqr_cursor_left (LqrCursor * c)
 {
   /* create an auxiliary pointer */
-  LqrData *ret = c->now;
+  gint ret = c->now;
 
 #ifdef __LQR_DEBUG__
   assert (c->initialized);
-  assert (c->x > 1);
+  assert (c->x > 0);
 #endif // __LQR_DEBUG__
 
   /* first move */
   ret--;
 #ifdef __LQR_DEBUG__
-  assert (ret >= c->map);
+  assert (ret >= 0);
 #endif // __LQR_DEBUG__
 
   /* skip invisible points */
-  while ((ret->vs != 0) && ret->vs < c->o->level)
+  while ((c->vs[ret] != 0) && c->vs[ret] < c->o->level)
     {
       ret--;
 #ifdef __LQR_DEBUG__
-      assert (ret >= c->map);
+      assert (ret >= 0);
 #endif // __LQR_DEBUG__
     }
   return ret;

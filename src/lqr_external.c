@@ -32,7 +32,6 @@
 
 #include "lqr.h"
 #include "lqr_gradient.h"
-#include "lqr_data.h"
 #include "lqr_cursor.h"
 #include "lqr_raster.h"
 #include "lqr_external.h"
@@ -82,11 +81,11 @@ lqr_external_readimage (LqrRaster * r, GimpDrawable * drawable)
         {
           if (r->raw != NULL)
             {
-              r->raw[y * r->w + x] = &(r->map[y * r->w + x]);
+              r->raw[y * r->w + x] = y * r->w + x;
             }
           for (k = 0; k < bpp; k++)
             {
-              r->map[y * r->w + x].rgb[k] = inrow[bpp * x + k];
+              r->rgb[(y * r->w + x) * bpp + k] = inrow[x * bpp + k];
             }
         }
 
@@ -164,7 +163,7 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
               bias *= (double) inrow[bpp * (x + 1) - 1] / 255;
             }
 
-          r->map[y * r->w + (x + MAX (0, x1 + x_off))].b += bias;
+          r->bias[y * r->w + (x + MAX (0, x1 + x_off))] += bias;
 
         }
 
@@ -186,6 +185,7 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
   gint update_step;
 
   gimp_progress_init (_("Applying changes..."));
+  update_step = MAX ((r->h - 1) / 20, 1);
 
   //gimp_drawable_mask_bounds (drawable->drawable_id, &x1, &y1, &x2, &y2);
   x1 = y1 = 0;
@@ -214,7 +214,8 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
         {
           for (k = 0; k < r->bpp; k++)
             {
-              outrow[r->bpp * x + k] = r->c->now->rgb[k];
+              //outrow[r->bpp * x + k] = r->c->now->rgb[k];
+              outrow[r->bpp * x + k] = r->rgb[r->c->now * r->bpp + k];
             }
           lqr_cursor_next (r->c);
         }
@@ -227,7 +228,6 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
           gimp_pixel_rgn_set_col (&rgn_out, outrow, y + x1, y1, y2 - y1);
         }
 
-      update_step = MAX ((r->h - 1) / 20, 1);
       if (y % update_step == 0)
         {
           gimp_progress_update ((gdouble) y / (r->h - 1));
@@ -262,6 +262,7 @@ lqr_external_write_vs (LqrRaster * r)
   gint update_step;
 
   gimp_progress_init (_("Drawing seam map..."));
+  update_step = MAX ((r->h - 1) / 20, 1);
 
   /* The name of the layer with the seams map */
   /* (here "%s" represents the selected layer's name) */
@@ -301,7 +302,7 @@ lqr_external_write_vs (LqrRaster * r)
     {
       for (x = 0; x < r->w; x++)
         {
-          vs = r->c->now->vs;
+          vs = r->vs[r->c->now];
           if (vs == 0)
             {
 
@@ -341,7 +342,6 @@ lqr_external_write_vs (LqrRaster * r)
           gimp_pixel_rgn_set_col (&rgn_out, outrow, y, 0, r->w);
         }
 
-      update_step = MAX ((r->h - 1) / 20, 1);
       if (y % update_step == 0)
         {
           gimp_progress_update ((gdouble) y / (r->h - 1));
@@ -383,7 +383,7 @@ lqr_raster_write_energy (LqrRaster * r /*, pngwriter& output */ )
     {
       for (x = 1; x <= r->w; x++)
         {
-          e = r->c->now->e;
+          e = r->en[r->c->now];
           if (!r->transposed)
             {
               /* external_write(x, y, e, e, e); */

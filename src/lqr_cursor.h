@@ -36,19 +36,19 @@
 struct _LqrCursor
 {
 #ifdef __LQR_DEBUG__
-  gint initialized;              /* initialization flag */
+  gint initialized;             /* initialization flag */
 #endif
-  gint x;                        /* x coordinate of current data */
-  gint y;                        /* y coordinate of current data */
+  gint x;                       /* x coordinate of current data */
+  gint y;                       /* y coordinate of current data */
+  gint now;			/* current array position */
   LqrRaster *o;                 /* pointer to owner raster */
-  LqrData *map;                 /* pointer to owner's map */
-  LqrData *now;                 /* pointer to current data */
+  gint *vs;			/* pointer to owner's visibility map */
 };
 
 /* LQR_CURSOR CLASS FUNCTIONS */
 
 /* constructor */
-LqrCursor *lqr_cursor_create (LqrRaster * owner, LqrData * m);
+LqrCursor *lqr_cursor_create (LqrRaster * owner, gint * vs);
 
 /* destructor */
 void lqr_cursor_destroy (LqrCursor * c);
@@ -59,7 +59,6 @@ void lqr_cursor_next (LqrCursor * c);
 void lqr_cursor_prev (LqrCursor * c);
 
 /* methods for exploring neighborhoods */
-LqrData *lqr_cursor_right (LqrCursor * c);
-LqrData *lqr_cursor_left (LqrCursor * c);
+gint lqr_cursor_left (LqrCursor * c);
 
 #endif /* __LQR_CURSOR_H__ */

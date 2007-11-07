@@ -50,9 +50,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_gimp_lqr_plugin_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
-	render.$(OBJEXT) lqr_gradient.$(OBJEXT) lqr_data.$(OBJEXT) \
-	lqr_cursor.$(OBJEXT) lqr_raster.$(OBJEXT) \
-	lqr_external.$(OBJEXT)
+	render.$(OBJEXT) lqr_gradient.$(OBJEXT) lqr_cursor.$(OBJEXT) \
+	lqr_raster.$(OBJEXT) lqr_external.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -216,8 +215,6 @@ gimp_lqr_plugin_SOURCES = \
 	lqr.h		\
 	lqr_gradient.c  \
 	lqr_gradient.h  \
-	lqr_data.c      \
-	lqr_data.h      \
 	lqr_cursor.c    \
 	lqr_cursor.h    \
 	lqr_raster.c    \
@@ -303,7 +300,6 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_cursor.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_data.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_external.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_gradient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_raster.Po@am__quote@
