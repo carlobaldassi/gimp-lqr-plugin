@@ -19,6 +19,10 @@ gimp_lqr_plugin_SOURCES = \
 	lqr_cursor.h    \
 	lqr_raster.c    \
 	lqr_raster.h    \
+	lqr_carver.c    \
+	lqr_carver.h    \
+	lqr_carver_external.c    \
+	lqr_carver_external.h    \
 	lqr_external.c  \
 	lqr_external.h
 

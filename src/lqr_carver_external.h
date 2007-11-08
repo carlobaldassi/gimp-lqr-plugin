@@ -23,34 +23,21 @@
  * 02111-1307, USA.
  */
 
+#ifndef __LQR_CARVER_EXTERNAL_H__
+#define __LQR_CARVER_EXTERNAL_H__
 
 #ifndef __LQR_H__
-#define __LQR_H__
-
-#define LQR_MAX_NAME_LENGTH (1024)
-
-#define TRY_N_N(assign) if ((assign) == NULL) { return NULL; }
-#define TRY_N_F(assign) if ((assign) == NULL) { return FALSE; }
-#define TRY_F_N(assign) if ((assign) == FALSE) { return NULL; }
-#define TRY_F_F(assign) if ((assign) == FALSE) { return FALSE; }
-
-#if 0
-#define __LQR_DEBUG__
-#endif
-
-#if 1
-#define __LQR_CLOCK__
-#endif
-
-void lqr_test_mem(gpointer pointer);
-
-/**** CLASSES DECLARATIONS ****/
-typedef struct _LqrCursor LqrCursor;
-typedef struct _LqrRaster LqrRaster;
-typedef struct _LqrCarver LqrCarver;
-
-struct _LqrCursor;              /* a "smart" index to read the raster */
-struct _LqrRaster;              /* the multisize image raster         */
-struct _LqrCarver;              /* quick&dirty implemetation          */
-
+#error "lqr.h must be included prior to lqr_external.h"
 #endif /* __LQR_H__ */
+
+/* LQR_CARVER_EXTERNAL FUNCTIONS */
+
+gboolean lqr_carver_external_readimage (LqrCarver * r, GimpDrawable * drawable);
+gboolean lqr_carver_external_readbias (LqrCarver * r, gint32 layer_ID, gint bias_factor);
+gboolean lqr_carver_external_writeimage (LqrCarver * r, GimpDrawable * drawable);
+//gboolean lqr_carver_external_write_vs (LqrCarver * r);     /* output the visibility map (the seams) */
+/* unimplemented */
+//gboolean lqr_raster_write_energy (LqrCarver * r /*, pngwriter& output */ ); /* output the energy */
+
+
+#endif // __LQR_CARVER_EXTERNAL_H__

@@ -24,6 +24,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include <libgimp/gimp.h>
 
@@ -32,9 +33,8 @@
 
 #include "lqr.h"
 #include "lqr_gradient.h"
-#include "lqr_cursor.h"
-#include "lqr_raster.h"
-#include "lqr_external.h"
+#include "lqr_carver.h"
+#include "lqr_carver_external.h"
 
 #ifdef __LQR_DEBUG__
 #include <assert.h>
@@ -44,14 +44,15 @@
 /**** EXTERNAL FUNCTIONS ****/
 
 gboolean
-lqr_external_readimage (LqrRaster * r, GimpDrawable * drawable)
+lqr_carver_external_readimage (LqrCarver * r, GimpDrawable * drawable)
 {
-  gint x, y, k, bpp;
+  gint y, bpp;
   gint x1, y1, x2, y2;
   GimpPixelRgn rgn_in;
   guchar *inrow;
   gint update_step;
 
+  update_step = MAX ((r->h - 1) / 20, 1);
   gimp_progress_init (_("Parsing layer..."));
 
   //gimp_drawable_mask_bounds (drawable->drawable_id, &x1, &y1, &x2, &y2);
@@ -77,19 +78,8 @@ lqr_external_readimage (LqrRaster * r, GimpDrawable * drawable)
     {
       gimp_pixel_rgn_get_row (&rgn_in, inrow, x1, y, r->w);
 
-      for (x = 0; x < r->w; x++)
-        {
-          if (r->raw != NULL)
-            {
-              r->raw[y][x] = y * r->w + x;
-            }
-          for (k = 0; k < bpp; k++)
-            {
-              r->rgb[(y * r->w + x) * bpp + k] = inrow[x * bpp + k];
-            }
-        }
+      memcpy(r->rgb + y * r->w * bpp, inrow, r->w * bpp * sizeof(guchar));
 
-      update_step = MAX ((r->h - 1) / 20, 1);
       if (y % update_step == 0)
         {
           gimp_progress_update ((gdouble) y / (r->h - 1));
@@ -103,7 +93,7 @@ lqr_external_readimage (LqrRaster * r, GimpDrawable * drawable)
 }
 
 gboolean
-lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
+lqr_carver_external_readbias (LqrCarver * r, gint32 layer_ID, gint bias_factor)
 {
   gint x, y, k, bpp, c_bpp;
   gboolean has_alpha;
@@ -174,20 +164,19 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
   return TRUE;
 }
 
-/* flush the LqrRaster to a layer */
+/* flush the LqrCarver to a layer */
 gboolean
-lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
+lqr_carver_external_writeimage (LqrCarver * r, GimpDrawable * drawable)
 {
-  gint x, y, k;
+  gint y;
   gint x1, y1, x2, y2;
   GimpPixelRgn rgn_out;
   guchar *outrow;
   gint update_step;
 
-  gimp_progress_init (_("Applying changes..."));
   update_step = MAX ((r->h - 1) / 20, 1);
+  gimp_progress_init (_("Applying changes..."));
 
-  //gimp_drawable_mask_bounds (drawable->drawable_id, &x1, &y1, &x2, &y2);
   x1 = y1 = 0;
   x2 = gimp_drawable_width (drawable->drawable_id);
   y2 = gimp_drawable_height (drawable->drawable_id);
@@ -206,19 +195,10 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
       TRY_N_F (outrow = g_try_new (guchar, r->bpp * (y2 - y1)));
     }
 
-  lqr_cursor_reset (r->c);
-
   for (y = 0; y < r->h; y++)
     {
-      for (x = 0; x < r->w; x++)
-        {
-          for (k = 0; k < r->bpp; k++)
-            {
-              //outrow[r->bpp * x + k] = r->c->now->rgb[k];
-              outrow[r->bpp * x + k] = r->rgb[r->c->now * r->bpp + k];
-            }
-          lqr_cursor_next (r->c);
-        }
+      memcpy(outrow, r->rgb + y * r->w_start * r->bpp, r->w * r->bpp * sizeof(guchar));
+
       if (!r->transposed)
         {
           gimp_pixel_rgn_set_row (&rgn_out, outrow, x1, y + y1, x2 - x1);
@@ -245,11 +225,13 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
 }
 
 
+#if 0
+
 /* plot the visibility level of the image
  * uses original size
  * uninitialized points are plotted transparent */
 gboolean
-lqr_external_write_vs (LqrRaster * r)
+lqr_external_write_vs (LqrCarver * r)
 {
   gchar name[LQR_MAX_NAME_LENGTH];
   gint w, h, w1, x, y, k, vs;
@@ -261,8 +243,8 @@ lqr_external_write_vs (LqrRaster * r)
   gdouble value, rd, gr, bl, al;
   gint update_step;
 
-  gimp_progress_init (_("Drawing seam map..."));
   update_step = MAX ((r->h - 1) / 20, 1);
+  gimp_progress_init (_("Drawing seam map..."));
 
   /* The name of the layer with the seams map */
   /* (here "%s" represents the selected layer's name) */
@@ -398,5 +380,7 @@ lqr_raster_write_energy (LqrRaster * r /*, pngwriter& output */ )
 
   return TRUE;
 }
+#endif
+
 
 

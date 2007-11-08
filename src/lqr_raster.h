@@ -77,10 +77,8 @@ struct _LqrRaster
   gdouble *en;                  /* array of energy levels */
   gdouble *bias;                /* array of energy levels */
   gdouble *m;			/* array of auxiliary energy values */
-  gint *least;			/* array of array-coordinates, pointing
-				   to the least m of previious row */
-  gint *least_x;		/* array of x coordinates of the least array */
-  gint *raw;                    /* array of array-coordinates, for seam computation */
+  gint *_raw;                   /* array of array-coordinates, for seam computation */
+  gint **raw;                   /* array of array-coordinates, for seam computation */
 
   LqrCursor *c;                 /* cursor to be used as image reader */
 

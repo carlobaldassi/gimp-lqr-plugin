@@ -33,6 +33,8 @@
 #include "lqr_gradient.h"
 #include "lqr_raster.h"
 #include "lqr_external.h"
+#include "lqr_carver.h"
+#include "lqr_carver_external.h"
 
 #include "main.h"
 #include "render.h"
@@ -49,6 +51,7 @@ render (gint32 image_ID,
         PlugInColVals * col_vals)
 {
   LqrRaster *rasta;
+  //LqrCarver *rasta;
   gint32 mask_ID;
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
@@ -174,6 +177,14 @@ render (gint32 image_ID,
                        vals->disc_coeff, vals->grad_func, vals->rigidity,
                        vals->resize_aux_layers, vals->output_seams,
                        color_start, color_end);
+  /*
+  rasta =
+    lqr_carver_new (image_ID, drawable, layer_name, vals->pres_layer_ID,
+                       vals->pres_coeff, vals->disc_layer_ID,
+                       vals->disc_coeff, vals->grad_func, vals->rigidity,
+                       vals->resize_aux_layers, vals->output_seams,
+                       color_start, color_end);
+		       */
   MEMCHECK (rasta != NULL);
 
 #ifdef __LQR_CLOCK__
@@ -182,6 +193,7 @@ render (gint32 image_ID,
 #endif // __LQR_CLOCK__
 
   MEMCHECK (lqr_raster_resize (rasta, vals->new_width, vals->new_height));
+  //MEMCHECK (lqr_carver_resize (rasta, vals->new_width, vals->new_height));
 
   if (vals->resize_canvas == TRUE)
     {
@@ -206,6 +218,7 @@ render (gint32 image_ID,
   gimp_tile_cache_size((gimp_tile_width() * gimp_tile_height() * ntiles * 4 * 2) / 1024 + 1);
 
   MEMCHECK (lqr_external_writeimage (rasta, drawable));
+  //MEMCHECK (lqr_carver_external_writeimage (rasta, drawable));
 
   if (vals->resize_aux_layers == TRUE)
     {
@@ -215,6 +228,10 @@ render (gint32 image_ID,
                              vals->new_height, x_off, y_off);
           MEMCHECK (lqr_external_writeimage (rasta->pres_raster,
                                    gimp_drawable_get (vals->pres_layer_ID)));
+	  /*
+          MEMCHECK (lqr_carver_external_writeimage (rasta->pres_raster,
+                                   gimp_drawable_get (vals->pres_layer_ID)));
+				   */
         }
       if (vals->disc_layer_ID != 0)
         {
@@ -222,10 +239,15 @@ render (gint32 image_ID,
                              vals->new_height, x_off, y_off);
           MEMCHECK (lqr_external_writeimage (rasta->disc_raster,
                                    gimp_drawable_get (vals->disc_layer_ID)));
+	  /*
+          MEMCHECK (lqr_carver_external_writeimage (rasta->disc_raster,
+                                   gimp_drawable_get (vals->disc_layer_ID)));
+				   */
         }
     }
 
   lqr_raster_destroy (rasta);
+  //lqr_carver_destroy (rasta);
 
 #ifdef __LQR_CLOCK__
   clock4 = (double) clock() / CLOCKS_PER_SEC;
