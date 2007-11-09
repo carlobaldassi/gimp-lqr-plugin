@@ -72,6 +72,7 @@ const PlugInVals default_vals = {
   0,                            /* disc layer ID */
   100,                          /* disc coeff */
   0,                            /* rigidity coeff */
+  1,				/* fast_update flag */
   TRUE,                         /* resize canvas */
   TRUE,                         /* resize aux layers */
   FALSE,                        /* output on a new layer */
@@ -135,6 +136,7 @@ static void query (void)
     {GIMP_PDB_INT32, "disc_layer", "Layer that marks areas to discard"},
     {GIMP_PDB_INT32, "disc_coeff", "Discard coefficient"},
     {GIMP_PDB_INT32, "rigidity", "Rigidity coefficient"},
+    {GIMP_PDB_INT32, "fast_update", "Fast_update flag"},
     {GIMP_PDB_INT32, "resize_aux_layers",
      "Whether to resize auxiliary layers"},
     {GIMP_PDB_INT32, "resize_canvas", "Whether to resize canvas"},
@@ -211,7 +213,7 @@ run (const gchar * name,
       switch (run_mode)
         {
         case GIMP_RUN_NONINTERACTIVE:
-          if (n_params != 16)
+          if (n_params != 17)
             {
               status = GIMP_PDB_CALLING_ERROR;
             }
@@ -224,12 +226,13 @@ run (const gchar * name,
               vals.disc_layer_ID = param[7].data.d_int32;
               vals.disc_coeff = param[8].data.d_int32;
               vals.rigidity = param[9].data.d_int32;
-              vals.resize_aux_layers = param[10].data.d_int32;
-              vals.resize_canvas = param[11].data.d_int32;
-              vals.new_layer = param[12].data.d_int32;
-              vals.output_seams = param[13].data.d_int32;
-              vals.grad_func = param[14].data.d_int32;
-              vals.mask_behavior = param[15].data.d_int32;
+              vals.fast_update = param[10].data.d_int32;
+              vals.resize_aux_layers = param[11].data.d_int32;
+              vals.resize_canvas = param[12].data.d_int32;
+              vals.new_layer = param[13].data.d_int32;
+              vals.output_seams = param[14].data.d_int32;
+              vals.grad_func = param[15].data.d_int32;
+              vals.mask_behavior = param[16].data.d_int32;
             }
           break;
 

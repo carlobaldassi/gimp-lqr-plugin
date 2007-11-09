@@ -175,7 +175,7 @@ render (gint32 image_ID,
     lqr_raster_new (image_ID, drawable, layer_name, vals->pres_layer_ID,
                        vals->pres_coeff, vals->disc_layer_ID,
                        vals->disc_coeff, vals->grad_func, vals->rigidity,
-                       vals->resize_aux_layers, vals->output_seams,
+                       vals->resize_aux_layers, vals->fast_update, vals->output_seams,
                        color_start, color_end);
   /*
   rasta =

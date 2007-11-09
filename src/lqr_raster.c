@@ -24,7 +24,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include <libgimp/gimp.h>
@@ -53,6 +52,7 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
                 gint32 disc_layer_ID, gint disc_coeff,
                 LqrGradFunc gf_ind, gint rigidity,
                 gboolean resize_aux_layers,
+                gboolean fast_update,
                 gboolean output_seams,
                 GimpRGB seam_color_start, GimpRGB seam_color_end)
 {
@@ -70,6 +70,7 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   r->transposed = 0;
   r->aux = 0;
   r->rigidity = rigidity;
+  r->fast_update = fast_update;
   r->resize_aux_layers = resize_aux_layers;
   r->output_seams = output_seams;
   r->seam_color_start = seam_color_start;
@@ -144,9 +145,8 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   r->rigidity_map += r->delta_x;
   for (dx = -r->delta_x; dx <= r->delta_x; dx++)
     {
-      r->rigidity_map[dx] = (gdouble) r->rigidity * dx * dx;
+      r->rigidity_map[dx] = (gdouble) r->rigidity * dx * dx / r->h;
     }
-  r->rigidity_map[0] -= 1e-5;
 
   return r;
 }
@@ -396,7 +396,7 @@ lqr_raster_build_mmap (LqrRaster * r)
               /* find the min among the neighbors
                * in the last row */
 	      if (r->rigidity) {
-		      m = MIN(m, r->m[data_down] + r->rigidity_map[x1] / r->h);
+		      m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
 	      } else {
 		      m = MIN(m, r->m[data_down]);
 	      }
@@ -799,21 +799,23 @@ lqr_raster_update_mmap (LqrRaster * r)  /* BUGGGGGY if r->delta_x > 1 */
               /* find the min among the neighbors
                * in the last row */
 	      if (r->rigidity) {
-		      m = MIN(m, r->m[data_down] + r->rigidity_map[x1] / r->h);
+		      m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
 	      } else {
 		      m = MIN(m, r->m[data_down]);
 	      }
             }
 
-          if ((x == x_min) && (x < r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
-            {
-              x_min++;
-            }
-          if ((x >= r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
-            {
-	      stop = 1;
-	      x_max = x;
-            }
+	  if (r->fast_update == 1) {
+		  if ((x == x_min) && (x < r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
+		    {
+		      x_min++;
+		    }
+		  if ((x >= r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
+		    {
+		      stop = 1;
+		      x_max = x;
+		    }
+	  }
 
 
           /* set current m */
@@ -1153,6 +1155,13 @@ lqr_raster_transpose (LqrRaster * r)
     }
   lqr_cursor_destroy (r->c);
   r->c = lqr_cursor_create (r, r->vs);
+
+  /* rescale rigidity */
+
+  for (x = -r->delta_x; x <= r->delta_x; x++)
+    {
+      r->rigidity_map[x] = (gdouble) r->rigidity * r->w0 / r->h0;
+    }
 
   /* set transposed flag */
   r->transposed = (r->transposed ? 0 : 1);

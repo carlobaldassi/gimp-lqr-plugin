@@ -37,6 +37,7 @@ typedef struct
   gint32 disc_layer_ID;
   gint disc_coeff;
   gint rigidity;
+  gint fast_update;
   gboolean resize_aux_layers;
   gboolean resize_canvas;
   gboolean new_layer;

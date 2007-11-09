@@ -139,6 +139,7 @@ dialog (gint32 image_ID,
   GtkWidget *label;
   GtkWidget *grad_func_combo_box;
   GtkWidget *vbox;
+  GtkWidget *fast_button;
   GtkWidget *new_layer_button;
   GtkWidget *resize_canvas_button;
   GtkWidget *resize_aux_layers_button;
@@ -457,6 +458,15 @@ dialog (gint32 image_ID,
                                  NULL);
   gtk_widget_show (thispage);
 
+  /* Fast update */
+
+  fast_button = gtk_check_button_new_with_label (_("Fast update"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (fast_button),
+                                state->fast_update);
+  gtk_box_pack_start(GTK_BOX(thispage), fast_button, FALSE, FALSE, 0);
+  gtk_widget_show(fast_button);
+  gimp_help_set_help_data (fast_button,
+                           _("Much faster but slightly less accurate"), NULL);
 
   /* Rigidity */
 
@@ -573,6 +583,9 @@ dialog (gint32 image_ID,
                                       (resize_aux_layers_button));
       state->output_seams =
         gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (out_seams_button));
+
+      state->fast_update =
+        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (fast_button));
 
       /* save vsmap colors */
       if (state->output_seams)
