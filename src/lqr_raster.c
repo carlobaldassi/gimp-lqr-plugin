@@ -1109,7 +1109,7 @@ lqr_raster_transpose (LqrRaster * r)
 	    }
 	  if (r->aux == 0)
 	    {
-	      new_bias[z1] = r->bias[z1];
+	      new_bias[z1] = r->bias[z0];
               r->raw[x][y] = z1;
 	    }
         }
@@ -1158,10 +1158,12 @@ lqr_raster_transpose (LqrRaster * r)
 
   /* rescale rigidity */
 
-  for (x = -r->delta_x; x <= r->delta_x; x++)
-    {
-      r->rigidity_map[x] = (gdouble) r->rigidity * r->w0 / r->h0;
-    }
+  if (r->aux == 0) {
+	  for (x = -r->delta_x; x <= r->delta_x; x++)
+	    {
+	      r->rigidity_map[x] = (gdouble) r->rigidity * r->w0 / r->h0;
+	    }
+  }
 
   /* set transposed flag */
   r->transposed = (r->transposed ? 0 : 1);
