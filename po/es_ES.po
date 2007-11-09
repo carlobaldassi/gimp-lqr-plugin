@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:11+0100\n"
+"POT-Creation-Date: 2007-11-09 18:21+0100\n"
 "PO-Revision-Date: 2007-10-14 18:57+0100\n"
 "Last-Translator: Diego Ruiz <diego.ruiz@opentrends.net>\n"
 "Language-Team:  <es_ES@li.org>\n"
@@ -285,24 +285,28 @@ msgstr "Coeficiente total de descarte de características"
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "LiquidRescaling (reescalado independiente del contenido)"
 
+#: ../src/main.c:167
+msgid "Resize a layer preserving its main features"
+msgstr ""
+
 #: ../src/main.c:170
 msgid "Liquid rescale ..."
 msgstr "Liquid rescale ..."
 
-#: ../src/render.c:44
+#: ../src/render.c:42
 msgid "Not enough memory"
 msgstr "Sin memoria suficiente"
 
-#: ../src/render.c:76
+#: ../src/render.c:74
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Error: parece que la capa seleccionada ya no es válida"
 
-#: ../src/render.c:85
+#: ../src/render.c:83
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Error: parece que la capa de conservación de características ya no es válida"
 
-#: ../src/render.c:95
+#: ../src/render.c:93
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Error: parece que la capa de descarte de características ya no es válida"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:11+0100\n"
+"POT-Creation-Date: 2007-11-09 18:21+0100\n"
 "PO-Revision-Date: 2007-10-02 04:27+0200\n"
 "Last-Translator: minombresbond <minombresbond@datafull.com>\n"
 "Language-Team: Español\n"
@@ -262,23 +262,27 @@ msgstr "Coeficiente global que determina la intensidad de eliminación"
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "Redimensionado Líquido (redimensionamiento preservando el contenido)"
 
+#: ../src/main.c:167
+msgid "Resize a layer preserving its main features"
+msgstr ""
+
 #: ../src/main.c:170
 msgid "Liquid rescale ..."
 msgstr "Redimensionado Líquido ..."
 
-#: ../src/render.c:44
+#: ../src/render.c:42
 msgid "Not enough memory"
 msgstr "No hay suficiente memoria"
 
-#: ../src/render.c:76
+#: ../src/render.c:74
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:85
+#: ../src/render.c:83
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:95
+#: ../src/render.c:93
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 

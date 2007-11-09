@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:11+0100\n"
+"POT-Creation-Date: 2007-11-09 18:21+0100\n"
 "PO-Revision-Date: 2007-10-10 05:15+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -277,25 +277,29 @@ msgstr "Коэффициент силы действия при удалении
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "Избирательное масштабирование (без изменения значимых объектов)"
 
+#: ../src/main.c:167
+msgid "Resize a layer preserving its main features"
+msgstr ""
+
 #: ../src/main.c:170
 msgid "Liquid rescale ..."
 msgstr "Избирательное масштабирование..."
 
-#: ../src/render.c:44
+#: ../src/render.c:42
 msgid "Not enough memory"
 msgstr "Недостаточно памяти"
 
-#: ../src/render.c:76
+#: ../src/render.c:74
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Ошибка: похоже, что выбранный слой больше не может быть использован"
 
-#: ../src/render.c:85
+#: ../src/render.c:83
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Ошибка: похоже, что слой с маской сохраняемых объектов больше не может быть "
 "использован"
 
-#: ../src/render.c:95
+#: ../src/render.c:93
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Ошибка: похоже, что слой с маской удаляемых объектов больше не может быть "

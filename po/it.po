@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:11+0100\n"
+"POT-Creation-Date: 2007-11-09 18:21+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -289,25 +289,29 @@ msgstr "Coefficiente globale per l'intensità dell'eliminazione dei contenuti"
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "LiquidRescaling (ridimensionamento preservando i contenuti) "
 
+#: ../src/main.c:167
+msgid "Resize a layer preserving its main features"
+msgstr "Ridimensiona i livelli preservando i contenuti"
+
 #: ../src/main.c:170
 msgid "Liquid rescale ..."
 msgstr "Ridimensionamento liquido ..."
 
-#: ../src/render.c:44
+#: ../src/render.c:42
 msgid "Not enough memory"
 msgstr "Memoria insufficiente"
 
-#: ../src/render.c:76
+#: ../src/render.c:74
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Errore: sembra che il livello selezionato non sia più valido"
 
-#: ../src/render.c:85
+#: ../src/render.c:83
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Errore: sembra che il livello per la preservazione dei contenuti non sia più "
 "valido"
 
-#: ../src/render.c:95
+#: ../src/render.c:93
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Errore: sembra che il livello per l'eliminazione dei contenuti non sia più "

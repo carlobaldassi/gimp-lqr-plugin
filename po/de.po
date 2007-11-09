@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:11+0100\n"
+"POT-Creation-Date: 2007-11-09 18:21+0100\n"
 "PO-Revision-Date: 2007-10-15 21:14+0200\n"
 "Last-Translator: Christoph Schäfer <christoph-schaefer@gmx.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -292,25 +292,29 @@ msgstr "Globaler Koeffizient der Intensität der zu verwerfenden Elemente"
 msgid "LiquidRescaling (content-aware rescaling)"
 msgstr "Flüssige Neuskalierung (unter Berücksichtigung des Bildinhalts)"
 
+#: ../src/main.c:167
+msgid "Resize a layer preserving its main features"
+msgstr ""
+
 #: ../src/main.c:170
 msgid "Liquid rescale ..."
 msgstr "Flüssige Neuskalierung ..."
 
-#: ../src/render.c:44
+#: ../src/render.c:42
 msgid "Not enough memory"
 msgstr "Nicht genug Arbeitsspeicher vorhanden"
 
-#: ../src/render.c:76
+#: ../src/render.c:74
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Fehler. Die ausgewählte Ebene ist anscheinend nicht mehr gültig"
 
-#: ../src/render.c:85
+#: ../src/render.c:83
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Fehler. Die ausgewählte Ebenezum Erhalten von Ebenen ist anscheinend nicht "
 "mehr gültig"
 
-#: ../src/render.c:95
+#: ../src/render.c:93
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Fehler. Die ausgewählte Ebene zum Verwerfen von Elementen ist anscheinend "

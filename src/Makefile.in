@@ -51,8 +51,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_gimp_lqr_plugin_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
 	render.$(OBJEXT) lqr_gradient.$(OBJEXT) lqr_cursor.$(OBJEXT) \
-	lqr_raster.$(OBJEXT) lqr_carver.$(OBJEXT) \
-	lqr_carver_external.$(OBJEXT) lqr_external.$(OBJEXT)
+	lqr_raster.$(OBJEXT) lqr_external.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -220,10 +219,6 @@ gimp_lqr_plugin_SOURCES = \
 	lqr_cursor.h    \
 	lqr_raster.c    \
 	lqr_raster.h    \
-	lqr_carver.c    \
-	lqr_carver.h    \
-	lqr_carver_external.c    \
-	lqr_carver_external.h    \
 	lqr_external.c  \
 	lqr_external.h
 
@@ -304,8 +299,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_carver.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_carver_external.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_cursor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_external.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_gradient.Po@am__quote@
