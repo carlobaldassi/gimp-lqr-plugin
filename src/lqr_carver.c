@@ -730,7 +730,7 @@ lqr_carver_copy_vpath (LqrCarver * r, LqrCarver * dest)
 {
 #ifdef __LQR_DEBUG__
   assert (r->w_start == dest->w_start);
-  assert (r->hstart == dest->h_start);
+  assert (r->h_start == dest->h_start);
 #endif // __LQR_DEBUG__
   memcpy(dest->vpath_x, r->vpath_x, r->h_start * sizeof(gint));
 }
