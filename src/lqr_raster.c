@@ -89,7 +89,7 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
 
   /* allocate memory for internal structures */
   TRY_N_N (r->rgb = g_try_new (guchar, r->w * r->h * r->bpp));
-  TRY_N_N (r->vs = g_try_new (gint, r->w * r->h));
+  TRY_N_N (r->vs = g_try_new0 (gint, r->w * r->h));
   TRY_N_N (r->en = g_try_new (gdouble, r->w * r->h));
   TRY_N_N (r->bias = g_try_new (gdouble, r->w * r->h));
   TRY_N_N (r->m = g_try_new (gdouble, r->w * r->h));
@@ -656,7 +656,10 @@ lqr_raster_inflate (LqrRaster * r, gint l)
   if (r->raw != NULL)
     {
       assert (x == 0);
-      assert ((y == r->h_start) || (printf("y=%i hst=%i\n", y, r->h_start) && fflush(stdout) && 0) );
+      if (w1 != 2 * r->w_start - 1)
+        {
+          assert ((y == r->h_start) || (printf("y=%i hst=%i w1=%i\n", y, r->h_start, w1) && fflush(stdout) && 0) );
+	}
     }
 #endif // __LQR_DEBUG__
 
@@ -980,7 +983,6 @@ lqr_raster_flatten (LqrRaster * r)
 #endif /* __LQR_VERBOSE__ */
 
   /* free non needed maps first */
-  g_free (r->vs);
   g_free (r->en);
   g_free (r->m);
 
@@ -1002,7 +1004,9 @@ lqr_raster_flatten (LqrRaster * r)
   lqr_cursor_reset (r->c);
   for (y = 0; y < r->h; y++)
     {
-      r->raw[y] = r->_raw + y * r->w;
+      if (r->aux == 0) {
+        r->raw[y] = r->_raw + y * r->w;
+      }
       for (x = 0; x < r->w; x++)
         {
           z0 = y * r->w + x;
@@ -1029,6 +1033,7 @@ lqr_raster_flatten (LqrRaster * r)
     }
 
   /* init the other maps */
+  g_free (r->vs);
   TRY_N_F (r->vs = g_try_new0 (gint, r->w * r->h));
   if (r->aux == 0)
     {
