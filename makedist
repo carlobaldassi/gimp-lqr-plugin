@@ -20,7 +20,7 @@ TGZ_NAME="${PLUGIN_NAME}.tar.gz"
 DEB_NAME="${NAME}_${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}-1_i386.deb"
 
 NEW_TGZ_NAME="${NEW_PLUGIN_NAME}.tar.gz"
-NEW_DEB_NAME="${NEW_PLUGIN_NAME}.ubfsty.i386.deb"
+NEW_DEB_NAME="${NEW_PLUGIN_NAME}.ubgtsy.i386.deb"
 
 [ -f description-pak ] || { echo "error: description-pak not found"; exit 1; }
 
