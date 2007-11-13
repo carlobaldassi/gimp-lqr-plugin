@@ -209,7 +209,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 SUBDIRS = po src help
-EXTRA_DIST = m4/ChangeLog  \
+EXTRA_DIST = \
 	BUGS			\
 	autogen.sh		\
         intltool-extract.in	\
@@ -222,7 +222,6 @@ DISTCLEANFILES = \
 	intltool-merge		\
 	intltool-update
 
-ACLOCAL_AMFLAGS = -I m4
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -414,7 +413,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/m4 $(distdir)/po
+	$(mkdir_p) $(distdir)/po
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

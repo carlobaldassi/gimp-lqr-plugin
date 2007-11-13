@@ -154,6 +154,8 @@ if test -z "$ACLOCAL_FLAGS"; then
     done
 fi
 
+rm -rf autom4te.cache
+
 $ACLOCAL $ACLOCAL_FLAGS
 RC=$?
 if test $RC -ne 0; then

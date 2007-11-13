@@ -7939,10 +7939,13 @@ fi
 done
 
 
-LOCALEDIR='${datadir}/locale'
-DATADIR='${datadir}/gimp-lqr-plugin'
+LOCALEDIR="${datadir}/locale"
+if test "$DATADIRNAME" = "lib"; then
+   LOCALEDIR="$libdir/locale"
+fi
 
 
+DATADIR="${datadir}/gimp-lqr-plugin"
 
 
 

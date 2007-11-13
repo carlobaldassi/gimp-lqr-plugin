@@ -2,7 +2,7 @@
 
 SUBDIRS = po src help
 
-EXTRA_DIST = m4/ChangeLog  \
+EXTRA_DIST = \
 	BUGS			\
 	autogen.sh		\
         intltool-extract.in	\
@@ -14,5 +14,3 @@ DISTCLEANFILES = \
 	intltool-extract	\
 	intltool-merge		\
 	intltool-update
-
-ACLOCAL_AMFLAGS = -I m4
