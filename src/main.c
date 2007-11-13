@@ -143,7 +143,7 @@ MAIN ()
     {GIMP_PDB_INT32, "grad_func", "Gradient function to use"},
   };
 
-  gimp_plugin_domain_register (PLUGIN_NAME, LOCALEDIR);
+  gimp_plugin_domain_register (GETTEXT_PACKAGE, LOCALEDIR);
 
   help_path = g_build_filename (DATADIR, "help", NULL);
   help_uri = g_filename_to_uri (help_path, NULL, NULL);
@@ -151,14 +151,15 @@ MAIN ()
 
   gimp_plugin_help_register ("http://developer.gimp.org/lqr-plug-in/help",
                              help_uri);
-  /* what about INDEXED* images ? */
-  gimp_install_procedure (PROCEDURE_NAME,
-                          _("LiquidRescaling (content-aware rescaling)"),
-                          "Set width and height and you're done",
+
+  gimp_install_procedure (PLUGIN_NAME,
+                          "LiquidRescaling (content-aware rescaling)",
+                          "Resize a layer preserving its main features",
                           "Carlo Baldassi <carlobaldassi@yahoo.it>",
                           "Carlo Baldassi <carlobaldassi@yahoo.it>", "2007",
                           N_("Liquid rescale ..."), "RGB*, GRAY*",
                           GIMP_PLUGIN, G_N_ELEMENTS (args), 0, args, NULL);
+			  /* what about INDEXED* images ? */
 
   gimp_plugin_menu_register (PROCEDURE_NAME, "<Image>/Layer/");
 }
