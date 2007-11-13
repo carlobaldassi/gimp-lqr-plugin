@@ -91,7 +91,7 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   TRY_N_N (r->rgb = g_try_new (guchar, r->w * r->h * r->bpp));
   TRY_N_N (r->vs = g_try_new0 (gint, r->w * r->h));
   TRY_N_N (r->en = g_try_new (gdouble, r->w * r->h));
-  TRY_N_N (r->bias = g_try_new (gdouble, r->w * r->h));
+  TRY_N_N (r->bias = g_try_new0 (gdouble, r->w * r->h));
   TRY_N_N (r->m = g_try_new (gdouble, r->w * r->h));
 
   TRY_N_N (r->_raw = g_try_new (gint, r->h_start * r->w_start));
