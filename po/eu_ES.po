@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:21+0100\n"
+"POT-Creation-Date: 2007-11-13 23:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -262,15 +262,7 @@ msgstr "Ezaugarrien babeskuntza gaitu"
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Koefiziente orokorra ezaugarrien "
 
-#: ../src/main.c:166
-msgid "LiquidRescaling (content-aware rescaling)"
-msgstr "Berreskalaketa likidoa (edukinari erreparatzen)"
-
-#: ../src/main.c:167
-msgid "Resize a layer preserving its main features"
-msgstr ""
-
-#: ../src/main.c:170
+#: ../src/main.c:163
 msgid "Liquid rescale ..."
 msgstr "Berreskalaketa likidoa..."
 
@@ -290,11 +282,11 @@ msgstr ""
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
-#: ../src/lqr_raster.c:1215
+#: ../src/lqr_raster.c:1222
 msgid "Resizing width..."
 msgstr "Zabalera aldatzen..."
 
-#: ../src/lqr_raster.c:1253
+#: ../src/lqr_raster.c:1260
 msgid "Resizing height..."
 msgstr "Altuera aldatzen..."
 
@@ -316,6 +308,9 @@ msgstr ""
 #, c-format
 msgid "%s seam map"
 msgstr ""
+
+#~ msgid "LiquidRescaling (content-aware rescaling)"
+#~ msgstr "Berreskalaketa likidoa (edukinari erreparatzen)"
 
 #~ msgid "Not enough memory, aborting"
 #~ msgstr "Memoria nahikorik ez, gelditzen..."

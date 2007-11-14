@@ -25,6 +25,9 @@ NEW_DEB_NAME="${NEW_PLUGIN_NAME}.ubgtsy.i386.deb"
 [ -f description-pak ] || { echo "error: description-pak not found"; exit 1; }
 
 sudo rm -fr "$PLUGIN_NAME" || exit 1
+
+intltools-update-all || exit 1
+
 make dist || exit 1
 
 mv "${TGZ_NAME}" "${NEW_TGZ_NAME}" || exit 1

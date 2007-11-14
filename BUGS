@@ -1,8 +1,7 @@
 Known bugs:
 -----------
 * The cancel progress signal scrambles up the internal state
-  during changes apply (needs a new version of pdb, either
-  supporting trapping or uncancelable progress)
+  during changes apply
 * The "New" button is not working properly when dealing with
   floating selections
 * The seam map is not properly translated

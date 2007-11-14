@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:21+0100\n"
+"POT-Creation-Date: 2007-11-13 23:50+0100\n"
 "PO-Revision-Date: 2007-10-14 18:57+0100\n"
 "Last-Translator: Diego Ruiz <diego.ruiz@opentrends.net>\n"
 "Language-Team:  <es_ES@li.org>\n"
@@ -281,15 +281,7 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficiente total de descarte de características"
 
-#: ../src/main.c:166
-msgid "LiquidRescaling (content-aware rescaling)"
-msgstr "LiquidRescaling (reescalado independiente del contenido)"
-
-#: ../src/main.c:167
-msgid "Resize a layer preserving its main features"
-msgstr ""
-
-#: ../src/main.c:170
+#: ../src/main.c:163
 msgid "Liquid rescale ..."
 msgstr "Liquid rescale ..."
 
@@ -311,11 +303,11 @@ msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Error: parece que la capa de descarte de características ya no es válida"
 
-#: ../src/lqr_raster.c:1215
+#: ../src/lqr_raster.c:1222
 msgid "Resizing width..."
 msgstr "Redimensionando anchura..."
 
-#: ../src/lqr_raster.c:1253
+#: ../src/lqr_raster.c:1260
 msgid "Resizing height..."
 msgstr "Redimensionando altura..."
 
@@ -337,6 +329,9 @@ msgstr "Dibujando mapa de las líneas de acción..."
 #, c-format
 msgid "%s seam map"
 msgstr "%s líneas de acc."
+
+#~ msgid "LiquidRescaling (content-aware rescaling)"
+#~ msgstr "LiquidRescaling (reescalado independiente del contenido)"
 
 #~ msgid "Not enough memory, aborting"
 #~ msgstr "Sin memoria suficiente, abortando"

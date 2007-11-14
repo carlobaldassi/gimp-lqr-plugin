@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:21+0100\n"
+"POT-Creation-Date: 2007-11-13 23:50+0100\n"
 "PO-Revision-Date: 2007-10-10 05:15+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -273,15 +273,7 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Коэффициент силы действия при удалении значимых объектов"
 
-#: ../src/main.c:166
-msgid "LiquidRescaling (content-aware rescaling)"
-msgstr "Избирательное масштабирование (без изменения значимых объектов)"
-
-#: ../src/main.c:167
-msgid "Resize a layer preserving its main features"
-msgstr ""
-
-#: ../src/main.c:170
+#: ../src/main.c:163
 msgid "Liquid rescale ..."
 msgstr "Избирательное масштабирование..."
 
@@ -305,11 +297,11 @@ msgstr ""
 "Ошибка: похоже, что слой с маской удаляемых объектов больше не может быть "
 "использован"
 
-#: ../src/lqr_raster.c:1215
+#: ../src/lqr_raster.c:1222
 msgid "Resizing width..."
 msgstr "Изменяется ширина..."
 
-#: ../src/lqr_raster.c:1253
+#: ../src/lqr_raster.c:1260
 msgid "Resizing height..."
 msgstr "Изменяется высота..."
 
@@ -331,6 +323,9 @@ msgstr "Рисуется карта швов..."
 #, c-format
 msgid "%s seam map"
 msgstr "%s - карта швов"
+
+#~ msgid "LiquidRescaling (content-aware rescaling)"
+#~ msgstr "Избирательное масштабирование (без изменения значимых объектов)"
 
 #~ msgid "Not enough memory, aborting"
 #~ msgstr "Недостаточно памяти, выполнение операции прерывается"

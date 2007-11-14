@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:21+0100\n"
+"POT-Creation-Date: 2007-11-13 23:50+0100\n"
 "PO-Revision-Date: 2007-10-15 21:14+0200\n"
 "Last-Translator: Christoph Schäfer <christoph-schaefer@gmx.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -288,15 +288,7 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Globaler Koeffizient der Intensität der zu verwerfenden Elemente"
 
-#: ../src/main.c:166
-msgid "LiquidRescaling (content-aware rescaling)"
-msgstr "Flüssige Neuskalierung (unter Berücksichtigung des Bildinhalts)"
-
-#: ../src/main.c:167
-msgid "Resize a layer preserving its main features"
-msgstr ""
-
-#: ../src/main.c:170
+#: ../src/main.c:163
 msgid "Liquid rescale ..."
 msgstr "Flüssige Neuskalierung ..."
 
@@ -320,11 +312,11 @@ msgstr ""
 "Fehler. Die ausgewählte Ebene zum Verwerfen von Elementen ist anscheinend "
 "nicht mehr gültig"
 
-#: ../src/lqr_raster.c:1215
+#: ../src/lqr_raster.c:1222
 msgid "Resizing width..."
 msgstr "Ändere die Breite ..."
 
-#: ../src/lqr_raster.c:1253
+#: ../src/lqr_raster.c:1260
 msgid "Resizing height..."
 msgstr "Ändere die Höhe ..."
 
@@ -346,6 +338,9 @@ msgstr "Zeichne die Nähtekarte ..."
 #, c-format
 msgid "%s seam map"
 msgstr ""
+
+#~ msgid "LiquidRescaling (content-aware rescaling)"
+#~ msgstr "Flüssige Neuskalierung (unter Berücksichtigung des Bildinhalts)"
 
 #~ msgid "Not enough memory, aborting"
 #~ msgstr "Nicht genug Arbeitsspeicher vorhanden. Abbruch"

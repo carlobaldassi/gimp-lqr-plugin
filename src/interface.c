@@ -211,7 +211,7 @@ dialog (gint32 image_ID,
 
   dlg = gimp_dialog_new (_("GIMP LiquidRescale Plug-In"), PLUGIN_NAME,
                          NULL, 0,
-                         gimp_standard_help_func, "lqr-plug-in",
+                         gimp_standard_help_func, "plug-in-lqr",
                          GTK_STOCK_REFRESH, RESPONSE_REFRESH,
                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                          GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
@@ -1353,6 +1353,8 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
     gimp_layer_combo_box_new (dialog_layer_constraint_func,
                               (gpointer *) drawable);
 
+  g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
+
   old_layer_ID = state->pres_layer_ID;
 
   gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (combo),
@@ -1360,9 +1362,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                               G_CALLBACK (callback_pres_combo_get_active),
                               (gpointer) (&preview_data));
 
-  /* if (gimp_drawable_is_valid(old_layer_ID)) { */
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (combo), old_layer_ID);
-  /* } */
 
   label = gimp_table_attach_aligned (GTK_TABLE (table), 0, row++,
                                      _("Layer:"), 0.0, 0.5, combo, 1, FALSE);
@@ -1539,6 +1539,8 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   combo =
     gimp_layer_combo_box_new (dialog_layer_constraint_func,
                               (gpointer *) drawable);
+
+  g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
 
   old_layer_ID = state->disc_layer_ID;
 

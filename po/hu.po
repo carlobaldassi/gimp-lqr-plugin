@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 18:21+0100\n"
+"POT-Creation-Date: 2007-11-13 23:50+0100\n"
 "PO-Revision-Date: 2007-10-03 11:07+0200\n"
 "Last-Translator: jeghegy <(null)>\n"
 "Language-Team: English <en@li.org>\n"
@@ -259,15 +259,7 @@ msgstr ""
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Alakelvetés intenzitásának együtthatója"
 
-#: ../src/main.c:166
-msgid "LiquidRescaling (content-aware rescaling)"
-msgstr "LiquidRescaling (tartalom-érzékeny átméretezés)"
-
-#: ../src/main.c:167
-msgid "Resize a layer preserving its main features"
-msgstr ""
-
-#: ../src/main.c:170
+#: ../src/main.c:163
 msgid "Liquid rescale ..."
 msgstr "Liquid rescale..."
 
@@ -287,11 +279,11 @@ msgstr ""
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
-#: ../src/lqr_raster.c:1215
+#: ../src/lqr_raster.c:1222
 msgid "Resizing width..."
 msgstr "Szélesség átméretezése..."
 
-#: ../src/lqr_raster.c:1253
+#: ../src/lqr_raster.c:1260
 msgid "Resizing height..."
 msgstr "Magasság átméretezése..."
 
@@ -313,6 +305,9 @@ msgstr ""
 #, c-format
 msgid "%s seam map"
 msgstr ""
+
+#~ msgid "LiquidRescaling (content-aware rescaling)"
+#~ msgstr "LiquidRescaling (tartalom-érzékeny átméretezés)"
 
 #~ msgid "Not enough memory, aborting"
 #~ msgstr "Nincs elég memória, a folyamat leáll"

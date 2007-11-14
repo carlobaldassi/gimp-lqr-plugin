@@ -1,213 +1,212 @@
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-  <title>Pagina di aiuto per gimp-lqr-plugin</title>
-</head>
+  <head>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+    <title>Pagina di aiuto per gimp-lqr-plugin</title>
+  </head>
 
-<body text="#000000" bgcolor="#FFFFFF" link="#0000FF"
-      vlink="#FF0000" alink="#000088">
+  <body text="#000000" bgcolor="#FFFFFF" link="#0000FF"
+    vlink="#FF0000" alink="#000088">
 
-  <table width="100%" cellspacing="1" cellpadding="1">
-    <tr>
-      <td width="100%" align="center">
-	<img src="../images/wilber.png">
-      </td>
-    </tr>
-    <tr bgcolor="black">
-      <td width="100%" align="center">
-        <font size="+2" color="white">Pagina di aiuto per il plugin Liquid rescale</font>
-      </td>
-    </tr>  
-    <tr>
-      <td width="100%" align="left">
-	<p>
-		Il plugin Liquid Rescale è un'implementazione dell'algoritmo
-		"content-aware resizing by seam carving"
-		ideato da Shai Avidan e Ariel Shamir.
-	</p>
-        <p>
-		Il suo scopo è di ridimensionzre non uniformemente le immagini pur mantenendo le
-		caratteristiche più salienti dell'immagine, evitando possibilmente di distorcerle.
-		Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale".
-	</p>
-        <p>
-		Funziona sia rimpicciolentdo che ingrandendo, ma in quest'ultimo caso è preferibile
-		procedere in più passi. È possibile specificare manualmente quali zone dell'immagine
-		devono essere preservate e quali ignorate (o rimosse).
-	</p>
-	<p>
-		Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo.
-		Se una selezione è presente, è salvata come canale.
-		Se il livello ha una maschera per la trasparenza, viene mostrata un'opzione
-		per stabilire se applicarla o rimuoverla prima di procedere.
-	</p>
-	
-	<h2>Descrizione dell'interfaccia utente</h2>
-	<p>
-		<center><img title="Esempio finestra di dialogo" alt="Esempio finestra di dialogo" src="../images/dialog1_it.png"></center>
-	</p>
-	
-	<h3>Selezionare le nuove dimensioni</h3>
-	</p>
-	<p>
-		In questa sezione è possibile impostare le dimensioni finali dell'immagine.
-		È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui
-		si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin
-		agisce sempre prima nel senso della larghezza, e poi in altezza
-		(per nessun particolare motivo).
-		L'ordine inverso si può ottenere semplicemento usando il plugin due volte,
-		la prima modificando l'altezza e lasciando la larghezza invariata, la seconda
-		il viceversa.
-	</p>
-	
-	<h3>Maschere per i contenuti</h3>
-        <h4>Guida rapida</h4>
-	<p>
-		Il sistema più semplice per selezionare manualmente le zone dell'immagine che si
-		vogliono proteggere/ignorare è il seguente:
-		<ul>
-			<li>
-				Selezionate il livello (non la selezione fluttuante) che volete riscalare e invocate il plugin
-			</li><li>
-				Cliccate il pulsante <i>"Nuovo"</i> nella sezione <b>"Maschera per i contenuti da preservare"</b>
-				(questo creerà un nuovo livello trasparente, con opacità 50%, e imposterà un colore
-				appropriato)
-			</li><li>
-				Dipingete con il pennello (o altro) le aree che volete preservare
-			</li><li>
-				Cliccate sul pulsante <i>"Aggiorna"</i> per vedere le modifiche
-			</li><li>
-				Ripetete il tutto per i contenuti da eliminare
-			</li>
-		</ul>
-	</p>
-	<p>
-		<b>NOTA:</b> eliminare un contenuto significa che la zona dell'immagine interessata
-		verà eliminata se si restringe l'immagine, ma verrà gonfiata se si allarga l'immagine,
-		dal momento che sarà trattata come se fosse sfondo di nessuna importanza, da poter
-		comprimere e espandere a piacere.
-	</p>
+    <table width="100%" cellspacing="1" cellpadding="1">
+      <tr>
+	<td width="100%" align="center">
+	  <img src="../images/wilber.png">
+	</td>
+      </tr>
+      <tr bgcolor="black">
+	<td width="100%" align="center">
+	  <font size="+2" color="white">Pagina di aiuto per il plugin Liquid rescale</font>
+	</td>
+      </tr>
+      <tr>
+	<td width="100%" align="left">
+	  <p>
+	  Il plugin Liquid Rescale è un'implementazione dell'algoritmo
+	  "content-aware resizing by seam carving"
+	  ideato da Shai Avidan e Ariel Shamir.
+	  </p>
+	  <p>
+	  Il suo scopo è di ridimensionzre non uniformemente le immagini pur mantenendo le
+	  caratteristiche più salienti dell'immagine, evitando possibilmente di distorcerle.
+	  Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale".
+	  </p>
+	  <p>
+	  Funziona sia rimpicciolentdo che ingrandendo, ma in quest'ultimo caso è preferibile
+	  procedere in più passi. È possibile specificare manualmente quali zone dell'immagine
+	  devono essere preservate e quali ignorate (o rimosse).
+	  </p>
+	  <p>
+	  Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo.
+	  Se una selezione è presente, è salvata come canale.
+	  Se il livello ha una maschera per la trasparenza, viene mostrata un'opzione
+	  per stabilire se applicarla o rimuoverla prima di procedere.
+	  </p>
 
-	<h4>Descrizione completa</h4>
-	<p>
-		<div>
-			Nella sezione <b>Selezione del contenuto da preservare</b>
-			è possibile specificare se ci sono regioni dell'immagine che dovrebbero
-			essere preservate dalle modifiche, attivando l'opzione
-			<i>Attiva la preservazione dei contenuti</i> e scegliendo
-			un livello tra quelli che appartengono all'imaggine attuale (e sono diversi
-			dal livello attivo) nel menu <i>Livelli disponibili</i>.
-			Il pulsante <i>"Nuovo"</i> crea un nuovo livello trasparente
-			con opacit`a 50% e un nome appropriato, e lo imposta
-			come maschera da utilizzare per la preservazione dei contenuti
-			(nota che se il plugin viene lanciato su una selezione fluttuante
-			questa procedura non è adatta, dato che non si potrà lavorare
-			sul nuovo livello). Inoltre, il colore di primo piano viene impostato
-			a verde; il colore precedente viene ripristinato alla chiusura
-			della finestra di dialogo.
-		</div>
-		<div>
-			L'intensità dell'effetto su ogni pixel si ricava dalla media dei valori
-			del pixel in ogni canale del colore, moltiplicato per il canale alpha.
-			Quindi per un livello RGB con un canale alpha, il valore massimo si otterrà
-			con i pixel binachi, mentre quelli neri e quelli trasparenti
-			sono ignorati. In generale, è consigliabile lavorare con un solo colore per
-			livello, e modulare l'intensità attraverso la sola trasparenza nel caso
-			in cui si voglia ottenere una regolazione più fine, per esempio
-			utilizzando la maschera veloce.
-		</div>
-		<div>
-			Le dimensioni e la posizione dei layer selezionati può essere arbitraria,
-			il plugin utilizza solo le porzioni che si sovrappongono al livello attivo.
-			La scala <i>"Intensità"</i> può essere utilizzata come parametro globale
-			per modulare la preservazione dei contenuti.
-			Nota che il valore di intensità tiene conto automaticamente delle dimensioni
-			dell'immagine, ma non di quelle delle aree mascherate: selezioni più sottili
-			(nel verso del ridimensionamento) hanno bisogno di valori di intensità
-			più alti, e viceversa.
-		</div>
-	</p>
-	<p>
-		La sezione <b>Selezione dei contenuti da eliminare</b> è identica alla precedente,
-		ma l'effetto è invertito. Inolte, il colore impostato dal pulssante <i>"Nuovo"</i>
-		è il rosso anziché il verde.
-	</p>
+	  <h2>Descrizione dell'interfaccia utente</h2>
+	  <p>
+	  <center><img title="Esempio finestra di dialogo" alt="Esempio finestra di dialogo" src="../images/dialog1_it.png"></center>
+	  </p>
 
-	<h3>Output</h3>
-	<p>
-		<center><img title="Output" alt="Output" src="../images/dialog2_it.png"></center>
-	</p>
-	<p>
-		Questa pagina contiene alcune opzioni riguardo all'output del plugin.
-	</p>
-	<p>
-		<b>Scrivi su un nuovo livello.</b>
-		Specifica se il risultato del ridimensionamento deve essere scritto su un nuovo
-		livello. Per default è disattivata.
-	</p>
-	<p>
-		<b>Ridimensiona la tela.</b>
-		Specifica se la tela deve essere ridimensionata in modo da adattarsi alle nuove
-		dimensioni del livello attivo.
-		Se quest'opzione è attivata (è il default), il livello attivo verrà anche
-		riposizionato in modo da essere completamente visibile.
-	</p>
-	<p>
-		<b>Ridimensiona i livelli per la preservazione/eliminazione.</b>
-		Specifica se i livelli che sono stati impostati per la selezione manuale dei
-		contenuti verranno ridimensionati assieme al livello attivo.
-		Se quest'opzione è attivata (è il default), le parti dei livelli in questione
-		che escono dal livello attivo verranno tagliate, dopodichè subiranno lo stesso
-		processo di eliminazione/inserimento di linee del layer attivo.
-	</p>
-	<p>
-		<b>Mostra le linee d'azione.</b>
-		Specifica se creare un nuovo livello che mostra la mappa delle linee d'azione
-		(che sono le parti dell'immagine che vengono eliminate, se si restringe,
-		o gonfiate, se si allarga).
-		La gamma dei colori delle linee può essere impostata manualmente tramite i due
-		pulsanti sulla destra.
-		Le linee sono calcolate sull'immagine originale in base alla necessità
-		(per es. ne saranno calcolate 100 se si sta restringendo o allargando
-		il livello di 100 pixel); le aree rimanenti restano trasparenti.
-		Per interpretare il risultato, usate questa opzione assieme a
-		<i>"Scrivi su un nuovo livello"</i>, e sovrapponete il livello con le linee
-		d'azione a quello originale.
-		Se riscalate in due direzioni contemporaneamente, otterete due mappe,
-		ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi
-		non è molto utile.
-	</p>
+	  <h3>Selezionare le nuove dimensioni</h3>
+	  <p>
+	  In questa sezione è possibile impostare le dimensioni finali dell'immagine.
+	  È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui
+	  si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin
+	  agisce sempre prima nel senso della larghezza, e poi in altezza
+	  (per nessun particolare motivo).
+	  L'ordine inverso si può ottenere semplicemento usando il plugin due volte,
+	  la prima modificando l'altezza e lasciando la larghezza invariata, la seconda
+	  il viceversa.
+	  </p>
 
-	<h3>Avanzato</h3>
-	<p>
-		<center><img title="Avanzato" alt="Avanzato" src="../images/dialog3_it.png"></center>
-	</p>
-	<p>
-	 	Questa pagina contiene alcune opzioni che permettono un controllo avanzato
-		dell'algoritmo di ridimensionamento.
-	</p>
-	<p>
-		<b>Rigidità delle linee.</b>
-		Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte.
-		Può risultare utile per ridurre le distorsioni in certi casi.
-	</p>
-	<p>
-		<b>Funzione gradiente.</b>
-		È possibile scegliere quale funzione deve essere utilizzata per calcolare
-		la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti
-		orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro
-		primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina
-		quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e
-		quali sono irrileventi e possono essere scartati.
-		Usando la funzione <i>Zero</i>, unitamente alla preservazione manuale dei
-		contenuti, è possibile soppiantare completamento il riconoscimento
-		automatico dei contenuti; l'utente può così generare la propria mappa dell'
-		energia (per es. con un altro plugin).
-	</p>
-      </td>
-    </tr>
-  </table>
+	  <h3>Maschere per i contenuti</h3>
+	  <h4>Guida rapida</h4>
+	  <p>
+	  Il sistema più semplice per selezionare manualmente le zone dell'immagine che si
+	  vogliono proteggere/ignorare è il seguente:
+	  <ul>
+	    <li>
+	    Selezionate il livello (non la selezione fluttuante) che volete riscalare e invocate il plugin
+	    </li><li>
+	    Cliccate il pulsante <i>"Nuovo"</i> nella sezione <b>"Maschera per i contenuti da preservare"</b>
+	    (questo creerà un nuovo livello trasparente, con opacità 50%, e imposterà un colore
+	    appropriato)
+	    </li><li>
+	    Dipingete con il pennello (o altro) le aree che volete preservare
+	    </li><li>
+	    Cliccate sul pulsante <i>"Aggiorna"</i> per vedere le modifiche
+	    </li><li>
+	    Ripetete il tutto per i contenuti da eliminare
+	    </li>
+	  </ul>
+	  </p>
+	  <p>
+	  <b>NOTA:</b> eliminare un contenuto significa che la zona dell'immagine interessata
+	  verà eliminata se si restringe l'immagine, ma verrà gonfiata se si allarga l'immagine,
+	  dal momento che sarà trattata come se fosse sfondo di nessuna importanza, da poter
+	  comprimere e espandere a piacere.
+	  </p>
 
-</body>
+	  <h4>Descrizione completa</h4>
+	  <p>
+	  <div>
+	    Nella sezione <b>Selezione del contenuto da preservare</b>
+	    è possibile specificare se ci sono regioni dell'immagine che dovrebbero
+	    essere preservate dalle modifiche, attivando l'opzione
+	    <i>Attiva la preservazione dei contenuti</i> e scegliendo
+	    un livello tra quelli che appartengono all'imaggine attuale (e sono diversi
+	    dal livello attivo) nel menu <i>Livelli disponibili</i>.
+	    Il pulsante <i>"Nuovo"</i> crea un nuovo livello trasparente
+	    con opacit`a 50% e un nome appropriato, e lo imposta
+	    come maschera da utilizzare per la preservazione dei contenuti
+	    (nota che se il plugin viene lanciato su una selezione fluttuante
+	    questa procedura non è adatta, dato che non si potrà lavorare
+	    sul nuovo livello). Inoltre, il colore di primo piano viene impostato
+	    a verde; il colore precedente viene ripristinato alla chiusura
+	    della finestra di dialogo.
+	  </div>
+	  <div>
+	    L'intensità dell'effetto su ogni pixel si ricava dalla media dei valori
+	    del pixel in ogni canale del colore, moltiplicato per il canale alpha.
+	    Quindi per un livello RGB con un canale alpha, il valore massimo si otterrà
+	    con i pixel binachi, mentre quelli neri e quelli trasparenti
+	    sono ignorati. In generale, è consigliabile lavorare con un solo colore per
+	    livello, e modulare l'intensità attraverso la sola trasparenza nel caso
+	    in cui si voglia ottenere una regolazione più fine, per esempio
+	    utilizzando la maschera veloce.
+	  </div>
+	  <div>
+	    Le dimensioni e la posizione dei layer selezionati può essere arbitraria,
+	    il plugin utilizza solo le porzioni che si sovrappongono al livello attivo.
+	    La scala <i>"Intensità"</i> può essere utilizzata come parametro globale
+	    per modulare la preservazione dei contenuti.
+	    Nota che il valore di intensità tiene conto automaticamente delle dimensioni
+	    dell'immagine, ma non di quelle delle aree mascherate: selezioni più sottili
+	    (nel verso del ridimensionamento) hanno bisogno di valori di intensità
+	    più alti, e viceversa.
+	  </div>
+	  </p>
+	  <p>
+	  La sezione <b>Selezione dei contenuti da eliminare</b> è identica alla precedente,
+	  ma l'effetto è invertito. Inolte, il colore impostato dal pulssante <i>"Nuovo"</i>
+	  è il rosso anziché il verde.
+	  </p>
+
+	  <h3>Output</h3>
+	  <p>
+	  <center><img title="Output" alt="Output" src="../images/dialog2_it.png"></center>
+	  </p>
+	  <p>
+	  Questa pagina contiene alcune opzioni riguardo all'output del plugin.
+	  </p>
+	  <p>
+	  <b>Scrivi su un nuovo livello.</b>
+	  Specifica se il risultato del ridimensionamento deve essere scritto su un nuovo
+	  livello. Per default è disattivata.
+	  </p>
+	  <p>
+	  <b>Ridimensiona la tela.</b>
+	  Specifica se la tela deve essere ridimensionata in modo da adattarsi alle nuove
+	  dimensioni del livello attivo.
+	  Se quest'opzione è attivata (è il default), il livello attivo verrà anche
+	  riposizionato in modo da essere completamente visibile.
+	  </p>
+	  <p>
+	  <b>Ridimensiona i livelli per la preservazione/eliminazione.</b>
+	  Specifica se i livelli che sono stati impostati per la selezione manuale dei
+	  contenuti verranno ridimensionati assieme al livello attivo.
+	  Se quest'opzione è attivata (è il default), le parti dei livelli in questione
+	  che escono dal livello attivo verranno tagliate, dopodichè subiranno lo stesso
+	  processo di eliminazione/inserimento di linee del layer attivo.
+	  </p>
+	  <p>
+	  <b>Mostra le linee d'azione.</b>
+	  Specifica se creare un nuovo livello che mostra la mappa delle linee d'azione
+	  (che sono le parti dell'immagine che vengono eliminate, se si restringe,
+	  o gonfiate, se si allarga).
+	  La gamma dei colori delle linee può essere impostata manualmente tramite i due
+	  pulsanti sulla destra.
+	  Le linee sono calcolate sull'immagine originale in base alla necessità
+	  (per es. ne saranno calcolate 100 se si sta restringendo o allargando
+	  il livello di 100 pixel); le aree rimanenti restano trasparenti.
+	  Per interpretare il risultato, usate questa opzione assieme a
+	  <i>"Scrivi su un nuovo livello"</i>, e sovrapponete il livello con le linee
+	  d'azione a quello originale.
+	  Se riscalate in due direzioni contemporaneamente, otterete due mappe,
+	  ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi
+	  non è molto utile.
+	  </p>
+
+	  <h3>Avanzato</h3>
+	  <p>
+	  <center><img title="Avanzato" alt="Avanzato" src="../images/dialog3_it.png"></center>
+	  </p>
+	  <p>
+	  Questa pagina contiene alcune opzioni che permettono un controllo avanzato
+	  dell'algoritmo di ridimensionamento.
+	  </p>
+	  <p>
+	  <b>Rigidità delle linee.</b>
+	  Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte.
+	  Può risultare utile per ridurre le distorsioni in certi casi.
+	  </p>
+	  <p>
+	  <b>Funzione gradiente.</b>
+	  È possibile scegliere quale funzione deve essere utilizzata per calcolare
+	  la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti
+	  orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro
+	  primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina
+	  quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e
+	  quali sono irrileventi e possono essere scartati.
+	  Usando la funzione <i>Zero</i>, unitamente alla preservazione manuale dei
+	  contenuti, è possibile soppiantare completamento il riconoscimento
+	  automatico dei contenuti; l'utente può così generare la propria mappa dell'
+	  energia (per es. con un altro plugin).
+	  </p>
+	</td>
+      </tr>
+    </table>
+
+  </body>
 </html>

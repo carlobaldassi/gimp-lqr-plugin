@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
-<gimp-help xmlns:template="http://developer.gimp.org/lqr-plug-in/help">
-  <help-item template:id="lqr-plug-in" ref="index.html" />
+<gimp-help xmlns:template="plug-in-lqr-help">
+  <help-item template:id="plug-in-lqr" ref="index.html" />
 </gimp-help>
