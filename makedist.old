@@ -8,20 +8,49 @@ MAJOR_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_major_version\], 
 MINOR_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_minor_version\], \[.*\])" | sed "s/m4_define(\[plugin_minor_version\], \[\(.*\)\])/\1/")
 MICRO_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_micro_version\], \[.*\])" | sed "s/m4_define(\[plugin_micro_version\], \[\(.*\)\])/\1/")
 
-[ -f "release_subv_src" ] || { echo "error: release_subv_src not found"; exit 1; }
+[ -f "release_subv" ] || { echo "error: release_subv not found"; exit 1; }
 
-REL_SUB_VER="$(cat release_subv_src)";
+REL_SUB_VER="$(cat release_subv)";
 echo "$REL_SUB_VER" | grep -q "[[:digit:]]\+" || { echo "error: invalid release subversion: $REL_SUB_VER"; exit 1;}
-REL_SUB_VER=$[ $REL_SUB_VER + 1 ] || exit 1;
+let REL_SUB_VER++ || exit 1;
 
 PLUGIN_NAME="${NAME}-${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}"
 NEW_PLUGIN_NAME="${PLUGIN_NAME}-${REL_SUB_VER}"
 TGZ_NAME="${PLUGIN_NAME}.tar.gz"
+DEB_NAME="${NAME}_${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}-1_i386.deb"
 
 NEW_TGZ_NAME="${NEW_PLUGIN_NAME}.tar.gz"
+NEW_DEB_NAME="${NEW_PLUGIN_NAME}.ubgtsy.i386.deb"
 
+[ -f description-pak ] || { echo "error: description-pak not found"; exit 1; }
+
+sudo rm -fr "$PLUGIN_NAME" || exit 1
 make dist || exit 1
 
 mv "${TGZ_NAME}" "${NEW_TGZ_NAME}" || exit 1
+
+sudo make distdir || exit 1
+
+cp description-pak "$PLUGIN_NAME" || exit 1
+
+cd "$PLUGIN_NAME"
+
+configure || exit 1
+make || exit 1
+
+sudo checkinstall \
+	--pkggroup="universe/graphics" \
+	--pkgaltsource="http://liquidrescale.wikidot.com" \
+	--maintainer="Carlo Baldassi \<carlobaldassi@yahoo.it\>" \
+	--requires="gimp \(\>= 2.2\)" \
+	--install=no \
+	-y \
+	$@ \
+	|| exit 1
+
+cp "$DEB_NAME" ..
+cd ..
+sudo rm -fr "$PLUGIN_NAME"
+mv "$DEB_NAME" "$NEW_DEB_NAME"
 
 echo $REL_SUB_VER > release_subv;

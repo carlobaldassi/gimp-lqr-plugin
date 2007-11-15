@@ -1,0 +1,167 @@
+#!/bin/bash
+
+function err_mess ()
+{
+	echo "$(basename $0): error: $1" > /dev/stderr;
+}
+
+[ -f "Makefile" ] || { err_mess "makefile not found"; exit 1; }
+[ -f "configure.in" ] || { err_mess "configure.in not found"; exit 1; }
+
+DISTRO="gutsy"
+
+NAME=$(head -n 50 configure.in | grep "m4_define(\[plugin_name\], \[.*\])" | sed "s/m4_define(\[plugin_name\], \[\(.*\)\])/\1/")
+MAJOR_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_major_version\], \[.*\])" | sed "s/m4_define(\[plugin_major_version\], \[\(.*\)\])/\1/")
+MINOR_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_minor_version\], \[.*\])" | sed "s/m4_define(\[plugin_minor_version\], \[\(.*\)\])/\1/")
+MICRO_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_micro_version\], \[.*\])" | sed "s/m4_define(\[plugin_micro_version\], \[\(.*\)\])/\1/")
+
+VER="${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}"
+
+[ -f "release_subv" ] || { err_mess "release_subv not found"; exit 1; }
+
+REL_SUB_VER="$(cat release_subv)";
+echo "$REL_SUB_VER" | grep -q "[[:digit:]]\+" || { err_mess "invalid release subversion: $REL_SUB_VER"; exit 1;}
+
+NAME_HYPHEN="${NAME}-${VER}"
+NAME_UNDERSC="${NAME}_${VER}"
+TGZ_NAME="${NAME_HYPHEN}.tar.gz"
+ORIG_NAME="${NAME_UNDERSC}.orig.tar.gz"
+
+function ubunames ()
+{
+	DEB_NAME="${NAME_UNDERSC}-0ubuntu$1"
+	DSC_NAME="${DEB_NAME}.dsc"
+	DIFF_NAME="${DEB_NAME}.diff.gz"
+	PKG_NAME="${DEB_NAME}_i386.deb"
+	CHANGES_NAME="${DEB_NAME}_i386.changes"
+}
+
+RESULTS_DIR="/var/cache/pbuilder/result"
+BUILD_DIR="${HOME}/deb_builds/${NAME_HYPHEN}"
+DEB_DIR_TEMPL="debian.template"
+TMP_DIR="${NAME_HYPHEN}-tmp-$$"
+TMP_FILE_1="changelog1.$$.tmp"
+TMP_FILE_2="changelog2.$$.tmp"
+
+if [ $REL_SUB_VER -gt 0 ]
+then
+	[ -d "${BUILD_DIR}" ] || { err_mess "directory not found: ${BUILD_DIR}"; exit 1; }
+	pushd "${BUILD_DIR}" > /dev/null || exit 1
+	BUILD_DIR="$(pwd -P)" || exit 1
+	[ -f "${ORIG_NAME}" ] || { err_mess "file not found: ${ORIG_NAME}"; exit 1; }
+	for ver in $(seq $REL_SUB_VER)
+	do
+		ubunames $ver
+		[ -f "${DIFF_NAME}" ] || { err_mess "file not found: ${DIFF_NAME}"; exit 1; }
+	done
+	popd > /dev/null || exit 1
+else
+	mkdir -p "${BUILD_DIR}" || exit 1
+	pushd "${BUILD_DIR}" > /dev/null || exit 1
+	BUILD_DIR="$(pwd -P)" || exit 1
+	popd > /dev/null || exit 1
+fi
+
+
+mkdir "${TMP_DIR}" || exit 1
+
+intltool-update-all || exit 1
+
+make dist || exit 1
+
+mv "${TGZ_NAME}" "${TMP_DIR}" || exit 1
+
+cd "${TMP_DIR}" || exit 1
+
+if [ $REL_SUB_VER -eq 0 ]
+then
+	cp "${TGZ_NAME}" "${ORIG_NAME}" || exit 1;
+fi
+
+tar -vxzf "${TGZ_NAME}" || exit 1
+
+if [ $REL_SUB_VER -gt 0 ]
+then
+	cp "${BUILD_DIR}/${ORIG_NAME}" . || exit 1
+	for ver in $(seq $REL_SUB_VER)
+	do
+		ubunames $ver
+		cp "${BUILD_DIR}/${DIFF_NAME}" . || exit 1;
+	done
+fi
+
+
+cd "${NAME_HYPHEN}" || exit 1
+
+cp -r "../../${DEB_DIR_TEMPL}" "debian" || exit 1
+
+if [ $REL_SUB_VER -gt 0 ]
+then
+	[ -f "debian/changelog" ] || { err_mess "changelog not found"; exit 1; }
+	head -n 1 "debian/changelog" | grep -q "^${NAME} ($(echo ${VER} | sed "s/\./\\\./g")-0ubuntu${REL_SUB_VER}) ${DISTRO}; urgency=.\+$"
+	[ $? -eq 0 ] || { err_mess "wrong changelog"; exit 1; }
+else
+	[ -f "debian/changelog" ] && { err_mess "changelog found before first release, aborting"; exit 1; }
+	touch "debian/changelog" || exit 1;
+fi
+
+REL_SUB_VER=$[ $REL_SUB_VER + 1 ] || { err_mess "strange error"; exit 1; }
+
+cat > ${TMP_FILE_1} << EOF
+${NAME} (${VER}-0ubuntu${REL_SUB_VER}) ${DISTRO}; urgency=low
+
+  * < description here >
+ 
+ -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -R)
+
+EOF
+
+[ $? -eq 0 ] || { err_mess "what?"; exit 1; }
+
+cat "debian/changelog" >> "${TMP_FILE_1}" || exit 1
+
+cp "${TMP_FILE_1}" "${TMP_FILE_2}" || exit 1
+
+vim "${TMP_FILE_1}" || exit 1
+
+diff -q "${TMP_FILE_1}" "${TMP_FILE_2}" > /dev/null
+case $? in
+	0) echo "no changelog description, aborting";
+           cd ../.. || exit 1
+	   rm -fr "${TMP_DIR}" || exit 1;
+	   exit 2;
+	   ;;
+	2) exit 1;
+	   ;;
+esac
+	   
+cp "${TMP_FILE_1}" "debian/changelog"
+
+rm -f "${TMP_FILE_1}" "${TMP_FILE_2}" || exit 1
+
+debuild -S || exit 1
+
+cd .. || exit 1
+
+ubunames ${REL_SUB_VER}
+
+sudo apt-get update || exit 1
+
+sudo pbuilder --build "${DSC_NAME}" --buildresult "${BUILD_DIR}" || exit 1
+
+cd .. || exit 1
+
+pushd "${RESULTS_DIR}" > /dev/null || exit 1
+
+[ ${REL_SUB_VER} -eq 1 ] && { cp "${ORIG_NAME}" "${BUILD_DIR}" || exit 1; }
+cp "${DIFF_NAME}" "${CHANGES_NAME}" "${DSC_NAME}" "${PKG_NAME}" "${BUILD_DIR}" || exit 1
+
+popd > /dev/null || exit 1
+
+cp -f "${TMP_DIR}/${NAME_HYPHEN}/debian/changelog" "${DEB_DIR_TEMPL}" || exit 1
+
+echo "${REL_SUB_VER}" > release_subv || exit 1
+
+rm -fr "${TMP_DIR}" || exit 1
+
+echo "Everything OK"
