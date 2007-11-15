@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-22 03:14+0200\n"
+"POT-Creation-Date: 2007-11-15 07:54+0100\n"
 "PO-Revision-Date: 2007-10-11 14:37-0300\n"
 "Last-Translator: Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>\n"
 "Language-Team: Portugês brasileiro <GNOME-l10n <gnome-l10n-br@listas.cipsga."
@@ -198,7 +198,7 @@ msgstr "Preservar detalhes"
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr "Usa uma camada extra para preservar detalhes, evitando sua distorção"
 
-#: ../src/interface.c:1280 ../src/interface.c:1468
+#: ../src/interface.c:1280 ../src/interface.c:1466
 msgid "New"
 msgstr "Nova"
 
@@ -216,24 +216,24 @@ msgstr ""
 "Camada a ser usada como máscara para preservação de detalhes.\n"
 "Use o botão \"Regenerar\" para atualizar a lista"
 
-#: ../src/interface.c:1355 ../src/interface.c:1544
+#: ../src/interface.c:1353 ../src/interface.c:1542
 msgid "Layer:"
 msgstr "Camada:"
 
-#: ../src/interface.c:1376 ../src/interface.c:1562
+#: ../src/interface.c:1374 ../src/interface.c:1560
 msgid "Strength:"
 msgstr "Força:"
 
-#: ../src/interface.c:1380
+#: ../src/interface.c:1378
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coeficiente geral para intensidade da preservação de detalhes"
 
 #. Feature discard
-#: ../src/interface.c:1410
+#: ../src/interface.c:1408
 msgid "Feature discard mask"
 msgstr "Máscara de descarte de detalhes"
 
-#: ../src/interface.c:1415
+#: ../src/interface.c:1413
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -246,11 +246,11 @@ msgstr ""
 "pressionar o botão \"Regenerar\".\n"
 "Note que pintar de preto não tem efeito."
 
-#: ../src/interface.c:1446
+#: ../src/interface.c:1444
 msgid "Discard features"
 msgstr "Descarte de detalhes"
 
-#: ../src/interface.c:1463
+#: ../src/interface.c:1461
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -258,13 +258,13 @@ msgstr ""
 "Usa uma camada extra para tratar as áreas selecionadas como se elas fossem "
 "irrelevantes (útil para remover partes da imagem ao encolher)"
 
-#: ../src/interface.c:1473
+#: ../src/interface.c:1471
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 "Cria uma nova camada transparente pronta para ser usada como máscara de "
 "descarte"
 
-#: ../src/interface.c:1511
+#: ../src/interface.c:1509
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -272,13 +272,9 @@ msgstr ""
 "Camada a  ser usada como máscara para descarte de detalhes.\n"
 "Use o botão \"Regenerar\" para atualizar a lista"
 
-#: ../src/interface.c:1566
+#: ../src/interface.c:1564
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficiente geral para intensidade de descarte de detalhes"
-
-#: ../src/main.c:156
-msgid "LiquidRescaling (content-aware rescaling)"
-msgstr "Redimensionamento Líquido (redimensionamento dependente do conteúdo)"
 
 #: ../src/main.c:160
 msgid "Liquid rescale ..."
@@ -326,6 +322,10 @@ msgstr "Desenhando mapa de costuras..."
 #, c-format
 msgid "%s seam map"
 msgstr "mapa de cost. %s"
+
+#~ msgid "LiquidRescaling (content-aware rescaling)"
+#~ msgstr ""
+#~ "Redimensionamento Líquido (redimensionamento dependente do conteúdo)"
 
 #~ msgid "Not enough memory, aborting"
 #~ msgstr "Memória insuficiente, abortando"

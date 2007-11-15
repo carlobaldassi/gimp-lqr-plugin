@@ -24,4 +24,4 @@ make dist || exit 1
 
 mv "${TGZ_NAME}" "${NEW_TGZ_NAME}" || exit 1
 
-echo $REL_SUB_VER > release_subv;
+echo $REL_SUB_VER > release_subv_src;

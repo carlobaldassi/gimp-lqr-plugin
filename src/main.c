@@ -44,13 +44,13 @@
 
 /*  Constants  */
 
-#define PROCEDURE_NAME   "lqr_plugin"
+#define PLUG_IN_NAME   "plug-in-lqr"
 
-#define DATA_KEY_VALS    "lqr_plug_in"
-#define DATA_KEY_UI_VALS "lqr_plug_in_ui"
-#define DATA_KEY_COL_VALS "lqr_plug_in_col"
+#define DATA_KEY_VALS    "plug-in-lqr-in"
+#define DATA_KEY_UI_VALS "plug-in-lqr-in-ui"
+#define DATA_KEY_COL_VALS "plug-in-lqr-in-col"
 
-#define PARASITE_KEY     "lqr_plug-in-options"
+#define PARASITE_KEY     "plug-in-lqr-options"
 
 
 /*  Local function prototypes  */
@@ -118,7 +118,8 @@ GimpPlugInInfo PLUG_IN_INFO = {
 };
 
 MAIN ()
-     static void query (void)
+
+static void query (void)
 {
   gchar *help_path;
   gchar *help_uri;
@@ -149,10 +150,9 @@ MAIN ()
   help_uri = g_filename_to_uri (help_path, NULL, NULL);
   g_free (help_path);
 
-  gimp_plugin_help_register ("http://developer.gimp.org/lqr-plug-in/help",
-                             help_uri);
+  gimp_plugin_help_register ("plug-in-lqr-help", help_uri);
 
-  gimp_install_procedure (PLUGIN_NAME,
+  gimp_install_procedure (PLUG_IN_NAME,
                           "LiquidRescaling (content-aware rescaling)",
                           "Resize a layer preserving its main features",
                           "Carlo Baldassi <carlobaldassi@yahoo.it>",
@@ -161,7 +161,7 @@ MAIN ()
                           GIMP_PLUGIN, G_N_ELEMENTS (args), 0, args, NULL);
 			  /* what about INDEXED* images ? */
 
-  gimp_plugin_menu_register (PROCEDURE_NAME, "<Image>/Layer/");
+  gimp_plugin_menu_register (PLUG_IN_NAME, "<Image>/Layer/");
 }
 
 static void
@@ -205,7 +205,7 @@ run (const gchar * name,
   ui_vals = default_ui_vals;
   col_vals = default_col_vals;
 
-  if (strcmp (name, PROCEDURE_NAME) == 0)
+  if (strcmp (name, PLUG_IN_NAME) == 0)
     {
       switch (run_mode)
         {

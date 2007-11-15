@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-22 03:14+0200\n"
+"POT-Creation-Date: 2007-11-15 07:54+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -197,7 +197,7 @@ msgstr ""
 "Utilizza un livello aggiuntivo per specificare le aree da preservare dalla "
 "distorsione"
 
-#: ../src/interface.c:1280 ../src/interface.c:1468
+#: ../src/interface.c:1280 ../src/interface.c:1466
 msgid "New"
 msgstr "Nuovo"
 
@@ -215,24 +215,24 @@ msgstr ""
 "Livello da utilizzare come maschera per la preservazione dei contenuti.\n"
 "Usa il pulsante \"Aggiorna\" per aggiornare la lista"
 
-#: ../src/interface.c:1355 ../src/interface.c:1544
+#: ../src/interface.c:1353 ../src/interface.c:1542
 msgid "Layer:"
 msgstr "Livello:"
 
-#: ../src/interface.c:1376 ../src/interface.c:1562
+#: ../src/interface.c:1374 ../src/interface.c:1560
 msgid "Strength:"
 msgstr "Intensità:"
 
-#: ../src/interface.c:1380
+#: ../src/interface.c:1378
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coefficiente globale per l'intensità della preservazione dei contenuti"
 
 #. Feature discard
-#: ../src/interface.c:1410
+#: ../src/interface.c:1408
 msgid "Feature discard mask"
 msgstr "Maschera per i contenuti da eliminare"
 
-#: ../src/interface.c:1415
+#: ../src/interface.c:1413
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -245,11 +245,11 @@ msgstr ""
 "premi il pulsante \"Aggiorna\"\n"
 "Nota che dipingere in nero non ha alcun effetto"
 
-#: ../src/interface.c:1446
+#: ../src/interface.c:1444
 msgid "Discard features"
 msgstr "Elimina contenuti"
 
-#: ../src/interface.c:1463
+#: ../src/interface.c:1461
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -258,13 +258,13 @@ msgstr ""
 "significative (utile per rimuovere parti dell'immagine mediante il "
 "restringimento)"
 
-#: ../src/interface.c:1473
+#: ../src/interface.c:1471
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 "Crea un nuovo livello trasparente, pronto per essere usato come maschera per "
 "l'eliminazione"
 
-#: ../src/interface.c:1511
+#: ../src/interface.c:1509
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -272,13 +272,9 @@ msgstr ""
 "Livello da utilizzare come maschera per l'eliminazione dei contenuti.\n"
 "Usa il pulsante \"Aggiorna\" per aggiornare la lista"
 
-#: ../src/interface.c:1566
+#: ../src/interface.c:1564
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coefficiente globale per l'intensità dell'eliminazione dei contenuti"
-
-#: ../src/main.c:156
-msgid "LiquidRescaling (content-aware rescaling)"
-msgstr "LiquidRescaling (ridimensionamento preservando i contenuti) "
 
 #: ../src/main.c:160
 msgid "Liquid rescale ..."
@@ -330,6 +326,9 @@ msgstr "Sto disegnando le linee d'azione"
 #, c-format
 msgid "%s seam map"
 msgstr "%s (linee az.)"
+
+#~ msgid "LiquidRescaling (content-aware rescaling)"
+#~ msgstr "LiquidRescaling (ridimensionamento preservando i contenuti) "
 
 #~ msgid "Not enough memory, aborting"
 #~ msgstr "Memoria insufficiente, operazione annullata"
