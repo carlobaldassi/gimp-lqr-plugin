@@ -1,0 +1,22 @@
+Source: gimp-lqr-plugin
+Section: universe/graphics
+Priority: extra
+Maintainer: Carlo Baldassi <carlobaldassi@yahoo.it>
+Build-Depends: libgimp2.0-dev (>= 2.4), debhelper (>= 5), autotools-dev, libxml-parser-perl (>= 2.34)
+Standards-Version: 3.7.2
+
+Package: gimp-lqr-plugin
+Architecture: any
+Depends: gimp (>=2.4), ${shlibs:Depends}
+Description: GIMP Liquid Rescale plugin
+ This GIMP plugin is an implementation of the
+ "seam carving for content-aware image resizing"
+ algorithm by Shai Avidan and Ariel Shamir.
+ .
+ It aims at resizing images non-uniformly while
+ preserving their features. It can also be used
+ to remove portions of the picture in a consistent
+ way.
+ .
+ You can find more information and examples at:
+ http://liquidrescale.wikidot.com

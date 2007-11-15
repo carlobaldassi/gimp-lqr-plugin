@@ -8,7 +8,32 @@ function err_mess ()
 [ -f "Makefile" ] || { err_mess "makefile not found"; exit 1; }
 [ -f "configure.in" ] || { err_mess "configure.in not found"; exit 1; }
 
+FAKE=0
+if [ -n "$1" ]
+then
+	if [ "$1" == "--fake" ]
+	then
+		FAKE=1
+	fi
+	shift;
+fi
+
 DISTRO="gutsy"
+if [ -n "$1" ]
+then
+	DISTRO="$1";
+	shift;
+fi
+case $DISTRO in
+	gutsy|hardy);;
+	default) err_mess "unknown distro: $DISTRO";
+		 exit 1;
+		 ;;
+esac
+
+PBUILDER_RC_FILE="${HOME}/.pbuilderrc_${DISTRO}"
+
+[ -f "${PBUILDER_RC_FILE}" ] || { err_mess "pbuilder config file not found"; exit 1; }
 
 NAME=$(head -n 50 configure.in | grep "m4_define(\[plugin_name\], \[.*\])" | sed "s/m4_define(\[plugin_name\], \[\(.*\)\])/\1/")
 MAJOR_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_major_version\], \[.*\])" | sed "s/m4_define(\[plugin_major_version\], \[\(.*\)\])/\1/")
@@ -17,9 +42,12 @@ MICRO_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_micro_version\], 
 
 VER="${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}"
 
-[ -f "release_subv" ] || { err_mess "release_subv not found"; exit 1; }
+DEBIAN_IN_DIR="debian.in"
+REL_SUB_VER_FILE="${DEBIAN_IN_DIR}/${DISTRO}/release_subv"
 
-REL_SUB_VER="$(cat release_subv)";
+[ -f "$REL_SUB_VER_FILE" ] || { err_mess "release_subv not found"; exit 1; }
+
+REL_SUB_VER="$(cat "${REL_SUB_VER_FILE}")";
 echo "$REL_SUB_VER" | grep -q "[[:digit:]]\+" || { err_mess "invalid release subversion: $REL_SUB_VER"; exit 1;}
 
 NAME_HYPHEN="${NAME}-${VER}"
@@ -36,9 +64,9 @@ function ubunames ()
 	CHANGES_NAME="${DEB_NAME}_i386.changes"
 }
 
-RESULTS_DIR="/var/cache/pbuilder/result"
-BUILD_DIR="${HOME}/deb_builds/${NAME_HYPHEN}"
-DEB_DIR_TEMPL="debian.template"
+RESULTS_DIR="/var/cache/pbuilder_${DISTRO}/result"
+BUILD_DIR="${HOME}/deb_builds/${DISTRO}/${NAME_HYPHEN}"
+DEB_DIR_TEMPL="${DEBIAN_IN_DIR}/${DISTRO}/debian.template"
 TMP_DIR="${NAME_HYPHEN}-tmp-$$"
 TMP_FILE_1="changelog1.$$.tmp"
 TMP_FILE_2="changelog2.$$.tmp"
@@ -147,20 +175,29 @@ ubunames ${REL_SUB_VER}
 
 sudo apt-get update || exit 1
 
-sudo pbuilder --build "${DSC_NAME}" --buildresult "${BUILD_DIR}" || exit 1
+sudo pbuilder --build --distribution "${DISTRO}" --configfile "${PBUILDER_RC_FILE}" "${DSC_NAME}" || exit 1
 
 cd .. || exit 1
 
 pushd "${RESULTS_DIR}" > /dev/null || exit 1
 
-[ ${REL_SUB_VER} -eq 1 ] && { cp "${ORIG_NAME}" "${BUILD_DIR}" || exit 1; }
-cp "${DIFF_NAME}" "${CHANGES_NAME}" "${DSC_NAME}" "${PKG_NAME}" "${BUILD_DIR}" || exit 1
+if [ $FAKE -eq 0 ]
+then
+	[ ${REL_SUB_VER} -eq 1 ] && { cp "${ORIG_NAME}" "${BUILD_DIR}" || exit 1; }
+	cp "${DIFF_NAME}" "${CHANGES_NAME}" "${DSC_NAME}" "${PKG_NAME}" "${BUILD_DIR}" || exit 1
+else
+	[ ${REL_SUB_VER} -eq 1 ] && { [ -f "${ORIG_NAME}" ] || { err_mess "orginal tar.gz not found"; exit 1; } }
+	[ -f "${CHANGES_NAME}" -a -f "${DSC_NAME}" -a -f "${PKG_NAME}" ] || { err_mess "built files not found"; exit 1; }
+fi
 
 popd > /dev/null || exit 1
 
-cp -f "${TMP_DIR}/${NAME_HYPHEN}/debian/changelog" "${DEB_DIR_TEMPL}" || exit 1
+if [ $FAKE -eq 0 ]
+then
+	cp -f "${TMP_DIR}/${NAME_HYPHEN}/debian/changelog" "${DEB_DIR_TEMPL}" || exit 1
 
-echo "${REL_SUB_VER}" > release_subv || exit 1
+	echo "${REL_SUB_VER}" > "${REL_SUB_VER_FILE}" || exit 1
+fi
 
 rm -fr "${TMP_DIR}" || exit 1
 
