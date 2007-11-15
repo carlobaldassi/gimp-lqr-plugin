@@ -365,7 +365,8 @@ lqr_raster_build_mmap (LqrRaster * r)
   gint data;
   gint data_down;
   gint x1_min, x1_max, x1;
-  double m;
+  gdouble m;
+
 
   /* span first row */
   for (x = 0; x < r->w; x++)
@@ -389,18 +390,28 @@ lqr_raster_build_mmap (LqrRaster * r)
 	  x1_min = MAX(-x, -r->delta_x);
 	  x1_max = MIN(r->w - 1 - x, r->delta_x);
 	  data_down = r->raw[y - 1][x + x1_min];
-          m = r->m[data_down];
-          for (x1 = x1_min + 1; x1 <= x1_max; x1++)
-            {
-	      data_down = r->raw[y - 1][x + x1];
-              /* find the min among the neighbors
-               * in the last row */
-	      if (r->rigidity) {
-		      m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
-	      } else {
-		      m = MIN(m, r->m[data_down]);
-	      }
-            }
+	  if (r->rigidity)
+	    {
+              m = r->m[data_down] + r->rigidity_map[x1_min];
+	      for (x1 = x1_min + 1; x1 <= x1_max; x1++)
+		{
+		  data_down = r->raw[y - 1][x + x1];
+		  /* find the min among the neighbors
+		   * in the last row */
+		  m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
+		}
+	    }
+	  else
+	    {
+	      m = r->m[data_down];
+	      for (x1 = x1_min + 1; x1 <= x1_max; x1++)
+		{
+		  data_down = r->raw[y - 1][x + x1];
+		  /* find the min among the neighbors
+		   * in the last row */
+	          m = MIN(m, r->m[data_down]);
+		}
+	    }
 
           /* set current m */
           r->m[data] = r->en[data] + m;
@@ -795,18 +806,28 @@ lqr_raster_update_mmap (LqrRaster * r)  /* BUGGGGGY if r->delta_x > 1 */
 	  x1_min = MAX(-x, -r->delta_x);
 	  x1_max = MIN(r->w - 1 - x, r->delta_x);
           data_down = r->raw[y - 1][x + x1_min];
-          m = r->m[data_down];
-          for (x1 = x1_min + 1; x1 <= x1_max; x1++) 
-            {
-              data_down = r->raw[y - 1][x + x1];
-              /* find the min among the neighbors
-               * in the last row */
-	      if (r->rigidity) {
-		      m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
-	      } else {
-		      m = MIN(m, r->m[data_down]);
-	      }
-            }
+	  if (r->rigidity)
+	    {
+              m = r->m[data_down] + r->rigidity_map[x1_min];
+	      for (x1 = x1_min + 1; x1 <= x1_max; x1++) 
+		{
+		  data_down = r->raw[y - 1][x + x1];
+		  /* find the min among the neighbors
+		   * in the last row */
+		  m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
+		}
+	    }
+	  else
+	    {
+              m = r->m[data_down];
+	      for (x1 = x1_min + 1; x1 <= x1_max; x1++) 
+		{
+		  data_down = r->raw[y - 1][x + x1];
+		  /* find the min among the neighbors
+		   * in the last row */
+		  m = MIN(m, r->m[data_down]);
+		}
+	    }
 
 	  if (r->fast_update == 1) {
 		  if ((x == x_min) && (x < r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
@@ -1166,7 +1187,7 @@ lqr_raster_transpose (LqrRaster * r)
   if (r->aux == 0) {
 	  for (x = -r->delta_x; x <= r->delta_x; x++)
 	    {
-	      r->rigidity_map[x] = (gdouble) r->rigidity * r->w0 / r->h0;
+	      r->rigidity_map[x] = (gdouble) r->rigidity_map[x] * r->w0 / r->h0;
 	    }
   }
 
