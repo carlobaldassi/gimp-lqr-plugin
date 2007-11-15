@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-13 23:50+0100\n"
+"POT-Creation-Date: 2007-11-15 07:17+0100\n"
 "PO-Revision-Date: 2007-10-11 14:37-0300\n"
 "Last-Translator: Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>\n"
 "Language-Team: Portugês brasileiro <GNOME-l10n <gnome-l10n-br@listas.cipsga."
@@ -225,11 +225,11 @@ msgstr ""
 "Camada a ser usada como máscara para preservação de detalhes.\n"
 "Use o botão \"Regenerar\" para atualizar a lista"
 
-#: ../src/interface.c:1368 ../src/interface.c:1557
+#: ../src/interface.c:1368 ../src/interface.c:1559
 msgid "Layer:"
 msgstr "Camada:"
 
-#: ../src/interface.c:1389 ../src/interface.c:1575
+#: ../src/interface.c:1389 ../src/interface.c:1577
 msgid "Strength:"
 msgstr "Força:"
 
@@ -281,11 +281,11 @@ msgstr ""
 "Camada a  ser usada como máscara para descarte de detalhes.\n"
 "Use o botão \"Regenerar\" para atualizar a lista"
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1581
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficiente geral para intensidade de descarte de detalhes"
 
-#: ../src/main.c:163
+#: ../src/main.c:162
 msgid "Liquid rescale ..."
 msgstr "Redimensionamento Líquido..."
 
@@ -305,11 +305,11 @@ msgstr "Erro: parece que a camada de preservação de detalhes não é mais vál
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Erro: parece que a camada de descarte de detalhes não é mais válida"
 
-#: ../src/lqr_raster.c:1222
+#: ../src/lqr_raster.c:1243
 msgid "Resizing width..."
 msgstr "Redimensionando largura..."
 
-#: ../src/lqr_raster.c:1260
+#: ../src/lqr_raster.c:1281
 msgid "Resizing height..."
 msgstr "Redimensionando altura..."
 

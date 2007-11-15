@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-13 23:50+0100\n"
+"POT-Creation-Date: 2007-11-15 07:17+0100\n"
 "PO-Revision-Date: 2007-10-01 21:41-0700\n"
 "Last-Translator: Pete Lypkie <pete.lypkie@gmail.com>\n"
 "Language-Team: zh_CN\n"
@@ -207,11 +207,11 @@ msgid ""
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:1368 ../src/interface.c:1557
+#: ../src/interface.c:1368 ../src/interface.c:1559
 msgid "Layer:"
 msgstr ""
 
-#: ../src/interface.c:1389 ../src/interface.c:1575
+#: ../src/interface.c:1389 ../src/interface.c:1577
 msgid "Strength:"
 msgstr ""
 
@@ -254,11 +254,11 @@ msgid ""
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1581
 msgid "Overall coefficient for feature discard intensity"
 msgstr "全部的系数为把特征丢弃的强度"
 
-#: ../src/main.c:163
+#: ../src/main.c:162
 msgid "Liquid rescale ..."
 msgstr "Liquid改变大小"
 
@@ -278,11 +278,11 @@ msgstr ""
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
-#: ../src/lqr_raster.c:1222
+#: ../src/lqr_raster.c:1243
 msgid "Resizing width..."
 msgstr "正在改变宽度"
 
-#: ../src/lqr_raster.c:1260
+#: ../src/lqr_raster.c:1281
 msgid "Resizing height..."
 msgstr "正在改变高度"
 

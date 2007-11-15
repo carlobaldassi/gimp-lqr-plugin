@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-13 23:50+0100\n"
+"POT-Creation-Date: 2007-11-15 07:17+0100\n"
 "PO-Revision-Date: 2007-10-14 18:57+0100\n"
 "Last-Translator: Diego Ruiz <diego.ruiz@opentrends.net>\n"
 "Language-Team:  <es_ES@li.org>\n"
@@ -222,11 +222,11 @@ msgstr ""
 "Capa para ser usada como máscara para la conservación de características.\n"
 "Utilizar el botón \"Refrescar\" para actualizar la lista"
 
-#: ../src/interface.c:1368 ../src/interface.c:1557
+#: ../src/interface.c:1368 ../src/interface.c:1559
 msgid "Layer:"
 msgstr "Capa:"
 
-#: ../src/interface.c:1389 ../src/interface.c:1575
+#: ../src/interface.c:1389 ../src/interface.c:1577
 msgid "Strength:"
 msgstr "Fuerza:"
 
@@ -277,11 +277,11 @@ msgstr ""
 "Capa para ser usada como máscara de descarte de características.\n"
 "Use el botón de \"Refrescar\" para actualizar la lista"
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1581
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficiente total de descarte de características"
 
-#: ../src/main.c:163
+#: ../src/main.c:162
 msgid "Liquid rescale ..."
 msgstr "Liquid rescale ..."
 
@@ -303,11 +303,11 @@ msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Error: parece que la capa de descarte de características ya no es válida"
 
-#: ../src/lqr_raster.c:1222
+#: ../src/lqr_raster.c:1243
 msgid "Resizing width..."
 msgstr "Redimensionando anchura..."
 
-#: ../src/lqr_raster.c:1260
+#: ../src/lqr_raster.c:1281
 msgid "Resizing height..."
 msgstr "Redimensionando altura..."
 

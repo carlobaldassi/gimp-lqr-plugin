@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-13 23:50+0100\n"
+"POT-Creation-Date: 2007-11-15 07:17+0100\n"
 "PO-Revision-Date: 2007-10-10 05:15+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -215,11 +215,11 @@ msgstr ""
 "Слой, используемый в качестве маски сохраняемых объектов.\n"
 "Нажимайте кнопку «Обновить» для обновления списка слоев."
 
-#: ../src/interface.c:1368 ../src/interface.c:1557
+#: ../src/interface.c:1368 ../src/interface.c:1559
 msgid "Layer:"
 msgstr "Слой:"
 
-#: ../src/interface.c:1389 ../src/interface.c:1575
+#: ../src/interface.c:1389 ../src/interface.c:1577
 msgid "Strength:"
 msgstr "Сила:"
 
@@ -269,11 +269,11 @@ msgstr ""
 "Слой, используемый в качестве маски удаляемых объектов.\n"
 "Нажимайте кнопку «Обновить» для обновления списка слоев."
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1581
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Коэффициент силы действия при удалении значимых объектов"
 
-#: ../src/main.c:163
+#: ../src/main.c:162
 msgid "Liquid rescale ..."
 msgstr "Избирательное масштабирование..."
 
@@ -297,11 +297,11 @@ msgstr ""
 "Ошибка: похоже, что слой с маской удаляемых объектов больше не может быть "
 "использован"
 
-#: ../src/lqr_raster.c:1222
+#: ../src/lqr_raster.c:1243
 msgid "Resizing width..."
 msgstr "Изменяется ширина..."
 
-#: ../src/lqr_raster.c:1260
+#: ../src/lqr_raster.c:1281
 msgid "Resizing height..."
 msgstr "Изменяется высота..."
 

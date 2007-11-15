@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-13 23:50+0100\n"
+"POT-Creation-Date: 2007-11-15 07:17+0100\n"
 "PO-Revision-Date: 2007-10-15 21:14+0200\n"
 "Last-Translator: Christoph Schäfer <christoph-schaefer@gmx.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -227,11 +227,11 @@ msgstr ""
 "Die Ebene, die als Maske zum Erhalten von Elementen verwendet wird.\n"
 "Verwenden Sie \"Aktualisieren\", um die Liste zu aktualisieren."
 
-#: ../src/interface.c:1368 ../src/interface.c:1557
+#: ../src/interface.c:1368 ../src/interface.c:1559
 msgid "Layer:"
 msgstr "Ebene:"
 
-#: ../src/interface.c:1389 ../src/interface.c:1575
+#: ../src/interface.c:1389 ../src/interface.c:1577
 msgid "Strength:"
 msgstr "Stärke:"
 
@@ -284,11 +284,11 @@ msgstr ""
 "Die Ebene, die als Maske zum Verwerfen von Elementen verwendet wird.\n"
 "Verwenden Sie \"Aktualisieren\", um die Liste zu aktualisieren."
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1581
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Globaler Koeffizient der Intensität der zu verwerfenden Elemente"
 
-#: ../src/main.c:163
+#: ../src/main.c:162
 msgid "Liquid rescale ..."
 msgstr "Flüssige Neuskalierung ..."
 
@@ -312,11 +312,11 @@ msgstr ""
 "Fehler. Die ausgewählte Ebene zum Verwerfen von Elementen ist anscheinend "
 "nicht mehr gültig"
 
-#: ../src/lqr_raster.c:1222
+#: ../src/lqr_raster.c:1243
 msgid "Resizing width..."
 msgstr "Ändere die Breite ..."
 
-#: ../src/lqr_raster.c:1260
+#: ../src/lqr_raster.c:1281
 msgid "Resizing height..."
 msgstr "Ändere die Höhe ..."
 

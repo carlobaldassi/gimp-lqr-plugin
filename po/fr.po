@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-13 23:50+0100\n"
+"POT-Creation-Date: 2007-11-15 07:17+0100\n"
 "PO-Revision-Date: 2007-10-13 14:31+0200\n"
 "Last-Translator: Vincent Picavet <vpicavet@gmail.com>\n"
 "Language-Team:  <fr@li.org>\n"
@@ -226,11 +226,11 @@ msgstr ""
 "Calque à utiliser comme masque pour la conservation d'éléments.\n"
 " Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
-#: ../src/interface.c:1368 ../src/interface.c:1557
+#: ../src/interface.c:1368 ../src/interface.c:1559
 msgid "Layer:"
 msgstr "Calque :"
 
-#: ../src/interface.c:1389 ../src/interface.c:1575
+#: ../src/interface.c:1389 ../src/interface.c:1577
 msgid "Strength:"
 msgstr "Force :"
 
@@ -284,11 +284,11 @@ msgstr ""
 "Calque à utiliser comme un masque pour la suppression d'élément.\n"
 " Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1581
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coefficient global pour l'intensité de suppression des éléments"
 
-#: ../src/main.c:163
+#: ../src/main.c:162
 msgid "Liquid rescale ..."
 msgstr "Redimensionnement liquide ..."
 
@@ -310,11 +310,11 @@ msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Erreur : il semble que le calque de suppression d'éléments n'est plus valide"
 
-#: ../src/lqr_raster.c:1222
+#: ../src/lqr_raster.c:1243
 msgid "Resizing width..."
 msgstr "Redimensionnement de la largeur..."
 
-#: ../src/lqr_raster.c:1260
+#: ../src/lqr_raster.c:1281
 msgid "Resizing height..."
 msgstr "Redimensionnement de la hauteur..."
 
