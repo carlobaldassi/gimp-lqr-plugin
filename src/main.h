@@ -62,6 +62,7 @@ typedef struct
   gboolean chain_active;
   gboolean pres_status;
   gboolean disc_status;
+  gint guess_direction;
 } PlugInUIVals;
 
 #define PLUGIN_UI_VALS(data) ((PlugInUIVals*)data)
@@ -102,6 +103,8 @@ typedef struct
   GtkWidget *area;
   GtkWidget *pres_combo;
   GtkWidget *disc_combo;
+  GtkWidget *coordinates;
+  gint guess_direction;
 } PreviewData;
 
 #define PREVIEW_DATA(data) ((PreviewData*)data)
@@ -121,6 +124,8 @@ typedef struct
   gpointer combo_label;
   gpointer scale;
   gpointer status;
+  gpointer guess_button;
+  gpointer guess_dir_combo;
 } ToggleData;
 
 #define TOGGLE_DATA(data) ((ToggleData*)data)
@@ -156,6 +161,14 @@ typedef struct
 
 #define NEW_LAYER_DATA(data) ((NewLayerData*)(data))
 
+typedef struct
+{
+  gint32 *layer_ID;
+  gint32 *disc_layer_ID;
+  gpointer *coordinates;
+} GuessData;
+
+#define GUESS_DATA(data) ((GuessData*)(data))
 
 
 

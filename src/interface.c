@@ -64,6 +64,10 @@ static void callback_disc_combo_get_active (GtkWidget * combo, gpointer data);
 static void callback_combo_set_sensitive (GtkWidget * button, gpointer data);
 static void callback_status_button (GtkWidget * button, gpointer data);
 static void callback_new_mask_button (GtkWidget * button, gpointer data);
+static void callback_guess_button (GtkWidget * button, gpointer data);
+static void callback_guess_direction (GtkWidget * combo, gpointer data);
+static int guess_new_width (GtkWidget * button, gpointer data);
+static int guess_new_height (GtkWidget * button, gpointer data);
 static void callback_out_seams_button (GtkWidget * button, gpointer data);
 static void refresh_features_page (NotebookData * data);
 static void callback_pres_combo_set_sensitive_preview (GtkWidget * button,
@@ -232,7 +236,7 @@ dialog (gint32 image_ID,
   gtk_widget_show (vbox);
 
   frame = gimp_frame_new (_("Selected layer"));
-  gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
   /* Preview */
@@ -244,7 +248,6 @@ dialog (gint32 image_ID,
   hfactor = (gfloat) gimp_drawable_height(drawable->drawable_id) / PREVIEW_MAX_HEIGHT;
   preview_data.factor = MAX (wfactor, hfactor);
   preview_data.factor = MAX (preview_data.factor, 1);
-  //printf("prev factor=%g\n", preview_data.factor); fflush(stdout);
 
 
   preview_data.old_width = gimp_drawable_width(drawable->drawable_id);
@@ -295,7 +298,7 @@ dialog (gint32 image_ID,
   /*  Coordinates widget for selecting new size  */
 
   frame = gimp_frame_new (_("Select new width and height"));
-  gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, FALSE, 0);
   gtk_widget_show (frame);
 
   hbox = gtk_hbox_new (FALSE, 4);
@@ -316,6 +319,8 @@ dialog (gint32 image_ID,
 
   gtk_box_pack_start (GTK_BOX (hbox), coordinates, FALSE, FALSE, 0);
   gtk_widget_show (coordinates);
+
+  preview_data.coordinates = (gpointer) coordinates;
 
   /* Notebook */
 
@@ -571,6 +576,7 @@ dialog (gint32 image_ID,
       ui_state->chain_active =
         gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
                                       (coordinates));
+      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX(disc_toggle_data.guess_dir_combo), &(ui_state->guess_direction));
       state->new_width =
         (gint) gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0);
       state->new_height =
@@ -754,6 +760,11 @@ callback_combo_set_sensitive (GtkWidget * button, gpointer data)
                             (TOGGLE_DATA (data)->scale), button_status);
   gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SPINBUTTON
                             (TOGGLE_DATA (data)->scale), button_status);
+  if (TOGGLE_DATA(data)->guess_button)
+    {
+      gtk_widget_set_sensitive (TOGGLE_DATA (data)->guess_button, button_status);
+      gtk_widget_set_sensitive (TOGGLE_DATA (data)->guess_dir_combo, button_status);
+    }
   *((gboolean *) (TOGGLE_DATA (data)->status)) = button_status;
 }
 
@@ -784,6 +795,196 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   gimp_context_set_foreground (&(NEW_LAYER_DATA (data)->color));
 
   gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH);
+}
+
+static void callback_guess_button (GtkWidget * button, gpointer data)
+{
+  gint new_width, new_height;
+  new_width = PREVIEW_DATA(data)->old_width;
+  new_height = PREVIEW_DATA(data)->old_height;
+  switch (PREVIEW_DATA(data)->guess_direction)
+    {
+      case 0 : new_width = guess_new_width (button, data);
+	       break;
+      case 1 : new_height = guess_new_height (button, data);
+	       break;
+      default : g_message("You just found a bug");
+    }
+
+  gimp_size_entry_set_refval(GIMP_SIZE_ENTRY(PREVIEW_DATA(data)->coordinates),
+     0, new_width);
+  gimp_size_entry_set_refval(GIMP_SIZE_ENTRY(PREVIEW_DATA(data)->coordinates),
+     1, new_height);
+}
+
+static void callback_guess_direction (GtkWidget * combo, gpointer data)
+{
+  gimp_int_combo_box_get_active(GIMP_INT_COMBO_BOX(combo), &(PREVIEW_DATA(data)->guess_direction));
+  ui_state->guess_direction = PREVIEW_DATA(data)->guess_direction;
+}
+
+static gint guess_new_width (GtkWidget * button, gpointer data)
+{
+  gint32 disc_layer_ID;
+  gint x, y, k;
+  gint width, height;
+  gint lw, lh;
+  gint x_off, y_off;
+  gint bpp, c_bpp;
+  GimpPixelRgn rgn_in;
+  guchar *inrow;
+  gboolean has_alpha;
+  gdouble sum;
+  gint mask_size;
+  gint max_mask_size = 0;
+  gint new_width;
+
+  disc_layer_ID = PREVIEW_DATA(data)->vals->disc_layer_ID;
+  if (!gimp_drawable_is_valid(disc_layer_ID)) {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      return PREVIEW_DATA(data)->old_width; /* Should refresh here */
+  }
+
+  width = gimp_drawable_width(disc_layer_ID);
+  height = gimp_drawable_height(disc_layer_ID);
+  has_alpha = gimp_drawable_has_alpha (disc_layer_ID);
+  bpp = gimp_drawable_bpp (disc_layer_ID);
+  c_bpp = bpp - (has_alpha ? 1 : 0);
+
+  gimp_pixel_rgn_init (&rgn_in, gimp_drawable_get(disc_layer_ID), 0, 0, width, height, FALSE, FALSE);
+
+
+  gimp_drawable_offsets (disc_layer_ID, &x_off, &y_off);
+
+  x_off -= PREVIEW_DATA(data)->x_off;
+  y_off -= PREVIEW_DATA(data)->y_off;
+
+  lw = (MIN (PREVIEW_DATA(data)->old_width, width + x_off) - MAX (0, x_off));
+  lh = (MIN (PREVIEW_DATA(data)->old_height, height + y_off) - MAX (0, y_off));
+
+  inrow = g_try_new (guchar, bpp * lw);
+
+  for (y = MAX (0, y_off); y < MIN (PREVIEW_DATA(data)->old_height, height + y_off); y++)
+    {
+      gimp_pixel_rgn_get_row (&rgn_in, inrow, MAX (0, -x_off),
+                              y - y_off, lw);
+
+      mask_size = 0;
+      for (x = 0; x < lw; x++)
+        {
+          sum = 0;
+          for (k = 0; k < c_bpp; k++)
+            {
+              sum += inrow[bpp * x + k];
+            }
+
+          sum /= (255 * c_bpp);
+          if (has_alpha)
+            {
+              sum *= (gdouble) inrow[bpp * (x + 1) - 1] / 255;
+            }
+
+	  if (sum >= (0.5 / c_bpp))
+	    {
+	      mask_size++;
+	    }
+        }
+      if (mask_size > max_mask_size)
+        {
+	  max_mask_size = mask_size;
+	}
+
+    }
+
+  new_width = PREVIEW_DATA(data)->old_width - max_mask_size;
+
+  g_free (inrow);
+
+  return new_width;
+
+}
+
+static gint guess_new_height (GtkWidget * button, gpointer data)
+{
+  gint32 disc_layer_ID;
+  gint x, y, k;
+  gint width, height;
+  gint lw, lh;
+  gint x_off, y_off;
+  gint bpp, c_bpp;
+  GimpPixelRgn rgn_in;
+  guchar *incol;
+  gboolean has_alpha;
+  gdouble sum;
+  gint mask_size;
+  gint max_mask_size = 0;
+  gint new_height;
+
+  disc_layer_ID = PREVIEW_DATA(data)->vals->disc_layer_ID;
+  if (!gimp_drawable_is_valid(disc_layer_ID)) {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      return PREVIEW_DATA(data)->old_height; /* Should refresh here */
+  }
+
+  width = gimp_drawable_width(disc_layer_ID);
+  height = gimp_drawable_height(disc_layer_ID);
+  has_alpha = gimp_drawable_has_alpha (disc_layer_ID);
+  bpp = gimp_drawable_bpp (disc_layer_ID);
+  c_bpp = bpp - (has_alpha ? 1 : 0);
+
+  gimp_pixel_rgn_init (&rgn_in, gimp_drawable_get(disc_layer_ID), 0, 0, width, height, FALSE, FALSE);
+
+
+  gimp_drawable_offsets (disc_layer_ID, &x_off, &y_off);
+
+  x_off -= PREVIEW_DATA(data)->x_off;
+  y_off -= PREVIEW_DATA(data)->y_off;
+
+  lw = (MIN (PREVIEW_DATA(data)->old_width, width + x_off) - MAX (0, x_off));
+  lh = (MIN (PREVIEW_DATA(data)->old_height, height + y_off) - MAX (0, y_off));
+
+  incol = g_try_new (guchar, bpp * lh);
+
+
+  for (x = MAX (0, x_off); x < MIN (PREVIEW_DATA(data)->old_width, width + x_off); x++)
+    {
+      gimp_pixel_rgn_get_col (&rgn_in, incol, x - x_off, MAX (0, -y_off),
+                              lh);
+
+      mask_size = 0;
+      for (y = 0; y < lh; y++)
+        {
+          sum = 0;
+          for (k = 0; k < c_bpp; k++)
+            {
+              sum += incol[bpp * y + k];
+            }
+
+          sum /= (255 * c_bpp);
+          if (has_alpha)
+            {
+              sum *= (gdouble) incol[bpp * (y + 1) - 1] / 255;
+            }
+
+	  if (sum >= (0.5 / c_bpp))
+	    {
+	      mask_size++;
+	    }
+        }
+      if (mask_size > max_mask_size)
+        {
+	  max_mask_size = mask_size;
+	}
+
+    }
+
+  new_height = PREVIEW_DATA(data)->old_height - max_mask_size;
+
+  g_free (incol);
+
+  return new_height;
 }
 
 static void
@@ -1188,6 +1389,8 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *disc_vbox2;
   GtkWidget *disc_button;
   GtkWidget *disc_new_button;
+  GtkWidget *guess_button;
+  GtkWidget *guess_dir_combo;
   GtkWidget *table;
   gint row;
   GtkWidget *combo;
@@ -1418,6 +1621,9 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                     G_CALLBACK (callback_pres_combo_set_sensitive_preview),
                     (gpointer) (&preview_data));
 
+  pres_toggle_data.guess_button = NULL;
+  pres_toggle_data.guess_dir_combo = NULL;
+
 
   /*  Feature discard  */
 
@@ -1616,6 +1822,44 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                     G_CALLBACK
                     (callback_resize_aux_layers_button_set_sensitive),
                     (gpointer) (&presdisc_status));
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (disc_vbox2), hbox, FALSE, FALSE, 0);
+  gtk_widget_show (hbox);
+
+  guess_button = gtk_button_new_with_label(_("Guess size"));
+  gtk_box_pack_start (GTK_BOX (hbox), guess_button, FALSE, FALSE, 0);
+  gtk_widget_show(guess_button);
+
+  disc_toggle_data.guess_button = (gpointer) guess_button;
+  
+  gtk_widget_set_sensitive (guess_button,
+                            (ui_state->disc_status
+                             && features_are_sensitive));
+
+  gimp_help_set_help_data (guess_button, _("Try to set the final size as needed to remove the masked areas"), NULL);
+
+  guess_dir_combo = gimp_int_combo_box_new (_("horizontal"), 0, _("vertical"), 1, NULL);
+  gtk_box_pack_end (GTK_BOX (hbox), guess_dir_combo, TRUE, TRUE, 0);
+  gtk_widget_show(guess_dir_combo);
+
+  gimp_int_combo_box_set_active(GIMP_INT_COMBO_BOX(guess_dir_combo), ui_state->guess_direction);
+
+  disc_toggle_data.guess_dir_combo = (gpointer) guess_dir_combo;
+  preview_data.guess_direction = ui_state->guess_direction;
+
+  gimp_help_set_help_data (guess_dir_combo, _("Resizing direction for guess"), NULL);
+
+  gtk_widget_set_sensitive (guess_dir_combo, (ui_state->disc_status && features_are_sensitive));
+
+  g_signal_connect (guess_dir_combo, "changed",
+      G_CALLBACK(callback_guess_direction), (gpointer) &preview_data);
+
+  g_signal_connect (guess_button, "clicked",
+      G_CALLBACK(callback_guess_button), (gpointer) &preview_data);
+
+
+
 
   return thispage;
 

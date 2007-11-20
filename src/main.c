@@ -102,6 +102,7 @@ const PlugInUIVals default_ui_vals = {
   FALSE,
   FALSE,
   FALSE,
+  0,
 };
 
 static PlugInVals vals;

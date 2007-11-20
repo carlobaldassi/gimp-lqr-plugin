@@ -1,5 +1,7 @@
 2007-11-20 Carlo Baldassi <carlobaldassi@yahoo.it>
 	* new : seam step option
+	* new : guess size button for object removal
+	* bugfix : layer validity check is now working in GIMP 2.4
 2007-11-09 Carlo Baldassi <carlobaldassi@yahoo.it>
 	* modified : global optimization of the core (removed
 	  the LqrData class, turned r->raw into an array of ints, various

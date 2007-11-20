@@ -69,7 +69,7 @@ render (gint32 image_ID,
   }
 
 
-  if (!gimp_drawable_is_layer (layer_ID))
+  if (!gimp_drawable_is_valid (layer_ID))
     {
       g_message (_("Error: it seems that the selected layer "
                    "is no longer valid"));
@@ -78,7 +78,7 @@ render (gint32 image_ID,
 
   if (vals->pres_layer_ID != 0)
     {
-      if (!gimp_drawable_is_layer (vals->pres_layer_ID))
+      if (!gimp_drawable_is_valid (vals->pres_layer_ID))
         {
           g_message (_("Error: it seems that the preservation "
                        "features layer is no longer valid"));
@@ -88,7 +88,7 @@ render (gint32 image_ID,
 
   if (vals->disc_layer_ID != 0)
     {
-      if (!gimp_drawable_is_layer (vals->disc_layer_ID))
+      if (!gimp_drawable_is_valid (vals->disc_layer_ID))
         {
           g_message (_("Error: it seems that the discard features "
                        "layer is no longer valid"));
