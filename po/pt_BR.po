@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-20 05:34+0100\n"
+"POT-Creation-Date: 2007-11-20 22:52+0100\n"
 "PO-Revision-Date: 2007-10-11 14:37-0300\n"
 "Last-Translator: Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>\n"
 "Language-Team: Portugês brasileiro <GNOME-l10n <gnome-l10n-br@listas.cipsga."
@@ -164,7 +164,7 @@ msgstr "Aplicar"
 msgid "Discard"
 msgstr "Descartar"
 
-#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:74
+#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Erro: parece que a camada selecionada não é mais válida"
 
@@ -291,7 +291,7 @@ msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficiente geral para intensidade de descarte de detalhes"
 
 #: ../src/interface.c:1830
-msgid "Guess size"
+msgid "Auto size"
 msgstr ""
 
 #: ../src/interface.c:1840
@@ -307,10 +307,10 @@ msgid "vertical"
 msgstr ""
 
 #: ../src/interface.c:1851
-msgid "Resizing direction for guess"
+msgid "Resizing direction for auto size"
 msgstr ""
 
-#: ../src/main.c:163
+#: ../src/main.c:164
 msgid "Liquid rescale ..."
 msgstr "Redimensionamento Líquido..."
 
@@ -318,19 +318,19 @@ msgstr "Redimensionamento Líquido..."
 msgid "Not enough memory"
 msgstr "Não há memória o suficiente"
 
-#: ../src/render.c:83
+#: ../src/render.c:87
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr "Erro: parece que a camada de preservação de detalhes não é mais válida"
 
-#: ../src/render.c:93
+#: ../src/render.c:97
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Erro: parece que a camada de descarte de detalhes não é mais válida"
 
-#: ../src/lqr_raster.c:1298
+#: ../src/lqr_raster.c:1318
 msgid "Resizing width..."
 msgstr "Redimensionando largura..."
 
-#: ../src/lqr_raster.c:1336
+#: ../src/lqr_raster.c:1356
 msgid "Resizing height..."
 msgstr "Redimensionando altura..."
 

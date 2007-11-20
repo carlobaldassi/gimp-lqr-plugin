@@ -142,7 +142,7 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
   lh = (MIN (r->h, y2 + y_off) - MAX (0, y1 + y_off));
 
 
-  TRY_N_F( inrow = g_try_new (guchar, bpp * lw));
+  TRY_N_F (inrow = g_try_new (guchar, bpp * lw));
 
   for (y = MAX (0, y1 + y_off); y < MIN (r->h, y2 + y_off); y++)
     {
@@ -290,6 +290,7 @@ lqr_external_write_vs (LqrRaster * r)
                     GIMP_NORMAL_MODE);
   gimp_drawable_fill (seam_layer_ID, GIMP_TRANSPARENT_FILL);
   gimp_image_add_layer (r->image_ID, seam_layer_ID, -1);
+  gimp_layer_translate (seam_layer_ID, r->x_off, r->y_off);
   drawable = gimp_drawable_get (seam_layer_ID);
 
   bpp = 4;
@@ -398,5 +399,3 @@ lqr_raster_write_energy (LqrRaster * r /*, pngwriter& output */ )
 
   return TRUE;
 }
-
-

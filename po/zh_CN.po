@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-20 05:34+0100\n"
+"POT-Creation-Date: 2007-11-20 22:52+0100\n"
 "PO-Revision-Date: 2007-10-01 21:41-0700\n"
 "Last-Translator: Pete Lypkie <pete.lypkie@gmail.com>\n"
 "Language-Team: zh_CN\n"
@@ -153,7 +153,7 @@ msgstr "应用"
 msgid "Discard"
 msgstr "丢弃"
 
-#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:74
+#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr ""
 
@@ -264,7 +264,7 @@ msgid "Overall coefficient for feature discard intensity"
 msgstr "全部的系数为把特征丢弃的强度"
 
 #: ../src/interface.c:1830
-msgid "Guess size"
+msgid "Auto size"
 msgstr ""
 
 #: ../src/interface.c:1840
@@ -280,10 +280,10 @@ msgid "vertical"
 msgstr ""
 
 #: ../src/interface.c:1851
-msgid "Resizing direction for guess"
+msgid "Resizing direction for auto size"
 msgstr ""
 
-#: ../src/main.c:163
+#: ../src/main.c:164
 msgid "Liquid rescale ..."
 msgstr "Liquid改变大小"
 
@@ -291,19 +291,19 @@ msgstr "Liquid改变大小"
 msgid "Not enough memory"
 msgstr "没有足够多的内存"
 
-#: ../src/render.c:83
+#: ../src/render.c:87
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:93
+#: ../src/render.c:97
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
-#: ../src/lqr_raster.c:1298
+#: ../src/lqr_raster.c:1318
 msgid "Resizing width..."
 msgstr "正在改变宽度"
 
-#: ../src/lqr_raster.c:1336
+#: ../src/lqr_raster.c:1356
 msgid "Resizing height..."
 msgstr "正在改变高度"
 

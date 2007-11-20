@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-20 05:34+0100\n"
+"POT-Creation-Date: 2007-11-20 22:52+0100\n"
 "PO-Revision-Date: 2007-10-10 05:15+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -154,7 +154,7 @@ msgstr "Применять"
 msgid "Discard"
 msgstr "Не использовать"
 
-#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:74
+#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Ошибка: похоже, что выбранный слой больше не может быть использован"
 
@@ -279,7 +279,7 @@ msgid "Overall coefficient for feature discard intensity"
 msgstr "Коэффициент силы действия при удалении значимых объектов"
 
 #: ../src/interface.c:1830
-msgid "Guess size"
+msgid "Auto size"
 msgstr ""
 
 #: ../src/interface.c:1840
@@ -295,10 +295,10 @@ msgid "vertical"
 msgstr ""
 
 #: ../src/interface.c:1851
-msgid "Resizing direction for guess"
+msgid "Resizing direction for auto size"
 msgstr ""
 
-#: ../src/main.c:163
+#: ../src/main.c:164
 msgid "Liquid rescale ..."
 msgstr "Избирательное масштабирование..."
 
@@ -306,23 +306,23 @@ msgstr "Избирательное масштабирование..."
 msgid "Not enough memory"
 msgstr "Недостаточно памяти"
 
-#: ../src/render.c:83
+#: ../src/render.c:87
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Ошибка: похоже, что слой с маской сохраняемых объектов больше не может быть "
 "использован"
 
-#: ../src/render.c:93
+#: ../src/render.c:97
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Ошибка: похоже, что слой с маской удаляемых объектов больше не может быть "
 "использован"
 
-#: ../src/lqr_raster.c:1298
+#: ../src/lqr_raster.c:1318
 msgid "Resizing width..."
 msgstr "Изменяется ширина..."
 
-#: ../src/lqr_raster.c:1336
+#: ../src/lqr_raster.c:1356
 msgid "Resizing height..."
 msgstr "Изменяется высота..."
 

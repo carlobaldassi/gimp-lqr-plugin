@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-20 05:34+0100\n"
+"POT-Creation-Date: 2007-11-20 22:52+0100\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -157,7 +157,7 @@ msgstr "Aplică"
 msgid "Discard"
 msgstr "Anulare"
 
-#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:74
+#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Eroare: stratul selectat nu mai este valid"
 
@@ -282,7 +282,7 @@ msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficient general de intensitate anulare caracteristici"
 
 #: ../src/interface.c:1830
-msgid "Guess size"
+msgid "Auto size"
 msgstr ""
 
 #: ../src/interface.c:1840
@@ -298,10 +298,10 @@ msgid "vertical"
 msgstr ""
 
 #: ../src/interface.c:1851
-msgid "Resizing direction for guess"
+msgid "Resizing direction for auto size"
 msgstr ""
 
-#: ../src/main.c:163
+#: ../src/main.c:164
 msgid "Liquid rescale ..."
 msgstr "Redimensionare liquid ..."
 
@@ -309,19 +309,19 @@ msgstr "Redimensionare liquid ..."
 msgid "Not enough memory"
 msgstr "Memorie insuficientă"
 
-#: ../src/render.c:83
+#: ../src/render.c:87
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr "Eroare: strat păstrare caracteristici nu mai este valid"
 
-#: ../src/render.c:93
+#: ../src/render.c:97
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Eroare: strat înlăturare caracteristici nu mai este valid"
 
-#: ../src/lqr_raster.c:1298
+#: ../src/lqr_raster.c:1318
 msgid "Resizing width..."
 msgstr "Redimensionare lăţime..."
 
-#: ../src/lqr_raster.c:1336
+#: ../src/lqr_raster.c:1356
 msgid "Resizing height..."
 msgstr "Redimensionare înălţime..."
 

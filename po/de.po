@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-20 05:34+0100\n"
+"POT-Creation-Date: 2007-11-20 22:52+0100\n"
 "PO-Revision-Date: 2007-10-15 21:14+0200\n"
 "Last-Translator: Christoph Schäfer <christoph-schaefer@gmx.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -163,7 +163,7 @@ msgstr "Anwenden"
 msgid "Discard"
 msgstr "Verwerfen"
 
-#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:74
+#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Fehler. Die ausgewählte Ebene ist anscheinend nicht mehr gültig"
 
@@ -294,7 +294,7 @@ msgid "Overall coefficient for feature discard intensity"
 msgstr "Globaler Koeffizient der Intensität der zu verwerfenden Elemente"
 
 #: ../src/interface.c:1830
-msgid "Guess size"
+msgid "Auto size"
 msgstr ""
 
 #: ../src/interface.c:1840
@@ -310,10 +310,10 @@ msgid "vertical"
 msgstr ""
 
 #: ../src/interface.c:1851
-msgid "Resizing direction for guess"
+msgid "Resizing direction for auto size"
 msgstr ""
 
-#: ../src/main.c:163
+#: ../src/main.c:164
 msgid "Liquid rescale ..."
 msgstr "Flüssige Neuskalierung ..."
 
@@ -321,23 +321,23 @@ msgstr "Flüssige Neuskalierung ..."
 msgid "Not enough memory"
 msgstr "Nicht genug Arbeitsspeicher vorhanden"
 
-#: ../src/render.c:83
+#: ../src/render.c:87
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Fehler. Die ausgewählte Ebenezum Erhalten von Ebenen ist anscheinend nicht "
 "mehr gültig"
 
-#: ../src/render.c:93
+#: ../src/render.c:97
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Fehler. Die ausgewählte Ebene zum Verwerfen von Elementen ist anscheinend "
 "nicht mehr gültig"
 
-#: ../src/lqr_raster.c:1298
+#: ../src/lqr_raster.c:1318
 msgid "Resizing width..."
 msgstr "Ändere die Breite ..."
 
-#: ../src/lqr_raster.c:1336
+#: ../src/lqr_raster.c:1356
 msgid "Resizing height..."
 msgstr "Ändere die Höhe ..."
 

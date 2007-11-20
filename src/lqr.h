@@ -46,15 +46,11 @@
 #define __LQR_VERBOSE__
 #endif
 
-void lqr_test_mem(gpointer pointer);
-
 /**** CLASSES DECLARATIONS ****/
 typedef struct _LqrCursor LqrCursor;
 typedef struct _LqrRaster LqrRaster;
-typedef struct _LqrCarver LqrCarver;
 
 struct _LqrCursor;              /* a "smart" index to read the raster */
 struct _LqrRaster;              /* the multisize image raster         */
-struct _LqrCarver;              /* quick&dirty implemetation          */
 
 #endif /* __LQR_H__ */

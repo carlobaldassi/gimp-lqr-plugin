@@ -34,21 +34,25 @@ norm (double x, double y)
 {
   return sqrt (x * x + y * y);
 }
+
 double
 norm_bias (double x, double y)
 {
   return sqrt (x * x + 0.1 * y * y);
 }
+
 double
 sumabs (double x, double y)
 {
   return (fabs (x) + fabs (y)) / 2;
 }
+
 double
 xabs (double x, double y)
 {
   return fabs (x);
 }
+
 double
 yabs (double x, double y)
 {

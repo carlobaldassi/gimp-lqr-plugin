@@ -72,7 +72,7 @@ const PlugInVals default_vals = {
   0,                            /* disc layer ID */
   100,                          /* disc coeff */
   0,                            /* rigidity coeff */
-  1,				/* delta x */
+  1,                            /* delta x */
   TRUE,                         /* resize canvas */
   TRUE,                         /* resize aux layers */
   FALSE,                        /* output on a new layer */
@@ -121,7 +121,8 @@ GimpPlugInInfo PLUG_IN_INFO = {
 
 MAIN ()
 
-static void query (void)
+static void
+query (void)
 {
   gchar *help_path;
   gchar *help_uri;
@@ -162,7 +163,7 @@ static void query (void)
                           "Carlo Baldassi <carlobaldassi@yahoo.it>", "2007",
                           N_("Liquid rescale ..."), "RGB*, GRAY*",
                           GIMP_PLUGIN, G_N_ELEMENTS (args), 0, args, NULL);
-			  /* what about INDEXED* images ? */
+  /* what about INDEXED* images ? */
 
   gimp_plugin_menu_register (PLUG_IN_NAME, "<Image>/Layer/");
 }
@@ -226,7 +227,7 @@ run (const gchar * name,
               vals.disc_layer_ID = param[7].data.d_int32;
               vals.disc_coeff = param[8].data.d_int32;
               vals.rigidity = param[9].data.d_int32;
-	      vals.delta_x = param[10].data.d_int32;
+              vals.delta_x = param[10].data.d_int32;
               vals.resize_aux_layers = param[11].data.d_int32;
               vals.resize_canvas = param[12].data.d_int32;
               vals.new_layer = param[13].data.d_int32;

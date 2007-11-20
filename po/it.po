@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-20 05:34+0100\n"
+"POT-Creation-Date: 2007-11-20 22:52+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -106,13 +106,15 @@ msgstr "Aumentando questo valore si ottengono linee d'azione più dritte"
 
 #: ../src/interface.c:488
 msgid "Seams max step:"
-msgstr ""
+msgstr "Passo massimo delle linee"
 
 #: ../src/interface.c:491
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
 msgstr ""
+"Massimo spostamento trasversale lungo una linea d'azione. Aumentare questo "
+"valore permette di superare il limite di inclinazione  di 45 gradi."
 
 #: ../src/interface.c:508
 msgid ""
@@ -161,7 +163,7 @@ msgstr "Applica"
 msgid "Discard"
 msgstr "Elimina"
 
-#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:74
+#: ../src/interface.c:844 ../src/interface.c:926 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Errore: sembra che il livello selezionato non sia più valido"
 
@@ -291,26 +293,28 @@ msgid "Overall coefficient for feature discard intensity"
 msgstr "Coefficiente globale per l'intensità dell'eliminazione dei contenuti"
 
 #: ../src/interface.c:1830
-msgid "Guess size"
-msgstr ""
+msgid "Auto size"
+msgstr "Auto dimensionamento"
 
 #: ../src/interface.c:1840
 msgid "Try to set the final size as needed to remove the masked areas"
 msgstr ""
+"Cerca di impostare le dimensioni finali in modo da eliminare le aree marcate "
+"per la rimozione"
 
 #: ../src/interface.c:1842
 msgid "horizontal"
-msgstr ""
+msgstr "orizzontale"
 
 #: ../src/interface.c:1842
 msgid "vertical"
-msgstr ""
+msgstr "verticale"
 
 #: ../src/interface.c:1851
-msgid "Resizing direction for guess"
-msgstr ""
+msgid "Resizing direction for auto size"
+msgstr "Direzione del ridimensionamento automatico"
 
-#: ../src/main.c:163
+#: ../src/main.c:164
 msgid "Liquid rescale ..."
 msgstr "Ridimensionamento liquido ..."
 
@@ -318,23 +322,23 @@ msgstr "Ridimensionamento liquido ..."
 msgid "Not enough memory"
 msgstr "Memoria insufficiente"
 
-#: ../src/render.c:83
+#: ../src/render.c:87
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Errore: sembra che il livello per la preservazione dei contenuti non sia più "
 "valido"
 
-#: ../src/render.c:93
+#: ../src/render.c:97
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Errore: sembra che il livello per l'eliminazione dei contenuti non sia più "
 "valido"
 
-#: ../src/lqr_raster.c:1298
+#: ../src/lqr_raster.c:1318
 msgid "Resizing width..."
 msgstr "Sto riscalando l'altezza..."
 
-#: ../src/lqr_raster.c:1336
+#: ../src/lqr_raster.c:1356
 msgid "Resizing height..."
 msgstr "Sto riscalando la larghezza..."
 

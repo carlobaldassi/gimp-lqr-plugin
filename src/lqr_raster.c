@@ -94,12 +94,13 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   TRY_N_N (r->least = g_try_new (gint, r->w * r->h));
 
   TRY_N_N (r->_raw = g_try_new (gint, r->h_start * r->w_start));
-  TRY_N_N (r->raw = g_try_new (gint*, r->h_start));
+  TRY_N_N (r->raw = g_try_new (gint *, r->h_start));
 
   r->raw[0] = r->_raw;
-  for (y = 1; y < r->h; y++) {
-	  r->raw[y] = r->raw[y - 1] + r->w_start;
-  }
+  for (y = 1; y < r->h; y++)
+    {
+      r->raw[y] = r->raw[y - 1] + r->w_start;
+    }
 
   TRY_N_N (r->vpath = g_try_new (gint, r->h));
   TRY_N_N (r->vpath_x = g_try_new (gint, r->h));
@@ -138,13 +139,14 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   lqr_raster_set_gf (r, gf_ind);
 
   /* set rigidity map */
-  r->delta_x = delta_x;               /* currently only 0 or 1 are meaningful values */
+  r->delta_x = delta_x;         /* currently only 0 or 1 are meaningful values */
 
   r->rigidity_map = g_try_new0 (gdouble, 2 * r->delta_x + 1);
   r->rigidity_map += r->delta_x;
   for (dx = -r->delta_x; dx <= r->delta_x; dx++)
     {
-      r->rigidity_map[dx] = (gdouble) r->rigidity * exp(0.75 * log(dx * dx)) / r->h;
+      r->rigidity_map[dx] =
+        (gdouble) r->rigidity * exp (0.75 * log (dx * dx)) / r->h;
     }
 
   return r;
@@ -388,44 +390,44 @@ lqr_raster_build_mmap (LqrRaster * r)
 #ifdef __LQR_DEBUG__
           assert (r->vs[data] == 0);
 #endif //__LQR_DEBUG__
-	  x1_min = MAX(-x, -r->delta_x);
-	  x1_max = MIN(r->w - 1 - x, r->delta_x);
-	  data_down = r->raw[y - 1][x + x1_min];
-	  r->least[data] = data_down;
-	  if (r->rigidity)
-	    {
+          x1_min = MAX (-x, -r->delta_x);
+          x1_max = MIN (r->w - 1 - x, r->delta_x);
+          data_down = r->raw[y - 1][x + x1_min];
+          r->least[data] = data_down;
+          if (r->rigidity)
+            {
               m = r->m[data_down] + r->rigidity_map[x1_min];
-	      for (x1 = x1_min + 1; x1 <= x1_max; x1++)
-		{
-		  data_down = r->raw[y - 1][x + x1];
-		  /* find the min among the neighbors
-		   * in the last row */
-		  m1 = r->m[data_down] + r->rigidity_map[x1];
-		  if (m1 < m)
-		    {
-		      m = m1;
-		      r->least[data] = data_down;
-		    }
-		  //m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
-		}
-	    }
-	  else
-	    {
-	      m = r->m[data_down];
-	      for (x1 = x1_min + 1; x1 <= x1_max; x1++)
-		{
-		  data_down = r->raw[y - 1][x + x1];
-		  /* find the min among the neighbors
-		   * in the last row */
-		  m1 = r->m[data_down];
-		  if (m1 < m)
-		    {
-		      m = m1;
-		      r->least[data] = data_down;
-		    }
-	          m = MIN(m, r->m[data_down]);
-		}
-	    }
+              for (x1 = x1_min + 1; x1 <= x1_max; x1++)
+                {
+                  data_down = r->raw[y - 1][x + x1];
+                  /* find the min among the neighbors
+                   * in the last row */
+                  m1 = r->m[data_down] + r->rigidity_map[x1];
+                  if (m1 < m)
+                    {
+                      m = m1;
+                      r->least[data] = data_down;
+                    }
+                  //m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
+                }
+            }
+          else
+            {
+              m = r->m[data_down];
+              for (x1 = x1_min + 1; x1 <= x1_max; x1++)
+                {
+                  data_down = r->raw[y - 1][x + x1];
+                  /* find the min among the neighbors
+                   * in the last row */
+                  m1 = r->m[data_down];
+                  if (m1 < m)
+                    {
+                      m = m1;
+                      r->least[data] = data_down;
+                    }
+                  m = MIN (m, r->m[data_down]);
+                }
+            }
 
           /* set current m */
           r->m[data] = r->en[data] + m;
@@ -442,7 +444,8 @@ lqr_raster_build_vsmap (LqrRaster * r, gint depth)
   gint update_step;
 
 #ifdef __LQR_VERBOSE__
-  printf("[ building visibility map ]\n"); fflush(stdout);
+  printf ("[ building visibility map ]\n");
+  fflush (stdout);
 #endif /* __LQR_VERBOSE__ */
 
 
@@ -464,14 +467,14 @@ lqr_raster_build_vsmap (LqrRaster * r, gint depth)
 
   /* reset visibility map and level (WHY????) */
   /*
-  if (r->max_level == 1)
-    {
-      for (z = 0; z < r->w0 * r->h0; z++)
-        {
-          r->vs[z] = 0;
-        }
-    }
-    */
+     if (r->max_level == 1)
+     {
+     for (z = 0; z < r->w0 * r->h0; z++)
+     {
+     r->vs[z] = 0;
+     }
+     }
+   */
 
   /* update step for progress */
   update_step = MAX ((depth - r->max_level) / 50, 1);
@@ -561,7 +564,8 @@ lqr_raster_build_vsmap (LqrRaster * r, gint depth)
     }
 
 #ifdef __LQR_VERBOSE__
-  printf("[ visibility map OK ]\n"); fflush(stdout);
+  printf ("[ visibility map OK ]\n");
+  fflush (stdout);
 #endif /* __LQR_VERBOSE__ */
 
   return TRUE;
@@ -581,7 +585,8 @@ lqr_raster_inflate (LqrRaster * r, gint l)
   gdouble *new_bias = NULL;
 
 #ifdef __LQR_VERBOSE__
-  printf("  [ inflating (aux=%i) ]\n", r->aux); fflush(stdout);
+  printf ("  [ inflating (aux=%i) ]\n", r->aux);
+  fflush (stdout);
 #endif /* __LQR_VERBOSE__ */
 
 #ifdef __LQR_DEBUG__
@@ -618,28 +623,29 @@ lqr_raster_inflate (LqrRaster * r, gint l)
           /* the point belongs to a previously computed seam
            * and was not inserted during a previous
            * inflate() call : insert another seam */
-		
+
           //newmap[z0] = *(r->c->now);
-	  
+
           /* the new pixel value is equal to the average of its
            * left and right neighbors */
           if (r->c->x > 0)
             {
-	      c_left = lqr_cursor_left(r->c);
-	    }
-	  else
-	    {
-	      c_left = r->c->now;
-	    }
+              c_left = lqr_cursor_left (r->c);
+            }
+          else
+            {
+              c_left = r->c->now;
+            }
           for (k = 0; k < r->bpp; k++)
             {
               new_rgb[z0 * r->bpp + k] =
-                (r->rgb[c_left * r->bpp + k] + r->rgb[r->c->now * r->bpp + k]) / 2;
+                (r->rgb[c_left * r->bpp + k] +
+                 r->rgb[r->c->now * r->bpp + k]) / 2;
             }
-	  if (r->aux == 0)
-	    {
-	      new_bias[z0] = (r->bias[c_left] + r->bias[r->c->now]) / 2;
-	    }
+          if (r->aux == 0)
+            {
+              new_bias[z0] = (r->bias[c_left] + r->bias[r->c->now]) / 2;
+            }
           /* the first time inflate() is called
            * the new visibility should be -vs + 1 but we shift it
            * so that the final minimum visibiliy will be 1 again
@@ -649,13 +655,13 @@ lqr_raster_inflate (LqrRaster * r, gint l)
           z0++;
         }
       for (k = 0; k < r->bpp; k++)
-	{
-      	  new_rgb[z0 * r->bpp + k] = r->rgb[r->c->now * r->bpp + k];
-	}
+        {
+          new_rgb[z0 * r->bpp + k] = r->rgb[r->c->now * r->bpp + k];
+        }
       if (r->aux == 0)
         {
           new_bias[z0] = r->bias[r->c->now];
-	}
+        }
       if (vs != 0)
         {
           /* visibility has to be shifted up */
@@ -683,8 +689,10 @@ lqr_raster_inflate (LqrRaster * r, gint l)
       assert (x == 0);
       if (w1 != 2 * r->w_start - 1)
         {
-          assert ((y == r->h_start) || (printf("y=%i hst=%i w1=%i\n", y, r->h_start, w1) && fflush(stdout) && 0) );
-	}
+          assert ((y == r->h_start)
+                  || (printf ("y=%i hst=%i w1=%i\n", y, r->h_start, w1)
+                      && fflush (stdout) && 0));
+        }
     }
 #endif // __LQR_DEBUG__
 
@@ -714,7 +722,8 @@ lqr_raster_inflate (LqrRaster * r, gint l)
   r->c = lqr_cursor_create (r, r->vs);
 
 #ifdef __LQR_VERBOSE__
-  printf("  [ inflating OK ]\n"); fflush(stdout);
+  printf ("  [ inflating OK ]\n");
+  fflush (stdout);
 #endif /* __LQR_VERBOSE__ */
 
   return TRUE;
@@ -772,8 +781,8 @@ lqr_raster_update_emap (LqrRaster * r)
   for (y = 0; y < r->h; y++)
     {
       x = r->vpath_x[y];
-      x_min = MAX(0, x - r->delta_x);
-      x_max = MIN(r->w - 1, x + r->delta_x - 1);
+      x_min = MAX (0, x - r->delta_x);
+      x_max = MIN (r->w - 1, x + r->delta_x - 1);
       for (x1 = x_min; x1 <= x_max; x1++)
         {
           lqr_raster_compute_e (r, x1, y);
@@ -815,64 +824,66 @@ lqr_raster_update_mmap (LqrRaster * r)
         {
           data = r->raw[y][x];
 
-	  x1_min = MAX(-x, -r->delta_x);
-	  x1_max = MIN(r->w - 1 - x, r->delta_x);
+          x1_min = MAX (-x, -r->delta_x);
+          x1_max = MIN (r->w - 1 - x, r->delta_x);
           data_down = r->raw[y - 1][x + x1_min];
-	  least = data_down;
-	  if (r->rigidity)
-	    {
+          least = data_down;
+          if (r->rigidity)
+            {
               m = r->m[data_down] + r->rigidity_map[x1_min];
-	      for (x1 = x1_min + 1; x1 <= x1_max; x1++) 
-		{
-		  data_down = r->raw[y - 1][x + x1];
-		  /* find the min among the neighbors
-		   * in the last row */
-		  m1 = r->m[data_down] + r->rigidity_map[x1];
-		  if (m1 < m)
-		    {
-		      m = m1;
-		      least = data_down;
-		    }
-		}
-	    }
-	  else
-	    {
+              for (x1 = x1_min + 1; x1 <= x1_max; x1++)
+                {
+                  data_down = r->raw[y - 1][x + x1];
+                  /* find the min among the neighbors
+                   * in the last row */
+                  m1 = r->m[data_down] + r->rigidity_map[x1];
+                  if (m1 < m)
+                    {
+                      m = m1;
+                      least = data_down;
+                    }
+                }
+            }
+          else
+            {
               m = r->m[data_down];
-	      for (x1 = x1_min + 1; x1 <= x1_max; x1++) 
-		{
-		  data_down = r->raw[y - 1][x + x1];
-		  /* find the min among the neighbors
-		   * in the last row */
-		  m1 = r->m[data_down];
-		  if (m1 < m)
-		    {
-		      m = m1;
-		      least = data_down;
-		    }
-		}
-	    }
+              for (x1 = x1_min + 1; x1 <= x1_max; x1++)
+                {
+                  data_down = r->raw[y - 1][x + x1];
+                  /* find the min among the neighbors
+                   * in the last row */
+                  m1 = r->m[data_down];
+                  if (m1 < m)
+                    {
+                      m = m1;
+                      least = data_down;
+                    }
+                }
+            }
 
-	  if (r->least[data] == least) {
-		  if ((x == x_min) && (x < r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
-		    {
-		      x_min++;
-		    }
-		  if ((x >= r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
-		    {
-		      stop = 1;
-		      x_max = x;
-		    }
-	  }
+          if (r->least[data] == least)
+            {
+              if ((x == x_min) && (x < r->vpath_x[y])
+                  && (r->m[data] == r->en[data] + m))
+                {
+                  x_min++;
+                }
+              if ((x >= r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
+                {
+                  stop = 1;
+                  x_max = x;
+                }
+            }
 
 
           /* set current m */
           r->m[data] = r->en[data] + m;
-	  r->least[data] = least;
+          r->least[data] = least;
 
-	  if (stop)
-	    {
-	      break;
-	    }
+          if (stop)
+            {
+              break;
+            }
         }
 
     }
@@ -910,7 +921,7 @@ lqr_raster_build_vpath (LqrRaster * r)
     }
 
 #ifdef __LQR_DEBUG__
-  assert(last >= 0);
+  assert (last >= 0);
 #endif /* __LQR_DEBUG__ */
 
   for (y = r->h0 - 1; y >= 0; y--)
@@ -923,22 +934,22 @@ lqr_raster_build_vpath (LqrRaster * r)
       r->vpath_x[y] = last_x;
       if (y > 0)
         {
-	  last = r->least[r->raw[y][last_x]];
-	  x_min = MAX(last_x - r->delta_x, 0);
-	  x_max = MIN(last_x + r->delta_x, r->w - 1);
+          last = r->least[r->raw[y][last_x]];
+          x_min = MAX (last_x - r->delta_x, 0);
+          x_max = MIN (last_x + r->delta_x, r->w - 1);
 
-	  for (x = x_min; x <= x_max; x++)
-	    {
-	      if (r->raw[y - 1][x] == last)
-	        {
-		  last_x = x;
-		  break;
-		}
-	    }
+          for (x = x_min; x <= x_max; x++)
+            {
+              if (r->raw[y - 1][x] == last)
+                {
+                  last_x = x;
+                  break;
+                }
+            }
 #ifdef __LQR_DEBUG__
-	  assert(x < x_max + 1);
+          assert (x < x_max + 1);
 #endif /* __LQR_DEBUG__ */
-	}
+        }
     }
 
 
@@ -953,19 +964,22 @@ lqr_raster_build_vpath (LqrRaster * r)
 
       r->vpath[y] = last;
       r->vpath_x[y] = last_x;
-      if (y > 0) {
-	      m = (1<<29);
-	      x_min = MAX(0, last_x - r->delta_x);
-	      x_max = MIN(r->w - 1, last_x + r->delta_x);
-	      for (x = x_min; x <= x_max; x++) {
-		      m1 = r->m[r->raw[y - 1][x]];
-		      if (m1 < m) {
-			      last = r->raw[y - 1][x];
-			      last_x = x;
-			      m = m1;
-		      }
-	      }
-      }
+      if (y > 0)
+        {
+          m = (1 << 29);
+          x_min = MAX (0, last_x - r->delta_x);
+          x_max = MIN (r->w - 1, last_x + r->delta_x);
+          for (x = x_min; x <= x_max; x++)
+            {
+              m1 = r->m[r->raw[y - 1][x]];
+              if (m1 < m)
+                {
+                  last = r->raw[y - 1][x];
+                  last_x = x;
+                  m = m1;
+                }
+            }
+        }
     }
 #endif
 }
@@ -1051,7 +1065,8 @@ lqr_raster_flatten (LqrRaster * r)
   gint z0;
 
 #ifdef __LQR_VERBOSE__
-  printf("    [ flattening (aux=%i) ]\n", r->aux); fflush(stdout);
+  printf ("    [ flattening (aux=%i) ]\n", r->aux);
+  fflush (stdout);
 #endif /* __LQR_VERBOSE__ */
 
   /* free non needed maps first */
@@ -1063,12 +1078,12 @@ lqr_raster_flatten (LqrRaster * r)
   TRY_N_F (new_rgb = g_try_new0 (guchar, r->w * r->h * r->bpp));
   if (r->aux == 0)
     {
-       TRY_N_F (new_bias = g_try_new0 (gdouble, r->w * r->h));
+      TRY_N_F (new_bias = g_try_new0 (gdouble, r->w * r->h));
 
-       g_free (r->_raw);
-       g_free (r->raw);
-       TRY_N_F (r->_raw = g_try_new (gint, r->w * r->h));
-       TRY_N_F (r->raw = g_try_new (gint*, r->h));
+      g_free (r->_raw);
+      g_free (r->raw);
+      TRY_N_F (r->_raw = g_try_new (gint, r->w * r->h));
+      TRY_N_F (r->raw = g_try_new (gint *, r->h));
     }
 
 
@@ -1077,21 +1092,22 @@ lqr_raster_flatten (LqrRaster * r)
   lqr_cursor_reset (r->c);
   for (y = 0; y < r->h; y++)
     {
-      if (r->aux == 0) {
-        r->raw[y] = r->_raw + y * r->w;
-      }
+      if (r->aux == 0)
+        {
+          r->raw[y] = r->_raw + y * r->w;
+        }
       for (x = 0; x < r->w; x++)
         {
           z0 = y * r->w + x;
-	  for (k = 0; k < r->bpp; k++)
+          for (k = 0; k < r->bpp; k++)
             {
               new_rgb[z0 * r->bpp + k] = r->rgb[r->c->now * r->bpp + k];
-	    }
-	  if (r->aux == 0)
-	    {
-	      new_bias[z0] = r->bias[r->c->now];
+            }
+          if (r->aux == 0)
+            {
+              new_bias[z0] = r->bias[r->c->now];
               r->raw[y][x] = z0;
-	    }
+            }
           lqr_cursor_next (r->c);
         }
     }
@@ -1128,7 +1144,8 @@ lqr_raster_flatten (LqrRaster * r)
   r->c = lqr_cursor_create (r, r->vs);
 
 #ifdef __LQR_VERBOSE__
-  printf("    [ flattening OK ]\n"); fflush(stdout);
+  printf ("    [ flattening OK ]\n");
+  fflush (stdout);
 #endif /* __LQR_VERBOSE__ */
 
   return TRUE;
@@ -1146,7 +1163,8 @@ lqr_raster_transpose (LqrRaster * r)
   gdouble *new_bias = NULL;
 
 #ifdef __LQR_VERBOSE__
-  printf("[ transposing (aux=%i) ]\n", r->aux); fflush(stdout);
+  printf ("[ transposing (aux=%i) ]\n", r->aux);
+  fflush (stdout);
 #endif /* __LQR_VERBOSE__ */
 
   if (r->level > 1)
@@ -1169,7 +1187,7 @@ lqr_raster_transpose (LqrRaster * r)
       g_free (r->_raw);
       g_free (r->raw);
       TRY_N_F (r->_raw = g_try_new0 (gint, r->h0 * r->w0));
-      TRY_N_F (r->raw = g_try_new0 (gint*, r->w0));
+      TRY_N_F (r->raw = g_try_new0 (gint *, r->w0));
     }
 
   /* compute trasposed maps */
@@ -1178,20 +1196,20 @@ lqr_raster_transpose (LqrRaster * r)
       if (r->aux == 0)
         {
           r->raw[x] = r->_raw + x * r->h0;
-	}
+        }
       for (y = 0; y < r->h; y++)
         {
           z0 = y * r->w0 + x;
           z1 = x * r->h0 + y;
-	  for (k = 0; k < r->bpp; k++)
-	    {
+          for (k = 0; k < r->bpp; k++)
+            {
               new_rgb[z1 * r->bpp + k] = r->rgb[z0 * r->bpp + k];
-	    }
-	  if (r->aux == 0)
-	    {
-	      new_bias[z1] = r->bias[z0];
+            }
+          if (r->aux == 0)
+            {
+              new_bias[z1] = r->bias[z0];
               r->raw[x][y] = z1;
-	    }
+            }
         }
     }
 
@@ -1239,12 +1257,13 @@ lqr_raster_transpose (LqrRaster * r)
 
   /* rescale rigidity */
 
-  if (r->aux == 0) {
-	  for (x = -r->delta_x; x <= r->delta_x; x++)
-	    {
-	      r->rigidity_map[x] = (gdouble) r->rigidity_map[x] * r->w0 / r->h0;
-	    }
-  }
+  if (r->aux == 0)
+    {
+      for (x = -r->delta_x; x <= r->delta_x; x++)
+        {
+          r->rigidity_map[x] = (gdouble) r->rigidity_map[x] * r->w0 / r->h0;
+        }
+    }
 
   /* set transposed flag */
   r->transposed = (r->transposed ? 0 : 1);
@@ -1263,7 +1282,8 @@ lqr_raster_transpose (LqrRaster * r)
     }
 
 #ifdef __LQR_VERBOSE__
-  printf("[ transpose OK ]\n"); fflush(stdout);
+  printf ("[ transpose OK ]\n");
+  fflush (stdout);
 #endif /* __LQR_VERBOSE__ */
 
   return TRUE;

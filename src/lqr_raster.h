@@ -58,7 +58,7 @@ struct _LqrRaster
   gint bpp;                     /* number of bpp of the image */
 
   gint transposed;              /* flag to set transposed state */
-  gint aux;			/* flag to set if raster is auxiliary */
+  gint aux;                     /* flag to set if raster is auxiliary */
 
   gboolean resize_aux_layers;   /* flag to determine whether the auxiliary layers are resized */
   gboolean output_seams;        /* flag to determine whether to output the seam map */
@@ -73,11 +73,11 @@ struct _LqrRaster
   gint delta_x;                 /* max displacement of seams (currently is only meaningful if 0 or 1 */
 
   guchar *rgb;                  /* array of rgb points */
-  gint *vs;			/* array of visibility levels */
+  gint *vs;                     /* array of visibility levels */
   gdouble *en;                  /* array of energy levels */
   gdouble *bias;                /* array of energy levels */
-  gdouble *m;			/* array of auxiliary energy values */
-  gint *least;		/* array of pointers */
+  gdouble *m;                   /* array of auxiliary energy values */
+  gint *least;                  /* array of pointers */
   gint *_raw;                   /* array of array-coordinates, for seam computation */
   gint **raw;                   /* array of array-coordinates, for seam computation */
 
@@ -94,10 +94,10 @@ struct _LqrRaster
 /* LQR_RASTER CLASS FUNCTIONS */
 
 /* build maps */
-gboolean lqr_raster_build_maps (LqrRaster * r, gint depth);      /* build all */
+gboolean lqr_raster_build_maps (LqrRaster * r, gint depth);     /* build all */
 void lqr_raster_build_emap (LqrRaster * r);     /* energy */
 void lqr_raster_build_mmap (LqrRaster * r);     /* minpath */
-gboolean lqr_raster_build_vsmap (LqrRaster * r, gint depth);     /* visibility */
+gboolean lqr_raster_build_vsmap (LqrRaster * r, gint depth);    /* visibility */
 
 /* internal functions for maps computation */
 inline gdouble lqr_raster_read (LqrRaster * r, gint x, gint y); /* read the average value at given point */
@@ -106,10 +106,10 @@ void lqr_raster_update_emap (LqrRaster * r);    /* update energy map after seam 
 void lqr_raster_update_mmap (LqrRaster * r);    /* minpath */
 void lqr_raster_build_vpath (LqrRaster * r);    /* compute seam path */
 void lqr_raster_carve (LqrRaster * r);  /* updates the "raw" buffer */
-void lqr_raster_update_vsmap (LqrRaster * r, gint l);    /* update visibility map after seam removal */
+void lqr_raster_update_vsmap (LqrRaster * r, gint l);   /* update visibility map after seam removal */
 void lqr_raster_finish_vsmap (LqrRaster * r);   /* complete visibility map (last seam) */
 void lqr_raster_copy_vsmap (LqrRaster * r, LqrRaster * dest);   /* copy vsmap on another raster */
-gboolean lqr_raster_inflate (LqrRaster * r, gint l);     /* adds enlargment info to map */
+gboolean lqr_raster_inflate (LqrRaster * r, gint l);    /* adds enlargment info to map */
 
 /* image manipulations */
 void lqr_raster_set_width (LqrRaster * r, gint w1);
@@ -120,9 +120,9 @@ LqrRaster *lqr_raster_new (gint32 image_ID, GimpDrawable * drawable,
                            gchar * name, gint32 pres_layer_ID,
                            gint pres_coeff, gint32 disc_layer_ID,
                            gint disc_coeff, LqrGradFunc gf_int,
-                           gint rigidity, gint delta_x, gboolean resize_aux_layers,
-                           gboolean output_seams, GimpRGB seam_color_start,
-			   GimpRGB seam_color_end);
+                           gint rigidity, gint delta_x,
+                           gboolean resize_aux_layers, gboolean output_seams,
+                           GimpRGB seam_color_start, GimpRGB seam_color_end);
 LqrRaster *lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable,
                                gchar * name);
 void lqr_raster_destroy (LqrRaster * r);
@@ -131,7 +131,7 @@ void lqr_raster_destroy (LqrRaster * r);
 void lqr_raster_set_gf (LqrRaster * r, LqrGradFunc gf_ind);
 
 /* image manipulations */
-gboolean lqr_raster_resize (LqrRaster * r, gint w1, gint h1);     /* liquid resize */
+gboolean lqr_raster_resize (LqrRaster * r, gint w1, gint h1);   /* liquid resize */
 gboolean lqr_raster_flatten (LqrRaster * r);    /* flatten the multisize image */
 
 #endif /* __LQR_RASTER_H__ */

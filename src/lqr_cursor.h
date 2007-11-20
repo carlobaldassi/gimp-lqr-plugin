@@ -40,9 +40,9 @@ struct _LqrCursor
 #endif
   gint x;                       /* x coordinate of current data */
   gint y;                       /* y coordinate of current data */
-  gint now;			/* current array position */
+  gint now;                     /* current array position */
   LqrRaster *o;                 /* pointer to owner raster */
-  gint *vs;			/* pointer to owner's visibility map */
+  gint *vs;                     /* pointer to owner's visibility map */
 };
 
 /* LQR_CURSOR CLASS FUNCTIONS */

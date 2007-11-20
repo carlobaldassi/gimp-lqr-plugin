@@ -38,7 +38,7 @@
 /*** constructor and destructor ***/
 
 LqrCursor *
-lqr_cursor_create (LqrRaster * owner, gint *vs)
+lqr_cursor_create (LqrRaster * owner, gint * vs)
 {
   LqrCursor *c;
 

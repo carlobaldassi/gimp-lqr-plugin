@@ -1827,7 +1827,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (disc_vbox2), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
-  guess_button = gtk_button_new_with_label(_("Guess size"));
+  guess_button = gtk_button_new_with_label(_("Auto size"));
   gtk_box_pack_start (GTK_BOX (hbox), guess_button, FALSE, FALSE, 0);
   gtk_widget_show(guess_button);
 
@@ -1848,7 +1848,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   disc_toggle_data.guess_dir_combo = (gpointer) guess_dir_combo;
   preview_data.guess_direction = ui_state->guess_direction;
 
-  gimp_help_set_help_data (guess_dir_combo, _("Resizing direction for guess"), NULL);
+  gimp_help_set_help_data (guess_dir_combo, _("Resizing direction for auto size"), NULL);
 
   gtk_widget_set_sensitive (guess_dir_combo, (ui_state->disc_status && features_are_sensitive));
 
