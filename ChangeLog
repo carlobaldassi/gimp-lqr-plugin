@@ -1,8 +1,9 @@
+2007-11-20 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* new : seam step option
 2007-11-09 Carlo Baldassi <carlobaldassi@yahoo.it>
 	* modified : global optimization of the core (removed
 	  the LqrData class, turned r->raw into an array of ints, various
 	  others)
-	* new : added "fast update" option
 	* modified : added PANGO_ELLIPSIZE_START to the combo boxes
 2007-11-07 Carlo Baldassi <carlobaldassi@yahoo.it>
 	* modified : call to gimp_layer_set_lock_alpha()

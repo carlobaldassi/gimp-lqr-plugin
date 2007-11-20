@@ -71,13 +71,13 @@ struct _LqrRaster
   gint rigidity;                /* rigidity value (can straighten seams) */
   gdouble *rigidity_map;        /* the rigidity function */
   gint delta_x;                 /* max displacement of seams (currently is only meaningful if 0 or 1 */
-  gboolean fast_update;		/* flag to determine if update_mmap is exact or not*/
 
   guchar *rgb;                  /* array of rgb points */
   gint *vs;			/* array of visibility levels */
   gdouble *en;                  /* array of energy levels */
   gdouble *bias;                /* array of energy levels */
   gdouble *m;			/* array of auxiliary energy values */
+  gint *least;		/* array of pointers */
   gint *_raw;                   /* array of array-coordinates, for seam computation */
   gint **raw;                   /* array of array-coordinates, for seam computation */
 
@@ -120,9 +120,9 @@ LqrRaster *lqr_raster_new (gint32 image_ID, GimpDrawable * drawable,
                            gchar * name, gint32 pres_layer_ID,
                            gint pres_coeff, gint32 disc_layer_ID,
                            gint disc_coeff, LqrGradFunc gf_int,
-                           gint rigidity, gboolean resize_aux_layers,
-                           gboolean output_seams, gboolean fast_update,
-			   GimpRGB seam_color_start, GimpRGB seam_color_end);
+                           gint rigidity, gint delta_x, gboolean resize_aux_layers,
+                           gboolean output_seams, GimpRGB seam_color_start,
+			   GimpRGB seam_color_end);
 LqrRaster *lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable,
                                gchar * name);
 void lqr_raster_destroy (LqrRaster * r);

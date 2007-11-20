@@ -47,6 +47,7 @@
 #define SPIN_BUTTON_WIDTH   75
 #define MAX_COEFF	  3000
 #define MAX_RIGIDITY      1000
+#define MAX_DELTA_X         10
 #define PREVIEW_MAX_WIDTH  300
 #define PREVIEW_MAX_HEIGHT 200
 #define MAX_STRING_SIZE   2048
@@ -139,7 +140,6 @@ dialog (gint32 image_ID,
   GtkWidget *label;
   GtkWidget *grad_func_combo_box;
   GtkWidget *vbox;
-  GtkWidget *fast_button;
   GtkWidget *new_layer_button;
   GtkWidget *resize_canvas_button;
   GtkWidget *resize_aux_layers_button;
@@ -458,19 +458,9 @@ dialog (gint32 image_ID,
                                  NULL);
   gtk_widget_show (thispage);
 
-  /* Fast update */
-
-  fast_button = gtk_check_button_new_with_label (_("Fast update"));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (fast_button),
-                                state->fast_update);
-  gtk_box_pack_start(GTK_BOX(thispage), fast_button, FALSE, FALSE, 0);
-  gtk_widget_show(fast_button);
-  gimp_help_set_help_data (fast_button,
-                           _("Much faster but slightly less accurate"), NULL);
-
   /* Rigidity */
 
-  table = gtk_table_new (1, 2, FALSE);
+  table = gtk_table_new (2, 2, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
@@ -486,6 +476,20 @@ dialog (gint32 image_ID,
   g_signal_connect (adj, "value_changed",
                     G_CALLBACK (gimp_int_adjustment_update),
                     &state->rigidity);
+
+  /* Delta x */
+
+  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, 1,
+                              _("Seams max step:"), SCALE_WIDTH,
+                              SPIN_BUTTON_WIDTH, state->delta_x, 0,
+                              MAX_DELTA_X, 1, 1, 0, TRUE, 0, 0,
+                              _("Maximum displacement along a seam. "
+				"Increasing this value allows to overcome "
+				"the 45 degrees bound"), NULL);
+
+  g_signal_connect (adj, "value_changed",
+                    G_CALLBACK (gimp_int_adjustment_update),
+                    &state->delta_x);
 
   /* Gradient */
 
@@ -583,9 +587,6 @@ dialog (gint32 image_ID,
                                       (resize_aux_layers_button));
       state->output_seams =
         gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (out_seams_button));
-
-      state->fast_update =
-        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (fast_button));
 
       /* save vsmap colors */
       if (state->output_seams)

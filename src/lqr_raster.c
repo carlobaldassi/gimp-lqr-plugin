@@ -50,9 +50,8 @@ LqrRaster *
 lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
                 gint32 pres_layer_ID, gint pres_coeff,
                 gint32 disc_layer_ID, gint disc_coeff,
-                LqrGradFunc gf_ind, gint rigidity,
+                LqrGradFunc gf_ind, gint rigidity, gint delta_x,
                 gboolean resize_aux_layers,
-                gboolean fast_update,
                 gboolean output_seams,
                 GimpRGB seam_color_start, GimpRGB seam_color_end)
 {
@@ -70,7 +69,6 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   r->transposed = 0;
   r->aux = 0;
   r->rigidity = rigidity;
-  r->fast_update = fast_update;
   r->resize_aux_layers = resize_aux_layers;
   r->output_seams = output_seams;
   r->seam_color_start = seam_color_start;
@@ -93,6 +91,7 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   TRY_N_N (r->en = g_try_new (gdouble, r->w * r->h));
   TRY_N_N (r->bias = g_try_new0 (gdouble, r->w * r->h));
   TRY_N_N (r->m = g_try_new (gdouble, r->w * r->h));
+  TRY_N_N (r->least = g_try_new (gint, r->w * r->h));
 
   TRY_N_N (r->_raw = g_try_new (gint, r->h_start * r->w_start));
   TRY_N_N (r->raw = g_try_new (gint*, r->h_start));
@@ -139,13 +138,13 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   lqr_raster_set_gf (r, gf_ind);
 
   /* set rigidity map */
-  r->delta_x = 1;               /* currently only 0 or 1 are meaningful values */
+  r->delta_x = delta_x;               /* currently only 0 or 1 are meaningful values */
 
   r->rigidity_map = g_try_new0 (gdouble, 2 * r->delta_x + 1);
   r->rigidity_map += r->delta_x;
   for (dx = -r->delta_x; dx <= r->delta_x; dx++)
     {
-      r->rigidity_map[dx] = (gdouble) r->rigidity * dx * dx / r->h;
+      r->rigidity_map[dx] = (gdouble) r->rigidity * exp(0.75 * log(dx * dx)) / r->h;
     }
 
   return r;
@@ -175,6 +174,7 @@ lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable, gchar * name)
   r->en = NULL;
   r->bias = NULL;
   r->m = NULL;
+  r->least = NULL;
   r->_raw = NULL;
   r->raw = NULL;
   r->vpath = NULL;
@@ -213,6 +213,7 @@ lqr_raster_destroy (LqrRaster * r)
   g_free (r->en);
   g_free (r->bias);
   g_free (r->m);
+  g_free (r->least);
 
   lqr_cursor_destroy (r->c);
   g_free (r->vpath);
@@ -365,7 +366,7 @@ lqr_raster_build_mmap (LqrRaster * r)
   gint data;
   gint data_down;
   gint x1_min, x1_max, x1;
-  gdouble m;
+  gdouble m, m1;
 
 
   /* span first row */
@@ -390,6 +391,7 @@ lqr_raster_build_mmap (LqrRaster * r)
 	  x1_min = MAX(-x, -r->delta_x);
 	  x1_max = MIN(r->w - 1 - x, r->delta_x);
 	  data_down = r->raw[y - 1][x + x1_min];
+	  r->least[data] = data_down;
 	  if (r->rigidity)
 	    {
               m = r->m[data_down] + r->rigidity_map[x1_min];
@@ -398,7 +400,13 @@ lqr_raster_build_mmap (LqrRaster * r)
 		  data_down = r->raw[y - 1][x + x1];
 		  /* find the min among the neighbors
 		   * in the last row */
-		  m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
+		  m1 = r->m[data_down] + r->rigidity_map[x1];
+		  if (m1 < m)
+		    {
+		      m = m1;
+		      r->least[data] = data_down;
+		    }
+		  //m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
 		}
 	    }
 	  else
@@ -409,6 +417,12 @@ lqr_raster_build_mmap (LqrRaster * r)
 		  data_down = r->raw[y - 1][x + x1];
 		  /* find the min among the neighbors
 		   * in the last row */
+		  m1 = r->m[data_down];
+		  if (m1 < m)
+		    {
+		      m = m1;
+		      r->least[data] = data_down;
+		    }
 	          m = MIN(m, r->m[data_down]);
 		}
 	    }
@@ -753,32 +767,30 @@ void
 lqr_raster_update_emap (LqrRaster * r)
 {
   gint x, y;
-  gint dx;
+  gint x1, x_min, x_max;
 
   for (y = 0; y < r->h; y++)
     {
       x = r->vpath_x[y];
-      for (dx = -1; dx < 1; dx++)
+      x_min = MAX(0, x - r->delta_x);
+      x_max = MIN(r->w - 1, x + r->delta_x - 1);
+      for (x1 = x_min; x1 <= x_max; x1++)
         {
-          if ((x + dx < 0) || (x + dx >= r->w))
-            {
-              continue;
-            }
-          lqr_raster_compute_e (r, x + dx, y);
+          lqr_raster_compute_e (r, x1, y);
         }
     }
 }
 
 
 void
-lqr_raster_update_mmap (LqrRaster * r)  /* BUGGGGGY if r->delta_x > 1 */
+lqr_raster_update_mmap (LqrRaster * r)
 {
   gint x, y;
   gint x_min, x_max;
   gint x1;
   gint x1_min, x1_max;
-  gint data, data_down;
-  gdouble m;
+  gint data, data_down, least;
+  gdouble m, m1;
   gint stop;
 
   /* span first row */
@@ -806,6 +818,7 @@ lqr_raster_update_mmap (LqrRaster * r)  /* BUGGGGGY if r->delta_x > 1 */
 	  x1_min = MAX(-x, -r->delta_x);
 	  x1_max = MIN(r->w - 1 - x, r->delta_x);
           data_down = r->raw[y - 1][x + x1_min];
+	  least = data_down;
 	  if (r->rigidity)
 	    {
               m = r->m[data_down] + r->rigidity_map[x1_min];
@@ -814,7 +827,12 @@ lqr_raster_update_mmap (LqrRaster * r)  /* BUGGGGGY if r->delta_x > 1 */
 		  data_down = r->raw[y - 1][x + x1];
 		  /* find the min among the neighbors
 		   * in the last row */
-		  m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
+		  m1 = r->m[data_down] + r->rigidity_map[x1];
+		  if (m1 < m)
+		    {
+		      m = m1;
+		      least = data_down;
+		    }
 		}
 	    }
 	  else
@@ -825,11 +843,16 @@ lqr_raster_update_mmap (LqrRaster * r)  /* BUGGGGGY if r->delta_x > 1 */
 		  data_down = r->raw[y - 1][x + x1];
 		  /* find the min among the neighbors
 		   * in the last row */
-		  m = MIN(m, r->m[data_down]);
+		  m1 = r->m[data_down];
+		  if (m1 < m)
+		    {
+		      m = m1;
+		      least = data_down;
+		    }
 		}
 	    }
 
-	  if (r->fast_update == 1) {
+	  if (r->least[data] == least) {
 		  if ((x == x_min) && (x < r->vpath_x[y]) && (r->m[data] == r->en[data] + m))
 		    {
 		      x_min++;
@@ -844,10 +867,7 @@ lqr_raster_update_mmap (LqrRaster * r)  /* BUGGGGGY if r->delta_x > 1 */
 
           /* set current m */
           r->m[data] = r->en[data] + m;
-
-#ifdef __LQR_DEBUG__
-          assert (m < 1 << 29);
-#endif // __LQR_DEBUG__
+	  r->least[data] = least;
 
 	  if (stop)
 	    {
@@ -893,6 +913,36 @@ lqr_raster_build_vpath (LqrRaster * r)
   assert(last >= 0);
 #endif /* __LQR_DEBUG__ */
 
+  for (y = r->h0 - 1; y >= 0; y--)
+    {
+#ifdef __LQR_DEBUG__
+      assert (r->vs[last] == 0);
+      assert (last_x < r->w);
+#endif // __LQR_DEBUG__
+      r->vpath[y] = last;
+      r->vpath_x[y] = last_x;
+      if (y > 0)
+        {
+	  last = r->least[r->raw[y][last_x]];
+	  x_min = MAX(last_x - r->delta_x, 0);
+	  x_max = MIN(last_x + r->delta_x, r->w - 1);
+
+	  for (x = x_min; x <= x_max; x++)
+	    {
+	      if (r->raw[y - 1][x] == last)
+	        {
+		  last_x = x;
+		  break;
+		}
+	    }
+#ifdef __LQR_DEBUG__
+	  assert(x < x_max + 1);
+#endif /* __LQR_DEBUG__ */
+	}
+    }
+
+
+#if 0
   /* we backtrack the seam following the min mmap */
   for (y = r->h0 - 1; y >= 0; y--)
     {
@@ -917,6 +967,7 @@ lqr_raster_build_vpath (LqrRaster * r)
 	      }
       }
     }
+#endif
 }
 
 /* update visibility map after seam computation */
@@ -1006,6 +1057,7 @@ lqr_raster_flatten (LqrRaster * r)
   /* free non needed maps first */
   g_free (r->en);
   g_free (r->m);
+  g_free (r->least);
 
   /* allocate room for new map */
   TRY_N_F (new_rgb = g_try_new0 (guchar, r->w * r->h * r->bpp));
@@ -1060,6 +1112,7 @@ lqr_raster_flatten (LqrRaster * r)
     {
       TRY_N_F (r->en = g_try_new0 (gdouble, r->w * r->h));
       TRY_N_F (r->m = g_try_new0 (gdouble, r->w * r->h));
+      TRY_N_F (r->least = g_try_new (gint, r->w * r->h));
     }
 
   /* reset widths, heights & levels */
@@ -1105,6 +1158,7 @@ lqr_raster_transpose (LqrRaster * r)
   g_free (r->vs);
   g_free (r->en);
   g_free (r->m);
+  g_free (r->least);
 
   /* allocate room for the new maps */
   TRY_N_F (new_rgb = g_try_new0 (guchar, r->w0 * r->h0 * r->bpp));
@@ -1156,6 +1210,7 @@ lqr_raster_transpose (LqrRaster * r)
     {
       TRY_N_F (r->en = g_try_new0 (gdouble, r->w0 * r->h0));
       TRY_N_F (r->m = g_try_new0 (gdouble, r->w0 * r->h0));
+      TRY_N_F (r->least = g_try_new (gint, r->w0 * r->h0));
     }
 
   /* switch widths & heights */
