@@ -41,11 +41,11 @@ enum _LqrGradFunc
   LQR_GF_NULL			       /* 0 */
 };
 
-inline double norm (double x, double y);
-inline double norm_bias (double x, double y);
-inline double sumabs (double x, double y);
-inline double xabs (double x, double y);
-inline double yabs (double x, double y);
-inline double zero (double x, double y);
+double norm (double x, double y);
+double norm_bias (double x, double y);
+double sumabs (double x, double y);
+double xabs (double x, double y);
+double yabs (double x, double y);
+double zero (double x, double y);
 
 #endif // __LQR_GRADIENT_H__

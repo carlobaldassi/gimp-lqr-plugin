@@ -29,33 +29,33 @@
 
 /**** GRADIENT FUNCTIONS ****/
 
-inline double
+double
 norm (double x, double y)
 {
   return sqrt (x * x + y * y);
 }
-inline double
+double
 norm_bias (double x, double y)
 {
   return sqrt (x * x + 0.1 * y * y);
 }
-inline double
+double
 sumabs (double x, double y)
 {
   return (fabs (x) + fabs (y)) / 2;
 }
-inline double
+double
 xabs (double x, double y)
 {
   return fabs (x);
 }
-inline double
+double
 yabs (double x, double y)
 {
   return fabs (y);
 }
 
-inline double
+double
 zero (double x, double y)
 {
   return 0;
