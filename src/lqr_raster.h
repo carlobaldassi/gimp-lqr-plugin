@@ -62,6 +62,7 @@ struct _LqrRaster
 
   gboolean resize_aux_layers;   /* flag to determine whether the auxiliary layers are resized */
   gboolean output_seams;        /* flag to determine whether to output the seam map */
+  LqrResizeOrder resize_order;  /* resize order */
   GimpRGB seam_color_start;     /* start color for the seam map */
   GimpRGB seam_color_end;       /* end color for the seam map */
 
@@ -122,6 +123,7 @@ LqrRaster *lqr_raster_new (gint32 image_ID, GimpDrawable * drawable,
                            gint disc_coeff, LqrGradFunc gf_int,
                            gint rigidity, gint delta_x,
                            gboolean resize_aux_layers, gboolean output_seams,
+			   LqrResizeOrder res_order,
                            GimpRGB seam_color_start, GimpRGB seam_color_end);
 LqrRaster *lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable,
                                gchar * name);
@@ -131,6 +133,8 @@ void lqr_raster_destroy (LqrRaster * r);
 void lqr_raster_set_gf (LqrRaster * r, LqrGradFunc gf_ind);
 
 /* image manipulations */
+gboolean lqr_raster_resize_width (LqrRaster * r, gint w1);   /* liquid resize */
+gboolean lqr_raster_resize_height (LqrRaster * r, gint h1);   /* liquid resize */
 gboolean lqr_raster_resize (LqrRaster * r, gint w1, gint h1);   /* liquid resize */
 gboolean lqr_raster_flatten (LqrRaster * r);    /* flatten the multisize image */
 

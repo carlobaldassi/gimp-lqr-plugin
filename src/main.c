@@ -78,6 +78,7 @@ const PlugInVals default_vals = {
   FALSE,                        /* output on a new layer */
   FALSE,                        /* output seams */
   LQR_GF_XABS,                  /* grad func */
+  LQR_RES_ORDER_HOR,		/* resize order */
   GIMP_MASK_APPLY,              /* mask behavior */
   LQR_MODE_NORMAL		/* operational mode */
 };
@@ -147,6 +148,7 @@ query (void)
     {GIMP_PDB_INT32, "seams", "Whether to output the seam map"},
     {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
     {GIMP_PDB_INT32, "grad_func", "Gradient function to use"},
+    {GIMP_PDB_INT32, "res_order", "Resize order"},
     {GIMP_PDB_INT32, "oper_mode", "Operational mode"},
   };
 
@@ -216,7 +218,7 @@ run (const gchar * name,
       switch (run_mode)
         {
         case GIMP_RUN_NONINTERACTIVE:
-          if (n_params != 18)
+          if (n_params != 19)
             {
               status = GIMP_PDB_CALLING_ERROR;
             }
@@ -235,8 +237,9 @@ run (const gchar * name,
               vals.new_layer = param[13].data.d_int32;
               vals.output_seams = param[14].data.d_int32;
               vals.grad_func = param[15].data.d_int32;
-              vals.mask_behavior = param[16].data.d_int32;
-	      vals.oper_mode = param[17].data.d_int32;
+              vals.res_order = param[16].data.d_int32;
+              vals.mask_behavior = param[17].data.d_int32;
+	      vals.oper_mode = param[18].data.d_int32;
             }
           break;
 

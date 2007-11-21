@@ -48,12 +48,19 @@
 
 /**** OPERATIONAL_MODES ****/
 typedef enum _LqrMode LqrMode;
+typedef enum _LqrResizeOrder LqrResizeOrder;
 
 enum _LqrMode
 {
   LQR_MODE_NORMAL,
   LQR_MODE_LQRBACK,
   LQR_MODE_SCALEBACK
+};
+
+enum _LqrResizeOrder
+{
+  LQR_RES_ORDER_HOR,
+  LQR_RES_ORDER_VERT
 };
 
 /**** CLASSES DECLARATIONS ****/

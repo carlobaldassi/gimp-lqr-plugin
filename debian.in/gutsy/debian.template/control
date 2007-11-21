@@ -8,6 +8,7 @@ Standards-Version: 3.7.2
 Package: gimp-lqr-plugin
 Architecture: any
 Depends: gimp (>=2.4), ${shlibs:Depends}
+Conflicts: gimp-plugin-registry
 Description: GIMP Liquid Rescale plugin
  This GIMP plugin is an implementation of the
  "seam carving for content-aware image resizing"

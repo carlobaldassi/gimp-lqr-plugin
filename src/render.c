@@ -181,7 +181,8 @@ render (gint32 image_ID,
                     vals->pres_coeff, vals->disc_layer_ID,
                     vals->disc_coeff, vals->grad_func, vals->rigidity,
                     vals->delta_x, vals->resize_aux_layers,
-                    vals->output_seams, color_start, color_end);
+                    vals->output_seams, vals->res_order, color_start,
+		    color_end);
   MEMCHECK (rasta != NULL);
 
 #ifdef __LQR_CLOCK__
@@ -212,6 +213,15 @@ render (gint32 image_ID,
 	  }
 	vals->new_width = old_width;
 	vals->new_height = old_height;
+	switch (vals->res_order)
+	  {
+	    case LQR_RES_ORDER_HOR:
+	      rasta->resize_order = LQR_RES_ORDER_VERT;
+	      break;
+	    case LQR_RES_ORDER_VERT:
+	      rasta->resize_order = LQR_RES_ORDER_HOR;
+	      break;
+	  }
 	MEMCHECK (lqr_raster_resize (rasta, vals->new_width, vals->new_height));
 	break;
       case LQR_MODE_SCALEBACK:

@@ -43,6 +43,7 @@ typedef struct
   gboolean new_layer;
   gboolean output_seams;
   gint grad_func;
+  gint res_order;
   gint mask_behavior;
   gint oper_mode;
 } PlugInVals;

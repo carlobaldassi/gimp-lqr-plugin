@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 02:48+0100\n"
+"POT-Creation-Date: 2007-11-21 03:49+0100\n"
 "PO-Revision-Date: 2007-10-10 05:15+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -11,82 +11,82 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Russian\n"
 
-#: ../src/interface.c:219
+#: ../src/interface.c:221
 msgid "GIMP LiquidRescale Plug-In"
 msgstr "Избирательное масштабирование"
 
-#: ../src/interface.c:241
+#: ../src/interface.c:243
 msgid "Selected layer"
 msgstr "Выбранный слой"
 
 #. New size
-#: ../src/interface.c:303
+#: ../src/interface.c:305
 msgid "Select new width and height"
 msgstr "Укажите новую ширину и высоту"
 
-#: ../src/interface.c:323
+#: ../src/interface.c:325
 msgid "Width:"
 msgstr "Ширина:"
 
-#: ../src/interface.c:325
+#: ../src/interface.c:327
 msgid "Height:"
 msgstr "Высота:"
 
-#: ../src/interface.c:340
+#: ../src/interface.c:342
 msgid "Choose mode of operation"
 msgstr ""
 
-#: ../src/interface.c:348
+#: ../src/interface.c:350
 msgid "Mode:"
 msgstr ""
 
-#: ../src/interface.c:353
+#: ../src/interface.c:355
 msgid "LqR only"
 msgstr ""
 
-#: ../src/interface.c:354
+#: ../src/interface.c:356
 msgid "LqR + LqR back to the original size"
 msgstr ""
 
-#: ../src/interface.c:355
+#: ../src/interface.c:357
 msgid "LqR + scale back to the original size"
 msgstr ""
 
 #. Output settings page
-#: ../src/interface.c:381
+#: ../src/interface.c:383
 msgid "Output"
 msgstr "Вывод"
 
-#: ../src/interface.c:396
+#: ../src/interface.c:398
 msgid "Output on a new layer"
 msgstr "Поместить результат в новый слой"
 
-#: ../src/interface.c:404
+#: ../src/interface.c:406
 msgid "Outputs the resulting image on a new layer"
 msgstr "Поместить конечное изображение в новый слой"
 
-#: ../src/interface.c:408
+#: ../src/interface.c:410
 msgid "Resize image canvas"
 msgstr "Изменить размер холста"
 
-#: ../src/interface.c:416
+#: ../src/interface.c:418
 msgid "Resize and translate the image canvas to fit the resized layer"
 msgstr "Подогнать размер холста изображения под размер конечного слоя"
 
-#: ../src/interface.c:420
+#: ../src/interface.c:422
 msgid "Resize preserve/discard layers"
 msgstr "Изменить размер слоев с масками сохранения/удаления"
 
-#: ../src/interface.c:437
+#: ../src/interface.c:439
 msgid "Resize the layers used as masks along with the active layer"
 msgstr ""
 "Подогнать размер использованных слоев с масками под новый активный слой"
 
-#: ../src/interface.c:444
+#: ../src/interface.c:446
 msgid "Output the seams"
 msgstr "Вывести швы"
 
-#: ../src/interface.c:453
+#: ../src/interface.c:455
 msgid ""
 "Creates an extra output layer with the seams, for visual inspection of what "
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
@@ -96,38 +96,38 @@ msgstr ""
 "с параметром «Поместить результат в новый слой» и меняйте размер изображения "
 "только в одном измерении за раз."
 
-#: ../src/interface.c:476
+#: ../src/interface.c:478
 msgid "Color to use for the last seams"
 msgstr "Цвет первых швов"
 
-#: ../src/interface.c:490
+#: ../src/interface.c:492
 msgid "Color to use for the first seams"
 msgstr "Цвет последних швов"
 
 #. Advanced settings page
-#: ../src/interface.c:495
+#: ../src/interface.c:497
 msgid "Advanced"
 msgstr "Дополнительно"
 
-#: ../src/interface.c:513
+#: ../src/interface.c:515
 msgid "Seams rigidity:"
 msgstr "Прямота швов:"
 
-#: ../src/interface.c:516
+#: ../src/interface.c:518
 msgid "Increasing this value results in straighter seams"
 msgstr "Чем выше это значение, тем прямее швы"
 
-#: ../src/interface.c:525
+#: ../src/interface.c:527
 msgid "Seams max step:"
 msgstr ""
 
-#: ../src/interface.c:528
+#: ../src/interface.c:530
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
 msgstr ""
 
-#: ../src/interface.c:545
+#: ../src/interface.c:547
 msgid ""
 "This affects the automatic feature recognition.\n"
 "It's the function which will be applied to the components of the gradient on "
@@ -136,72 +136,88 @@ msgstr ""
 "Эта функция применяется к компонентам градиента в каждом пикселе\n"
 "и затрагивает автоматическое распознавание значимых объектов."
 
-#: ../src/interface.c:555
+#: ../src/interface.c:557
 msgid "Gradient function:"
 msgstr "Функция расчета градиентов:"
 
-#: ../src/interface.c:560
+#: ../src/interface.c:562
 msgid "Transversal absolute value"
 msgstr "Поперечное абсолютное значение"
 
-#: ../src/interface.c:561
+#: ../src/interface.c:563
 msgid "Sum of absolute values"
 msgstr "Сумма абсолютных значений"
 
-#: ../src/interface.c:562
+#: ../src/interface.c:564
 msgid "Norm"
 msgstr "Обычная"
 
 #. Null can be translated as Zero
-#: ../src/interface.c:564
+#: ../src/interface.c:566
 msgid "Null"
 msgstr "Ноль"
 
+#: ../src/interface.c:582
+msgid "This controls the order of operations if rescaling in both directions"
+msgstr ""
+
+#: ../src/interface.c:591
+msgid "Rescale order:"
+msgstr ""
+
+#: ../src/interface.c:596
+msgid "Horizontal first"
+msgstr ""
+
+#: ../src/interface.c:597
+msgid "Vertical first"
+msgstr ""
+
 #. Mask page
-#: ../src/interface.c:578
+#: ../src/interface.c:614
 msgid "Mask"
 msgstr "Маска"
 
-#: ../src/interface.c:586
+#: ../src/interface.c:622
 msgid "Select behavior for the mask"
 msgstr "Укажите, как работать с масками"
 
-#: ../src/interface.c:591
+#: ../src/interface.c:627
 msgid "Apply"
 msgstr "Применять"
 
-#: ../src/interface.c:591
+#: ../src/interface.c:627
 msgid "Discard"
 msgstr "Не использовать"
 
-#: ../src/interface.c:883 ../src/interface.c:965 ../src/render.c:78
+#: ../src/interface.c:921 ../src/interface.c:1003 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Ошибка: похоже, что выбранный слой больше не может быть использован"
 
-#: ../src/interface.c:1438
+#: ../src/interface.c:1476
 msgid "Feature masks"
 msgstr "Маски значимых объектов"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1448
+#: ../src/interface.c:1486
 #, c-format
 msgid "%s pres mask"
 msgstr "%s - маска сохранения"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1457
+#: ../src/interface.c:1495
 #, c-format
 msgid "%s disc mask"
 msgstr "%s - маска удаления"
 
 #. Feature preservation
-#: ../src/interface.c:1479
+#: ../src/interface.c:1517
 msgid "Feature preservation mask"
 msgstr "Маска сохраняемых значимых объектов"
 
-#: ../src/interface.c:1484
+#: ../src/interface.c:1522
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -214,25 +230,25 @@ msgstr ""
 "на созданном слое маску выделения и нажать кнопку «Обновить».\n"
 "Обратите внимание, что закрашивание черным цветом ни на что не влияет."
 
-#: ../src/interface.c:1517
+#: ../src/interface.c:1555
 msgid "Preserve features"
 msgstr "Сохранить объекты"
 
-#: ../src/interface.c:1533
+#: ../src/interface.c:1571
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr ""
 "Используйте дополнительный слой для предохранения избранных областей от "
 "искажения"
 
-#: ../src/interface.c:1536 ../src/interface.c:1727
+#: ../src/interface.c:1574 ../src/interface.c:1765
 msgid "New"
 msgstr "Создать слой"
 
-#: ../src/interface.c:1541
+#: ../src/interface.c:1579
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr "Создать новый прозрачный слой для маски сохранения"
 
-#: ../src/interface.c:1580
+#: ../src/interface.c:1618
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -240,24 +256,24 @@ msgstr ""
 "Слой, используемый в качестве маски сохраняемых объектов.\n"
 "Нажимайте кнопку «Обновить» для обновления списка слоев."
 
-#: ../src/interface.c:1611 ../src/interface.c:1805
+#: ../src/interface.c:1649 ../src/interface.c:1843
 msgid "Layer:"
 msgstr "Слой:"
 
-#: ../src/interface.c:1632 ../src/interface.c:1823
+#: ../src/interface.c:1670 ../src/interface.c:1861
 msgid "Strength:"
 msgstr "Сила:"
 
-#: ../src/interface.c:1636
+#: ../src/interface.c:1674
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Коэффициент силы действия при сохранении значимых объектов"
 
 #. Feature discard
-#: ../src/interface.c:1669
+#: ../src/interface.c:1707
 msgid "Feature discard mask"
 msgstr "Маска удаляемых незначимых объектов"
 
-#: ../src/interface.c:1674
+#: ../src/interface.c:1712
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -270,11 +286,11 @@ msgstr ""
 "на созданном слое маску выделения и нажать кнопку «Обновить».\n"
 "Обратите внимание, что закрашивание черным цветом ни на что не влияет."
 
-#: ../src/interface.c:1705
+#: ../src/interface.c:1743
 msgid "Discard features"
 msgstr "Удалить объекты"
 
-#: ../src/interface.c:1722
+#: ../src/interface.c:1760
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -282,11 +298,11 @@ msgstr ""
 "Используйте дополнительный слой для удаления избранных областей, не имеющих "
 "значения (полезно при уменьшении изображения)"
 
-#: ../src/interface.c:1732
+#: ../src/interface.c:1770
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr "Создать новый прозрачный слой для маски удаления"
 
-#: ../src/interface.c:1770
+#: ../src/interface.c:1808
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -294,33 +310,33 @@ msgstr ""
 "Слой, используемый в качестве маски удаляемых объектов.\n"
 "Нажимайте кнопку «Обновить» для обновления списка слоев."
 
-#: ../src/interface.c:1827
+#: ../src/interface.c:1865
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Коэффициент силы действия при удалении значимых объектов"
 
-#: ../src/interface.c:1869
+#: ../src/interface.c:1907
 msgid "Auto size"
 msgstr ""
 
-#: ../src/interface.c:1879
+#: ../src/interface.c:1917
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
-#: ../src/interface.c:1882
+#: ../src/interface.c:1920
 msgid "horizontal"
 msgstr ""
 
-#: ../src/interface.c:1882
+#: ../src/interface.c:1920
 msgid "vertical"
 msgstr ""
 
-#: ../src/interface.c:1891
+#: ../src/interface.c:1929
 msgid "Resizing direction for auto size"
 msgstr ""
 
-#: ../src/main.c:166
+#: ../src/main.c:168
 msgid "Liquid rescale ..."
 msgstr "Избирательное масштабирование..."
 
@@ -344,7 +360,7 @@ msgstr ""
 msgid "Resizing width..."
 msgstr "Изменяется ширина..."
 
-#: ../src/lqr_raster.c:1356
+#: ../src/lqr_raster.c:1361
 msgid "Resizing height..."
 msgstr "Изменяется высота..."
 

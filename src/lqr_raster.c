@@ -53,6 +53,7 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
                 LqrGradFunc gf_ind, gint rigidity, gint delta_x,
                 gboolean resize_aux_layers,
                 gboolean output_seams,
+		LqrResizeOrder res_order,
                 GimpRGB seam_color_start, GimpRGB seam_color_end)
 {
   LqrRaster *r;
@@ -71,6 +72,7 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   r->rigidity = rigidity;
   r->resize_aux_layers = resize_aux_layers;
   r->output_seams = output_seams;
+  r->resize_order = res_order;
   r->seam_color_start = seam_color_start;
   r->seam_color_end = seam_color_end;
   r->pres_raster = NULL;
@@ -270,7 +272,7 @@ lqr_raster_set_gf (LqrRaster * r, LqrGradFunc gf_ind)
 #ifdef __LQR_DEBUG__
     default:
       assert (0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
     }
 }
 
@@ -1289,14 +1291,12 @@ lqr_raster_transpose (LqrRaster * r)
   return TRUE;
 }
 
-
 /* liquid resize : this is the main method
  * it automatically determines the depth of the map
  * according to the desired size */
 gboolean
-lqr_raster_resize (LqrRaster * r, gint w1, gint h1)
+lqr_raster_resize_width (LqrRaster * r, gint w1)
 {
-  /* resize width */
   gint delta, gamma;
   if (!r->transposed)
     {
@@ -1334,8 +1334,13 @@ lqr_raster_resize (LqrRaster * r, gint w1, gint h1)
           TRY_F_F (lqr_external_write_vs (r));
         }
     }
+  return TRUE;
+}
 
-  /* resize height */
+gboolean
+lqr_raster_resize_height (LqrRaster * r, gint h1)
+{
+  gint delta, gamma;
   if (!r->transposed)
     {
       delta = h1 - r->h_start;
@@ -1371,6 +1376,35 @@ lqr_raster_resize (LqrRaster * r, gint w1, gint h1)
         {
           TRY_F_F (lqr_external_write_vs (r));
         }
+    }
+
+  return TRUE;
+}
+
+
+
+
+/* liquid resize : this is the main method
+ * it automatically determines the depth of the map
+ * according to the desired size */
+gboolean
+lqr_raster_resize (LqrRaster * r, gint w1, gint h1)
+{
+  /* resize width */
+  switch (r->resize_order)
+    {
+      case LQR_RES_ORDER_HOR:
+	TRY_F_F (lqr_raster_resize_width(r, w1));
+	TRY_F_F (lqr_raster_resize_height(r, h1));
+	break;
+      case LQR_RES_ORDER_VERT:
+	TRY_F_F (lqr_raster_resize_height(r, h1));
+	TRY_F_F (lqr_raster_resize_width(r, w1));
+	break;
+#ifdef __LQR_DEBUG__
+      default:
+	assert(0);
+#endif /* __LQR_DEBUG__ */
     }
 
   return TRUE;

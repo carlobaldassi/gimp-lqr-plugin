@@ -51,10 +51,8 @@
 		<div>
 			In this section it is possible to choose the size and the mode of operation.
 			It is advisable to rescale always in one direction at a time. If both 
-			the width and the height are changed, rescaling is always performed on the width first,
-			then on the height (for no particular reason).
-			The reverse order can be obtained by simply applying it twice, letting the width
-			unchanged the first time, and the height the second.
+			the width and the height are changed, rescaling is performed by default on the
+			width first, then on the height. This can be changed in the <i>Advanced</i> tab.
 		</div>
 		<div>
 			The default operational mode is just liquid rescaling to the desired size.
@@ -93,12 +91,12 @@
 		the final size atuomatically.
 	</p>
 	<p>
-		<b>Note:</b> discarding a feature implies that it will be removed if shrinking
+		<b>Note #1:</b> discarding a feature implies that it will be removed if shrinking
 		the layer, but it will be inflated if enlarging it, since it will be treated
 		as unimportant background which can be removed or expanded as needed.
 	</p>
 	<p>
-		<b>Note:</b> preservation of features is not possible if enlarging too much,
+		<b>Note #2:</b> preservation of features is not possible if enlarging too much,
 		because the inflation process is the exact reverse of the shrinking process,
 		so the maximum amount of pixels you can add to a layer corresponds to the 
 		amount of pixels which are not protected. For example, if you have a 1000 pixel
@@ -205,7 +203,9 @@
 	<p>
 		<b>Seams rigidity. </b>
 		Use this value to give a negative bias to the seams which are not straight. May be useful
-		to prevent distortions in some situations. It automatically accounts for the image size.
+		to prevent distortions in some situations, or to avoid artifacts from pixel skipping.
+		The bias is proportional to the difference in the transversal coordinate between each
+		two successive points, elevated to the power of 1.5, and summed up for the whole seam.
 	</p>
 	<p>
 		<div>
@@ -219,8 +219,7 @@
 		<div>
 			Increasing the step value lets you overcome this limit, but may lead to the
 			introduction of artifacts. In order to balance the situation, you can use
-			the rigidity setting: this will give a bias to the steps proportional
-			to their absolute value to the power of 1.5.
+			the rigidity setting.
 		</div>
 	<p>
 		<b>Gradient function. </b>
@@ -234,6 +233,12 @@
 		mask can be used to override completely the automatic feature detection, thus
 		allowing the user to generate his own energy map (e.g. by another plugin).
 	</p>
+	<p>
+		<b>Rescale order. </b>
+		When rescaling in both directions at the same time, it can be choosen whether to resize
+		first in the horizontal and then in the vertical direction, or vice versa.
+		If the mode of operation is "Lqr + Lqr back to the original size", the order is reversed
+		when scaling back.
       </td>
     </tr>
   </table>

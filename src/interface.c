@@ -147,6 +147,8 @@ dialog (gint32 image_ID,
   GtkWidget *thispage;
   GtkWidget *label;
   GtkWidget *grad_func_combo_box;
+  GtkWidget *res_order_event_box;
+  GtkWidget *res_order_combo_box;
   GtkWidget *new_layer_button;
   GtkWidget *resize_canvas_button;
   GtkWidget *resize_aux_layers_button;
@@ -568,6 +570,40 @@ dialog (gint32 image_ID,
   gtk_box_pack_start (GTK_BOX (hbox), grad_func_combo_box, TRUE, TRUE, 0);
   gtk_widget_show (grad_func_combo_box);
 
+  /* Resize order */
+
+  res_order_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (thispage), res_order_event_box, FALSE, FALSE,
+                      0);
+  gtk_widget_show (res_order_event_box);
+
+  gimp_help_set_help_data (res_order_event_box,
+                           _
+                           ("This controls the order of operations "
+                            "if rescaling in both directions"),
+                           NULL);
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
+  gtk_container_add (GTK_CONTAINER (res_order_event_box), hbox);
+  gtk_widget_show (hbox);
+
+  label = gtk_label_new (_("Rescale order:"));
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  res_order_combo_box =
+    gimp_int_combo_box_new (_("Horizontal first"), LQR_RES_ORDER_HOR,
+                            _("Vertical first"), LQR_RES_ORDER_VERT,
+                            NULL);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
+                                 state->res_order);
+
+  gtk_box_pack_start (GTK_BOX (hbox), res_order_combo_box, TRUE, TRUE, 0);
+  gtk_widget_show (res_order_combo_box);
+
+
+
 
   /* Mask */
 
@@ -622,6 +658,8 @@ dialog (gint32 image_ID,
                                      &(state->oper_mode));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
                                      &(state->grad_func));
+      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
+                                     &(state->res_order));
       state->new_layer =
         gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (new_layer_button));
       state->resize_canvas =
