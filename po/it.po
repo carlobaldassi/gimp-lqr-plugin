@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 03:49+0100\n"
+"POT-Creation-Date: 2007-11-22 00:10+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -201,34 +201,34 @@ msgstr "Applica"
 msgid "Discard"
 msgstr "Elimina"
 
-#: ../src/interface.c:921 ../src/interface.c:1003 ../src/render.c:78
+#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Errore: sembra che il livello selezionato non sia più valido"
 
-#: ../src/interface.c:1476
+#: ../src/interface.c:1486
 msgid "Feature masks"
 msgstr "Maschere per i contenuti"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1486
+#: ../src/interface.c:1496
 #, c-format
 msgid "%s pres mask"
 msgstr "%s (maschera pres.)"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1495
+#: ../src/interface.c:1505
 #, c-format
 msgid "%s disc mask"
 msgstr "%s (maschera elim.)"
 
 #. Feature preservation
-#: ../src/interface.c:1517
+#: ../src/interface.c:1527
 msgid "Feature preservation mask"
 msgstr "Maschera per i contenuti da preservare"
 
-#: ../src/interface.c:1522
+#: ../src/interface.c:1532
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -241,27 +241,27 @@ msgstr ""
 "premi il pulsante \"Aggiorna\"\n"
 "Nota che dipingere in nero non ha alcun effetto"
 
-#: ../src/interface.c:1555
+#: ../src/interface.c:1565
 msgid "Preserve features"
 msgstr "Preserva contenuti"
 
-#: ../src/interface.c:1571
+#: ../src/interface.c:1581
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr ""
 "Utilizza un livello aggiuntivo per specificare le aree da preservare dalla "
 "distorsione"
 
-#: ../src/interface.c:1574 ../src/interface.c:1765
+#: ../src/interface.c:1584 ../src/interface.c:1775
 msgid "New"
 msgstr "Nuovo"
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1589
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr ""
 "Crea un nuovo livello trasparente, pronto per essere usato come maschera per "
 "la preservazione"
 
-#: ../src/interface.c:1618
+#: ../src/interface.c:1628
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -269,24 +269,24 @@ msgstr ""
 "Livello da utilizzare come maschera per la preservazione dei contenuti.\n"
 "Usa il pulsante \"Aggiorna\" per aggiornare la lista"
 
-#: ../src/interface.c:1649 ../src/interface.c:1843
+#: ../src/interface.c:1659 ../src/interface.c:1853
 msgid "Layer:"
 msgstr "Livello:"
 
-#: ../src/interface.c:1670 ../src/interface.c:1861
+#: ../src/interface.c:1680 ../src/interface.c:1871
 msgid "Strength:"
 msgstr "Intensità:"
 
-#: ../src/interface.c:1674
+#: ../src/interface.c:1684
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coefficiente globale per l'intensità della preservazione dei contenuti"
 
 #. Feature discard
-#: ../src/interface.c:1707
+#: ../src/interface.c:1717
 msgid "Feature discard mask"
 msgstr "Maschera per i contenuti da eliminare"
 
-#: ../src/interface.c:1712
+#: ../src/interface.c:1722
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -299,11 +299,11 @@ msgstr ""
 "premi il pulsante \"Aggiorna\"\n"
 "Nota che dipingere in nero non ha alcun effetto"
 
-#: ../src/interface.c:1743
+#: ../src/interface.c:1753
 msgid "Discard features"
 msgstr "Elimina contenuti"
 
-#: ../src/interface.c:1760
+#: ../src/interface.c:1770
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -312,13 +312,13 @@ msgstr ""
 "significative (utile per rimuovere parti dell'immagine mediante il "
 "restringimento)"
 
-#: ../src/interface.c:1770
+#: ../src/interface.c:1780
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 "Crea un nuovo livello trasparente, pronto per essere usato come maschera per "
 "l'eliminazione"
 
-#: ../src/interface.c:1808
+#: ../src/interface.c:1818
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -326,15 +326,15 @@ msgstr ""
 "Livello da utilizzare come maschera per l'eliminazione dei contenuti.\n"
 "Usa il pulsante \"Aggiorna\" per aggiornare la lista"
 
-#: ../src/interface.c:1865
+#: ../src/interface.c:1875
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coefficiente globale per l'intensità dell'eliminazione dei contenuti"
 
-#: ../src/interface.c:1907
+#: ../src/interface.c:1917
 msgid "Auto size"
 msgstr "Auto dimensionamento"
 
-#: ../src/interface.c:1917
+#: ../src/interface.c:1927
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
@@ -343,15 +343,15 @@ msgstr ""
 "per la rimozione.\n"
 "Usare solo con maschere semplici."
 
-#: ../src/interface.c:1920
+#: ../src/interface.c:1930
 msgid "horizontal"
 msgstr "orizzontale"
 
-#: ../src/interface.c:1920
+#: ../src/interface.c:1930
 msgid "vertical"
 msgstr "verticale"
 
-#: ../src/interface.c:1929
+#: ../src/interface.c:1939
 msgid "Resizing direction for auto size"
 msgstr "Direzione del ridimensionamento automatico"
 
@@ -375,11 +375,11 @@ msgstr ""
 "Errore: sembra che il livello per l'eliminazione dei contenuti non sia più "
 "valido"
 
-#: ../src/lqr_raster.c:1318
+#: ../src/lqr_raster.c:1320
 msgid "Resizing width..."
 msgstr "Sto riscalando l'altezza..."
 
-#: ../src/lqr_raster.c:1361
+#: ../src/lqr_raster.c:1363
 msgid "Resizing height..."
 msgstr "Sto riscalando la larghezza..."
 

@@ -711,6 +711,8 @@ dialog (gint32 image_ID,
       gimp_context_set_foreground (&saved_color);
     }
 
+  gimp_drawable_detach(preview_data.drawable);
+
   return run;
 }
 
@@ -903,6 +905,7 @@ static void callback_guess_direction (GtkWidget * combo, gpointer data)
 static gint guess_new_width (GtkWidget * button, gpointer data)
 {
   gint32 disc_layer_ID;
+  GimpDrawable *drawable;
   gint x, y, k;
   gint width, height;
   gint lw, lh;
@@ -929,7 +932,8 @@ static gint guess_new_width (GtkWidget * button, gpointer data)
   bpp = gimp_drawable_bpp (disc_layer_ID);
   c_bpp = bpp - (has_alpha ? 1 : 0);
 
-  gimp_pixel_rgn_init (&rgn_in, gimp_drawable_get(disc_layer_ID), 0, 0, width, height, FALSE, FALSE);
+  drawable = gimp_drawable_get(disc_layer_ID);
+  gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, width, height, FALSE, FALSE);
 
 
   gimp_drawable_offsets (disc_layer_ID, &x_off, &y_off);
@@ -977,6 +981,7 @@ static gint guess_new_width (GtkWidget * button, gpointer data)
   new_width = PREVIEW_DATA(data)->old_width - max_mask_size;
 
   g_free (inrow);
+  gimp_drawable_detach(drawable);
 
   return new_width;
 
@@ -985,6 +990,7 @@ static gint guess_new_width (GtkWidget * button, gpointer data)
 static gint guess_new_height (GtkWidget * button, gpointer data)
 {
   gint32 disc_layer_ID;
+  GimpDrawable *drawable;
   gint x, y, k;
   gint width, height;
   gint lw, lh;
@@ -1011,7 +1017,8 @@ static gint guess_new_height (GtkWidget * button, gpointer data)
   bpp = gimp_drawable_bpp (disc_layer_ID);
   c_bpp = bpp - (has_alpha ? 1 : 0);
 
-  gimp_pixel_rgn_init (&rgn_in, gimp_drawable_get(disc_layer_ID), 0, 0, width, height, FALSE, FALSE);
+  drawable = gimp_drawable_get(disc_layer_ID);
+  gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, width, height, FALSE, FALSE);
 
 
   gimp_drawable_offsets (disc_layer_ID, &x_off, &y_off);
@@ -1060,6 +1067,7 @@ static gint guess_new_height (GtkWidget * button, gpointer data)
   new_height = PREVIEW_DATA(data)->old_height - max_mask_size;
 
   g_free (incol);
+  gimp_drawable_detach(drawable);
 
   return new_height;
 }
@@ -1186,7 +1194,7 @@ preview_build_buffer_new (gint32 layer_ID)
   //isgray = gimp_drawable_is_gray (layer_ID);
 
   gimp_pixel_rgn_init (&rgn_in,
-                       gimp_drawable_get (layer_ID), 0, 0, width, height,
+                       drawable, 0, 0, width, height,
                        FALSE, FALSE);
 
   x_off -= preview_data.x_off;
@@ -1273,6 +1281,7 @@ preview_build_buffer_new (gint32 layer_ID)
   }
 
   g_free(inrect);
+  gimp_drawable_detach(drawable);
   printf("built\n"); fflush(stdout);
 
   return buffer;
@@ -1331,6 +1340,7 @@ preview_build_buffer (gint32 layer_ID)
     }
 
   g_free (inrow);
+  gimp_drawable_detach(drawable);
   return buffer;
 }
 

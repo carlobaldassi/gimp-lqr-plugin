@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 03:49+0100\n"
+"POT-Creation-Date: 2007-11-22 00:10+0100\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -193,35 +193,35 @@ msgstr "Aplică"
 msgid "Discard"
 msgstr "Anulare"
 
-#: ../src/interface.c:921 ../src/interface.c:1003 ../src/render.c:78
+#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Eroare: stratul selectat nu mai este valid"
 
-#: ../src/interface.c:1476
+#: ../src/interface.c:1486
 msgid "Feature masks"
 msgstr "Mască trăsături"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1486
+#: ../src/interface.c:1496
 #, c-format
 msgid "%s pres mask"
 msgstr "masca salvare %s"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1495
+#: ../src/interface.c:1505
 #, c-format
 msgid "%s disc mask"
 msgstr "masca ştergere %s"
 
 #. Feature preservation
-#: ../src/interface.c:1517
+#: ../src/interface.c:1527
 #, fuzzy
 msgid "Feature preservation mask"
 msgstr "Selectare păstrare caracteristici"
 
-#: ../src/interface.c:1522
+#: ../src/interface.c:1532
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -234,23 +234,23 @@ msgstr ""
 "\"Actualizare\".\n"
 "Pictatul în negru nu are nici un efect."
 
-#: ../src/interface.c:1555
+#: ../src/interface.c:1565
 msgid "Preserve features"
 msgstr "Păstrare caracteristici"
 
-#: ../src/interface.c:1571
+#: ../src/interface.c:1581
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr "Foloseşte un extra strat pentru a nu distorsiona zonele selectate"
 
-#: ../src/interface.c:1574 ../src/interface.c:1765
+#: ../src/interface.c:1584 ../src/interface.c:1775
 msgid "New"
 msgstr "Nou"
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1589
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr "Crează un nou strat transparent folosit ca mască de conservare"
 
-#: ../src/interface.c:1618
+#: ../src/interface.c:1628
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -258,25 +258,25 @@ msgstr ""
 "Strat folosit ca mască pentru păstrarea caracteristicilor.\n"
 "Folosiţi butonul \"Actualizare\" pentru actualizare listă"
 
-#: ../src/interface.c:1649 ../src/interface.c:1843
+#: ../src/interface.c:1659 ../src/interface.c:1853
 msgid "Layer:"
 msgstr "Strat:"
 
-#: ../src/interface.c:1670 ../src/interface.c:1861
+#: ../src/interface.c:1680 ../src/interface.c:1871
 msgid "Strength:"
 msgstr "Forţă"
 
-#: ../src/interface.c:1674
+#: ../src/interface.c:1684
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coeficient general de intensitate păstrare caracteristici"
 
 #. Feature discard
-#: ../src/interface.c:1707
+#: ../src/interface.c:1717
 #, fuzzy
 msgid "Feature discard mask"
 msgstr "Selectare anulare caracteristici"
 
-#: ../src/interface.c:1712
+#: ../src/interface.c:1722
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -289,11 +289,11 @@ msgstr ""
 "\"Actualizare\".\n"
 "Pictatul în negru nu are efect."
 
-#: ../src/interface.c:1743
+#: ../src/interface.c:1753
 msgid "Discard features"
 msgstr "Înlăturare caracteristici"
 
-#: ../src/interface.c:1760
+#: ../src/interface.c:1770
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -301,11 +301,11 @@ msgstr ""
 "Foloseşte un strat pentru a trata zona selectată ca nesimnificativă"
 "(folositor pentru îndepărtare părţi din imagine la redimensionare) "
 
-#: ../src/interface.c:1770
+#: ../src/interface.c:1780
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr "Crează un strat nou transparent folosit ca mască de înlăturare"
 
-#: ../src/interface.c:1808
+#: ../src/interface.c:1818
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -313,29 +313,29 @@ msgstr ""
 "Strat folosit ca mască pentru caracteristici înlăturate.\n"
 "Folosiţi butonul \"Actualizare\" pentru actualizare listă"
 
-#: ../src/interface.c:1865
+#: ../src/interface.c:1875
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficient general de intensitate anulare caracteristici"
 
-#: ../src/interface.c:1907
+#: ../src/interface.c:1917
 msgid "Auto size"
 msgstr ""
 
-#: ../src/interface.c:1917
+#: ../src/interface.c:1927
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
-#: ../src/interface.c:1920
+#: ../src/interface.c:1930
 msgid "horizontal"
 msgstr ""
 
-#: ../src/interface.c:1920
+#: ../src/interface.c:1930
 msgid "vertical"
 msgstr ""
 
-#: ../src/interface.c:1929
+#: ../src/interface.c:1939
 msgid "Resizing direction for auto size"
 msgstr ""
 
@@ -355,11 +355,11 @@ msgstr "Eroare: strat păstrare caracteristici nu mai este valid"
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Eroare: strat înlăturare caracteristici nu mai este valid"
 
-#: ../src/lqr_raster.c:1318
+#: ../src/lqr_raster.c:1320
 msgid "Resizing width..."
 msgstr "Redimensionare lăţime..."
 
-#: ../src/lqr_raster.c:1361
+#: ../src/lqr_raster.c:1363
 msgid "Resizing height..."
 msgstr "Redimensionare înălţime..."
 

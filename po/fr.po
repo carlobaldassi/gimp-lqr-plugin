@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 03:49+0100\n"
+"POT-Creation-Date: 2007-11-22 00:10+0100\n"
 "PO-Revision-Date: 2007-10-13 14:31+0200\n"
 "Last-Translator: Vincent Picavet <vpicavet@gmail.com>\n"
 "Language-Team:  <fr@li.org>\n"
@@ -200,34 +200,34 @@ msgstr "Appliquer"
 msgid "Discard"
 msgstr "Annuler"
 
-#: ../src/interface.c:921 ../src/interface.c:1003 ../src/render.c:78
+#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:78
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Erreur : il semble que le calque sélectionné n'est plus valide"
 
-#: ../src/interface.c:1476
+#: ../src/interface.c:1486
 msgid "Feature masks"
 msgstr "Masques des éléments"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1486
+#: ../src/interface.c:1496
 #, c-format
 msgid "%s pres mask"
 msgstr "Masque de préservation %s"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1495
+#: ../src/interface.c:1505
 #, c-format
 msgid "%s disc mask"
 msgstr "Masque de suppression %s"
 
 #. Feature preservation
-#: ../src/interface.c:1517
+#: ../src/interface.c:1527
 msgid "Feature preservation mask"
 msgstr "Masque de conservation d'éléments"
 
-#: ../src/interface.c:1522
+#: ../src/interface.c:1532
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -239,27 +239,27 @@ msgstr ""
 "d'éléments.\n"
 "Vous pouvez en créer un avec le bouton \"Nouveau\" et peindre dessus"
 
-#: ../src/interface.c:1555
+#: ../src/interface.c:1565
 msgid "Preserve features"
 msgstr "Conserver les éléments"
 
-#: ../src/interface.c:1571
+#: ../src/interface.c:1581
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr ""
 "Utiliser un calque supplémentaire pour préserver les zones sélectionnées de "
 "la déformation"
 
-#: ../src/interface.c:1574 ../src/interface.c:1765
+#: ../src/interface.c:1584 ../src/interface.c:1775
 msgid "New"
 msgstr "Nouveau"
 
-#: ../src/interface.c:1579
+#: ../src/interface.c:1589
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr ""
 "Créer un nouveau calque transparent prêt à être utilisé comme masque de "
 "conservation"
 
-#: ../src/interface.c:1618
+#: ../src/interface.c:1628
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -267,24 +267,24 @@ msgstr ""
 "Calque à utiliser comme masque pour la conservation d'éléments.\n"
 " Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
-#: ../src/interface.c:1649 ../src/interface.c:1843
+#: ../src/interface.c:1659 ../src/interface.c:1853
 msgid "Layer:"
 msgstr "Calque :"
 
-#: ../src/interface.c:1670 ../src/interface.c:1861
+#: ../src/interface.c:1680 ../src/interface.c:1871
 msgid "Strength:"
 msgstr "Force :"
 
-#: ../src/interface.c:1674
+#: ../src/interface.c:1684
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coefficient global pour l'intensité de conservation des éléments"
 
 #. Feature discard
-#: ../src/interface.c:1707
+#: ../src/interface.c:1717
 msgid "Feature discard mask"
 msgstr "Masque de suppression d'éléments"
 
-#: ../src/interface.c:1712
+#: ../src/interface.c:1722
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -298,11 +298,11 @@ msgstr ""
 "ensuite pressez le bouton \"Rafraichir\".\n"
 " Notez que peindre en noir n'a aucun effet"
 
-#: ../src/interface.c:1743
+#: ../src/interface.c:1753
 msgid "Discard features"
 msgstr "Supprimer des éléments"
 
-#: ../src/interface.c:1760
+#: ../src/interface.c:1770
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -311,13 +311,13 @@ msgstr ""
 "si elles étaient inutiles. Efficace pour enlever certaines parties de "
 "l'image lors d'un rétrécissement"
 
-#: ../src/interface.c:1770
+#: ../src/interface.c:1780
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 "Créer un nouveau calque transparent prêt à être utiliser comme calque de "
 "suppression"
 
-#: ../src/interface.c:1808
+#: ../src/interface.c:1818
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -325,29 +325,29 @@ msgstr ""
 "Calque à utiliser comme un masque pour la suppression d'élément.\n"
 " Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
-#: ../src/interface.c:1865
+#: ../src/interface.c:1875
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coefficient global pour l'intensité de suppression des éléments"
 
-#: ../src/interface.c:1907
+#: ../src/interface.c:1917
 msgid "Auto size"
 msgstr ""
 
-#: ../src/interface.c:1917
+#: ../src/interface.c:1927
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
-#: ../src/interface.c:1920
+#: ../src/interface.c:1930
 msgid "horizontal"
 msgstr ""
 
-#: ../src/interface.c:1920
+#: ../src/interface.c:1930
 msgid "vertical"
 msgstr ""
 
-#: ../src/interface.c:1929
+#: ../src/interface.c:1939
 msgid "Resizing direction for auto size"
 msgstr ""
 
@@ -369,11 +369,11 @@ msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Erreur : il semble que le calque de suppression d'éléments n'est plus valide"
 
-#: ../src/lqr_raster.c:1318
+#: ../src/lqr_raster.c:1320
 msgid "Resizing width..."
 msgstr "Redimensionnement de la largeur..."
 
-#: ../src/lqr_raster.c:1361
+#: ../src/lqr_raster.c:1363
 msgid "Resizing height..."
 msgstr "Redimensionnement de la hauteur..."
 

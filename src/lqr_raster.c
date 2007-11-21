@@ -47,6 +47,60 @@
 
 /* constructor */
 LqrRaster *
+lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable, gchar * name)
+{
+  LqrRaster *r;
+
+  TRY_N_N (r = g_try_new (LqrRaster, 1));
+
+  r->image_ID = image_ID;
+  strncpy (r->name, name, LQR_MAX_NAME_LENGTH);
+
+  r->level = 1;
+  r->max_level = 1;
+  r->transposed = 0;
+  r->aux = 1;
+  r->rigidity = 0;
+  r->resize_aux_layers = FALSE;
+  r->output_seams = FALSE;
+  r->pres_raster = NULL;
+  r->disc_raster = NULL;
+
+  r->en = NULL;
+  r->bias = NULL;
+  r->m = NULL;
+  r->least = NULL;
+  r->_raw = NULL;
+  r->raw = NULL;
+  r->vpath = NULL;
+  r->vpath_x = NULL;
+  r->rigidity_map = NULL;
+
+  r->h = gimp_drawable_height (drawable->drawable_id);
+  r->w = gimp_drawable_width (drawable->drawable_id);
+  r->bpp = gimp_drawable_bpp (drawable->drawable_id);
+
+  r->w0 = r->w;
+  r->h0 = r->h;
+  r->w_start = r->w;
+  r->h_start = r->h;
+
+  /* allocate memory for internal structures */
+  TRY_N_N (r->rgb = g_try_new (guchar, r->w * r->h * r->bpp));
+  TRY_N_N (r->vs = g_try_new (gint, r->w * r->h));
+
+  /* initialize cursors */
+
+  TRY_N_N (r->c = lqr_cursor_create (r, r->vs));
+
+  /* read input layer */
+  TRY_F_N (lqr_external_readimage (r, drawable));
+
+  return r;
+}
+
+
+LqrRaster *
 lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
                 gint32 pres_layer_ID, gint pres_coeff,
                 gint32 disc_layer_ID, gint disc_coeff,
@@ -123,17 +177,17 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
     {
       if (pres_layer_ID != 0)
         {
+	  drawable = gimp_drawable_get(pres_layer_ID);
           TRY_N_N (r->pres_raster =
-                   lqr_raster_aux_new (image_ID,
-                                       gimp_drawable_get
-                                       (pres_layer_ID), ""));
+                   lqr_raster_aux_new (image_ID, drawable, ""));
+	  gimp_drawable_detach(drawable);
         }
       if (disc_layer_ID != 0)
         {
+	  drawable = gimp_drawable_get(disc_layer_ID);
           TRY_N_N (r->disc_raster =
-                   lqr_raster_aux_new (image_ID,
-                                       gimp_drawable_get
-                                       (disc_layer_ID), ""));
+                   lqr_raster_aux_new (image_ID, drawable, ""));
+	  gimp_drawable_detach(drawable);
         }
     }
 
@@ -155,59 +209,6 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
 }
 
 /* aux constructor (for preserve/discard layers) */
-LqrRaster *
-lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable, gchar * name)
-{
-  LqrRaster *r;
-
-  TRY_N_N (r = g_try_new (LqrRaster, 1));
-
-  r->image_ID = image_ID;
-  strncpy (r->name, name, LQR_MAX_NAME_LENGTH);
-
-  r->level = 1;
-  r->max_level = 1;
-  r->transposed = 0;
-  r->aux = 1;
-  r->rigidity = 0;
-  r->resize_aux_layers = FALSE;
-  r->output_seams = FALSE;
-  r->pres_raster = NULL;
-  r->disc_raster = NULL;
-
-  r->en = NULL;
-  r->bias = NULL;
-  r->m = NULL;
-  r->least = NULL;
-  r->_raw = NULL;
-  r->raw = NULL;
-  r->vpath = NULL;
-  r->vpath_x = NULL;
-  r->rigidity_map = NULL;
-
-  r->h = gimp_drawable_height (drawable->drawable_id);
-  r->w = gimp_drawable_width (drawable->drawable_id);
-  r->bpp = gimp_drawable_bpp (drawable->drawable_id);
-
-  r->w0 = r->w;
-  r->h0 = r->h;
-  r->w_start = r->w;
-  r->h_start = r->h;
-
-  /* allocate memory for internal structures */
-  TRY_N_N (r->rgb = g_try_new (guchar, r->w * r->h * r->bpp));
-  TRY_N_N (r->vs = g_try_new (gint, r->w * r->h));
-
-  /* initialize cursors */
-
-  TRY_N_N (r->c = lqr_cursor_create (r, r->vs));
-
-  /* read input layer */
-  TRY_F_N (lqr_external_readimage (r, drawable));
-
-  return r;
-}
-
 /* destructor */
 void
 lqr_raster_destroy (LqrRaster * r)
@@ -1291,9 +1292,10 @@ lqr_raster_transpose (LqrRaster * r)
   return TRUE;
 }
 
-/* liquid resize : this is the main method
- * it automatically determines the depth of the map
- * according to the desired size */
+/* liquid resize w + h: these are the rescale methods
+ * they automatically determine the depth of the map
+ * according to the desired size, can be called multiple
+ * times, transpose the image as necessasry */
 gboolean
 lqr_raster_resize_width (LqrRaster * r, gint w1)
 {
@@ -1381,12 +1383,7 @@ lqr_raster_resize_height (LqrRaster * r, gint h1)
   return TRUE;
 }
 
-
-
-
-/* liquid resize : this is the main method
- * it automatically determines the depth of the map
- * according to the desired size */
+/* liquid resize : this is the public method */
 gboolean
 lqr_raster_resize (LqrRaster * r, gint w1, gint h1)
 {
