@@ -48,13 +48,24 @@
 	
 	<h3>Select new width and height</h3>
 	<p>
-		In this section it is possible to choose the final
-		size. It is advisable to rescale always in one direction at a time. If both 
-		the width and the height are changed, rescaling is always performed on the width first,
-		then on the height (for no particular reason).
-		The reverse order can be obtained by simply applying it twice, letting the width
-		unchanged the first time, and the height the second.
+		<div>
+			In this section it is possible to choose the size and the mode of operation.
+			It is advisable to rescale always in one direction at a time. If both 
+			the width and the height are changed, rescaling is always performed on the width first,
+			then on the height (for no particular reason).
+			The reverse order can be obtained by simply applying it twice, letting the width
+			unchanged the first time, and the height the second.
+		</div>
+		<div>
+			The default operational mode is just liquid rescaling to the desired size.
+			The other options are to apply liquid rescaling or the standard scaling
+			back to the original size once the first liquid rescaling is done.
+		</div>
 	</p>
+	<p>
+		Note that the final size can be set automatically when removing objects, see below
+	</p>
+
 
 	<h3>Feature masks</h3>
 	<h4>Quick guide</h4>
@@ -77,11 +88,25 @@
 			</li>
 		</ul>
 	</p>
+		If you want to remove portions of the image, you can choose the scaling direction
+		(horizontal/vertical) and finally press the <i>"Auto size"</i> button to determine
+		the final size atuomatically.
+	</p>
 	<p>
 		<b>Note:</b> discarding a feature implies that it will be removed if shrinking
 		the layer, but it will be inflated if enlarging it, since it will be treated
 		as unimportant background which can be removed or expanded as needed.
 	</p>
+	<p>
+		<b>Note:</b> preservation of features is not possible if enlarging too much,
+		because the inflation process is the exact reverse of the shrinking process,
+		so the maximum amount of pixels you can add to a layer corresponds to the 
+		amount of pixels which are not protected. For example, if you have a 1000 pixel
+		wide image and you have marked a 800 pixel wide area for protection, the final
+		width should be less than 1200 pixels. If you want to enlarge more, do it in
+		steps.
+	</p>
+		
 
 	<h4>Full description</h4>
 	<p>
@@ -115,8 +140,22 @@
 		</div>
 	</p>
 	<p>
-		The <b>Feature discard selection</b> section is identical to the previous one,
-		but the effect is reversed. Also, the default color for the <i>"New"</i> button is red instead of green.
+		<div>
+			The <b>Feature discard selection</b> section is nearly identical to the previous one,
+			but the effect is reversed, and the default color for the <i>"New"</i> button is red instead of green.
+		</div>
+		<div>
+			Furthermore, there's an additional button, <i>"Auto size"</i>, which sets the final size of
+			the layer automatically. The nearby menu can be used to determine if the scaling will be
+			performed in the horizontal or in the vertical sense (the other direction will be
+			set to its initial value).
+		</div>
+		<div>
+			Note that this option is only suitable for naive object removals, since the final size is
+			determined by simply finding out the maximum number of pixels in a line for which the mask
+			value is above a given threshold, and it may fail if the masks are non-trivial.
+			The threshold is set to the 50% of a full RGB color (e.g. red in the default setting).
+		</div>
 	</p>
 
 	<h3>Output</h3>
@@ -134,9 +173,7 @@
 	<p>
 		<b>Resize image canvas.</b>
 		Specifies whether the image canvas should be resized to meet the new size of the active
-		layer. If this option is checked, the active layer will be repositioned to be
-		fully visible.
-		By default, it is on.
+		layer. By default, it is on.
 	</p>
 	<p>
 		<b>Resize preserve/discard layers.</b>
@@ -166,12 +203,27 @@
 		This page has some of options to tweak the plugin behavior.
 	</p>
 	<p>
-		<b>Seams rigidity.</b>
+		<b>Seams rigidity. </b>
 		Use this value to give a negative bias to the seams which are not straight. May be useful
-		to prevent distortions in some situations.
+		to prevent distortions in some situations. It automatically accounts for the image size.
 	</p>
 	<p>
-		<b>Gradient function.</b>
+		<div>
+			<b>Seams max step. </b>
+			This option lets you choose the maximum transversal step that the pixels in the seams can
+			take. In the standard algorithm, corresponing to the default value step = 1, each pixel
+			in a seam can be shifted by at most one pixel with respect to its neighbors.
+			This implies that the seams can form an angle of at most 45 degrees with respect
+			to their base line.
+		</div>
+		<div>
+			Increasing the step value lets you overcome this limit, but may lead to the
+			introduction of artifacts. In order to balance the situation, you can use
+			the rigidity setting: this will give a bias to the steps proportional
+			to their absolute value to the power of 1.5.
+		</div>
+	<p>
+		<b>Gradient function. </b>
 		It is possible to choose which function
 		is to be used to calculate the energy map of the image. For each pixel in the image,
 		the x,y components of the gradient are computed from the pixel's four nearest neighbors.

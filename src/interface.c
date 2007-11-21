@@ -132,18 +132,21 @@ dialog (gint32 image_ID,
   gint num_extra_layers;
   GtkWidget *gradient_event_box;
   GtkWidget *main_hbox;
+  GtkWidget *vbox;
+  GtkWidget *vbox2;
+  GtkWidget *hbox;
   GtkWidget *frame;
   GtkWidget *notebook;
   gfloat wfactor, hfactor;
   GtkWidget *preview_area;
   GtkWidget *table;
-  GtkWidget *hbox;
   GtkWidget *coordinates;
+  GtkWidget *mode_event_box;
+  GtkWidget *oper_mode_combo_box;
   GtkWidget *features_page;
   GtkWidget *thispage;
   GtkWidget *label;
   GtkWidget *grad_func_combo_box;
-  GtkWidget *vbox;
   GtkWidget *new_layer_button;
   GtkWidget *resize_canvas_button;
   GtkWidget *resize_aux_layers_button;
@@ -295,15 +298,20 @@ dialog (gint32 image_ID,
   gtk_widget_show (preview_area);
 
 
-  /*  Coordinates widget for selecting new size  */
+  /*  New size  */
 
   frame = gimp_frame_new (_("Select new width and height"));
-  gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
+
+  vbox2 = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox2), 4);
+  gtk_container_add (GTK_CONTAINER (frame), vbox2);
+  gtk_widget_show (vbox2);
 
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
-  gtk_container_add (GTK_CONTAINER (frame), hbox);
+  gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
   unit = gimp_image_get_unit (image_ID);
@@ -321,6 +329,35 @@ dialog (gint32 image_ID,
   gtk_widget_show (coordinates);
 
   preview_data.coordinates = (gpointer) coordinates;
+
+  /* Operational mode combo box */
+
+  mode_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (vbox2), mode_event_box, FALSE, FALSE, 0);
+  gtk_widget_show (mode_event_box);
+
+  gimp_help_set_help_data (mode_event_box,
+                           _("Choose mode of operation"),
+                           NULL);
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
+  gtk_container_add (GTK_CONTAINER (mode_event_box), hbox);
+  gtk_widget_show (hbox);
+
+  label = gtk_label_new (_("Mode:"));
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  oper_mode_combo_box =
+    gimp_int_combo_box_new (_("LqR only"), LQR_MODE_NORMAL,
+                            _("LqR + LqR back to the original size"), LQR_MODE_LQRBACK,
+                            _("LqR + scale back to the original size"), LQR_MODE_SCALEBACK, NULL);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
+                                 state->oper_mode);
+
+  gtk_box_pack_start (GTK_BOX (hbox), oper_mode_combo_box, TRUE, TRUE, 0);
+  gtk_widget_show (oper_mode_combo_box);
 
   /* Notebook */
 
@@ -581,6 +618,8 @@ dialog (gint32 image_ID,
         (gint) gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0);
       state->new_height =
         (gint) gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 1);
+      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
+                                     &(state->oper_mode));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
                                      &(state->grad_func));
       state->new_layer =
@@ -1837,7 +1876,8 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                             (ui_state->disc_status
                              && features_are_sensitive));
 
-  gimp_help_set_help_data (guess_button, _("Try to set the final size as needed to remove the masked areas"), NULL);
+  gimp_help_set_help_data (guess_button, _("Try to set the final size as needed to remove the masked areas.\n"
+			                   "Only use with simple masks"), NULL);
 
   guess_dir_combo = gimp_int_combo_box_new (_("horizontal"), 0, _("vertical"), 1, NULL);
   gtk_box_pack_end (GTK_BOX (hbox), guess_dir_combo, TRUE, TRUE, 0);

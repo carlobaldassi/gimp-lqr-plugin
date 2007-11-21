@@ -79,6 +79,7 @@ const PlugInVals default_vals = {
   FALSE,                        /* output seams */
   LQR_GF_XABS,                  /* grad func */
   GIMP_MASK_APPLY,              /* mask behavior */
+  LQR_MODE_NORMAL		/* operational mode */
 };
 
 const PlugInColVals default_col_vals = {
@@ -146,6 +147,7 @@ query (void)
     {GIMP_PDB_INT32, "seams", "Whether to output the seam map"},
     {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
     {GIMP_PDB_INT32, "grad_func", "Gradient function to use"},
+    {GIMP_PDB_INT32, "oper_mode", "Operational mode"},
   };
 
   gimp_plugin_domain_register (GETTEXT_PACKAGE, LOCALEDIR);
@@ -234,6 +236,7 @@ run (const gchar * name,
               vals.output_seams = param[14].data.d_int32;
               vals.grad_func = param[15].data.d_int32;
               vals.mask_behavior = param[16].data.d_int32;
+	      vals.oper_mode = param[17].data.d_int32;
             }
           break;
 

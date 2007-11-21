@@ -250,22 +250,22 @@ lqr_raster_set_gf (LqrRaster * r, LqrGradFunc gf_ind)
   switch (gf_ind)
     {
     case LQR_GF_NORM:
-      r->gf = &norm;
+      r->gf = &lqr_grad_norm;
       break;
     case LQR_GF_NORM_BIAS:
-      r->gf = &norm_bias;
+      r->gf = &lqr_grad_norm_bias;
       break;
     case LQR_GF_SUMABS:
-      r->gf = &sumabs;
+      r->gf = &lqr_grad_sumabs;
       break;
     case LQR_GF_XABS:
-      r->gf = &xabs;
+      r->gf = &lqr_grad_xabs;
       break;
     case LQR_GF_YABS:
-      r->gf = &yabs;
+      r->gf = &lqr_grad_yabs;
       break;
     case LQR_GF_NULL:
-      r->gf = &zero;
+      r->gf = &lqr_grad_zero;
       break;
 #ifdef __LQR_DEBUG__
     default:

@@ -44,6 +44,7 @@ typedef struct
   gboolean output_seams;
   gint grad_func;
   gint mask_behavior;
+  gint oper_mode;
 } PlugInVals;
 
 

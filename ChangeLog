@@ -1,6 +1,7 @@
 2007-11-20 Carlo Baldassi <carlobaldassi@yahoo.it>
-	* new : seam step option
+	* new : seam max step option
 	* new : auto size button for object removal
+	* new : added new operational modes (LqR back, scale back)
 	* bugfix : layer validity check is now working in GIMP 2.4
 	* bugfix : all layers are now transposed correctly
 2007-11-09 Carlo Baldassi <carlobaldassi@yahoo.it>

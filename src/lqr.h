@@ -46,6 +46,16 @@
 #define __LQR_VERBOSE__
 #endif
 
+/**** OPERATIONAL_MODES ****/
+typedef enum _LqrMode LqrMode;
+
+enum _LqrMode
+{
+  LQR_MODE_NORMAL,
+  LQR_MODE_LQRBACK,
+  LQR_MODE_SCALEBACK
+};
+
 /**** CLASSES DECLARATIONS ****/
 typedef struct _LqrCursor LqrCursor;
 typedef struct _LqrRaster LqrRaster;

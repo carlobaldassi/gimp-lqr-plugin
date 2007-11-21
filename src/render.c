@@ -146,9 +146,10 @@ render (gint32 image_ID,
   old_width = gimp_drawable_width (drawable->drawable_id);
   old_height = gimp_drawable_height (drawable->drawable_id);
 
+  gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
+
   if (vals->resize_aux_layers == TRUE)
     {
-      gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
       if (vals->pres_layer_ID != 0)
         {
           gimp_drawable_offsets (vals->pres_layer_ID, &aux_x_off, &aux_y_off);
@@ -189,6 +190,36 @@ render (gint32 image_ID,
 #endif // __LQR_CLOCK__
 
   MEMCHECK (lqr_raster_resize (rasta, vals->new_width, vals->new_height));
+
+  switch (vals->oper_mode)
+    {
+      case LQR_MODE_NORMAL:
+	break;
+      case LQR_MODE_LQRBACK:
+	MEMCHECK (lqr_raster_flatten (rasta));
+	MEMCHECK (lqr_raster_flatten (rasta));
+	if (vals->resize_aux_layers == TRUE)
+	  {
+	    if (vals->pres_layer_ID != 0)
+	      {
+		MEMCHECK (lqr_raster_flatten (rasta->pres_raster));
+	      }
+	    if (vals->disc_layer_ID != 0)
+	      {
+		MEMCHECK (lqr_raster_flatten (rasta->disc_raster));
+		TRY_F_F (lqr_external_readbias (rasta, vals->disc_layer_ID, 2 * vals->disc_coeff));
+	      }
+	  }
+	vals->new_width = old_width;
+	vals->new_height = old_height;
+	MEMCHECK (lqr_raster_resize (rasta, vals->new_width, vals->new_height));
+	break;
+      case LQR_MODE_SCALEBACK:
+	break;
+      default:
+	g_message("error: unknown mode");
+	return FALSE;
+    }
 
   if (vals->resize_canvas == TRUE)
     {
@@ -235,6 +266,48 @@ render (gint32 image_ID,
     }
 
   lqr_raster_destroy (rasta);
+  switch (vals->oper_mode)
+    {
+      case LQR_MODE_NORMAL:
+      case LQR_MODE_LQRBACK:
+	break;
+      case LQR_MODE_SCALEBACK:
+	if (vals->resize_canvas == TRUE)
+	  {
+	    gimp_image_resize (image_ID, old_width, old_height, 0, 0);
+	    gimp_layer_scale (layer_ID, old_width, old_height, FALSE);
+	  }
+	else
+	  {
+	    gimp_layer_translate(layer_ID, -x_off, -y_off);
+	    gimp_layer_scale (layer_ID, old_width, old_height, FALSE);
+	    gimp_layer_translate(layer_ID, x_off, y_off);
+	  }
+	drawable = gimp_drawable_get (layer_ID);
+	if (vals->resize_aux_layers == TRUE)
+	  {
+	    if (vals->pres_layer_ID != 0)
+	      {
+		gimp_layer_translate(vals->pres_layer_ID, -x_off, -y_off);
+		gimp_layer_scale (vals->pres_layer_ID, old_width,
+				   old_height, FALSE);
+		gimp_layer_translate(vals->pres_layer_ID, x_off, y_off);
+	      }
+	    if (vals->disc_layer_ID != 0)
+	      {
+		gimp_layer_translate(vals->disc_layer_ID, -x_off, -y_off);
+		gimp_layer_scale (vals->disc_layer_ID, old_width,
+				   old_height, FALSE);
+		gimp_layer_translate(vals->disc_layer_ID, x_off, y_off);
+	      }
+	  }
+	break;
+      default:
+	g_message("error: unknown mode");
+	return FALSE;
+    }
+
+
 
 #ifdef __LQR_CLOCK__
   clock4 = (double) clock () / CLOCKS_PER_SEC;
