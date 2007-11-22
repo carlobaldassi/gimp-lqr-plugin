@@ -47,42 +47,39 @@ gboolean
 lqr_external_readimage (LqrRaster * r, GimpDrawable * drawable)
 {
   gint x, y, k, bpp;
-  gint x1, y1, x2, y2;
+  gint32 layer_ID;
+  gint w, h;
   GimpPixelRgn rgn_in;
   guchar *inrow;
   gint update_step;
 
   gimp_progress_init (_("Parsing layer..."));
 
-  //gimp_drawable_mask_bounds (drawable->drawable_id, &x1, &y1, &x2, &y2);
-  x1 = y1 = 0;
-  x2 = gimp_drawable_width (drawable->drawable_id);
-  y2 = gimp_drawable_height (drawable->drawable_id);
+  layer_ID = drawable->drawable_id;
 
-  bpp = gimp_drawable_bpp (drawable->drawable_id);
+  w = gimp_drawable_width (layer_ID);
+  h = gimp_drawable_height (layer_ID);
+
+  bpp = gimp_drawable_bpp (layer_ID);
 
   gimp_pixel_rgn_init (&rgn_in,
-                       drawable, x1, y1, x2 - x1, y2 - y1, FALSE, FALSE);
+                       drawable, 0, 0, w, h, FALSE, FALSE);
 
-  gimp_drawable_offsets (drawable->drawable_id, &r->x_off, &r->y_off);
+  gimp_drawable_offsets (layer_ID, &r->x_off, &r->y_off);
 
 #ifdef __LQR_DEBUG__
-  assert (x2 - x1 == r->w);
-  assert (y2 - y1 == r->h);
+  assert (w == r->w);
+  assert (h == r->h);
 #endif // __LQR_DEBUG__
 
   TRY_N_F (inrow = g_try_new (guchar, bpp * r->w));
 
   for (y = 0; y < r->h; y++)
     {
-      gimp_pixel_rgn_get_row (&rgn_in, inrow, x1, y, r->w);
+      gimp_pixel_rgn_get_row (&rgn_in, inrow, 0, y, r->w);
 
       for (x = 0; x < r->w; x++)
         {
-          if (r->raw != NULL)
-            {
-              r->raw[y][x] = y * r->w + x;
-            }
           for (k = 0; k < bpp; k++)
             {
               r->rgb[(y * r->w + x) * bpp + k] = inrow[x * bpp + k];
@@ -107,7 +104,7 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
 {
   gint x, y, k, bpp, c_bpp;
   gboolean has_alpha;
-  gint x1, y1, x2, y2;
+  gint w, h;
   gint x_off, y_off;
   gint lw, lh;
   gint sum;
@@ -123,31 +120,30 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
   gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
   //gimp_drawable_mask_bounds (layer_ID, &x1, &y1, &x2, &y2);
-  x1 = y1 = 0;
-  x2 = gimp_drawable_width (layer_ID);
-  y2 = gimp_drawable_height (layer_ID);
+  w = gimp_drawable_width (layer_ID);
+  h = gimp_drawable_height (layer_ID);
 
   bpp = gimp_drawable_bpp (layer_ID);
   has_alpha = gimp_drawable_has_alpha (layer_ID);
   c_bpp = bpp - (has_alpha ? 1 : 0);
 
   gimp_pixel_rgn_init (&rgn_in,
-                       gimp_drawable_get (layer_ID), x1, y1, x2 - x1, y2 - y1,
+                       gimp_drawable_get (layer_ID), 0, 0, w, h,
                        FALSE, FALSE);
 
   x_off -= r->x_off;
   y_off -= r->y_off;
 
-  lw = (MIN (r->w, x2 + x_off) - MAX (0, x1 + x_off));
-  lh = (MIN (r->h, y2 + y_off) - MAX (0, y1 + y_off));
+  lw = (MIN (r->w, w + x_off) - MAX (0, x_off));
+  lh = (MIN (r->h, h + y_off) - MAX (0, y_off));
 
 
   TRY_N_F (inrow = g_try_new (guchar, bpp * lw));
 
-  for (y = MAX (0, y1 + y_off); y < MIN (r->h, y2 + y_off); y++)
+  for (y = MAX (0, y_off); y < MIN (r->h, h + y_off); y++)
     {
-      gimp_pixel_rgn_get_row (&rgn_in, inrow, MAX (x1, -x_off),
-                              y - y1 - y_off, lw);
+      gimp_pixel_rgn_get_row (&rgn_in, inrow, MAX (0, -x_off),
+                              y - y_off, lw);
 
       for (x = 0; x < lw; x++)
         {
@@ -163,7 +159,7 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
               bias *= (double) inrow[bpp * (x + 1) - 1] / 255;
             }
 
-          r->bias[y * r->w + (x + MAX (0, x1 + x_off))] += bias;
+          r->bias[y * r->w + (x + MAX (0, x_off))] += bias;
 
         }
 
@@ -178,8 +174,9 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
 gboolean
 lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
 {
+  gint32 layer_ID;
   gint x, y, k;
-  gint x1, y1, x2, y2;
+  gint w, h;
   GimpPixelRgn rgn_out;
   guchar *outrow;
   gint update_step;
@@ -187,23 +184,24 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
   gimp_progress_init (_("Applying changes..."));
   update_step = MAX ((r->h - 1) / 20, 1);
 
-  //gimp_drawable_mask_bounds (drawable->drawable_id, &x1, &y1, &x2, &y2);
-  x1 = y1 = 0;
-  x2 = gimp_drawable_width (drawable->drawable_id);
-  y2 = gimp_drawable_height (drawable->drawable_id);
+  layer_ID = drawable->drawable_id;
+
+  //gimp_drawable_mask_bounds (layer_ID, &x1, &y1, &x2, &y2);
+  w = gimp_drawable_width (layer_ID);
+  h = gimp_drawable_height (layer_ID);
 
   gimp_pixel_rgn_init (&rgn_out,
-                       drawable, x1, y1, x2 - x1, y2 - y1, TRUE, TRUE);
+                       drawable, 0, 0, w, h, TRUE, TRUE);
 
 
 
   if (!r->transposed)
     {
-      TRY_N_F (outrow = g_try_new (guchar, r->bpp * (x2 - x1)));
+      TRY_N_F (outrow = g_try_new (guchar, r->bpp * w));
     }
   else
     {
-      TRY_N_F (outrow = g_try_new (guchar, r->bpp * (y2 - y1)));
+      TRY_N_F (outrow = g_try_new (guchar, r->bpp * h));
     }
 
   lqr_cursor_reset (r->c);
@@ -221,11 +219,11 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
         }
       if (!r->transposed)
         {
-          gimp_pixel_rgn_set_row (&rgn_out, outrow, x1, y + y1, x2 - x1);
+          gimp_pixel_rgn_set_row (&rgn_out, outrow, 0, y, w);
         }
       else
         {
-          gimp_pixel_rgn_set_col (&rgn_out, outrow, y + x1, y1, y2 - y1);
+          gimp_pixel_rgn_set_col (&rgn_out, outrow, y, 0, h);
         }
 
       if (y % update_step == 0)
@@ -238,8 +236,8 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
   g_free (outrow);
 
   gimp_drawable_flush (drawable);
-  gimp_drawable_merge_shadow (drawable->drawable_id, TRUE);
-  gimp_drawable_update (drawable->drawable_id, x1, y1, x2 - x1, y2 - y1);
+  gimp_drawable_merge_shadow (layer_ID, TRUE);
+  gimp_drawable_update (layer_ID, 0, 0, w, h);
 
   return TRUE;
 }
@@ -365,7 +363,7 @@ lqr_external_write_vs (LqrRaster * r)
 /* plot the energy (at current size / visibility) to a file
  * (greyscale) */
 gboolean
-lqr_raster_write_energy (LqrRaster * r /*, pngwriter& output */ )
+lqr_external_write_energy (LqrRaster * r /*, pngwriter& output */ )
 {
   int x, y;
   double e;

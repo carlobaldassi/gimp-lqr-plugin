@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-22 00:10+0100\n"
+"POT-Creation-Date: 2007-11-22 04:33+0100\n"
 "PO-Revision-Date: 2007-10-01 21:41-0700\n"
 "Last-Translator: Pete Lypkie <pete.lypkie@gmail.com>\n"
 "Language-Team: zh_CN\n"
@@ -15,209 +15,209 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/interface.c:221
+#: ../src/interface.c:225
 msgid "GIMP LiquidRescale Plug-In"
 msgstr "GIMP LiquidRescale 插件"
 
-#: ../src/interface.c:243
+#: ../src/interface.c:247
 msgid "Selected layer"
 msgstr "选中图层"
 
 #. New size
-#: ../src/interface.c:305
+#: ../src/interface.c:309
 msgid "Select new width and height"
 msgstr "请选择新的宽度与高度"
 
-#: ../src/interface.c:325
+#: ../src/interface.c:329
 msgid "Width:"
 msgstr "宽度"
 
-#: ../src/interface.c:327
+#: ../src/interface.c:331
 msgid "Height:"
 msgstr "高度"
 
-#: ../src/interface.c:342
+#: ../src/interface.c:346
 msgid "Choose mode of operation"
 msgstr ""
 
-#: ../src/interface.c:350
+#: ../src/interface.c:354
 msgid "Mode:"
 msgstr ""
 
-#: ../src/interface.c:355
+#: ../src/interface.c:359
 msgid "LqR only"
 msgstr ""
 
-#: ../src/interface.c:356
+#: ../src/interface.c:360
 msgid "LqR + LqR back to the original size"
 msgstr ""
 
-#: ../src/interface.c:357
+#: ../src/interface.c:361
 msgid "LqR + scale back to the original size"
 msgstr ""
 
 #. Output settings page
-#: ../src/interface.c:383
+#: ../src/interface.c:387
 msgid "Output"
 msgstr ""
 
-#: ../src/interface.c:398
+#: ../src/interface.c:402
 msgid "Output on a new layer"
 msgstr ""
 
-#: ../src/interface.c:406
+#: ../src/interface.c:410
 msgid "Outputs the resulting image on a new layer"
 msgstr ""
 
-#: ../src/interface.c:410
+#: ../src/interface.c:414
 msgid "Resize image canvas"
 msgstr "画布改变大小"
 
-#: ../src/interface.c:418
+#: ../src/interface.c:422
 msgid "Resize and translate the image canvas to fit the resized layer"
 msgstr ""
 
-#: ../src/interface.c:422
+#: ../src/interface.c:426
 msgid "Resize preserve/discard layers"
 msgstr "保持的或丢弃的图层改变大小"
 
-#: ../src/interface.c:439
+#: ../src/interface.c:443
 msgid "Resize the layers used as masks along with the active layer"
 msgstr ""
 
-#: ../src/interface.c:446
+#: ../src/interface.c:450
 msgid "Output the seams"
 msgstr ""
 
-#: ../src/interface.c:455
+#: ../src/interface.c:459
 msgid ""
 "Creates an extra output layer with the seams, for visual inspection of what "
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
 "in one direction at a time"
 msgstr ""
 
-#: ../src/interface.c:478
+#: ../src/interface.c:482
 msgid "Color to use for the last seams"
 msgstr ""
 
-#: ../src/interface.c:492
+#: ../src/interface.c:496
 msgid "Color to use for the first seams"
 msgstr ""
 
 #. Advanced settings page
-#: ../src/interface.c:497
+#: ../src/interface.c:501
 msgid "Advanced"
 msgstr ""
 
-#: ../src/interface.c:515
+#: ../src/interface.c:519
 msgid "Seams rigidity:"
 msgstr ""
 
-#: ../src/interface.c:518
+#: ../src/interface.c:522
 msgid "Increasing this value results in straighter seams"
 msgstr ""
 
-#: ../src/interface.c:527
+#: ../src/interface.c:531
 msgid "Seams max step:"
 msgstr ""
 
-#: ../src/interface.c:530
+#: ../src/interface.c:534
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
 msgstr ""
 
-#: ../src/interface.c:547
+#: ../src/interface.c:551
 msgid ""
 "This affects the automatic feature recognition.\n"
 "It's the function which will be applied to the components of the gradient on "
 "each pixel"
 msgstr ""
 
-#: ../src/interface.c:557
+#: ../src/interface.c:561
 #, fuzzy
 msgid "Gradient function:"
 msgstr "选择渐变函数"
 
-#: ../src/interface.c:562
+#: ../src/interface.c:566
 msgid "Transversal absolute value"
 msgstr "横过的绝对值"
 
-#: ../src/interface.c:563
+#: ../src/interface.c:567
 msgid "Sum of absolute values"
 msgstr "绝对值的总数"
 
-#: ../src/interface.c:564
+#: ../src/interface.c:568
 msgid "Norm"
 msgstr "平均"
 
 #. Null can be translated as Zero
-#: ../src/interface.c:566
+#: ../src/interface.c:570
 msgid "Null"
 msgstr "零"
 
-#: ../src/interface.c:582
+#: ../src/interface.c:586
 msgid "This controls the order of operations if rescaling in both directions"
 msgstr ""
 
-#: ../src/interface.c:591
+#: ../src/interface.c:595
 msgid "Rescale order:"
 msgstr ""
 
-#: ../src/interface.c:596
+#: ../src/interface.c:600
 msgid "Horizontal first"
 msgstr ""
 
-#: ../src/interface.c:597
+#: ../src/interface.c:601
 msgid "Vertical first"
 msgstr ""
 
 #. Mask page
-#: ../src/interface.c:614
+#: ../src/interface.c:618
 msgid "Mask"
 msgstr ""
 
-#: ../src/interface.c:622
+#: ../src/interface.c:626
 msgid "Select behavior for the mask"
 msgstr "选择蒙板行为"
 
-#: ../src/interface.c:627
+#: ../src/interface.c:631
 msgid "Apply"
 msgstr "应用"
 
-#: ../src/interface.c:627
+#: ../src/interface.c:631
 msgid "Discard"
 msgstr "丢弃"
 
-#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:78
+#: ../src/interface.c:928 ../src/interface.c:1013 ../src/render.c:81
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr ""
 
-#: ../src/interface.c:1486
+#: ../src/interface.c:1493
 msgid "Feature masks"
 msgstr ""
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1496
+#: ../src/interface.c:1503
 #, c-format
 msgid "%s pres mask"
 msgstr ""
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1505
+#: ../src/interface.c:1512
 #, c-format
 msgid "%s disc mask"
 msgstr ""
 
 #. Feature preservation
-#: ../src/interface.c:1527
+#: ../src/interface.c:1534
 #, fuzzy
 msgid "Feature preservation mask"
 msgstr "保持特征的选择"
 
-#: ../src/interface.c:1532
+#: ../src/interface.c:1539
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -226,47 +226,47 @@ msgid ""
 "Note that painting in black has no effect"
 msgstr ""
 
-#: ../src/interface.c:1565
+#: ../src/interface.c:1572
 msgid "Preserve features"
 msgstr ""
 
-#: ../src/interface.c:1581
+#: ../src/interface.c:1588
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr ""
 
-#: ../src/interface.c:1584 ../src/interface.c:1775
+#: ../src/interface.c:1591 ../src/interface.c:1782
 msgid "New"
 msgstr ""
 
-#: ../src/interface.c:1589
+#: ../src/interface.c:1596
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr ""
 
-#: ../src/interface.c:1628
+#: ../src/interface.c:1635
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:1659 ../src/interface.c:1853
+#: ../src/interface.c:1666 ../src/interface.c:1860
 msgid "Layer:"
 msgstr ""
 
-#: ../src/interface.c:1680 ../src/interface.c:1871
+#: ../src/interface.c:1687 ../src/interface.c:1878
 msgid "Strength:"
 msgstr ""
 
-#: ../src/interface.c:1684
+#: ../src/interface.c:1691
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "全部的系数为保持特征的强度"
 
 #. Feature discard
-#: ../src/interface.c:1717
+#: ../src/interface.c:1724
 #, fuzzy
 msgid "Feature discard mask"
 msgstr "丢弃特征的选择"
 
-#: ../src/interface.c:1722
+#: ../src/interface.c:1729
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -275,49 +275,49 @@ msgid ""
 "Note that painting in black has no effect"
 msgstr ""
 
-#: ../src/interface.c:1753
+#: ../src/interface.c:1760
 msgid "Discard features"
 msgstr ""
 
-#: ../src/interface.c:1770
+#: ../src/interface.c:1777
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
 msgstr ""
 
-#: ../src/interface.c:1780
+#: ../src/interface.c:1787
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 
-#: ../src/interface.c:1818
+#: ../src/interface.c:1825
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:1875
+#: ../src/interface.c:1882
 msgid "Overall coefficient for feature discard intensity"
 msgstr "全部的系数为把特征丢弃的强度"
 
-#: ../src/interface.c:1917
+#: ../src/interface.c:1924
 msgid "Auto size"
 msgstr ""
 
-#: ../src/interface.c:1927
+#: ../src/interface.c:1934
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
-#: ../src/interface.c:1930
+#: ../src/interface.c:1937
 msgid "horizontal"
 msgstr ""
 
-#: ../src/interface.c:1930
+#: ../src/interface.c:1937
 msgid "vertical"
 msgstr ""
 
-#: ../src/interface.c:1939
+#: ../src/interface.c:1946
 msgid "Resizing direction for auto size"
 msgstr ""
 
@@ -329,37 +329,37 @@ msgstr "Liquid改变大小"
 msgid "Not enough memory"
 msgstr "没有足够多的内存"
 
-#: ../src/render.c:87
+#: ../src/render.c:90
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:97
+#: ../src/render.c:100
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
-#: ../src/lqr_raster.c:1320
+#: ../src/lqr_raster.c:1339
 msgid "Resizing width..."
 msgstr "正在改变宽度"
 
-#: ../src/lqr_raster.c:1363
+#: ../src/lqr_raster.c:1382
 msgid "Resizing height..."
 msgstr "正在改变高度"
 
-#: ../src/lqr_external.c:55
+#: ../src/lqr_external.c:56
 msgid "Parsing layer..."
 msgstr "正在解析图层"
 
-#: ../src/lqr_external.c:187
+#: ../src/lqr_external.c:184
 msgid "Applying changes..."
 msgstr "正在应用变化"
 
-#: ../src/lqr_external.c:264
+#: ../src/lqr_external.c:262
 msgid "Drawing seam map..."
 msgstr ""
 
 #. The name of the layer with the seams map
 #. (here "%s" represents the selected layer's name)
-#: ../src/lqr_external.c:269
+#: ../src/lqr_external.c:267
 #, c-format
 msgid "%s seam map"
 msgstr ""

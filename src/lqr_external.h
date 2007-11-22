@@ -38,7 +38,7 @@ gboolean lqr_external_readbias (LqrRaster * r, gint32 layer_ID,
 gboolean lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable);
 gboolean lqr_external_write_vs (LqrRaster * r); /* output the visibility map (the seams) */
 /* unimplemented */
-gboolean lqr_raster_write_energy (LqrRaster * r /*, pngwriter& output */ );     /* output the energy */
+gboolean lqr_external_write_energy (LqrRaster * r /*, pngwriter& output */ );     /* output the energy */
 
 
 #endif // __LQR_EXTERNAL_H__

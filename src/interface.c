@@ -128,6 +128,8 @@ dialog (gint32 image_ID,
         PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
         PlugInColVals * col_vals)
 {
+
+  gint32 layer_ID;
   GimpRGB saved_color;
   gint num_extra_layers;
   GtkWidget *gradient_event_box;
@@ -192,17 +194,19 @@ dialog (gint32 image_ID,
     {
       disc_combo_awaked = TRUE;
     }
+  
+  layer_ID = drawable->drawable_id;
 
-  state->new_width = gimp_drawable_width (drawable->drawable_id);
-  state->new_height = gimp_drawable_height (drawable->drawable_id);
+  state->new_width = gimp_drawable_width (layer_ID);
+  state->new_height = gimp_drawable_height (layer_ID);
 
 
-  g_assert (gimp_drawable_is_layer (drawable->drawable_id) == TRUE);
+  g_assert (gimp_drawable_is_layer (layer_ID) == TRUE);
 
-  drawable_vals->layer_ID = drawable->drawable_id;
-  preview_data.orig_layer_ID = drawable->drawable_id;
+  drawable_vals->layer_ID = layer_ID;
+  preview_data.orig_layer_ID = layer_ID;
 
-  if (gimp_layer_get_mask (drawable->drawable_id) != -1)
+  if (gimp_layer_get_mask (layer_ID) != -1)
     {
       has_mask = TRUE;
     }
@@ -249,15 +253,15 @@ dialog (gint32 image_ID,
   preview_data.image_ID = image_ID;
   preview_data.vals = state;
   preview_data.ui_vals = ui_state;
-  wfactor = (gfloat) gimp_drawable_width(drawable->drawable_id) / PREVIEW_MAX_WIDTH;
-  hfactor = (gfloat) gimp_drawable_height(drawable->drawable_id) / PREVIEW_MAX_HEIGHT;
+  wfactor = (gfloat) gimp_drawable_width(layer_ID) / PREVIEW_MAX_WIDTH;
+  hfactor = (gfloat) gimp_drawable_height(layer_ID) / PREVIEW_MAX_HEIGHT;
   preview_data.factor = MAX (wfactor, hfactor);
   preview_data.factor = MAX (preview_data.factor, 1);
 
 
-  preview_data.old_width = gimp_drawable_width(drawable->drawable_id);
-  preview_data.old_height = gimp_drawable_height(drawable->drawable_id);
-  gimp_drawable_offsets (drawable->drawable_id, &(preview_data.x_off),
+  preview_data.old_width = gimp_drawable_width(layer_ID);
+  preview_data.old_height = gimp_drawable_height(layer_ID);
+  gimp_drawable_offsets (layer_ID, &(preview_data.x_off),
                          &(preview_data.y_off));
   preview_data.width =
     gimp_drawable_width (preview_data.orig_layer_ID) / preview_data.factor;
@@ -266,7 +270,7 @@ dialog (gint32 image_ID,
 
   
   gimp_image_undo_freeze (image_ID);
-  preview_data.layer_ID = gimp_layer_copy (drawable->drawable_id);
+  preview_data.layer_ID = gimp_layer_copy (layer_ID);
   gimp_image_add_layer (image_ID, preview_data.layer_ID, 1);
 
   gimp_layer_scale (preview_data.layer_ID, preview_data.width,
@@ -1303,7 +1307,7 @@ preview_build_buffer (gint32 layer_ID)
   drawable = gimp_drawable_get (layer_ID);
   width = gimp_drawable_width(layer_ID);
   height = gimp_drawable_height(layer_ID);
-  isgray = gimp_drawable_is_gray (drawable->drawable_id);
+  isgray = gimp_drawable_is_gray (layer_ID);
 
   gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, width, height, FALSE, FALSE);
 
@@ -1452,6 +1456,7 @@ preview_expose_event_callback (GtkWidget * preview_area,
 GtkWidget *
 features_page_new (gint32 image_ID, GimpDrawable * drawable)
 {
+  gint32 layer_ID;
   gint num_extra_layers;
   GtkWidget *label;
   GtkWidget *thispage;
@@ -1482,6 +1487,8 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gint row;
   GtkWidget *combo;
   GtkObject *adj;
+
+  layer_ID = drawable->drawable_id;
 
   label = gtk_label_new (_("Feature masks"));
   notebook_data->label = label;
@@ -1649,7 +1656,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   old_layer_ID = state->pres_layer_ID;
 
   gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (combo),
-                              drawable->drawable_id,
+                              layer_ID,
                               G_CALLBACK (callback_pres_combo_get_active),
                               (gpointer) (&preview_data));
 
@@ -1839,7 +1846,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   old_layer_ID = state->disc_layer_ID;
 
   gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (combo),
-                              drawable->drawable_id,
+                              layer_ID,
                               G_CALLBACK (callback_disc_combo_get_active),
                               (gpointer) (&preview_data));
 

@@ -54,10 +54,13 @@ render (gint32 image_ID,
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
   gchar new_layer_name[LQR_MAX_NAME_LENGTH];
-  gboolean alpha_lock = FALSE;
+  gboolean alpha_lock;
+  gboolean alpha_lock_pres = FALSE, alpha_lock_disc = FALSE;
   gint ntiles;
   gint old_width, old_height;
+  gint new_width, new_height;
   gint x_off, y_off, aux_x_off, aux_y_off;
+  GimpDrawable * drawable_pres, * drawable_disc;
   GimpRGB color_start, color_end;
 #ifdef __LQR_CLOCK__
   double clock1, clock2, clock3, clock4;
@@ -128,6 +131,7 @@ render (gint32 image_ID,
       snprintf (new_layer_name, LQR_MAX_NAME_LENGTH, "%s LqR", layer_name);
       layer_ID = gimp_layer_copy (drawable->drawable_id);
       gimp_image_add_layer (image_ID, layer_ID, -1);
+      gimp_drawable_detach (drawable);
       drawable = gimp_drawable_get (layer_ID);
       gimp_drawable_set_name (layer_ID, new_layer_name);
       gimp_drawable_set_visible (layer_ID, FALSE);
@@ -145,6 +149,8 @@ render (gint32 image_ID,
 
   old_width = gimp_drawable_width (drawable->drawable_id);
   old_height = gimp_drawable_height (drawable->drawable_id);
+  new_width = vals->new_width;
+  new_height = vals->new_height;
 
   gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
 
@@ -152,20 +158,21 @@ render (gint32 image_ID,
     {
       if (vals->pres_layer_ID != 0)
         {
+	  alpha_lock_pres = gimp_layer_get_lock_alpha (vals->pres_layer_ID);
+	  gimp_layer_set_lock_alpha (vals->pres_layer_ID, FALSE);
           gimp_drawable_offsets (vals->pres_layer_ID, &aux_x_off, &aux_y_off);
           gimp_layer_resize (vals->pres_layer_ID, old_width, old_height,
                              aux_x_off - x_off, aux_y_off - y_off);
         }
       if (vals->disc_layer_ID != 0)
         {
+	  alpha_lock_disc = gimp_layer_get_lock_alpha (vals->disc_layer_ID);
+	  gimp_layer_set_lock_alpha (vals->disc_layer_ID, FALSE);
           gimp_drawable_offsets (vals->disc_layer_ID, &aux_x_off, &aux_y_off);
           gimp_layer_resize (vals->disc_layer_ID, old_width, old_height,
                              aux_x_off - x_off, aux_y_off - y_off);
         }
     }
-
-  gimp_rgba_set (&color_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
-  gimp_rgba_set (&color_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
 
   ntiles = old_width / gimp_tile_width () + 1;
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
@@ -176,28 +183,47 @@ render (gint32 image_ID,
   printf ("[ begin: clock: %g ]\n", clock1);
 #endif // __LQR_CLOCK__
 
+#if 0
   rasta =
-    lqr_raster_new (image_ID, drawable, layer_name, vals->pres_layer_ID,
+    lqr_raster_new_full (image_ID, drawable, layer_name, vals->pres_layer_ID,
                     vals->pres_coeff, vals->disc_layer_ID,
                     vals->disc_coeff, vals->grad_func, vals->rigidity,
                     vals->delta_x, vals->resize_aux_layers,
                     vals->output_seams, vals->res_order, color_start,
 		    color_end);
+#endif
+  rasta = lqr_raster_new (image_ID, drawable, layer_name);
   MEMCHECK (rasta != NULL);
+  MEMCHECK (lqr_raster_init (rasta, vals->pres_layer_ID, vals->disc_layer_ID,
+	                     vals->pres_coeff, vals->disc_coeff, 
+			     vals->delta_x, vals->rigidity));
+  lqr_raster_set_gradient_function (rasta, vals->grad_func);
+  lqr_raster_set_resize_order (rasta, vals->res_order);
+  if (vals->output_seams)
+    {
+      gimp_rgba_set (&color_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
+      gimp_rgba_set (&color_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
+
+      lqr_raster_set_output_seams(rasta, color_start, color_end);
+    }
+  if (vals->resize_aux_layers)
+    {
+      MEMCHECK (lqr_raster_attach_pres_layer(rasta, vals->pres_layer_ID));
+      MEMCHECK (lqr_raster_attach_disc_layer(rasta, vals->disc_layer_ID));
+    }
 
 #ifdef __LQR_CLOCK__
   clock2 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ read: clock: %g (%g) ]\n", clock2, clock2 - clock1);
 #endif // __LQR_CLOCK__
 
-  MEMCHECK (lqr_raster_resize (rasta, vals->new_width, vals->new_height));
+  MEMCHECK (lqr_raster_resize (rasta, new_width, new_height));
 
   switch (vals->oper_mode)
     {
       case LQR_MODE_NORMAL:
 	break;
       case LQR_MODE_LQRBACK:
-	MEMCHECK (lqr_raster_flatten (rasta));
 	MEMCHECK (lqr_raster_flatten (rasta));
 	if (vals->resize_aux_layers == TRUE)
 	  {
@@ -211,8 +237,9 @@ render (gint32 image_ID,
 		TRY_F_F (lqr_external_readbias (rasta, vals->disc_layer_ID, 2 * vals->disc_coeff));
 	      }
 	  }
-	vals->new_width = old_width;
-	vals->new_height = old_height;
+	new_width = old_width;
+	new_height = old_height;
+	
 	switch (vals->res_order)
 	  {
 	    case LQR_RES_ORDER_HOR:
@@ -222,7 +249,7 @@ render (gint32 image_ID,
 	      rasta->resize_order = LQR_RES_ORDER_HOR;
 	      break;
 	  }
-	MEMCHECK (lqr_raster_resize (rasta, vals->new_width, vals->new_height));
+	MEMCHECK (lqr_raster_resize (rasta, new_width, new_height));
 	break;
       case LQR_MODE_SCALEBACK:
 	break;
@@ -233,14 +260,15 @@ render (gint32 image_ID,
 
   if (vals->resize_canvas == TRUE)
     {
-      gimp_image_resize (image_ID, vals->new_width, vals->new_height, -x_off,
+      gimp_image_resize (image_ID, new_width, new_height, -x_off,
                          -y_off);
       gimp_layer_resize_to_image_size (layer_ID);
     }
   else
     {
-      gimp_layer_resize (layer_ID, vals->new_width, vals->new_height, 0, 0);
+      gimp_layer_resize (layer_ID, new_width, new_height, 0, 0);
     }
+  gimp_drawable_detach (drawable);
   drawable = gimp_drawable_get (layer_ID);
 
 #ifdef __LQR_CLOCK__
@@ -259,19 +287,17 @@ render (gint32 image_ID,
     {
       if (vals->pres_layer_ID != 0)
         {
-          gimp_layer_resize (vals->pres_layer_ID, vals->new_width,
-                             vals->new_height, 0, 0);
-          MEMCHECK (lqr_external_writeimage (rasta->pres_raster,
-                                             gimp_drawable_get (vals->
-                                                                pres_layer_ID)));
+          gimp_layer_resize (vals->pres_layer_ID, new_width, new_height, 0, 0);
+	  drawable_pres = gimp_drawable_get(vals->pres_layer_ID);
+          MEMCHECK (lqr_external_writeimage (rasta->pres_raster, drawable_pres));
+	  gimp_drawable_detach(drawable_pres);
         }
       if (vals->disc_layer_ID != 0)
         {
-          gimp_layer_resize (vals->disc_layer_ID, vals->new_width,
-                             vals->new_height, 0, 0);
-          MEMCHECK (lqr_external_writeimage (rasta->disc_raster,
-                                             gimp_drawable_get (vals->
-                                                                disc_layer_ID)));
+          gimp_layer_resize (vals->disc_layer_ID, new_width, new_height, 0, 0);
+	  drawable_disc = gimp_drawable_get(vals->disc_layer_ID);
+          MEMCHECK (lqr_external_writeimage (rasta->disc_raster, drawable_disc));
+	  gimp_drawable_detach(drawable_disc);
         }
     }
 
@@ -293,6 +319,7 @@ render (gint32 image_ID,
 	    gimp_layer_scale (layer_ID, old_width, old_height, FALSE);
 	    gimp_layer_translate(layer_ID, x_off, y_off);
 	  }
+	gimp_drawable_detach (drawable);
 	drawable = gimp_drawable_get (layer_ID);
 	if (vals->resize_aux_layers == TRUE)
 	  {
@@ -321,13 +348,24 @@ render (gint32 image_ID,
 
 #ifdef __LQR_CLOCK__
   clock4 = (double) clock () / CLOCKS_PER_SEC;
-  printf ("[ finish: clock: %g (%g) ]\n", clock4, clock4 - clock3);
+  printf ("[ finish: clock: %g (%g) ]\n\n", clock4, clock4 - clock3);
 #endif // __LQR_CLOCK__
 
   gimp_drawable_set_visible (layer_ID, TRUE);
   gimp_image_set_active_layer (image_ID, layer_ID);
 
   gimp_layer_set_lock_alpha (drawable->drawable_id, alpha_lock);
+  if (vals->resize_aux_layers == TRUE)
+    {
+      if (vals->pres_layer_ID != 0)
+	{
+	  gimp_layer_set_lock_alpha (vals->pres_layer_ID, alpha_lock_pres);
+	}
+      if (vals->disc_layer_ID != 0)
+	{
+	  gimp_layer_set_lock_alpha (vals->disc_layer_ID, alpha_lock_disc);
+	}
+    }
 
   return TRUE;
 }

@@ -47,22 +47,27 @@
 
 /* constructor */
 LqrRaster *
-lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable, gchar * name)
+lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name)
 {
   LqrRaster *r;
+  gint32 layer_ID;
 
   TRY_N_N (r = g_try_new (LqrRaster, 1));
 
   r->image_ID = image_ID;
+  layer_ID = drawable->drawable_id;
   strncpy (r->name, name, LQR_MAX_NAME_LENGTH);
 
   r->level = 1;
   r->max_level = 1;
   r->transposed = 0;
-  r->aux = 1;
+  r->aux = FALSE;
   r->rigidity = 0;
   r->resize_aux_layers = FALSE;
   r->output_seams = FALSE;
+  gimp_rgba_set(&(r->seam_color_start), 0, 0, 0, 0);
+  gimp_rgba_set(&(r->seam_color_end), 0, 0, 0, 0);
+  r->resize_order = LQR_RES_ORDER_HOR;
   r->pres_raster = NULL;
   r->disc_raster = NULL;
 
@@ -75,91 +80,22 @@ lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable, gchar * name)
   r->vpath = NULL;
   r->vpath_x = NULL;
   r->rigidity_map = NULL;
+  r->delta_x = 1;
 
-  r->h = gimp_drawable_height (drawable->drawable_id);
-  r->w = gimp_drawable_width (drawable->drawable_id);
-  r->bpp = gimp_drawable_bpp (drawable->drawable_id);
-
-  r->w0 = r->w;
-  r->h0 = r->h;
-  r->w_start = r->w;
-  r->h_start = r->h;
-
-  /* allocate memory for internal structures */
-  TRY_N_N (r->rgb = g_try_new (guchar, r->w * r->h * r->bpp));
-  TRY_N_N (r->vs = g_try_new (gint, r->w * r->h));
-
-  /* initialize cursors */
-
-  TRY_N_N (r->c = lqr_cursor_create (r, r->vs));
-
-  /* read input layer */
-  TRY_F_N (lqr_external_readimage (r, drawable));
-
-  return r;
-}
-
-
-LqrRaster *
-lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
-                gint32 pres_layer_ID, gint pres_coeff,
-                gint32 disc_layer_ID, gint disc_coeff,
-                LqrGradFunc gf_ind, gint rigidity, gint delta_x,
-                gboolean resize_aux_layers,
-                gboolean output_seams,
-		LqrResizeOrder res_order,
-                GimpRGB seam_color_start, GimpRGB seam_color_end)
-{
-  LqrRaster *r;
-  gint dx;
-  gint y;
-
-  TRY_N_N (r = g_try_new (LqrRaster, 1));
-
-  r->image_ID = image_ID;
-  strncpy (r->name, name, LQR_MAX_NAME_LENGTH);
-
-  r->level = 1;
-  r->max_level = 1;
-  r->transposed = 0;
-  r->aux = 0;
-  r->rigidity = rigidity;
-  r->resize_aux_layers = resize_aux_layers;
-  r->output_seams = output_seams;
-  r->resize_order = res_order;
-  r->seam_color_start = seam_color_start;
-  r->seam_color_end = seam_color_end;
-  r->pres_raster = NULL;
-  r->disc_raster = NULL;
-
-  r->h = gimp_drawable_height (drawable->drawable_id);
-  r->w = gimp_drawable_width (drawable->drawable_id);
-  r->bpp = gimp_drawable_bpp (drawable->drawable_id);
+  r->h = gimp_drawable_height (layer_ID);
+  r->w = gimp_drawable_width (layer_ID);
+  r->bpp = gimp_drawable_bpp (layer_ID);
 
   r->w0 = r->w;
   r->h0 = r->h;
   r->w_start = r->w;
   r->h_start = r->h;
+
+  lqr_raster_set_gradient_function(r, LQR_GF_XABS);
 
   /* allocate memory for internal structures */
   TRY_N_N (r->rgb = g_try_new (guchar, r->w * r->h * r->bpp));
   TRY_N_N (r->vs = g_try_new0 (gint, r->w * r->h));
-  TRY_N_N (r->en = g_try_new (gdouble, r->w * r->h));
-  TRY_N_N (r->bias = g_try_new0 (gdouble, r->w * r->h));
-  TRY_N_N (r->m = g_try_new (gdouble, r->w * r->h));
-  TRY_N_N (r->least = g_try_new (gint, r->w * r->h));
-
-  TRY_N_N (r->_raw = g_try_new (gint, r->h_start * r->w_start));
-  TRY_N_N (r->raw = g_try_new (gint *, r->h_start));
-
-  r->raw[0] = r->_raw;
-  for (y = 1; y < r->h; y++)
-    {
-      r->raw[y] = r->raw[y - 1] + r->w_start;
-    }
-
-  TRY_N_N (r->vpath = g_try_new (gint, r->h));
-  TRY_N_N (r->vpath_x = g_try_new (gint, r->h));
 
   /* initialize cursors */
 
@@ -168,47 +104,9 @@ lqr_raster_new (gint32 image_ID, GimpDrawable * drawable, gchar * name,
   /* read input layer */
   TRY_F_N (lqr_external_readimage (r, drawable));
 
-  /* read bias layers */
-  TRY_F_N (lqr_external_readbias (r, pres_layer_ID, pres_coeff));
-  TRY_F_N (lqr_external_readbias (r, disc_layer_ID, -disc_coeff));
-
-  /* rasterize bias layers */
-  if (resize_aux_layers == TRUE)
-    {
-      if (pres_layer_ID != 0)
-        {
-	  drawable = gimp_drawable_get(pres_layer_ID);
-          TRY_N_N (r->pres_raster =
-                   lqr_raster_aux_new (image_ID, drawable, ""));
-	  gimp_drawable_detach(drawable);
-        }
-      if (disc_layer_ID != 0)
-        {
-	  drawable = gimp_drawable_get(disc_layer_ID);
-          TRY_N_N (r->disc_raster =
-                   lqr_raster_aux_new (image_ID, drawable, ""));
-	  gimp_drawable_detach(drawable);
-        }
-    }
-
-  /* set gradient function */
-  lqr_raster_set_gf (r, gf_ind);
-
-  /* set rigidity map */
-  r->delta_x = delta_x;         /* currently only 0 or 1 are meaningful values */
-
-  r->rigidity_map = g_try_new0 (gdouble, 2 * r->delta_x + 1);
-  r->rigidity_map += r->delta_x;
-  for (dx = -r->delta_x; dx <= r->delta_x; dx++)
-    {
-      r->rigidity_map[dx] =
-        (gdouble) r->rigidity * exp (0.75 * log (dx * dx)) / r->h;
-    }
-
   return r;
 }
 
-/* aux constructor (for preserve/discard layers) */
 /* destructor */
 void
 lqr_raster_destroy (LqrRaster * r)
@@ -241,14 +139,57 @@ lqr_raster_destroy (LqrRaster * r)
   g_free (r);
 }
 
+/*** initialization ***/
 
-/*** gradient related functions ***/
+gboolean
+lqr_raster_init (LqrRaster *r, gint32 pres_layer_ID, gint32 disc_layer_ID, gint pres_coeff, gint disc_coeff, gint delta_x, gint rigidity)
+{
+  gint y, x;
 
-/* set the gradient function for energy computation 
- * choosing among those those listed in enum LqrGradFunc
- * the arguments are the x, y components of the gradient */
+  TRY_N_F (r->en = g_try_new (gdouble, r->w * r->h));
+  TRY_N_F (r->bias = g_try_new0 (gdouble, r->w * r->h));
+  TRY_N_F (r->m = g_try_new (gdouble, r->w * r->h));
+  TRY_N_F (r->least = g_try_new (gint, r->w * r->h));
+
+  TRY_N_F (r->_raw = g_try_new (gint, r->h_start * r->w_start));
+  TRY_N_F (r->raw = g_try_new (gint *, r->h_start));
+
+  for (y = 0; y < r->h; y++)
+    {
+      r->raw[y] = r->_raw + y * r->w_start;
+      for (x = 0; x < r->w_start; x++)
+        {
+	  r->raw[y][x] = y * r->w_start + x;
+	}
+    }
+
+  TRY_N_F (r->vpath = g_try_new (gint, r->h));
+  TRY_N_F (r->vpath_x = g_try_new (gint, r->h));
+
+  /* read bias layers */
+  TRY_F_F (lqr_external_readbias (r, pres_layer_ID, pres_coeff));
+  TRY_F_F (lqr_external_readbias (r, disc_layer_ID, -disc_coeff));
+
+  /* set rigidity map */
+  r->delta_x = delta_x;
+  r->rigidity = rigidity;
+
+  r->rigidity_map = g_try_new0 (gdouble, 2 * r->delta_x + 1);
+  r->rigidity_map += r->delta_x;
+  for (x = -r->delta_x; x <= r->delta_x; x++)
+    {
+      r->rigidity_map[x] =
+        (gdouble) r->rigidity * exp (0.75 * log (x * x)) / r->h;
+    }
+
+  return TRUE;
+}
+
+/*** set attributes ***/
+
+/* gradient function for energy computation */
 void
-lqr_raster_set_gf (LqrRaster * r, LqrGradFunc gf_ind)
+lqr_raster_set_gradient_function (LqrRaster * r, LqrGradFunc gf_ind)
 {
   switch (gf_ind)
     {
@@ -277,47 +218,69 @@ lqr_raster_set_gf (LqrRaster * r, LqrGradFunc gf_ind)
     }
 }
 
-
-inline gdouble
-lqr_raster_read (LqrRaster * r, gint x, gint y)
+/* attach layers to be scaled along with the main one */
+gboolean
+lqr_raster_attach_pres_layer (LqrRaster * r, gint32 pres_layer_ID)
 {
-  gdouble sum = 0;
-  gint k;
-  gint now = r->raw[y][x];
-  for (k = 0; k < r->bpp; k++)
+  GimpDrawable * drawable;
+
+  if (r->pres_raster)
     {
-      sum += r->rgb[now * r->bpp + k];
+      lqr_raster_destroy(r->pres_raster);
     }
-  return sum / (255 * r->bpp);
+
+  r->resize_aux_layers = TRUE;
+  if (pres_layer_ID)
+    {
+      drawable = gimp_drawable_get(pres_layer_ID);
+      TRY_N_F (r->pres_raster =
+	       lqr_raster_new (r->image_ID, drawable, ""));
+      gimp_drawable_detach(drawable);
+      r->pres_raster->aux = TRUE;
+    }
+  return TRUE;
 }
 
+gboolean
+lqr_raster_attach_disc_layer (LqrRaster * r, gint32 disc_layer_ID)
+{
+  GimpDrawable * drawable;
+
+  if (r->disc_raster)
+    {
+      lqr_raster_destroy(r->disc_raster);
+    }
+
+  r->resize_aux_layers = TRUE;
+  if (disc_layer_ID)
+    {
+      drawable = gimp_drawable_get(disc_layer_ID);
+      TRY_N_F (r->disc_raster =
+	       lqr_raster_new (r->image_ID, drawable, ""));
+      gimp_drawable_detach(drawable);
+      r->disc_raster->aux = TRUE;
+    }
+  return TRUE;
+}
+
+/* set the seam output flag and colors */
 void
-lqr_raster_carve (LqrRaster * r)
+lqr_raster_set_output_seams (LqrRaster *r, GimpRGB seam_color_start, GimpRGB seam_color_end)
 {
-  gint x, y;
+  r->output_seams = TRUE;
+  r->seam_color_start = seam_color_start;
+  r->seam_color_end = seam_color_end;
+}
 
-  for (y = 0; y < r->h_start; y++)
-    {
-#ifdef __LQR_DEBUG__
-      assert (r->vs[r->raw[y][r->vpath_x[y]]] != 0);
-      for (x = 0; x < r->vpath_x[y]; x++)
-        {
-          assert (r->vs[r->raw[y][x]] == 0);
-        }
-#endif // __LQR_DEBUG__
-      for (x = r->vpath_x[y]; x < r->w; x++)
-        {
-          r->raw[y][x] = r->raw[y][x + 1];
-#ifdef __LQR_DEBUG__
-          assert (r->vs[r->raw[y][x]] == 0);
-#endif // __LQR_DEBUG__
-        }
-    }
+/* set order if rescaling in both directions */
+void
+lqr_raster_set_resize_order (LqrRaster *r, LqrResizeOrder resize_order)
+{
+  r->resize_order = resize_order;
 }
 
 
-
-/*** compute maps (energy, minpath & visibility ***/
+/*** compute maps (energy, minpath & visibility) ***/
 
 /* build multisize image up to given depth
  * it is progressive (can be called multilple times) */
@@ -332,14 +295,14 @@ lqr_raster_build_maps (LqrRaster * r, gint depth)
   /* only go deeper if needed */
   if (depth > r->max_level)
     {
-      /* set to minimum width */
+      /* set to minimum width reached so far */
       lqr_raster_set_width (r, r->w_start - r->max_level + 1);
 
       /* compute energy & minpath maps */
       lqr_raster_build_emap (r);
       lqr_raster_build_mmap (r);
 
-      /* compute visibility */
+      /* compute visibility map */
       TRY_F_F (lqr_raster_build_vsmap (r, depth));
     }
   return TRUE;
@@ -362,8 +325,13 @@ lqr_raster_build_emap (LqrRaster * r)
 
 /* compute auxiliary minpath map
  * defined as
- * y = 1 : m(x,y) = e(x,y)
- * y > 1 : m(x,y) = min{ m(x-1,y-1), m(x,y-1), m(x+1,y-1) } + e(x,y) */
+ *   y = 1 : m(x,y) = e(x,y)
+ *   y > 1 : m(x,y) = min_{x'=-dx,..,dx} ( m(x-x',y-1) + rig(x') ) + e(x,y)
+ * where
+ *   e(x,y)  is the energy at point (x,y)
+ *   dx      is the max seam step delta_x 
+ *   rig(x') is the rigidity for step x'
+ */
 void
 lqr_raster_build_mmap (LqrRaster * r)
 {
@@ -393,8 +361,11 @@ lqr_raster_build_mmap (LqrRaster * r)
 #ifdef __LQR_DEBUG__
           assert (r->vs[data] == 0);
 #endif //__LQR_DEBUG__
+	  /* watch for boundaries */
           x1_min = MAX (-x, -r->delta_x);
           x1_max = MIN (r->w - 1 - x, r->delta_x);
+	  /* we use the data_down pointer to be able to
+	   * track the seams later (needed for rigidity) */  
           data_down = r->raw[y - 1][x + x1_min];
           r->least[data] = data_down;
           if (r->rigidity)
@@ -468,18 +439,7 @@ lqr_raster_build_vsmap (LqrRaster * r, gint depth)
    * lqr_raster_set_width(w_start - max_level + 1);
    * has been given */
 
-  /* reset visibility map and level (WHY????) */
-  /*
-     if (r->max_level == 1)
-     {
-     for (z = 0; z < r->w0 * r->h0; z++)
-     {
-     r->vs[z] = 0;
-     }
-     }
-   */
-
-  /* update step for progress */
+  /* update step for gimp progress */
   update_step = MAX ((depth - r->max_level) / 50, 1);
 
   /* cycle over levels */
@@ -527,7 +487,8 @@ lqr_raster_build_vsmap (LqrRaster * r, gint depth)
   /* reset width to the maximum */
   lqr_raster_set_width (r, r->w0);
 
-  /* copy visibility maps on auxiliary layers */
+  /* copy visibility maps on auxiliary layers
+   * (needs to be done before inflation) */
   if (r->resize_aux_layers)
     {
       if (r->pres_raster != NULL)
@@ -606,7 +567,7 @@ lqr_raster_inflate (LqrRaster * r, gint l)
   /* allocate room for new maps */
   TRY_N_F (new_rgb = g_try_new0 (guchar, w1 * r->h0 * r->bpp));
   TRY_N_F (new_vs = g_try_new0 (gint, w1 * r->h0));
-  if (r->aux == 0)
+  if (!r->aux)
     {
       TRY_N_F (new_bias = g_try_new0 (gdouble, w1 * r->h0));
     }
@@ -627,8 +588,6 @@ lqr_raster_inflate (LqrRaster * r, gint l)
            * and was not inserted during a previous
            * inflate() call : insert another seam */
 
-          //newmap[z0] = *(r->c->now);
-
           /* the new pixel value is equal to the average of its
            * left and right neighbors */
           if (r->c->x > 0)
@@ -645,15 +604,15 @@ lqr_raster_inflate (LqrRaster * r, gint l)
                 (r->rgb[c_left * r->bpp + k] +
                  r->rgb[r->c->now * r->bpp + k]) / 2;
             }
-          if (r->aux == 0)
+          if (!r->aux)
             {
               new_bias[z0] = (r->bias[c_left] + r->bias[r->c->now]) / 2;
             }
           /* the first time inflate() is called
            * the new visibility should be -vs + 1 but we shift it
            * so that the final minimum visibiliy will be 1 again
-           * and so that vs=0 still means "uninitialized"
-           * subsequent inflations have to account for that */
+           * and so that vs=0 still means "uninitialized".
+           * Subsequent inflations account for that */
           new_vs[z0] = l - vs + r->max_level;
           z0++;
         }
@@ -661,7 +620,7 @@ lqr_raster_inflate (LqrRaster * r, gint l)
         {
           new_rgb[z0 * r->bpp + k] = r->rgb[r->c->now * r->bpp + k];
         }
-      if (r->aux == 0)
+      if (!r->aux)
         {
           new_bias[z0] = r->bias[r->c->now];
         }
@@ -708,7 +667,7 @@ lqr_raster_inflate (LqrRaster * r, gint l)
 
   r->rgb = new_rgb;
   r->vs = new_vs;
-  if (r->aux == 0)
+  if (!r->aux)
     {
       r->bias = new_bias;
       TRY_N_F (r->en = g_try_new0 (gdouble, w1 * r->h0));
@@ -733,6 +692,22 @@ lqr_raster_inflate (LqrRaster * r, gint l)
 }
 
 /*** internal functions for maps computations ***/
+
+/* read average pixel value at x, y 
+ * for energy computation */
+inline gdouble
+lqr_raster_read (LqrRaster * r, gint x, gint y)
+{
+  gdouble sum = 0;
+  gint k;
+  gint now = r->raw[y][x];
+  for (k = 0; k < r->bpp; k++)
+    {
+      sum += r->rgb[now * r->bpp + k];
+    }
+  return sum / (255 * r->bpp);
+}
+
 
 /* compute energy at x, y */
 void
@@ -772,6 +747,35 @@ lqr_raster_compute_e (LqrRaster * r, gint x, gint y)
   r->en[data] = (*(r->gf)) (gx, gy) + r->bias[data] / r->w_start;
 }
 
+/* do the carving
+ * this actually carves the raw array,
+ * which holds the indices to be used
+ * in all the other maps */
+void
+lqr_raster_carve (LqrRaster * r)
+{
+  gint x, y;
+
+  for (y = 0; y < r->h_start; y++)
+    {
+#ifdef __LQR_DEBUG__
+      assert (r->vs[r->raw[y][r->vpath_x[y]]] != 0);
+      for (x = 0; x < r->vpath_x[y]; x++)
+        {
+          assert (r->vs[r->raw[y][x]] == 0);
+        }
+#endif // __LQR_DEBUG__
+      for (x = r->vpath_x[y]; x < r->w; x++)
+        {
+          r->raw[y][x] = r->raw[y][x + 1];
+#ifdef __LQR_DEBUG__
+          assert (r->vs[r->raw[y][x]] == 0);
+#endif // __LQR_DEBUG__
+        }
+    }
+}
+
+
 /* update energy map after seam removal
  * (the only affected energies are to the
  * left and right of the removed seam) */
@@ -794,6 +798,11 @@ lqr_raster_update_emap (LqrRaster * r)
 }
 
 
+/* update the auxiliary minpath map
+ * this only updates the affected pixels,
+ * which start form the beginning of the seam
+ * and expand at most by delta_x (in both
+ * directions) at each row */
 void
 lqr_raster_update_mmap (LqrRaster * r)
 {
@@ -814,19 +823,25 @@ lqr_raster_update_mmap (LqrRaster * r)
       r->m[r->raw[0][x]] = r->en[r->raw[0][x]];
     }
 
+  /* other rows */
   for (y = 1; y < r->h; y++)
     {
+      /* make sure to include the seam */
       x_min = MIN (x_min, r->vpath_x[y]);
       x_max = MAX (x_max, r->vpath_x[y] - 1);
 
+      /* expand the affected region by delta_x */
       x_min = MAX (x_min - r->delta_x, 0);
       x_max = MIN (x_max + r->delta_x, r->w - 1);
 
+      /* span the affected region */
       stop = 0;
       for (x = x_min; x <= x_max; x++)
         {
           data = r->raw[y][x];
 
+	  /* find the minimum in the previous rows
+	   * as in build_mmap() */
           x1_min = MAX (-x, -r->delta_x);
           x1_max = MIN (r->w - 1 - x, r->delta_x);
           data_down = r->raw[y - 1][x + x1_min];
@@ -837,8 +852,6 @@ lqr_raster_update_mmap (LqrRaster * r)
               for (x1 = x1_min + 1; x1 <= x1_max; x1++)
                 {
                   data_down = r->raw[y - 1][x + x1];
-                  /* find the min among the neighbors
-                   * in the last row */
                   m1 = r->m[data_down] + r->rigidity_map[x1];
                   if (m1 < m)
                     {
@@ -853,8 +866,6 @@ lqr_raster_update_mmap (LqrRaster * r)
               for (x1 = x1_min + 1; x1 <= x1_max; x1++)
                 {
                   data_down = r->raw[y - 1][x + x1];
-                  /* find the min among the neighbors
-                   * in the last row */
                   m1 = r->m[data_down];
                   if (m1 < m)
                     {
@@ -864,6 +875,8 @@ lqr_raster_update_mmap (LqrRaster * r)
                 }
             }
 
+	  /* reduce the range if there's no difference
+	   * with the previous map */
           if (r->least[data] == least)
             {
               if ((x == x_min) && (x < r->vpath_x[y])
@@ -927,6 +940,7 @@ lqr_raster_build_vpath (LqrRaster * r)
   assert (last >= 0);
 #endif /* __LQR_DEBUG__ */
 
+  /* follow the track for the other rows */
   for (y = r->h0 - 1; y >= 0; y--)
     {
 #ifdef __LQR_DEBUG__
@@ -938,9 +952,9 @@ lqr_raster_build_vpath (LqrRaster * r)
       if (y > 0)
         {
           last = r->least[r->raw[y][last_x]];
+	  /* we also need to retrieve the x coordinate */
           x_min = MAX (last_x - r->delta_x, 0);
           x_max = MIN (last_x + r->delta_x, r->w - 1);
-
           for (x = x_min; x <= x_max; x++)
             {
               if (r->raw[y - 1][x] == last)
@@ -1022,6 +1036,8 @@ lqr_raster_finish_vsmap (LqrRaster * r)
     }
 }
 
+/* copy the visibility map from a lqr_raster
+ * to another one of the same size */
 void
 lqr_raster_copy_vsmap (LqrRaster * r, LqrRaster * dest)
 {
@@ -1079,7 +1095,7 @@ lqr_raster_flatten (LqrRaster * r)
 
   /* allocate room for new map */
   TRY_N_F (new_rgb = g_try_new0 (guchar, r->w * r->h * r->bpp));
-  if (r->aux == 0)
+  if (!r->aux)
     {
       TRY_N_F (new_bias = g_try_new0 (gdouble, r->w * r->h));
 
@@ -1095,7 +1111,7 @@ lqr_raster_flatten (LqrRaster * r)
   lqr_cursor_reset (r->c);
   for (y = 0; y < r->h; y++)
     {
-      if (r->aux == 0)
+      if (!r->aux)
         {
           r->raw[y] = r->_raw + y * r->w;
         }
@@ -1106,7 +1122,7 @@ lqr_raster_flatten (LqrRaster * r)
             {
               new_rgb[z0 * r->bpp + k] = r->rgb[r->c->now * r->bpp + k];
             }
-          if (r->aux == 0)
+          if (!r->aux)
             {
               new_bias[z0] = r->bias[r->c->now];
               r->raw[y][x] = z0;
@@ -1118,7 +1134,7 @@ lqr_raster_flatten (LqrRaster * r)
   /* substitute the old maps */
   g_free (r->rgb);
   r->rgb = new_rgb;
-  if (r->aux == 0)
+  if (!r->aux)
     {
       g_free (r->bias);
       r->bias = new_bias;
@@ -1127,7 +1143,7 @@ lqr_raster_flatten (LqrRaster * r)
   /* init the other maps */
   g_free (r->vs);
   TRY_N_F (r->vs = g_try_new0 (gint, r->w * r->h));
-  if (r->aux == 0)
+  if (!r->aux)
     {
       TRY_N_F (r->en = g_try_new0 (gdouble, r->w * r->h));
       TRY_N_F (r->m = g_try_new0 (gdouble, r->w * r->h));
@@ -1183,7 +1199,7 @@ lqr_raster_transpose (LqrRaster * r)
 
   /* allocate room for the new maps */
   TRY_N_F (new_rgb = g_try_new0 (guchar, r->w0 * r->h0 * r->bpp));
-  if (r->aux == 0)
+  if (!r->aux)
     {
       TRY_N_F (new_bias = g_try_new0 (gdouble, r->w0 * r->h0));
 
@@ -1196,7 +1212,7 @@ lqr_raster_transpose (LqrRaster * r)
   /* compute trasposed maps */
   for (x = 0; x < r->w; x++)
     {
-      if (r->aux == 0)
+      if (!r->aux)
         {
           r->raw[x] = r->_raw + x * r->h0;
         }
@@ -1208,7 +1224,7 @@ lqr_raster_transpose (LqrRaster * r)
             {
               new_rgb[z1 * r->bpp + k] = r->rgb[z0 * r->bpp + k];
             }
-          if (r->aux == 0)
+          if (!r->aux)
             {
               new_bias[z1] = r->bias[z0];
               r->raw[x][y] = z1;
@@ -1219,7 +1235,7 @@ lqr_raster_transpose (LqrRaster * r)
   /* substitute the map */
   g_free (r->rgb);
   r->rgb = new_rgb;
-  if (r->aux == 0)
+  if (!r->aux)
     {
       g_free (r->bias);
       r->bias = new_bias;
@@ -1227,7 +1243,7 @@ lqr_raster_transpose (LqrRaster * r)
 
   /* init the other maps */
   TRY_N_F (r->vs = g_try_new0 (gint, r->w0 * r->h0));
-  if (r->aux == 0)
+  if (!r->aux)
     {
       TRY_N_F (r->en = g_try_new0 (gdouble, r->w0 * r->h0));
       TRY_N_F (r->m = g_try_new0 (gdouble, r->w0 * r->h0));
@@ -1248,7 +1264,7 @@ lqr_raster_transpose (LqrRaster * r)
   r->max_level = 1;
 
   /* reset seam path and cursors */
-  if (r->aux == 0)
+  if (!r->aux)
     {
       g_free (r->vpath);
       TRY_N_F (r->vpath = g_try_new (gint, r->h));
@@ -1260,7 +1276,7 @@ lqr_raster_transpose (LqrRaster * r)
 
   /* rescale rigidity */
 
-  if (r->aux == 0)
+  if (!r->aux)
     {
       for (x = -r->delta_x; x <= r->delta_x; x++)
         {
@@ -1292,14 +1308,16 @@ lqr_raster_transpose (LqrRaster * r)
   return TRUE;
 }
 
-/* liquid resize w + h: these are the rescale methods
- * they automatically determine the depth of the map
+/* resize w + h: these are the liquid rescale methods.
+ * They automatically determine the depth of the map
  * according to the desired size, can be called multiple
  * times, transpose the image as necessasry */
 gboolean
 lqr_raster_resize_width (LqrRaster * r, gint w1)
 {
   gint delta, gamma;
+  /* delta is used to determine the required depth
+   * gamma to decide if action is necessary */
   if (!r->transposed)
     {
       delta = w1 - r->w_start;
@@ -1311,6 +1329,7 @@ lqr_raster_resize_width (LqrRaster * r, gint w1)
       gamma = w1 - r->h;
     }
   delta = delta > 0 ? delta : -delta;
+  
   if (gamma)
     {
       if (r->transposed)
@@ -1383,11 +1402,14 @@ lqr_raster_resize_height (LqrRaster * r, gint h1)
   return TRUE;
 }
 
-/* liquid resize : this is the public method */
+/* liquid rescale public method */
 gboolean
 lqr_raster_resize (LqrRaster * r, gint w1, gint h1)
 {
-  /* resize width */
+#ifdef __LQR_VERBOSE__
+  printf("[ Rescale from %i,%i to %i,%i ]\n", (r->transposed ? r->h : r->w), (r->transposed ? r->w : r->h), w1, h1);
+  fflush(stdout);
+#endif /* __LQR_VERBOSE__ */
   switch (r->resize_order)
     {
       case LQR_RES_ORDER_HOR:
@@ -1404,6 +1426,10 @@ lqr_raster_resize (LqrRaster * r, gint w1, gint h1)
 #endif /* __LQR_DEBUG__ */
     }
 
+#ifdef __LQR_VERBOSE__
+  printf("[ Rescale OK ]\n");
+  fflush(stdout);
+#endif /* __LQR_VERBOSE__ */
   return TRUE;
 }
 

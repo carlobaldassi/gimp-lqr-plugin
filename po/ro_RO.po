@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-22 00:10+0100\n"
+"POT-Creation-Date: 2007-11-22 04:33+0100\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -13,83 +13,83 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/interface.c:221
+#: ../src/interface.c:225
 msgid "GIMP LiquidRescale Plug-In"
 msgstr "Extensie GIMP LiquidRescale"
 
-#: ../src/interface.c:243
+#: ../src/interface.c:247
 msgid "Selected layer"
 msgstr "Strat selectat"
 
 #. New size
-#: ../src/interface.c:305
+#: ../src/interface.c:309
 msgid "Select new width and height"
 msgstr "Lungime şi înălţime nouă"
 
-#: ../src/interface.c:325
+#: ../src/interface.c:329
 msgid "Width:"
 msgstr "Lungime:"
 
-#: ../src/interface.c:327
+#: ../src/interface.c:331
 msgid "Height:"
 msgstr "Înălţime:"
 
-#: ../src/interface.c:342
+#: ../src/interface.c:346
 msgid "Choose mode of operation"
 msgstr ""
 
-#: ../src/interface.c:350
+#: ../src/interface.c:354
 msgid "Mode:"
 msgstr ""
 
-#: ../src/interface.c:355
+#: ../src/interface.c:359
 msgid "LqR only"
 msgstr ""
 
-#: ../src/interface.c:356
+#: ../src/interface.c:360
 msgid "LqR + LqR back to the original size"
 msgstr ""
 
-#: ../src/interface.c:357
+#: ../src/interface.c:361
 msgid "LqR + scale back to the original size"
 msgstr ""
 
 #. Output settings page
-#: ../src/interface.c:383
+#: ../src/interface.c:387
 msgid "Output"
 msgstr "Producţie"
 
-#: ../src/interface.c:398
+#: ../src/interface.c:402
 msgid "Output on a new layer"
 msgstr "Producţie pe strat nou"
 
-#: ../src/interface.c:406
+#: ../src/interface.c:410
 msgid "Outputs the resulting image on a new layer"
 msgstr "Produce imaginea rezultată pe un strat nou"
 
-#: ../src/interface.c:410
+#: ../src/interface.c:414
 msgid "Resize image canvas"
 msgstr "Redimensionare canevas imagine"
 
-#: ../src/interface.c:418
+#: ../src/interface.c:422
 msgid "Resize and translate the image canvas to fit the resized layer"
 msgstr ""
 "Redimensionare şi interpretare canevas imagine adecvat pentru imaginea "
 "redimensionată"
 
-#: ../src/interface.c:422
+#: ../src/interface.c:426
 msgid "Resize preserve/discard layers"
 msgstr "Redimensionare straturi păstrate/anulare"
 
-#: ../src/interface.c:439
+#: ../src/interface.c:443
 msgid "Resize the layers used as masks along with the active layer"
 msgstr "Redimensionare straturi folosite ca mască odată cu statul activ"
 
-#: ../src/interface.c:446
+#: ../src/interface.c:450
 msgid "Output the seams"
 msgstr "Producţie margini"
 
-#: ../src/interface.c:455
+#: ../src/interface.c:459
 msgid ""
 "Creates an extra output layer with the seams, for visual inspection of what "
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
@@ -99,38 +99,38 @@ msgstr ""
 "efectuluiextensiei. Se utilizează cu \"Producţie pe strat nou \", şi "
 "redimensionare într-o direcţie"
 
-#: ../src/interface.c:478
+#: ../src/interface.c:482
 msgid "Color to use for the last seams"
 msgstr "Culoare ultima margine"
 
-#: ../src/interface.c:492
+#: ../src/interface.c:496
 msgid "Color to use for the first seams"
 msgstr "Culoare prima margine"
 
 #. Advanced settings page
-#: ../src/interface.c:497
+#: ../src/interface.c:501
 msgid "Advanced"
 msgstr "Avansat"
 
-#: ../src/interface.c:515
+#: ../src/interface.c:519
 msgid "Seams rigidity:"
 msgstr "Rigiditate margini:"
 
-#: ../src/interface.c:518
+#: ../src/interface.c:522
 msgid "Increasing this value results in straighter seams"
 msgstr "Mărind această valoare se obţin margini mai precise"
 
-#: ../src/interface.c:527
+#: ../src/interface.c:531
 msgid "Seams max step:"
 msgstr ""
 
-#: ../src/interface.c:530
+#: ../src/interface.c:534
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
 msgstr ""
 
-#: ../src/interface.c:547
+#: ../src/interface.c:551
 msgid ""
 "This affects the automatic feature recognition.\n"
 "It's the function which will be applied to the components of the gradient on "
@@ -139,89 +139,89 @@ msgstr ""
 "Aceasta afectează recunoaşterea automată a caracteristicilor.\n"
 "Este funcţia ce va fi aplicată componenţilor gradientului pe fiecare pixel"
 
-#: ../src/interface.c:557
+#: ../src/interface.c:561
 msgid "Gradient function:"
 msgstr "Funcţie gradient"
 
-#: ../src/interface.c:562
+#: ../src/interface.c:566
 msgid "Transversal absolute value"
 msgstr "Valoare transversală absolută"
 
-#: ../src/interface.c:563
+#: ../src/interface.c:567
 msgid "Sum of absolute values"
 msgstr "Suma valori absolute"
 
-#: ../src/interface.c:564
+#: ../src/interface.c:568
 msgid "Norm"
 msgstr "Norm"
 
 #. Null can be translated as Zero
-#: ../src/interface.c:566
+#: ../src/interface.c:570
 msgid "Null"
 msgstr "Zero"
 
-#: ../src/interface.c:582
+#: ../src/interface.c:586
 msgid "This controls the order of operations if rescaling in both directions"
 msgstr ""
 
-#: ../src/interface.c:591
+#: ../src/interface.c:595
 msgid "Rescale order:"
 msgstr ""
 
-#: ../src/interface.c:596
+#: ../src/interface.c:600
 msgid "Horizontal first"
 msgstr ""
 
-#: ../src/interface.c:597
+#: ../src/interface.c:601
 msgid "Vertical first"
 msgstr ""
 
 #. Mask page
-#: ../src/interface.c:614
+#: ../src/interface.c:618
 msgid "Mask"
 msgstr "Mască"
 
-#: ../src/interface.c:622
+#: ../src/interface.c:626
 msgid "Select behavior for the mask"
 msgstr "Selectare comportament mască"
 
-#: ../src/interface.c:627
+#: ../src/interface.c:631
 msgid "Apply"
 msgstr "Aplică"
 
-#: ../src/interface.c:627
+#: ../src/interface.c:631
 msgid "Discard"
 msgstr "Anulare"
 
-#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:78
+#: ../src/interface.c:928 ../src/interface.c:1013 ../src/render.c:81
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Eroare: stratul selectat nu mai este valid"
 
-#: ../src/interface.c:1486
+#: ../src/interface.c:1493
 msgid "Feature masks"
 msgstr "Mască trăsături"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1496
+#: ../src/interface.c:1503
 #, c-format
 msgid "%s pres mask"
 msgstr "masca salvare %s"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1505
+#: ../src/interface.c:1512
 #, c-format
 msgid "%s disc mask"
 msgstr "masca ştergere %s"
 
 #. Feature preservation
-#: ../src/interface.c:1527
+#: ../src/interface.c:1534
 #, fuzzy
 msgid "Feature preservation mask"
 msgstr "Selectare păstrare caracteristici"
 
-#: ../src/interface.c:1532
+#: ../src/interface.c:1539
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -234,23 +234,23 @@ msgstr ""
 "\"Actualizare\".\n"
 "Pictatul în negru nu are nici un efect."
 
-#: ../src/interface.c:1565
+#: ../src/interface.c:1572
 msgid "Preserve features"
 msgstr "Păstrare caracteristici"
 
-#: ../src/interface.c:1581
+#: ../src/interface.c:1588
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr "Foloseşte un extra strat pentru a nu distorsiona zonele selectate"
 
-#: ../src/interface.c:1584 ../src/interface.c:1775
+#: ../src/interface.c:1591 ../src/interface.c:1782
 msgid "New"
 msgstr "Nou"
 
-#: ../src/interface.c:1589
+#: ../src/interface.c:1596
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr "Crează un nou strat transparent folosit ca mască de conservare"
 
-#: ../src/interface.c:1628
+#: ../src/interface.c:1635
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -258,25 +258,25 @@ msgstr ""
 "Strat folosit ca mască pentru păstrarea caracteristicilor.\n"
 "Folosiţi butonul \"Actualizare\" pentru actualizare listă"
 
-#: ../src/interface.c:1659 ../src/interface.c:1853
+#: ../src/interface.c:1666 ../src/interface.c:1860
 msgid "Layer:"
 msgstr "Strat:"
 
-#: ../src/interface.c:1680 ../src/interface.c:1871
+#: ../src/interface.c:1687 ../src/interface.c:1878
 msgid "Strength:"
 msgstr "Forţă"
 
-#: ../src/interface.c:1684
+#: ../src/interface.c:1691
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coeficient general de intensitate păstrare caracteristici"
 
 #. Feature discard
-#: ../src/interface.c:1717
+#: ../src/interface.c:1724
 #, fuzzy
 msgid "Feature discard mask"
 msgstr "Selectare anulare caracteristici"
 
-#: ../src/interface.c:1722
+#: ../src/interface.c:1729
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -289,11 +289,11 @@ msgstr ""
 "\"Actualizare\".\n"
 "Pictatul în negru nu are efect."
 
-#: ../src/interface.c:1753
+#: ../src/interface.c:1760
 msgid "Discard features"
 msgstr "Înlăturare caracteristici"
 
-#: ../src/interface.c:1770
+#: ../src/interface.c:1777
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -301,11 +301,11 @@ msgstr ""
 "Foloseşte un strat pentru a trata zona selectată ca nesimnificativă"
 "(folositor pentru îndepărtare părţi din imagine la redimensionare) "
 
-#: ../src/interface.c:1780
+#: ../src/interface.c:1787
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr "Crează un strat nou transparent folosit ca mască de înlăturare"
 
-#: ../src/interface.c:1818
+#: ../src/interface.c:1825
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -313,29 +313,29 @@ msgstr ""
 "Strat folosit ca mască pentru caracteristici înlăturate.\n"
 "Folosiţi butonul \"Actualizare\" pentru actualizare listă"
 
-#: ../src/interface.c:1875
+#: ../src/interface.c:1882
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficient general de intensitate anulare caracteristici"
 
-#: ../src/interface.c:1917
+#: ../src/interface.c:1924
 msgid "Auto size"
 msgstr ""
 
-#: ../src/interface.c:1927
+#: ../src/interface.c:1934
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
-#: ../src/interface.c:1930
+#: ../src/interface.c:1937
 msgid "horizontal"
 msgstr ""
 
-#: ../src/interface.c:1930
+#: ../src/interface.c:1937
 msgid "vertical"
 msgstr ""
 
-#: ../src/interface.c:1939
+#: ../src/interface.c:1946
 msgid "Resizing direction for auto size"
 msgstr ""
 
@@ -347,37 +347,37 @@ msgstr "Redimensionare liquid ..."
 msgid "Not enough memory"
 msgstr "Memorie insuficientă"
 
-#: ../src/render.c:87
+#: ../src/render.c:90
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr "Eroare: strat păstrare caracteristici nu mai este valid"
 
-#: ../src/render.c:97
+#: ../src/render.c:100
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Eroare: strat înlăturare caracteristici nu mai este valid"
 
-#: ../src/lqr_raster.c:1320
+#: ../src/lqr_raster.c:1339
 msgid "Resizing width..."
 msgstr "Redimensionare lăţime..."
 
-#: ../src/lqr_raster.c:1363
+#: ../src/lqr_raster.c:1382
 msgid "Resizing height..."
 msgstr "Redimensionare înălţime..."
 
-#: ../src/lqr_external.c:55
+#: ../src/lqr_external.c:56
 msgid "Parsing layer..."
 msgstr "Analiza strat..."
 
-#: ../src/lqr_external.c:187
+#: ../src/lqr_external.c:184
 msgid "Applying changes..."
 msgstr "Se aplică modificările..."
 
-#: ../src/lqr_external.c:264
+#: ../src/lqr_external.c:262
 msgid "Drawing seam map..."
 msgstr "Se desenează harta margini..."
 
 #. The name of the layer with the seams map
 #. (here "%s" represents the selected layer's name)
-#: ../src/lqr_external.c:269
+#: ../src/lqr_external.c:267
 #, fuzzy, c-format
 msgid "%s seam map"
 msgstr "masca salvare %s"

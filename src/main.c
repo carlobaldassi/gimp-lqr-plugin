@@ -46,11 +46,11 @@
 
 #define PLUG_IN_NAME   "plug-in-lqr"
 
-#define DATA_KEY_VALS    "plug-in-lqr-in"
-#define DATA_KEY_UI_VALS "plug-in-lqr-in-ui"
-#define DATA_KEY_COL_VALS "plug-in-lqr-in-col"
+#define DATA_KEY_VALS    "plug_in_lqr"
+#define DATA_KEY_UI_VALS "plug_in_lqr_ui"
+#define DATA_KEY_COL_VALS "plug_in_lqr_col"
 
-#define PARASITE_KEY     "plug-in-lqr-options"
+#define PARASITE_KEY     "plug_in_lqr_options"
 
 
 /*  Local function prototypes  */

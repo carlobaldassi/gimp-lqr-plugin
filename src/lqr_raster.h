@@ -58,7 +58,7 @@ struct _LqrRaster
   gint bpp;                     /* number of bpp of the image */
 
   gint transposed;              /* flag to set transposed state */
-  gint aux;                     /* flag to set if raster is auxiliary */
+  gboolean aux;                 /* flag to set if raster is auxiliary */
 
   gboolean resize_aux_layers;   /* flag to determine whether the auxiliary layers are resized */
   gboolean output_seams;        /* flag to determine whether to output the seam map */
@@ -113,11 +113,17 @@ void lqr_raster_copy_vsmap (LqrRaster * r, LqrRaster * dest);   /* copy vsmap on
 gboolean lqr_raster_inflate (LqrRaster * r, gint l);    /* adds enlargment info to map */
 
 /* image manipulations */
+gboolean lqr_raster_resize_width (LqrRaster * r, gint w1);   /* liquid resize width */
+gboolean lqr_raster_resize_height (LqrRaster * r, gint h1);   /* liquid resize height */
 void lqr_raster_set_width (LqrRaster * r, gint w1);
 gboolean lqr_raster_transpose (LqrRaster * r);
 
+/** PUBLIC FUNCTIONS **/
+
 /* constructor & destructor */
 LqrRaster *lqr_raster_new (gint32 image_ID, GimpDrawable * drawable,
+                               gchar * name);
+LqrRaster *lqr_raster_new_full (gint32 image_ID, GimpDrawable * drawable,
                            gchar * name, gint32 pres_layer_ID,
                            gint pres_coeff, gint32 disc_layer_ID,
                            gint disc_coeff, LqrGradFunc gf_int,
@@ -125,16 +131,19 @@ LqrRaster *lqr_raster_new (gint32 image_ID, GimpDrawable * drawable,
                            gboolean resize_aux_layers, gboolean output_seams,
 			   LqrResizeOrder res_order,
                            GimpRGB seam_color_start, GimpRGB seam_color_end);
-LqrRaster *lqr_raster_aux_new (gint32 image_ID, GimpDrawable * drawable,
-                               gchar * name);
 void lqr_raster_destroy (LqrRaster * r);
 
-/* set gradient function */
-void lqr_raster_set_gf (LqrRaster * r, LqrGradFunc gf_ind);
+/* initialize */
+gboolean lqr_raster_init (LqrRaster *r, gint32 pres_layer_ID, gint32 disc_layer_ID, gint pres_coeff, gint disc_coeff, gint delta_x, gint rigidity);
+
+/* set attributes */
+void lqr_raster_set_gradient_function (LqrRaster * r, LqrGradFunc gf_ind);
+void lqr_raster_set_output_seams (LqrRaster *r, GimpRGB seam_color_start, GimpRGB seam_color_end);
+void lqr_raster_set_resize_order (LqrRaster *r, LqrResizeOrder resize_order);
+gboolean lqr_raster_attach_pres_layer (LqrRaster * r, gint32 pres_layer_ID);
+gboolean lqr_raster_attach_disc_layer (LqrRaster * r, gint32 disc_layer_ID);
 
 /* image manipulations */
-gboolean lqr_raster_resize_width (LqrRaster * r, gint w1);   /* liquid resize */
-gboolean lqr_raster_resize_height (LqrRaster * r, gint h1);   /* liquid resize */
 gboolean lqr_raster_resize (LqrRaster * r, gint w1, gint h1);   /* liquid resize */
 gboolean lqr_raster_flatten (LqrRaster * r);    /* flatten the multisize image */
 
