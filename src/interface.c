@@ -518,11 +518,11 @@ dialog (gint32 image_ID,
   adj = gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
                               _("Seams rigidity:"), SCALE_WIDTH,
                               SPIN_BUTTON_WIDTH, state->rigidity, 0,
-                              MAX_RIGIDITY, 1, 10, 0, TRUE, 0, 0,
+                              MAX_RIGIDITY, 0.2, 10, 2, TRUE, 0, 0,
                               _("Increasing this value results "
                                 "in straighter seams"), NULL);
   g_signal_connect (adj, "value_changed",
-                    G_CALLBACK (gimp_int_adjustment_update),
+                    G_CALLBACK (gimp_float_adjustment_update),
                     &state->rigidity);
 
   /* Delta x */

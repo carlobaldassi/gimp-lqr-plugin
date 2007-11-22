@@ -36,7 +36,7 @@ typedef struct
   gint pres_coeff;
   gint32 disc_layer_ID;
   gint disc_coeff;
-  gint rigidity;
+  gfloat rigidity;
   gint delta_x;
   gboolean resize_aux_layers;
   gboolean resize_canvas;

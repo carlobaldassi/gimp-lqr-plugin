@@ -142,7 +142,7 @@ lqr_raster_destroy (LqrRaster * r)
 /*** initialization ***/
 
 gboolean
-lqr_raster_init (LqrRaster *r, gint32 pres_layer_ID, gint32 disc_layer_ID, gint pres_coeff, gint disc_coeff, gint delta_x, gint rigidity)
+lqr_raster_init (LqrRaster *r, gint32 pres_layer_ID, gint32 disc_layer_ID, gint pres_coeff, gint disc_coeff, gint delta_x, gfloat rigidity)
 {
   gint y, x;
 

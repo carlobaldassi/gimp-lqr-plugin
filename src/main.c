@@ -139,7 +139,7 @@ query (void)
     {GIMP_PDB_INT32, "pres_coeff", "Preservation coefficient"},
     {GIMP_PDB_INT32, "disc_layer", "Layer that marks areas to discard"},
     {GIMP_PDB_INT32, "disc_coeff", "Discard coefficient"},
-    {GIMP_PDB_INT32, "rigidity", "Rigidity coefficient"},
+    {GIMP_PDB_FLOAT, "rigidity", "Rigidity coefficient"},
     {GIMP_PDB_INT32, "delta_x", "max displacement of seams"},
     {GIMP_PDB_INT32, "resize_aux_layers",
      "Whether to resize auxiliary layers"},

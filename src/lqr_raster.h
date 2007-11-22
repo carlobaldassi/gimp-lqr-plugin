@@ -69,7 +69,7 @@ struct _LqrRaster
   LqrRaster *pres_raster;       /* preservation layer raster */
   LqrRaster *disc_raster;       /* discard layer raster */
 
-  gint rigidity;                /* rigidity value (can straighten seams) */
+  gfloat rigidity;              /* rigidity value (can straighten seams) */
   gdouble *rigidity_map;        /* the rigidity function */
   gint delta_x;                 /* max displacement of seams (currently is only meaningful if 0 or 1 */
 
@@ -123,18 +123,10 @@ gboolean lqr_raster_transpose (LqrRaster * r);
 /* constructor & destructor */
 LqrRaster *lqr_raster_new (gint32 image_ID, GimpDrawable * drawable,
                                gchar * name);
-LqrRaster *lqr_raster_new_full (gint32 image_ID, GimpDrawable * drawable,
-                           gchar * name, gint32 pres_layer_ID,
-                           gint pres_coeff, gint32 disc_layer_ID,
-                           gint disc_coeff, LqrGradFunc gf_int,
-                           gint rigidity, gint delta_x,
-                           gboolean resize_aux_layers, gboolean output_seams,
-			   LqrResizeOrder res_order,
-                           GimpRGB seam_color_start, GimpRGB seam_color_end);
 void lqr_raster_destroy (LqrRaster * r);
 
 /* initialize */
-gboolean lqr_raster_init (LqrRaster *r, gint32 pres_layer_ID, gint32 disc_layer_ID, gint pres_coeff, gint disc_coeff, gint delta_x, gint rigidity);
+gboolean lqr_raster_init (LqrRaster *r, gint32 pres_layer_ID, gint32 disc_layer_ID, gint pres_coeff, gint disc_coeff, gint delta_x, gfloat rigidity);
 
 /* set attributes */
 void lqr_raster_set_gradient_function (LqrRaster * r, LqrGradFunc gf_ind);
