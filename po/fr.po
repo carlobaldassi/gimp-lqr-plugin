@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-22 04:33+0100\n"
+"POT-Creation-Date: 2007-11-24 02:11+0100\n"
 "PO-Revision-Date: 2007-10-13 14:31+0200\n"
 "Last-Translator: Vincent Picavet <vpicavet@gmail.com>\n"
 "Language-Team:  <fr@li.org>\n"
@@ -351,8 +351,13 @@ msgstr ""
 msgid "Resizing direction for auto size"
 msgstr ""
 
+#: ../src/main.c:164
+msgid "scaling which keeps layer features (or removes them)"
+msgstr ""
+
 #: ../src/main.c:168
-msgid "Liquid rescale ..."
+#, fuzzy
+msgid "Li_quid rescale..."
 msgstr "Redimensionnement liquide ..."
 
 #: ../src/render.c:42

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-22 04:33+0100\n"
+"POT-Creation-Date: 2007-11-24 02:11+0100\n"
 "PO-Revision-Date: 2007-10-02 04:27+0200\n"
 "Last-Translator: minombresbond <minombresbond@datafull.com>\n"
 "Language-Team: Español\n"
@@ -321,8 +321,13 @@ msgstr ""
 msgid "Resizing direction for auto size"
 msgstr ""
 
+#: ../src/main.c:164
+msgid "scaling which keeps layer features (or removes them)"
+msgstr ""
+
 #: ../src/main.c:168
-msgid "Liquid rescale ..."
+#, fuzzy
+msgid "Li_quid rescale..."
 msgstr "Redimensionado Líquido ..."
 
 #: ../src/render.c:42

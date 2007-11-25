@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-22 04:33+0100\n"
+"POT-Creation-Date: 2007-11-24 02:11+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -355,9 +355,13 @@ msgstr "verticale"
 msgid "Resizing direction for auto size"
 msgstr "Direzione del ridimensionamento automatico"
 
+#: ../src/main.c:164
+msgid "scaling which keeps layer features (or removes them)"
+msgstr "scala il livello mantenendo i contenuti (o rimuovendoli)"
+
 #: ../src/main.c:168
-msgid "Liquid rescale ..."
-msgstr "Ridimensionamento liquido ..."
+msgid "Li_quid rescale..."
+msgstr "Li_quid rescale..."
 
 #: ../src/render.c:42
 msgid "Not enough memory"

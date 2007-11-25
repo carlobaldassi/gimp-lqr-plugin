@@ -161,11 +161,11 @@ query (void)
   gimp_plugin_help_register ("plug-in-lqr-help", help_uri);
 
   gimp_install_procedure (PLUG_IN_NAME,
-                          "LiquidRescaling (content-aware rescaling)",
-                          "Resize a layer preserving its main features",
+                          N_("scaling which keeps layer features (or removes them)"),
+                          "Resize a layer preserving (or removing) content",
                           "Carlo Baldassi <carlobaldassi@yahoo.it>",
                           "Carlo Baldassi <carlobaldassi@yahoo.it>", "2007",
-                          N_("Liquid rescale ..."), "RGB*, GRAY*",
+                          N_("Li_quid rescale..."), "RGB*, GRAY*",
                           GIMP_PLUGIN, G_N_ELEMENTS (args), 0, args, NULL);
   /* what about INDEXED* images ? */
 

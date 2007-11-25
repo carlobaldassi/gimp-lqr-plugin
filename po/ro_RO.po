@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-22 04:33+0100\n"
+"POT-Creation-Date: 2007-11-24 02:11+0100\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -339,8 +339,13 @@ msgstr ""
 msgid "Resizing direction for auto size"
 msgstr ""
 
+#: ../src/main.c:164
+msgid "scaling which keeps layer features (or removes them)"
+msgstr ""
+
 #: ../src/main.c:168
-msgid "Liquid rescale ..."
+#, fuzzy
+msgid "Li_quid rescale..."
 msgstr "Redimensionare liquid ..."
 
 #: ../src/render.c:42
