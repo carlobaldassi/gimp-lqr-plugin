@@ -1,4 +1,15 @@
-Here you can collect the new features of your current plugin release.
+Version 0.4.0 :
+ 
+* Core
+  * Faster engine
+  * Possibility of seam step > 1
+  * More precision for rigidity value
+
+* Interface
+  * Autosize button for object deletion
+  * Optionally scale (or LqRescale) back to
+    the original size
+  * Rescale order option
 
 Version 0.3.0 :
 
