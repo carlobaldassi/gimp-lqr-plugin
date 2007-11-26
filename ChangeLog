@@ -1,3 +1,6 @@
+2007-11-26 Carlo Baldassi <carlobaldassi@yahoo.it>
+	* modified : reorganized code in order to completely separate
+	  the UI from the carving library
 2007-11-20 Carlo Baldassi <carlobaldassi@yahoo.it>
 	* new : seam max step option
 	* new : auto size button for object removal

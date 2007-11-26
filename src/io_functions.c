@@ -26,7 +26,6 @@
 #include <stdio.h>
 
 #include <libgimp/gimp.h>
-
 #include "config.h"
 #include "plugin-intl.h"
 
@@ -34,73 +33,70 @@
 #include "lqr_gradient.h"
 #include "lqr_cursor.h"
 #include "lqr_raster.h"
-#include "lqr_external.h"
+#include "lqr_seams_buffer_list.h"
+#include "lqr_seams_buffer.h"
 
-#ifdef __LQR_DEBUG__
-#include <assert.h>
-#endif // __LQR_DEBUG__
+#include "io_functions.h"
 
-
-/**** EXTERNAL FUNCTIONS ****/
-
-gboolean
-lqr_external_readimage (LqrRaster * r, GimpDrawable * drawable)
+guchar * 
+rgb_buffer_from_layer (gint32 layer_ID)
 {
   gint x, y, k, bpp;
-  gint32 layer_ID;
   gint w, h;
+  gint x_off, y_off;
+  GimpDrawable * drawable;
   GimpPixelRgn rgn_in;
   guchar *inrow;
+  guchar * buffer;
   gint update_step;
 
   gimp_progress_init (_("Parsing layer..."));
-
-  layer_ID = drawable->drawable_id;
 
   w = gimp_drawable_width (layer_ID);
   h = gimp_drawable_height (layer_ID);
 
   bpp = gimp_drawable_bpp (layer_ID);
 
+  TRY_N_N (buffer = g_try_new (guchar , bpp * w * h));
+
+  drawable = gimp_drawable_get(layer_ID);
+
   gimp_pixel_rgn_init (&rgn_in,
                        drawable, 0, 0, w, h, FALSE, FALSE);
 
-  gimp_drawable_offsets (layer_ID, &r->x_off, &r->y_off);
+  gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
-#ifdef __LQR_DEBUG__
-  assert (w == r->w);
-  assert (h == r->h);
-#endif // __LQR_DEBUG__
+  TRY_N_N (inrow = g_try_new (guchar, bpp * w));
 
-  TRY_N_F (inrow = g_try_new (guchar, bpp * r->w));
-
-  for (y = 0; y < r->h; y++)
+  for (y = 0; y < h; y++)
     {
-      gimp_pixel_rgn_get_row (&rgn_in, inrow, 0, y, r->w);
+      gimp_pixel_rgn_get_row (&rgn_in, inrow, 0, y, w);
 
-      for (x = 0; x < r->w; x++)
+      for (x = 0; x < w; x++)
         {
           for (k = 0; k < bpp; k++)
             {
-              r->rgb[(y * r->w + x) * bpp + k] = inrow[x * bpp + k];
+              buffer[(y * w + x) * bpp + k] = inrow[x * bpp + k];
             }
         }
 
-      update_step = MAX ((r->h - 1) / 20, 1);
+      update_step = MAX ((h - 1) / 20, 1);
       if (y % update_step == 0)
         {
-          gimp_progress_update ((gdouble) y / (r->h - 1));
+          gimp_progress_update ((gdouble) y / (h - 1));
         }
 
     }
 
   g_free (inrow);
 
-  return TRUE;
+  gimp_drawable_detach(drawable);
+
+  return buffer;
 }
 
 gboolean
-lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
+update_bias (LqrRaster *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off)
 {
   gint x, y, k, bpp, c_bpp;
   gboolean has_alpha;
@@ -131,8 +127,8 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
                        gimp_drawable_get (layer_ID), 0, 0, w, h,
                        FALSE, FALSE);
 
-  x_off -= r->x_off;
-  y_off -= r->y_off;
+  x_off -= base_x_off;
+  y_off -= base_y_off;
 
   lw = (MIN (r->w, w + x_off) - MAX (0, x_off));
   lh = (MIN (r->h, h + y_off) - MAX (0, y_off));
@@ -170,9 +166,8 @@ lqr_external_readbias (LqrRaster * r, gint32 layer_ID, gint bias_factor)
   return TRUE;
 }
 
-/* flush the LqrRaster to a layer */
 gboolean
-lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
+write_raster_to_layer (LqrRaster * r, GimpDrawable * drawable)
 {
   gint32 layer_ID;
   gint x, y, k;
@@ -242,123 +237,69 @@ lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable)
   return TRUE;
 }
 
-
-/* plot the visibility level of the image
- * uses original size
- * uninitialized points are plotted transparent */
-gboolean
-lqr_external_write_vs (LqrRaster * r)
+void
+write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gint32 image_ID, gchar * name, gint x_off, gint y_off)
 {
-  gchar name[LQR_MAX_NAME_LENGTH];
-  gint w, h, w1, x, y, k, vs;
+  gint w, h, y;
   gint bpp;
   gint32 seam_layer_ID;
   GimpPixelRgn rgn_out;
   guchar *outrow;
   GimpDrawable *drawable;
-  gdouble value, rd, gr, bl, al;
   gint update_step;
 
+  w = seams_buffer->width;
+  h = seams_buffer->height;
+
   gimp_progress_init (_("Drawing seam map..."));
-  update_step = MAX ((r->h - 1) / 20, 1);
-
-  /* The name of the layer with the seams map */
-  /* (here "%s" represents the selected layer's name) */
-  snprintf (name, LQR_MAX_NAME_LENGTH, _("%s seam map"), r->name);
-
-  /* save current size */
-  w1 = r->w;
-
-  /* temporarily set the size to the original */
-  lqr_raster_set_width (r, r->w_start);
-
-  if (!r->transposed)
-    {
-      w = r->w;
-      h = r->h;
-    }
-  else
-    {
-      w = r->h;
-      h = r->w;
-    }
+  update_step = MAX ((h - 1) / 20, 1);
 
   seam_layer_ID =
-    gimp_layer_new (r->image_ID, name, w, h, GIMP_RGBA_IMAGE, 100,
+    gimp_layer_new (image_ID, name, w, h, GIMP_RGBA_IMAGE, 100,
                     GIMP_NORMAL_MODE);
   gimp_drawable_fill (seam_layer_ID, GIMP_TRANSPARENT_FILL);
-  gimp_image_add_layer (r->image_ID, seam_layer_ID, -1);
-  gimp_layer_translate (seam_layer_ID, r->x_off, r->y_off);
+  gimp_image_add_layer (image_ID, seam_layer_ID, -1);
+  gimp_layer_translate (seam_layer_ID, x_off, y_off);
   drawable = gimp_drawable_get (seam_layer_ID);
 
   bpp = 4;
 
   gimp_pixel_rgn_init (&rgn_out, drawable, 0, 0, w, h, TRUE, TRUE);
-  TRY_N_F (outrow = g_try_new (guchar, bpp * r->w));
+  //TRY_N_F (outrow = g_try_new (guchar, bpp * w));
 
-  lqr_cursor_reset (r->c);
-  for (y = 0; y < r->h; y++)
+  for (y = 0; y < h; y++)
     {
-      for (x = 0; x < r->w; x++)
-        {
-          vs = r->vs[r->c->now];
-          if (vs == 0)
-            {
-
-              for (k = 0; k < bpp; k++)
-                {
-                  outrow[bpp * x + k] = 0;
-                }
-            }
-          else
-            {
-              value =
-                (double) (r->max_level -
-                          (vs - r->w0 + r->w_start)) / r->max_level;
-              rd =
-                value * r->seam_color_start.r + (1 -
-                                                 value) * r->seam_color_end.r;
-              gr =
-                value * r->seam_color_start.g + (1 -
-                                                 value) * r->seam_color_end.g;
-              bl =
-                value * r->seam_color_start.b + (1 -
-                                                 value) * r->seam_color_end.b;
-              al = 0.5 * (1 + value);
-              outrow[bpp * x] = 255 * rd;
-              outrow[bpp * x + 1] = 255 * gr;
-              outrow[bpp * x + 2] = 255 * bl;
-              outrow[bpp * x + 3] = 255 * al;
-            }
-          lqr_cursor_next (r->c);
-        }
-      if (!r->transposed)
-        {
-          gimp_pixel_rgn_set_row (&rgn_out, outrow, 0, y, r->w);
-        }
-      else
-        {
-          gimp_pixel_rgn_set_col (&rgn_out, outrow, y, 0, r->w);
-        }
-
+      outrow = seams_buffer->buffer + y * w * bpp;
+      gimp_pixel_rgn_set_row (&rgn_out, outrow, 0, y, w);
       if (y % update_step == 0)
         {
-          gimp_progress_update ((gdouble) y / (r->h - 1));
+          gimp_progress_update ((gdouble) y / (h - 1));
         }
     }
 
-  g_free (outrow);
+  //g_free (outrow);
 
   gimp_drawable_flush (drawable);
   gimp_drawable_merge_shadow (seam_layer_ID, TRUE);
   gimp_drawable_update (seam_layer_ID, 0, 0, w, h);
   gimp_drawable_set_visible (seam_layer_ID, FALSE);
-
-  /* recover size */
-  lqr_raster_set_width (r, w1);
-
-  return TRUE;
 }
+
+void
+write_all_seams_buffers (LqrSeamsBufferList * list, gint32 image_ID, gchar * orig_name, gint x_off, gint y_off)
+{
+  LqrSeamsBufferList * now = list;
+  gchar name[LQR_MAX_NAME_LENGTH];
+  while (now != NULL)
+    {
+      /* The name of the layer with the seams map */
+      /* (here "%s" represents the selected layer's name) */
+      snprintf (name, LQR_MAX_NAME_LENGTH, _("%s seam map"), orig_name);
+      write_seams_buffer_to_layer (now->current, image_ID, name, x_off, y_off);
+      now = now->next;
+    }
+}
+
 
 /* plot the energy (at current size / visibility) to a file
  * (greyscale) */
@@ -397,3 +338,5 @@ lqr_external_write_energy (LqrRaster * r /*, pngwriter& output */ )
 
   return TRUE;
 }
+
+

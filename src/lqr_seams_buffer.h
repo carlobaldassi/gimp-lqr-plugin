@@ -23,55 +23,29 @@
  * 02111-1307, USA.
  */
 
+#ifndef __LQR_SEAMS_BUFFER_H__
+#define __LQR_SEAMS_BUFFER_H__
 
 #ifndef __LQR_H__
-#define __LQR_H__
-
-#define LQR_MAX_NAME_LENGTH (1024)
-
-#define TRY_N_N(assign) if ((assign) == NULL) { return NULL; }
-#define TRY_N_F(assign) if ((assign) == NULL) { return FALSE; }
-#define TRY_F_N(assign) if ((assign) == FALSE) { return NULL; }
-#define TRY_F_F(assign) if ((assign) == FALSE) { return FALSE; }
-
-#if 0
-#define __LQR_DEBUG__
-#endif
-
-#if 1
-#define __LQR_CLOCK__
-#endif
-
-#if 0
-#define __LQR_VERBOSE__
-#endif
-
-/**** OPERATIONAL_MODES ****/
-typedef enum _LqrMode LqrMode;
-typedef enum _LqrResizeOrder LqrResizeOrder;
-
-enum _LqrMode
-{
-  LQR_MODE_NORMAL,
-  LQR_MODE_LQRBACK,
-  LQR_MODE_SCALEBACK
-};
-
-enum _LqrResizeOrder
-{
-  LQR_RES_ORDER_HOR,
-  LQR_RES_ORDER_VERT
-};
-
-/**** CLASSES DECLARATIONS ****/
-typedef struct _LqrCursor LqrCursor;
-typedef struct _LqrSeamsBuffer LqrSeamsBuffer;
-typedef struct _LqrSeamsBufferList LqrSeamsBufferList;
-typedef struct _LqrRaster LqrRaster;
-
-struct _LqrCursor;              /* a "smart" index to read the raster */
-struct _LqrSeamsBuffer;
-struct _LqrSeamsBufferList;
-struct _LqrRaster;              /* the multisize image raster         */
-
+#error "lqr.h must be included prior to lqr_seams_buffer.h"
 #endif /* __LQR_H__ */
+
+/*** LQR_SEAMS_BUFFER CLASS DEFINITION ***/
+
+struct _LqrSeamsBuffer
+{
+  guchar * buffer;
+  gint width;
+  gint height;
+};
+
+/* LQR_SEAMS_BUFFER FUNCTIONS */
+
+LqrSeamsBuffer* lqr_seams_buffer_new (guchar * buffer, gint width, gint heigth);
+void lqr_seams_buffer_destroy (LqrSeamsBuffer * seams_buffer);
+
+gboolean lqr_seams_buffer_flush_vs (LqrRaster * r);
+
+
+#endif /* __LQR_SEAMS_BUFFER__ */
+

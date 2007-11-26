@@ -32,7 +32,10 @@
 #include "lqr.h"
 #include "lqr_gradient.h"
 #include "lqr_raster.h"
-#include "lqr_external.h"
+#include "lqr_seams_buffer.h"
+#include "lqr_seams_buffer_list.h"
+
+#include "io_functions.h"
 
 #include "main.h"
 #include "render.h"
@@ -54,11 +57,13 @@ render (gint32 image_ID,
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
   gchar new_layer_name[LQR_MAX_NAME_LENGTH];
+  guchar * rgb_buffer;
   gboolean alpha_lock;
   gboolean alpha_lock_pres = FALSE, alpha_lock_disc = FALSE;
   gint ntiles;
   gint old_width, old_height;
   gint new_width, new_height;
+  gint bpp;
   gint x_off, y_off, aux_x_off, aux_y_off;
   GimpDrawable * drawable_pres, * drawable_disc;
   GimpRGB color_start, color_end;
@@ -154,6 +159,8 @@ render (gint32 image_ID,
 
   gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
 
+  bpp = gimp_drawable_bpp (drawable->drawable_id);
+
   if (vals->resize_aux_layers == TRUE)
     {
       if (vals->pres_layer_ID != 0)
@@ -183,20 +190,14 @@ render (gint32 image_ID,
   printf ("[ begin: clock: %g ]\n", clock1);
 #endif // __LQR_CLOCK__
 
-#if 0
-  rasta =
-    lqr_raster_new_full (image_ID, drawable, layer_name, vals->pres_layer_ID,
-                    vals->pres_coeff, vals->disc_layer_ID,
-                    vals->disc_coeff, vals->grad_func, vals->rigidity,
-                    vals->delta_x, vals->resize_aux_layers,
-                    vals->output_seams, vals->res_order, color_start,
-		    color_end);
-#endif
-  rasta = lqr_raster_new (image_ID, drawable, layer_name);
+  /* lqr raster initialization */
+  rgb_buffer = rgb_buffer_from_layer (layer_ID);
+  MEMCHECK (rgb_buffer != NULL);
+  rasta = lqr_raster_new (rgb_buffer, old_width, old_height, bpp);
   MEMCHECK (rasta != NULL);
-  MEMCHECK (lqr_raster_init (rasta, vals->pres_layer_ID, vals->disc_layer_ID,
-	                     vals->pres_coeff, vals->disc_coeff, 
-			     vals->delta_x, vals->rigidity));
+  MEMCHECK (lqr_raster_init (rasta, vals->delta_x, vals->rigidity));
+  MEMCHECK (update_bias (rasta, vals->pres_layer_ID, vals->pres_coeff, x_off, y_off));
+  MEMCHECK (update_bias (rasta, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
   lqr_raster_set_gradient_function (rasta, vals->grad_func);
   lqr_raster_set_resize_order (rasta, vals->res_order);
   if (vals->output_seams)
@@ -208,8 +209,20 @@ render (gint32 image_ID,
     }
   if (vals->resize_aux_layers)
     {
-      MEMCHECK (lqr_raster_attach_pres_layer(rasta, vals->pres_layer_ID));
-      MEMCHECK (lqr_raster_attach_disc_layer(rasta, vals->disc_layer_ID));
+      if (vals->pres_layer_ID)
+        {
+          rgb_buffer = rgb_buffer_from_layer (vals->pres_layer_ID);
+	  MEMCHECK (rgb_buffer != NULL);
+	  //MEMCHECK (lqr_raster_attach_pres_layer(rasta, vals->pres_layer_ID));
+	  MEMCHECK (lqr_raster_attach_pres_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->pres_layer_ID)));
+	}
+      if (vals->disc_layer_ID)
+        {
+          rgb_buffer = rgb_buffer_from_layer (vals->disc_layer_ID);
+	  MEMCHECK (rgb_buffer != NULL);
+	  //MEMCHECK (lqr_raster_attach_disc_layer(rasta, vals->disc_layer_ID));
+	  MEMCHECK (lqr_raster_attach_disc_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->disc_layer_ID)));
+	}
     }
 
 #ifdef __LQR_CLOCK__
@@ -234,7 +247,7 @@ render (gint32 image_ID,
 	    if (vals->disc_layer_ID != 0)
 	      {
 		MEMCHECK (lqr_raster_flatten (rasta->disc_raster));
-		TRY_F_F (lqr_external_readbias (rasta, vals->disc_layer_ID, 2 * vals->disc_coeff));
+		MEMCHECK (update_bias (rasta, vals->disc_layer_ID, 2 * vals->disc_coeff, x_off, y_off));
 	      }
 	  }
 	new_width = old_width;
@@ -257,6 +270,8 @@ render (gint32 image_ID,
 	g_message("error: unknown mode");
 	return FALSE;
     }
+
+  write_all_seams_buffers (rasta->flushed_vs, image_ID, layer_name, x_off, y_off);
 
   if (vals->resize_canvas == TRUE)
     {
@@ -281,7 +296,7 @@ render (gint32 image_ID,
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
                          4 * 2) / 1024 + 1);
 
-  MEMCHECK (lqr_external_writeimage (rasta, drawable));
+  MEMCHECK (write_raster_to_layer (rasta, drawable));
 
   if (vals->resize_aux_layers == TRUE)
     {
@@ -289,14 +304,14 @@ render (gint32 image_ID,
         {
           gimp_layer_resize (vals->pres_layer_ID, new_width, new_height, 0, 0);
 	  drawable_pres = gimp_drawable_get(vals->pres_layer_ID);
-          MEMCHECK (lqr_external_writeimage (rasta->pres_raster, drawable_pres));
+          MEMCHECK (write_raster_to_layer (rasta->pres_raster, drawable_pres));
 	  gimp_drawable_detach(drawable_pres);
         }
       if (vals->disc_layer_ID != 0)
         {
           gimp_layer_resize (vals->disc_layer_ID, new_width, new_height, 0, 0);
 	  drawable_disc = gimp_drawable_get(vals->disc_layer_ID);
-          MEMCHECK (lqr_external_writeimage (rasta->disc_raster, drawable_disc));
+          MEMCHECK (write_raster_to_layer (rasta->disc_raster, drawable_disc));
 	  gimp_drawable_detach(drawable_disc);
         }
     }

@@ -23,55 +23,26 @@
  * 02111-1307, USA.
  */
 
+#ifndef __IO_FUNCTIONS__
+#define __IO_FUNCTIONS__
 
 #ifndef __LQR_H__
-#define __LQR_H__
-
-#define LQR_MAX_NAME_LENGTH (1024)
-
-#define TRY_N_N(assign) if ((assign) == NULL) { return NULL; }
-#define TRY_N_F(assign) if ((assign) == NULL) { return FALSE; }
-#define TRY_F_N(assign) if ((assign) == FALSE) { return NULL; }
-#define TRY_F_F(assign) if ((assign) == FALSE) { return FALSE; }
-
-#if 0
-#define __LQR_DEBUG__
-#endif
-
-#if 1
-#define __LQR_CLOCK__
-#endif
-
-#if 0
-#define __LQR_VERBOSE__
-#endif
-
-/**** OPERATIONAL_MODES ****/
-typedef enum _LqrMode LqrMode;
-typedef enum _LqrResizeOrder LqrResizeOrder;
-
-enum _LqrMode
-{
-  LQR_MODE_NORMAL,
-  LQR_MODE_LQRBACK,
-  LQR_MODE_SCALEBACK
-};
-
-enum _LqrResizeOrder
-{
-  LQR_RES_ORDER_HOR,
-  LQR_RES_ORDER_VERT
-};
-
-/**** CLASSES DECLARATIONS ****/
-typedef struct _LqrCursor LqrCursor;
-typedef struct _LqrSeamsBuffer LqrSeamsBuffer;
-typedef struct _LqrSeamsBufferList LqrSeamsBufferList;
-typedef struct _LqrRaster LqrRaster;
-
-struct _LqrCursor;              /* a "smart" index to read the raster */
-struct _LqrSeamsBuffer;
-struct _LqrSeamsBufferList;
-struct _LqrRaster;              /* the multisize image raster         */
-
+#error "lqr.h must be included prior to io_functions.h"
 #endif /* __LQR_H__ */
+
+#ifndef __LQR_RASTER_H__
+#error "lqr_raster.h must be included prior to io_functions.h"
+#endif /* __LQR_H__ */
+
+/* INPUT/OUTPUT FUNCTIONS */
+
+guchar * rgb_buffer_from_layer (gint32 layer_ID);
+gboolean update_bias (LqrRaster *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off);
+gboolean write_raster_to_layer (LqrRaster * r, GimpDrawable * drawable);
+void write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gint32 image_ID, gchar *name, gint x_off, gint y_off);
+void write_all_seams_buffers (LqrSeamsBufferList * list, gint32 image_ID, gchar *name, gint x_off, gint y_off);
+/* unimplemented */
+gboolean lqr_external_write_energy (LqrRaster * r /*, pngwriter& output */ );     /* output the energy */
+
+#endif // __IO_FUNCTIONS__
+

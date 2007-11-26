@@ -41,12 +41,9 @@
  * The points are ordered by rows. */
 struct _LqrRaster
 {
-  gint32 image_ID;              /* the GIMP image ID of the layer */
-  gchar name[LQR_MAX_NAME_LENGTH];      /* the layer name */
   gint w_start, h_start;        /* original width & height */
   gint w, h;                    /* current width & height */
   gint w0, h0;                  /* map array width & height */
-  gint x_off, y_off;            /* layer offsets in the GIMP coordinate system */
 
   gint level;                   /* (in)visibility level (1 = full visibility) */
   gint max_level;               /* max level computed so far
@@ -89,10 +86,14 @@ struct _LqrRaster
 
   p_to_f gf;                    /* pointer to a gradient function */
 
+  LqrSeamsBufferList * flushed_vs;  /* linked list of pointers to flushed visibility maps buffers */
+
 };
 
 
 /* LQR_RASTER CLASS FUNCTIONS */
+
+/** private functions **/
 
 /* build maps */
 gboolean lqr_raster_build_maps (LqrRaster * r, gint depth);     /* build all */
@@ -118,25 +119,28 @@ gboolean lqr_raster_resize_height (LqrRaster * r, gint h1);   /* liquid resize h
 void lqr_raster_set_width (LqrRaster * r, gint w1);
 gboolean lqr_raster_transpose (LqrRaster * r);
 
-/** PUBLIC FUNCTIONS **/
+/** public functions **/
 
 /* constructor & destructor */
-LqrRaster *lqr_raster_new (gint32 image_ID, GimpDrawable * drawable,
-                               gchar * name);
+LqrRaster * lqr_raster_new (guchar * buffer, gint width, gint height, gint bpp);
 void lqr_raster_destroy (LqrRaster * r);
 
 /* initialize */
-gboolean lqr_raster_init (LqrRaster *r, gint32 pres_layer_ID, gint32 disc_layer_ID, gint pres_coeff, gint disc_coeff, gint delta_x, gfloat rigidity);
+gboolean lqr_raster_init (LqrRaster *r, gint delta_x, gfloat rigidity);
 
 /* set attributes */
 void lqr_raster_set_gradient_function (LqrRaster * r, LqrGradFunc gf_ind);
 void lqr_raster_set_output_seams (LqrRaster *r, GimpRGB seam_color_start, GimpRGB seam_color_end);
 void lqr_raster_set_resize_order (LqrRaster *r, LqrResizeOrder resize_order);
-gboolean lqr_raster_attach_pres_layer (LqrRaster * r, gint32 pres_layer_ID);
-gboolean lqr_raster_attach_disc_layer (LqrRaster * r, gint32 disc_layer_ID);
+gboolean lqr_raster_attach_pres_layer (LqrRaster * r, guchar * buffer, gint bpp);
+gboolean lqr_raster_attach_disc_layer (LqrRaster * r, guchar * buffer, gint bpp);
 
 /* image manipulations */
 gboolean lqr_raster_resize (LqrRaster * r, gint w1, gint h1);   /* liquid resize */
 gboolean lqr_raster_flatten (LqrRaster * r);    /* flatten the multisize image */
+
+/* other */
+gint lqr_raster_get_width (LqrRaster * r);
+gint lqr_raster_get_height (LqrRaster * r);
 
 #endif /* __LQR_RASTER_H__ */

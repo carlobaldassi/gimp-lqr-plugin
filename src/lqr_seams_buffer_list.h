@@ -23,22 +23,26 @@
  * 02111-1307, USA.
  */
 
-#ifndef __LQR_EXTERNAL_H__
-#define __LQR_EXTERNAL_H__
+#ifndef __LQR_SEAMS_BUFFER_LIST_H__
+#define __LQR_SEAMS_BUFFER_LIST_H__
 
 #ifndef __LQR_H__
-#error "lqr.h must be included prior to lqr_external.h"
+#error "lqr.h must be included prior to lqr_seams_buffer_list.h"
 #endif /* __LQR_H__ */
 
-/* LQR_EXTERNAL FUNCTIONS */
+/**** LQR_SEAMS_BUFFER_LIST CLASS DEFINITION ****/
 
-gboolean lqr_external_readimage (LqrRaster * r, GimpDrawable * drawable);
-gboolean lqr_external_readbias (LqrRaster * r, gint32 layer_ID,
-                                gint bias_factor);
-gboolean lqr_external_writeimage (LqrRaster * r, GimpDrawable * drawable);
-gboolean lqr_external_write_vs (LqrRaster * r); /* output the visibility map (the seams) */
-/* unimplemented */
-gboolean lqr_external_write_energy (LqrRaster * r /*, pngwriter& output */ );     /* output the energy */
+struct _LqrSeamsBufferList
+{
+  LqrSeamsBuffer * current;
+  LqrSeamsBufferList * next;
+};
+
+/* LQR_SEAMS_BUFFER_LIST FUNCTIONS */
+
+LqrSeamsBufferList * lqr_seams_buffer_list_append (LqrSeamsBufferList * list, LqrSeamsBuffer * buffer);
+void lqr_seams_buffer_list_destroy (LqrSeamsBufferList * list);
+
+#endif /* __LQR_SEAMS_BUFFER__ */
 
 
-#endif // __LQR_EXTERNAL_H__

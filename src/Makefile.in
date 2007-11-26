@@ -50,8 +50,9 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_gimp_lqr_plugin_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
-	render.$(OBJEXT) lqr_gradient.$(OBJEXT) lqr_cursor.$(OBJEXT) \
-	lqr_raster.$(OBJEXT) lqr_external.$(OBJEXT)
+	render.$(OBJEXT) io_functions.$(OBJEXT) lqr_gradient.$(OBJEXT) \
+	lqr_cursor.$(OBJEXT) lqr_raster.$(OBJEXT) \
+	lqr_seams_buffer.$(OBJEXT) lqr_seams_buffer_list.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -212,6 +213,8 @@ gimp_lqr_plugin_SOURCES = \
 	main.h		\
 	render.c	\
 	render.h	\
+	io_functions.c  \
+	io_function.h   \
 	lqr.h		\
 	lqr_gradient.c  \
 	lqr_gradient.h  \
@@ -219,8 +222,10 @@ gimp_lqr_plugin_SOURCES = \
 	lqr_cursor.h    \
 	lqr_raster.c    \
 	lqr_raster.h    \
-	lqr_external.c  \
-	lqr_external.h
+	lqr_seams_buffer.c \
+	lqr_seams_buffer.h \
+	lqr_seams_buffer_list.c \
+	lqr_seams_buffer_list.h 
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
@@ -299,10 +304,12 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_cursor.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_external.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_gradient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_raster.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_seams_buffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_seams_buffer_list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/render.Po@am__quote@
 

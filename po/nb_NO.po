@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-24 02:11+0100\n"
+"POT-Creation-Date: 2007-11-26 06:21+0100\n"
 "PO-Revision-Date: 2007-10-21 20:08+0200\n"
 "Last-Translator: Alexander Rødseth <rodseth@gmail.com>\n"
 "Language-Team: Norsk bokmål <Norwegian Bokmål <i18n-nb@lister.ping.uio.no>>\n"
@@ -195,7 +195,7 @@ msgstr "Bruk"
 msgid "Discard"
 msgstr "Visk ut"
 
-#: ../src/interface.c:928 ../src/interface.c:1013 ../src/render.c:81
+#: ../src/interface.c:928 ../src/interface.c:1013 ../src/render.c:86
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Uffda: det ser ut som om det valgte laget ikke lenger kan brukes"
 
@@ -349,45 +349,38 @@ msgstr ""
 msgid "Li_quid rescale..."
 msgstr "Væske-skalering..."
 
-#: ../src/render.c:42
+#: ../src/render.c:45
 msgid "Not enough memory"
 msgstr "Tom for minne"
 
-#: ../src/render.c:90
+#: ../src/render.c:95
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr "Uffda: det ser ut til at laget for brukte trekk ikke lenger kan brukes"
 
-#: ../src/render.c:100
+#: ../src/render.c:105
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Uffda: det ser ut til at laget for utviskede trekk ikke lenger kan brukes"
 
-#: ../src/lqr_raster.c:1339
+#: ../src/lqr_raster.c:1314
 msgid "Resizing width..."
 msgstr "Endrer bredden..."
 
-#: ../src/lqr_raster.c:1382
+#: ../src/lqr_raster.c:1358
 msgid "Resizing height..."
 msgstr "Endrer høyden..."
 
-#: ../src/lqr_external.c:56
-msgid "Parsing layer..."
-msgstr "Tolker lag..."
+#~ msgid "Parsing layer..."
+#~ msgstr "Tolker lag..."
 
-#: ../src/lqr_external.c:184
-msgid "Applying changes..."
-msgstr "Legger til endringer..."
+#~ msgid "Applying changes..."
+#~ msgstr "Legger til endringer..."
 
-#: ../src/lqr_external.c:262
-msgid "Drawing seam map..."
-msgstr "Tegner sømkart..."
+#~ msgid "Drawing seam map..."
+#~ msgstr "Tegner sømkart..."
 
-#. The name of the layer with the seams map
-#. (here "%s" represents the selected layer's name)
-#: ../src/lqr_external.c:267
-#, c-format
-msgid "%s seam map"
-msgstr "%s sømkart"
+#~ msgid "%s seam map"
+#~ msgstr "%s sømkart"
 
 #, fuzzy
 #~ msgid "Liquid rescale only"
