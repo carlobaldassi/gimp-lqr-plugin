@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 06:38+0100\n"
+"POT-Creation-Date: 2007-11-27 08:51+0100\n"
 "PO-Revision-Date: 2007-10-10 05:15+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -200,7 +200,7 @@ msgstr "Применять"
 msgid "Discard"
 msgstr "Не использовать"
 
-#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:82
+#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:88
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Ошибка: похоже, что выбранный слой больше не может быть использован"
 
@@ -359,23 +359,23 @@ msgstr "Избирательное масштабирование..."
 msgid "Not enough memory"
 msgstr "Недостаточно памяти"
 
-#: ../src/render.c:91
+#: ../src/render.c:97
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Ошибка: похоже, что слой с маской сохраняемых объектов больше не может быть "
 "использован"
 
-#: ../src/render.c:101
+#: ../src/render.c:107
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Ошибка: похоже, что слой с маской удаляемых объектов больше не может быть "
 "использован"
 
-#: ../src/lqr_raster.c:1315
+#: ../src/render.c:195
 msgid "Resizing width..."
 msgstr "Изменяется ширина..."
 
-#: ../src/lqr_raster.c:1359
+#: ../src/render.c:196
 msgid "Resizing height..."
 msgstr "Изменяется высота..."
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 06:38+0100\n"
+"POT-Creation-Date: 2007-11-27 08:51+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -209,7 +209,7 @@ msgstr "Applica"
 msgid "Discard"
 msgstr "Elimina"
 
-#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:82
+#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:88
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Errore: sembra che il livello selezionato non sia più valido"
 
@@ -375,23 +375,23 @@ msgstr "Li_quid rescale..."
 msgid "Not enough memory"
 msgstr "Memoria insufficiente"
 
-#: ../src/render.c:91
+#: ../src/render.c:97
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Errore: sembra che il livello per la preservazione dei contenuti non sia più "
 "valido"
 
-#: ../src/render.c:101
+#: ../src/render.c:107
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Errore: sembra che il livello per l'eliminazione dei contenuti non sia più "
 "valido"
 
-#: ../src/lqr_raster.c:1315
+#: ../src/render.c:195
 msgid "Resizing width..."
 msgstr "Sto riscalando l'altezza..."
 
-#: ../src/lqr_raster.c:1359
+#: ../src/render.c:196
 msgid "Resizing height..."
 msgstr "Sto riscalando la larghezza..."
 

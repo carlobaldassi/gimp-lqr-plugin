@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 06:38+0100\n"
+"POT-Creation-Date: 2007-11-27 08:51+0100\n"
 "PO-Revision-Date: 2007-10-02 04:27+0200\n"
 "Last-Translator: minombresbond <minombresbond@datafull.com>\n"
 "Language-Team: Español\n"
@@ -197,7 +197,7 @@ msgstr "Aplicar"
 msgid "Discard"
 msgstr "Descartar"
 
-#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:82
+#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:88
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr ""
 
@@ -342,19 +342,19 @@ msgstr "Redimensionado Líquido ..."
 msgid "Not enough memory"
 msgstr "No hay suficiente memoria"
 
-#: ../src/render.c:91
+#: ../src/render.c:97
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:101
+#: ../src/render.c:107
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
-#: ../src/lqr_raster.c:1315
+#: ../src/render.c:195
 msgid "Resizing width..."
 msgstr "Ajustando ancho..."
 
-#: ../src/lqr_raster.c:1359
+#: ../src/render.c:196
 msgid "Resizing height..."
 msgstr "Ajustando Alto"
 

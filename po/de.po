@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 06:38+0100\n"
+"POT-Creation-Date: 2007-11-27 08:51+0100\n"
 "PO-Revision-Date: 2007-10-15 21:14+0200\n"
 "Last-Translator: Christoph Schäfer <christoph-schaefer@gmx.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -209,7 +209,7 @@ msgstr "Anwenden"
 msgid "Discard"
 msgstr "Verwerfen"
 
-#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:82
+#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:88
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Fehler. Die ausgewählte Ebene ist anscheinend nicht mehr gültig"
 
@@ -374,23 +374,23 @@ msgstr "Flüssige Neuskalierung ..."
 msgid "Not enough memory"
 msgstr "Nicht genug Arbeitsspeicher vorhanden"
 
-#: ../src/render.c:91
+#: ../src/render.c:97
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Fehler. Die ausgewählte Ebenezum Erhalten von Ebenen ist anscheinend nicht "
 "mehr gültig"
 
-#: ../src/render.c:101
+#: ../src/render.c:107
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Fehler. Die ausgewählte Ebene zum Verwerfen von Elementen ist anscheinend "
 "nicht mehr gültig"
 
-#: ../src/lqr_raster.c:1315
+#: ../src/render.c:195
 msgid "Resizing width..."
 msgstr "Ändere die Breite ..."
 
-#: ../src/lqr_raster.c:1359
+#: ../src/render.c:196
 msgid "Resizing height..."
 msgstr "Ändere die Höhe ..."
 

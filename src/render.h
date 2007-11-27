@@ -26,6 +26,9 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
+/* progress functions wrappers */
+gboolean my_progress_end (const gchar * message);
+
 /*  Render function  */
 
 gboolean render (gint32 image_ID,

@@ -27,9 +27,6 @@
 #include <string.h>
 #include <math.h>
 
-#include "config.h"
-#include "plugin-intl.h"
-
 #include "lqr.h"
 
 #ifdef __LQR_DEBUG__
@@ -61,7 +58,7 @@ lqr_raster_new (guchar * buffer, gint width, gint height, gint bpp)
   r->pres_raster = NULL;
   r->disc_raster = NULL;
   r->flushed_vs = NULL;
-  r->progress = NULL;
+  TRY_N_N (r->progress = lqr_progress_new());
 
   r->en = NULL;
   r->bias = NULL;
@@ -124,6 +121,7 @@ lqr_raster_destroy (LqrRaster * r)
       g_free (r->rigidity_map);
     }
   lqr_seams_buffer_list_destroy(r->flushed_vs);
+  g_free (r->progress);
   g_free (r->_raw);
   g_free (r->raw);
   g_free (r);
@@ -252,6 +250,7 @@ lqr_raster_set_resize_order (LqrRaster *r, LqrResizeOrder resize_order)
 void
 lqr_raster_set_progress (LqrRaster *r, LqrProgress *p)
 {
+  g_free(r->progress);
   r->progress = p;
 }
 
@@ -1312,7 +1311,7 @@ lqr_raster_resize_width (LqrRaster * r, gint w1)
         {
           TRY_F_F (lqr_raster_transpose (r));
         }
-      lqr_progress_init (r->progress, _("Resizing width..."));
+      lqr_progress_init (r->progress, r->progress->init_width_message);
       TRY_F_F (lqr_raster_build_maps (r, delta + 1));
       lqr_raster_set_width (r, w1);
       if (r->resize_aux_layers == TRUE)
@@ -1330,7 +1329,7 @@ lqr_raster_resize_width (LqrRaster * r, gint w1)
         {
           TRY_F_F (lqr_seams_buffer_flush_vs (r));
         }
-      lqr_progress_end (r->progress);
+      lqr_progress_end (r->progress, r->progress->end_width_message);
     }
   return TRUE;
 }
@@ -1356,7 +1355,7 @@ lqr_raster_resize_height (LqrRaster * r, gint h1)
         {
           TRY_F_F (lqr_raster_transpose (r));
         }
-      lqr_progress_init (r->progress, _("Resizing height..."));
+      lqr_progress_init (r->progress, r->progress->init_height_message);
       TRY_F_F (lqr_raster_build_maps (r, delta + 1));
       lqr_raster_set_width (r, h1);
       if (r->resize_aux_layers == TRUE)
@@ -1374,7 +1373,7 @@ lqr_raster_resize_height (LqrRaster * r, gint h1)
         {
           TRY_F_F (lqr_seams_buffer_flush_vs (r));
         }
-      lqr_progress_end (r->progress);
+      lqr_progress_end (r->progress, r->progress->end_height_message);
     }
 
   return TRUE;

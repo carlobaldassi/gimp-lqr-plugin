@@ -24,14 +24,31 @@
  */
 
 
+#include <string.h>
 #include <glib.h>
 
+#include "lqr_base.h"
 #include "lqr_progress.h"
+
+LqrProgress *
+lqr_progress_new(void)
+{
+  LqrProgress * progress;
+  TRY_N_N(progress = g_try_new0(LqrProgress, 1));
+
+  lqr_progress_set_init_width_message(progress, "Resizing width...");
+  lqr_progress_set_init_height_message(progress, "Resizing height...");
+  lqr_progress_set_end_width_message(progress, "done");
+  lqr_progress_set_end_height_message(progress, "done");
+
+  return progress;
+}
 
 gboolean
 lqr_progress_init(LqrProgress * p, const gchar * message)
 {
-  if (p != NULL)
+  TRY_N_F (p);
+  if (p->init)
     {
       return p->init(message);
     }
@@ -44,7 +61,8 @@ lqr_progress_init(LqrProgress * p, const gchar * message)
 gboolean
 lqr_progress_update(LqrProgress * p, gdouble percentage)
 {
-  if (p != NULL)
+  TRY_N_F (p);
+  if (p->init)
     {
       return p->update(percentage);
     }
@@ -55,14 +73,48 @@ lqr_progress_update(LqrProgress * p, gdouble percentage)
 }
 
 gboolean
-lqr_progress_end(LqrProgress * p)
+lqr_progress_end(LqrProgress * p, const gchar * message)
 {
-  if (p != NULL)
+  TRY_N_F (p);
+  if (p->init)
     {
-      return p->end();
+      return p->end(message);
     }
   else
     {
       return TRUE;
     }
 }
+
+gboolean
+lqr_progress_set_init_width_message(LqrProgress *p, const gchar * message)
+{
+  TRY_N_F (p);
+  strncpy(p->init_width_message, message, LQR_PROGRESS_MAX_MESSAGE_LENGTH);
+  return TRUE;
+}
+
+gboolean
+lqr_progress_set_init_height_message(LqrProgress *p, const gchar * message)
+{
+  TRY_N_F (p);
+  strncpy(p->init_height_message, message, LQR_PROGRESS_MAX_MESSAGE_LENGTH);
+  return TRUE;
+}
+
+gboolean
+lqr_progress_set_end_width_message(LqrProgress *p, const gchar * message)
+{
+  TRY_N_F (p);
+  strncpy(p->end_width_message, message, LQR_PROGRESS_MAX_MESSAGE_LENGTH);
+  return TRUE;
+}
+
+gboolean
+lqr_progress_set_end_height_message(LqrProgress *p, const gchar * message)
+{
+  TRY_N_F (p);
+  strncpy(p->end_height_message, message, LQR_PROGRESS_MAX_MESSAGE_LENGTH);
+  return TRUE;
+}
+

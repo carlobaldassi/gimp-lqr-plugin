@@ -41,6 +41,12 @@
 #define MEMCHECK(x) if ((x) == FALSE) { g_message(_("Not enough memory")); return FALSE; }
 
 gboolean
+my_progress_end (const gchar * message)
+{
+  return gimp_progress_end();
+}
+
+gboolean
 render (gint32 image_ID,
         GimpDrawable * drawable,
         PlugInVals * vals,
@@ -181,12 +187,13 @@ render (gint32 image_ID,
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
                          4 * 2) / 1024 + 1);
 
-  lqr_progress = g_try_new (LqrProgress, 1);
-  MEMCHECK(lqr_progress);
-
+  lqr_progress = lqr_progress_new();
+  MEMCHECK(lqr_progress != NULL);
   lqr_progress->init = (LqrProgressFuncInit) gimp_progress_init;
   lqr_progress->update = (LqrProgressFuncUpdate) gimp_progress_update;
-  lqr_progress->end = (LqrProgressFuncEnd) gimp_progress_end;
+  lqr_progress->end = (LqrProgressFuncEnd) my_progress_end;
+  lqr_progress_set_init_width_message(lqr_progress, _("Resizing width..."));
+  lqr_progress_set_init_height_message(lqr_progress, _("Resizing height..."));
 
 #ifdef __LQR_CLOCK__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
