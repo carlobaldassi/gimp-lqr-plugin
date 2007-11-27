@@ -15,6 +15,7 @@ gimp_lqr_plugin_SOURCES = \
 	io_functions.c  \
 	io_function.h   \
 	lqr.h		\
+	lqr_base.h      \
 	lqr_gradient.c  \
 	lqr_gradient.h  \
 	lqr_cursor.c    \
@@ -24,7 +25,9 @@ gimp_lqr_plugin_SOURCES = \
 	lqr_seams_buffer.c \
 	lqr_seams_buffer.h \
 	lqr_seams_buffer_list.c \
-	lqr_seams_buffer_list.h 
+	lqr_seams_buffer_list.h \
+	lqr_colour.c    \
+	lqr_colour.h
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\

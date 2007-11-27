@@ -25,18 +25,11 @@
 
 #include <stdio.h>
 
-#include <libgimp/gimp.h>
-
-#include "lqr.h"
-#include "lqr_gradient.h"
-#include "lqr_cursor.h"
-#include "lqr_raster.h"
-#include "lqr_seams_buffer_list.h"
-#include "lqr_seams_buffer.h"
+#include <lqr.h>
 
 #ifdef __LQR_DEBUG__
 #include <assert.h>
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
 
 /**** SEAMS BUFFER FUNCTIONS ****/
@@ -112,14 +105,14 @@ lqr_seams_buffer_flush_vs (LqrRaster * r)
                 (double) (r->max_level -
                           (vs - r->w0 + r->w_start)) / r->max_level;
               rd =
-                value * r->seam_color_start.r + (1 -
-                                                 value) * r->seam_color_end.r;
+                value * r->seam_colour_start.r + (1 -
+                                                 value) * r->seam_colour_end.r;
               gr =
-                value * r->seam_color_start.g + (1 -
-                                                 value) * r->seam_color_end.g;
+                value * r->seam_colour_start.g + (1 -
+                                                 value) * r->seam_colour_end.g;
               bl =
-                value * r->seam_color_start.b + (1 -
-                                                 value) * r->seam_color_end.b;
+                value * r->seam_colour_start.b + (1 -
+                                                 value) * r->seam_colour_end.b;
               al = 0.5 * (1 + value);
               buffer[z0 * bpp] = 255 * rd;
               buffer[z0 * bpp + 1] = 255 * gr;

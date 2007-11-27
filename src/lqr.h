@@ -27,51 +27,18 @@
 #ifndef __LQR_H__
 #define __LQR_H__
 
-#define LQR_MAX_NAME_LENGTH (1024)
+#include <glib.h>
 
-#define TRY_N_N(assign) if ((assign) == NULL) { return NULL; }
-#define TRY_N_F(assign) if ((assign) == NULL) { return FALSE; }
-#define TRY_F_N(assign) if ((assign) == FALSE) { return NULL; }
-#define TRY_F_F(assign) if ((assign) == FALSE) { return FALSE; }
+G_BEGIN_DECLS
 
-#if 0
-#define __LQR_DEBUG__
-#endif
+#include <lqr_base.h>
+#include <lqr_gradient.h>
+#include <lqr_colour.h>
+#include <lqr_cursor.h>
+#include <lqr_seams_buffer.h>
+#include <lqr_seams_buffer_list.h>
+#include <lqr_raster.h>
 
-#if 1
-#define __LQR_CLOCK__
-#endif
-
-#if 0
-#define __LQR_VERBOSE__
-#endif
-
-/**** OPERATIONAL_MODES ****/
-typedef enum _LqrMode LqrMode;
-typedef enum _LqrResizeOrder LqrResizeOrder;
-
-enum _LqrMode
-{
-  LQR_MODE_NORMAL,
-  LQR_MODE_LQRBACK,
-  LQR_MODE_SCALEBACK
-};
-
-enum _LqrResizeOrder
-{
-  LQR_RES_ORDER_HOR,
-  LQR_RES_ORDER_VERT
-};
-
-/**** CLASSES DECLARATIONS ****/
-typedef struct _LqrCursor LqrCursor;
-typedef struct _LqrSeamsBuffer LqrSeamsBuffer;
-typedef struct _LqrSeamsBufferList LqrSeamsBufferList;
-typedef struct _LqrRaster LqrRaster;
-
-struct _LqrCursor;              /* a "smart" index to read the raster */
-struct _LqrSeamsBuffer;
-struct _LqrSeamsBufferList;
-struct _LqrRaster;              /* the multisize image raster         */
+G_END_DECLS
 
 #endif /* __LQR_H__ */

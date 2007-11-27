@@ -52,7 +52,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am_gimp_lqr_plugin_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
 	render.$(OBJEXT) io_functions.$(OBJEXT) lqr_gradient.$(OBJEXT) \
 	lqr_cursor.$(OBJEXT) lqr_raster.$(OBJEXT) \
-	lqr_seams_buffer.$(OBJEXT) lqr_seams_buffer_list.$(OBJEXT)
+	lqr_seams_buffer.$(OBJEXT) lqr_seams_buffer_list.$(OBJEXT) \
+	lqr_colour.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -216,6 +217,7 @@ gimp_lqr_plugin_SOURCES = \
 	io_functions.c  \
 	io_function.h   \
 	lqr.h		\
+	lqr_base.h      \
 	lqr_gradient.c  \
 	lqr_gradient.h  \
 	lqr_cursor.c    \
@@ -225,7 +227,9 @@ gimp_lqr_plugin_SOURCES = \
 	lqr_seams_buffer.c \
 	lqr_seams_buffer.h \
 	lqr_seams_buffer_list.c \
-	lqr_seams_buffer_list.h 
+	lqr_seams_buffer_list.h \
+	lqr_colour.c    \
+	lqr_colour.h
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
@@ -305,6 +309,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_functions.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_colour.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_cursor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_gradient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_raster.Po@am__quote@

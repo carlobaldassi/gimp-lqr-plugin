@@ -26,23 +26,37 @@
 #ifndef __IO_FUNCTIONS__
 #define __IO_FUNCTIONS__
 
-#ifndef __LQR_H__
-#error "lqr.h must be included prior to io_functions.h"
+#ifndef __LQR_BASE_H__
+#error "lqr_base.h must be included prior to io_functions.h"
 #endif /* __LQR_H__ */
 
 #ifndef __LQR_RASTER_H__
 #error "lqr_raster.h must be included prior to io_functions.h"
 #endif /* __LQR_H__ */
 
+struct _SeamsBufferFuncArg;
+
+typedef struct _SeamsBufferFuncArg SeamsBufferFuncArg;
+
+struct _SeamsBufferFuncArg
+{
+  gint32 image_ID;
+  gchar * name;
+  gint x_off;
+  gint y_off;
+};
+
+#define SEAMS_BUFFER_FUNC_ARG(data) ((SeamsBufferFuncArg*)(data))
+
 /* INPUT/OUTPUT FUNCTIONS */
 
 guchar * rgb_buffer_from_layer (gint32 layer_ID);
 gboolean update_bias (LqrRaster *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off);
 gboolean write_raster_to_layer (LqrRaster * r, GimpDrawable * drawable);
-void write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gint32 image_ID, gchar *name, gint x_off, gint y_off);
-void write_all_seams_buffers (LqrSeamsBufferList * list, gint32 image_ID, gchar *name, gint x_off, gint y_off);
+gboolean write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gpointer data);
+gboolean write_all_seams_buffers (LqrSeamsBufferList * list, gint32 image_ID, gchar *orig_name, gint x_off, gint y_off);
 /* unimplemented */
 gboolean lqr_external_write_energy (LqrRaster * r /*, pngwriter& output */ );     /* output the energy */
 
-#endif // __IO_FUNCTIONS__
+#endif /* __IO_FUNCTIONS__ */
 

@@ -23,15 +23,15 @@
  * 02111-1307, USA.
  */
 
-#include <libgimp/gimp.h>
+#include <glib.h>
 
-#include "lqr.h"
-#include "lqr_seams_buffer_list.h"
+#include "lqr_base.h"
 #include "lqr_seams_buffer.h"
+#include "lqr_seams_buffer_list.h"
 
 #ifdef __LQR_DEBUG__
 #include <assert.h>
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
 
 /**** SEAMS BUFFER LIST FUNCTIONS ****/
@@ -73,3 +73,16 @@ lqr_seams_buffer_list_destroy(LqrSeamsBufferList * list)
       lqr_seams_buffer_destroy(now->current);
     }
 }
+
+gboolean
+lqr_seams_buffer_list_foreach (LqrSeamsBufferList * list, LqrSeamsBufferFunc func, gpointer data)
+{
+  LqrSeamsBufferList * now = list;
+  if (now != NULL)
+    {
+      TRY_F_F (func(now->current, data));
+      return lqr_seams_buffer_list_foreach (now->next, func, data);
+    }
+  return TRUE;
+}
+

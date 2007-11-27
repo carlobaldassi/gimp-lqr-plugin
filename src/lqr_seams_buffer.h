@@ -26,18 +26,22 @@
 #ifndef __LQR_SEAMS_BUFFER_H__
 #define __LQR_SEAMS_BUFFER_H__
 
-#ifndef __LQR_H__
-#error "lqr.h must be included prior to lqr_seams_buffer.h"
-#endif /* __LQR_H__ */
+#ifndef __LQR_BASE_H__
+#error "lqr_base.h must be included prior to lqr_seams_buffer.h"
+#endif /* __LQR_BASE_H__ */
+
 
 /*** LQR_SEAMS_BUFFER CLASS DEFINITION ***/
-
 struct _LqrSeamsBuffer
 {
   guchar * buffer;
   gint width;
   gint height;
 };
+
+typedef struct _LqrSeamsBuffer LqrSeamsBuffer;
+
+typedef gboolean (*LqrSeamsBufferFunc) (LqrSeamsBuffer * seams_buffer, gpointer data);
 
 /* LQR_SEAMS_BUFFER FUNCTIONS */
 

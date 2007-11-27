@@ -23,29 +23,14 @@
  * 02111-1307, USA.
  */
 
+#include <glib.h>
+#include "lqr_colour.h"
 
-#ifndef __LQR_GRADIENT_H__
-#define __LQR_GRADIENT_H__
-
-/**** gradient functions for energy evluation ****/
-typedef double (*LqrGradFunc) (double, double);
-typedef enum _LqrGradFuncType LqrGradFuncType;
-
-enum _LqrGradFuncType
+void lqr_colour_rgba_set(LqrColourRGBA * colour, gdouble red, gdouble green, gdouble blue, gdouble alpha)
 {
-  LQR_GF_NORM,                  /* gradient norm : sqrt(x^2 + y^2)            */
-  LQR_GF_NORM_BIAS,             /* gradient biased norm : sqrt(x^2 + 0.1 y^2) */
-  LQR_GF_SUMABS,                /* sum of absulte values : |x| + |y|          */
-  LQR_GF_XABS,                  /* x absolute value : |x|                     */
-  LQR_GF_YABS,                  /* y absolute value : |y|                     */
-  LQR_GF_NULL                   /* 0 */
-};
+  colour->r = CLAMP(red, 0 , 1);
+  colour->g = CLAMP(green, 0 , 1);
+  colour->b = CLAMP(blue, 0 , 1);
+  colour->a = CLAMP(alpha, 0 , 1);
+}
 
-double lqr_grad_norm (double x, double y);
-double lqr_grad_norm_bias (double x, double y);
-double lqr_grad_sumabs (double x, double y);
-double lqr_grad_xabs (double x, double y);
-double lqr_grad_yabs (double x, double y);
-double lqr_grad_zero (double x, double y);
-
-#endif /* __LQR_GRADIENT_H__ */

@@ -33,7 +33,7 @@
 
 #include "plugin-intl.h"
 
-#include "lqr.h"
+#include "lqr_base.h"
 #include "lqr_gradient.h"
 
 #include "main.h"
@@ -84,10 +84,10 @@ const PlugInVals default_vals = {
 };
 
 const PlugInColVals default_col_vals = {
-  1,                            /* start color */
+  1,                            /* start colour */
   1,
   0,
-  0.2,                          /* end color */
+  0.2,                          /* end colour */
   0,
   0
 };
@@ -249,7 +249,7 @@ run (const gchar * name,
           gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
           gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
 
-          /* gimp_context_push(); *//* doesn't work! why? */
+          /* gimp_context_push(); */ /* doesn't work! why? */
           if (!dialog (image_ID, drawable,
                        &vals, &image_vals, &drawable_vals, &ui_vals,
                        &col_vals))

@@ -23,11 +23,7 @@
  * 02111-1307, USA.
  */
 
-#include <libgimp/gimp.h>
 #include "lqr.h"
-#include "lqr_gradient.h"
-#include "lqr_cursor.h"
-#include "lqr_raster.h"
 
 #ifdef __LQR_DEBUG__
 #include <assert.h>
@@ -68,7 +64,7 @@ lqr_cursor_reset (LqrCursor * c)
   /* make sure the pointers are initialized */
 #ifdef __LQR_DEBUG__
   assert (c->initialized);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* reset coordinates */
   c->x = 0;
@@ -83,7 +79,7 @@ lqr_cursor_reset (LqrCursor * c)
       c->now++;
 #ifdef __LQR_DEBUG__
       assert (c->now < c->o->w0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
     }
 }
 
@@ -94,7 +90,7 @@ lqr_cursor_next (LqrCursor * c)
 {
 #ifdef __LQR_DEBUG__
   assert (c->initialized);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* update coordinates */
   if (c->x == c->o->w - 1)
@@ -118,7 +114,7 @@ lqr_cursor_next (LqrCursor * c)
   c->now++;
 #ifdef __LQR_DEBUG__
   assert (c->now < (c->o->w0 * c->o->h0));
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* skip invisible points */
   while ((c->vs[c->now] != 0) && (c->vs[c->now] < c->o->level))
@@ -126,7 +122,7 @@ lqr_cursor_next (LqrCursor * c)
       c->now++;
 #ifdef __LQR_DEBUG__
       assert (c->now < (c->o->w0 * c->o->h0));
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
     }
 }
 
@@ -156,7 +152,7 @@ lqr_cursor_prev (LqrCursor * c)
   c->now--;
 #ifdef __LQR_DEBUG__
   assert (c->now >= 0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* skip invisible points */
   while ((c->vs[c->now] != 0) && (c->vs[c->now] < c->o->level))
@@ -164,7 +160,7 @@ lqr_cursor_prev (LqrCursor * c)
       c->now--;
 #ifdef __LQR_DEBUG__
       assert (c->now >= 0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
     }
 }
 
@@ -182,13 +178,13 @@ lqr_cursor_left (LqrCursor * c)
 #ifdef __LQR_DEBUG__
   assert (c->initialized);
   assert (c->x > 0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* first move */
   ret--;
 #ifdef __LQR_DEBUG__
   assert (ret >= 0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* skip invisible points */
   while ((c->vs[ret] != 0) && c->vs[ret] < c->o->level)
@@ -196,7 +192,7 @@ lqr_cursor_left (LqrCursor * c)
       ret--;
 #ifdef __LQR_DEBUG__
       assert (ret >= 0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
     }
   return ret;
 }

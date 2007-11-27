@@ -26,11 +26,18 @@
 #ifndef __LQR_SEAMS_BUFFER_LIST_H__
 #define __LQR_SEAMS_BUFFER_LIST_H__
 
-#ifndef __LQR_H__
-#error "lqr.h must be included prior to lqr_seams_buffer_list.h"
-#endif /* __LQR_H__ */
+#ifndef __LQR_BASE_H__
+#error "lqr_base.h must be included prior to lqr_seams_buffer_list.h"
+#endif /* __LQR_BASE_H__ */
+
+#ifndef __LQR_SEAMS_BUFFER_H__
+#error "lqr_seams_buffer.h must be included prior to lqr_seams_buffer_list.h"
+#endif
 
 /**** LQR_SEAMS_BUFFER_LIST CLASS DEFINITION ****/
+struct _LqrSeamsBufferList;
+
+typedef struct _LqrSeamsBufferList LqrSeamsBufferList;
 
 struct _LqrSeamsBufferList
 {
@@ -42,6 +49,8 @@ struct _LqrSeamsBufferList
 
 LqrSeamsBufferList * lqr_seams_buffer_list_append (LqrSeamsBufferList * list, LqrSeamsBuffer * buffer);
 void lqr_seams_buffer_list_destroy (LqrSeamsBufferList * list);
+
+gboolean lqr_seams_buffer_list_foreach (LqrSeamsBufferList * list, LqrSeamsBufferFunc func, gpointer data);
 
 #endif /* __LQR_SEAMS_BUFFER__ */
 

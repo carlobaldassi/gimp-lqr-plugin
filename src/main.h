@@ -158,7 +158,7 @@ typedef struct
   gint32 *layer_ID;
   gboolean *status;
   gchar name[LQR_MAX_NAME_LENGTH];
-  GimpRGB color;
+  GimpRGB colour;
 } NewLayerData;
 
 #define NEW_LAYER_DATA(data) ((NewLayerData*)(data))

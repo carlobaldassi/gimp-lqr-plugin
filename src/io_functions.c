@@ -30,11 +30,6 @@
 #include "plugin-intl.h"
 
 #include "lqr.h"
-#include "lqr_gradient.h"
-#include "lqr_cursor.h"
-#include "lqr_raster.h"
-#include "lqr_seams_buffer_list.h"
-#include "lqr_seams_buffer.h"
 
 #include "io_functions.h"
 
@@ -115,7 +110,6 @@ update_bias (LqrRaster *r, gint32 layer_ID, gint bias_factor, gint base_x_off, g
 
   gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
-  //gimp_drawable_mask_bounds (layer_ID, &x1, &y1, &x2, &y2);
   w = gimp_drawable_width (layer_ID);
   h = gimp_drawable_height (layer_ID);
 
@@ -181,7 +175,6 @@ write_raster_to_layer (LqrRaster * r, GimpDrawable * drawable)
 
   layer_ID = drawable->drawable_id;
 
-  //gimp_drawable_mask_bounds (layer_ID, &x1, &y1, &x2, &y2);
   w = gimp_drawable_width (layer_ID);
   h = gimp_drawable_height (layer_ID);
 
@@ -207,7 +200,6 @@ write_raster_to_layer (LqrRaster * r, GimpDrawable * drawable)
         {
           for (k = 0; k < r->bpp; k++)
             {
-              //outrow[r->bpp * x + k] = r->c->now->rgb[k];
               outrow[r->bpp * x + k] = r->rgb[r->c->now * r->bpp + k];
             }
           lqr_cursor_next (r->c);
@@ -237,16 +229,24 @@ write_raster_to_layer (LqrRaster * r, GimpDrawable * drawable)
   return TRUE;
 }
 
-void
-write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gint32 image_ID, gchar * name, gint x_off, gint y_off)
+gboolean
+write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gpointer data)
 {
   gint w, h, y;
   gint bpp;
   gint32 seam_layer_ID;
+  gint32 image_ID;
+  gint x_off, y_off;
+  gchar * name;
   GimpPixelRgn rgn_out;
   guchar *outrow;
   GimpDrawable *drawable;
   gint update_step;
+
+  image_ID = SEAMS_BUFFER_FUNC_ARG(data)->image_ID;
+  x_off = SEAMS_BUFFER_FUNC_ARG(data)->x_off;
+  y_off = SEAMS_BUFFER_FUNC_ARG(data)->y_off;
+  name = SEAMS_BUFFER_FUNC_ARG(data)->name;
 
   w = seams_buffer->width;
   h = seams_buffer->height;
@@ -265,7 +265,6 @@ write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gint32 image_ID, gch
   bpp = 4;
 
   gimp_pixel_rgn_init (&rgn_out, drawable, 0, 0, w, h, TRUE, TRUE);
-  //TRY_N_F (outrow = g_try_new (guchar, bpp * w));
 
   for (y = 0; y < h; y++)
     {
@@ -277,27 +276,30 @@ write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gint32 image_ID, gch
         }
     }
 
-  //g_free (outrow);
-
   gimp_drawable_flush (drawable);
   gimp_drawable_merge_shadow (seam_layer_ID, TRUE);
   gimp_drawable_update (seam_layer_ID, 0, 0, w, h);
   gimp_drawable_set_visible (seam_layer_ID, FALSE);
+
+  return TRUE;
 }
 
-void
+gboolean
 write_all_seams_buffers (LqrSeamsBufferList * list, gint32 image_ID, gchar * orig_name, gint x_off, gint y_off)
 {
-  LqrSeamsBufferList * now = list;
   gchar name[LQR_MAX_NAME_LENGTH];
-  while (now != NULL)
-    {
-      /* The name of the layer with the seams map */
-      /* (here "%s" represents the selected layer's name) */
-      snprintf (name, LQR_MAX_NAME_LENGTH, _("%s seam map"), orig_name);
-      write_seams_buffer_to_layer (now->current, image_ID, name, x_off, y_off);
-      now = now->next;
-    }
+  SeamsBufferFuncArg data;
+
+  /* The name of the layer with the seams map */
+  /* (here "%s" represents the selected layer's name) */
+  snprintf (name, LQR_MAX_NAME_LENGTH, _("%s seam map"), orig_name);
+
+  data.image_ID = image_ID;
+  data.name = name;
+  data.x_off = x_off;
+  data.y_off = y_off;
+
+  return lqr_seams_buffer_list_foreach(list, write_seams_buffer_to_layer, (gpointer) (&data));
 }
 
 

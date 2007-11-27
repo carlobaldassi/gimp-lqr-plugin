@@ -26,21 +26,15 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <libgimp/gimp.h>
-
 #include "config.h"
 #include "plugin-intl.h"
 
+#include <libgimp/gimp.h>
 #include "lqr.h"
-#include "lqr_gradient.h"
-#include "lqr_cursor.h"
-#include "lqr_raster.h"
-#include "lqr_seams_buffer_list.h"
-#include "lqr_seams_buffer.h"
 
 #ifdef __LQR_DEBUG__
 #include <assert.h>
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
 /**** LQR_RASTER CLASS FUNCTIONS ****/
 
@@ -61,8 +55,8 @@ lqr_raster_new (guchar * buffer, gint width, gint height, gint bpp)
   r->rigidity = 0;
   r->resize_aux_layers = FALSE;
   r->output_seams = FALSE;
-  gimp_rgba_set(&(r->seam_color_start), 0, 0, 0, 0);
-  gimp_rgba_set(&(r->seam_color_end), 0, 0, 0, 0);
+  lqr_colour_rgba_set(&(r->seam_colour_start), 0, 0, 0, 0);
+  lqr_colour_rgba_set(&(r->seam_colour_end), 0, 0, 0, 0);
   r->resize_order = LQR_RES_ORDER_HOR;
   r->pres_raster = NULL;
   r->disc_raster = NULL;
@@ -180,7 +174,7 @@ lqr_raster_init (LqrRaster *r, gint delta_x, gfloat rigidity)
 
 /* gradient function for energy computation */
 void
-lqr_raster_set_gradient_function (LqrRaster * r, LqrGradFunc gf_ind)
+lqr_raster_set_gradient_function (LqrRaster * r, LqrGradFuncType gf_ind)
 {
   switch (gf_ind)
     {
@@ -238,13 +232,13 @@ lqr_raster_attach_disc_layer (LqrRaster * r, guchar * buffer, gint bpp)
   return TRUE;
 }
 
-/* set the seam output flag and colors */
+/* set the seam output flag and colours */
 void
-lqr_raster_set_output_seams (LqrRaster *r, GimpRGB seam_color_start, GimpRGB seam_color_end)
+lqr_raster_set_output_seams (LqrRaster *r, LqrColourRGBA seam_colour_start, LqrColourRGBA seam_colour_end)
 {
   r->output_seams = TRUE;
-  r->seam_color_start = seam_color_start;
-  r->seam_color_end = seam_color_end;
+  r->seam_colour_start = seam_colour_start;
+  r->seam_colour_end = seam_colour_end;
 }
 
 /* set order if rescaling in both directions */
@@ -265,7 +259,7 @@ lqr_raster_build_maps (LqrRaster * r, gint depth)
 #ifdef __LQR_DEBUG__
   assert (depth <= r->w_start);
   assert (depth >= 1);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* only go deeper if needed */
   if (depth > r->max_level)
@@ -323,7 +317,7 @@ lqr_raster_build_mmap (LqrRaster * r)
       data = r->raw[0][x];
 #ifdef __LQR_DEBUG__
       assert (r->vs[data] == 0);
-#endif //__LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
       r->m[data] = r->en[data];
     }
 
@@ -335,7 +329,7 @@ lqr_raster_build_mmap (LqrRaster * r)
           data = r->raw[y][x];
 #ifdef __LQR_DEBUG__
           assert (r->vs[data] == 0);
-#endif //__LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 	  /* watch for boundaries */
           x1_min = MAX (-x, -r->delta_x);
           x1_max = MIN (r->w - 1 - x, r->delta_x);
@@ -357,7 +351,7 @@ lqr_raster_build_mmap (LqrRaster * r)
                       m = m1;
                       r->least[data] = data_down;
                     }
-                  //m = MIN(m, r->m[data_down] + r->rigidity_map[x1]);
+                  /* m = MIN(m, r->m[data_down] + r->rigidity_map[x1]); */
                 }
             }
           else
@@ -401,7 +395,7 @@ lqr_raster_build_vsmap (LqrRaster * r, gint depth)
 #ifdef __LQR_DEBUG__
   assert (depth <= r->w_start + 1);
   assert (depth >= 1);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* default behavior : compute all possible levels
    * (complete map) */
@@ -530,7 +524,7 @@ lqr_raster_inflate (LqrRaster * r, gint l)
 
 #ifdef __LQR_DEBUG__
   assert (l + 1 > r->max_level);        /* otherwise is useless */
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* scale to current maximum size
    * (this is the original size the first time) */
@@ -609,7 +603,7 @@ lqr_raster_inflate (LqrRaster * r, gint l)
 #ifdef __LQR_DEBUG__
           assert (y < r->h_start);
           assert (x < r->w_start - l);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
           r->raw[y][x] = z0;
           x++;
           if (x >= r->w_start - l)
@@ -631,7 +625,7 @@ lqr_raster_inflate (LqrRaster * r, gint l)
                       && fflush (stdout) && 0));
         }
     }
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
   /* substitute maps */
   g_free (r->rgb);
@@ -739,13 +733,13 @@ lqr_raster_carve (LqrRaster * r)
         {
           assert (r->vs[r->raw[y][x]] == 0);
         }
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
       for (x = r->vpath_x[y]; x < r->w; x++)
         {
           r->raw[y][x] = r->raw[y][x + 1];
 #ifdef __LQR_DEBUG__
           assert (r->vs[r->raw[y][x]] == 0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
         }
     }
 }
@@ -921,7 +915,7 @@ lqr_raster_build_vpath (LqrRaster * r)
 #ifdef __LQR_DEBUG__
       assert (r->vs[last] == 0);
       assert (last_x < r->w);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
       r->vpath[y] = last;
       r->vpath_x[y] = last_x;
       if (y > 0)
@@ -952,7 +946,7 @@ lqr_raster_build_vpath (LqrRaster * r)
 #ifdef __LQR_DEBUG__
       assert (r->vs[last] == 0);
       assert (last_x < r->w);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
 
       r->vpath[y] = last;
       r->vpath_x[y] = last_x;
@@ -986,7 +980,7 @@ lqr_raster_update_vsmap (LqrRaster * r, gint l)
 #ifdef __LQR_DEBUG__
       assert (r->vs[r->vpath[y]] == 0);
       assert (r->vpath[y] == r->raw[y][r->vpath_x[y]]);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
       r->vs[r->vpath[y]] = l;
     }
 }
@@ -1000,13 +994,13 @@ lqr_raster_finish_vsmap (LqrRaster * r)
 
 #ifdef __LQR_DEBUG__
   assert (r->w == 1);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
   lqr_cursor_reset (r->c);
   for (y = 1; y <= r->h; y++, lqr_cursor_next (r->c))
     {
 #ifdef __LQR_DEBUG__
       assert (r->vs[r->c->now] == 0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
       r->vs[r->c->now] = r->w0;
     }
 }
@@ -1020,7 +1014,7 @@ lqr_raster_copy_vsmap (LqrRaster * r, LqrRaster * dest)
 #ifdef __LQR_DEBUG__
   assert (r->w0 == dest->w0);
   assert (r->h0 == dest->h0);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
   for (y = 0; y < r->h0; y++)
     {
       for (x = 0; x < r->w0; x++)
@@ -1041,7 +1035,7 @@ lqr_raster_set_width (LqrRaster * r, gint w1)
 #ifdef __LQR_DEBUG__
   assert (w1 <= r->w0);
   assert (w1 >= r->w_start - r->max_level + 1);
-#endif // __LQR_DEBUG__
+#endif /* __LQR_DEBUG__ */
   r->w = w1;
   r->level = r->w0 - w1 + 1;
 }
@@ -1327,7 +1321,6 @@ lqr_raster_resize_width (LqrRaster * r, gint w1)
         }
       if (r->output_seams)
         {
-          //TRY_F_F (lqr_external_write_vs (r));
           TRY_F_F (lqr_seams_buffer_flush_vs (r));
         }
     }
@@ -1371,7 +1364,6 @@ lqr_raster_resize_height (LqrRaster * r, gint h1)
         }
       if (r->output_seams)
         {
-          //TRY_F_F (lqr_external_write_vs (r));
           TRY_F_F (lqr_seams_buffer_flush_vs (r));
         }
     }

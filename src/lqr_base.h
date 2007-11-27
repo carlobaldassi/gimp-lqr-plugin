@@ -24,28 +24,53 @@
  */
 
 
-#ifndef __LQR_GRADIENT_H__
-#define __LQR_GRADIENT_H__
+#ifndef __LQR_BASE_H__
+#define __LQR_BASE_H__
 
-/**** gradient functions for energy evluation ****/
-typedef double (*LqrGradFunc) (double, double);
-typedef enum _LqrGradFuncType LqrGradFuncType;
+#define LQR_MAX_NAME_LENGTH (1024)
 
-enum _LqrGradFuncType
+#define TRY_N_N(assign) if ((assign) == NULL) { return NULL; }
+#define TRY_N_F(assign) if ((assign) == NULL) { return FALSE; }
+#define TRY_F_N(assign) if ((assign) == FALSE) { return NULL; }
+#define TRY_F_F(assign) if ((assign) == FALSE) { return FALSE; }
+
+#if 0
+#define __LQR_DEBUG__
+#endif
+
+#if 1
+#define __LQR_CLOCK__
+#endif
+
+#if 0
+#define __LQR_VERBOSE__
+#endif
+
+/**** OPERATIONAL_MODES ****/
+enum _LqrMode
 {
-  LQR_GF_NORM,                  /* gradient norm : sqrt(x^2 + y^2)            */
-  LQR_GF_NORM_BIAS,             /* gradient biased norm : sqrt(x^2 + 0.1 y^2) */
-  LQR_GF_SUMABS,                /* sum of absulte values : |x| + |y|          */
-  LQR_GF_XABS,                  /* x absolute value : |x|                     */
-  LQR_GF_YABS,                  /* y absolute value : |y|                     */
-  LQR_GF_NULL                   /* 0 */
+  LQR_MODE_NORMAL,
+  LQR_MODE_LQRBACK,
+  LQR_MODE_SCALEBACK
 };
 
-double lqr_grad_norm (double x, double y);
-double lqr_grad_norm_bias (double x, double y);
-double lqr_grad_sumabs (double x, double y);
-double lqr_grad_xabs (double x, double y);
-double lqr_grad_yabs (double x, double y);
-double lqr_grad_zero (double x, double y);
+typedef enum _LqrMode LqrMode;
 
-#endif /* __LQR_GRADIENT_H__ */
+/**** RESIZE ORDER ****/
+enum _LqrResizeOrder
+{
+  LQR_RES_ORDER_HOR,
+  LQR_RES_ORDER_VERT
+};
+
+typedef enum _LqrResizeOrder LqrResizeOrder;
+
+/**** CLASSES DECLARATIONS ****/
+
+struct _LqrCursor;              /* a "smart" index to read the raster */
+struct _LqrRaster;              /* the multisize image raster         */
+
+typedef struct _LqrCursor LqrCursor;
+typedef struct _LqrRaster LqrRaster;
+
+#endif /* __LQR_BASE_H__ */

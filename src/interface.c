@@ -33,7 +33,7 @@
 
 #include "plugin-intl.h"
 
-#include "lqr.h"
+#include "lqr_base.h"
 #include "lqr_gradient.h"
 
 #include "main.h"
@@ -130,7 +130,7 @@ dialog (gint32 image_ID,
 {
 
   gint32 layer_ID;
-  GimpRGB saved_color;
+  GimpRGB saved_colour;
   gint num_extra_layers;
   GtkWidget *gradient_event_box;
   GtkWidget *main_hbox;
@@ -156,8 +156,8 @@ dialog (gint32 image_ID,
   GtkWidget *resize_aux_layers_button;
   GtkWidget *out_seams_hbox;
   GtkWidget *out_seams_button;
-  GimpRGB *color_start;
-  GimpRGB *color_end;
+  GimpRGB *colour_start;
+  GimpRGB *colour_end;
   GtkWidget *out_seams_col_button1;
   GtkWidget *out_seams_col_button2;
   GtkWidget *mask_behavior_combo_box = NULL;
@@ -170,7 +170,7 @@ dialog (gint32 image_ID,
 
   gimp_ui_init (PLUGIN_NAME, TRUE);
 
-  gimp_context_get_foreground (&saved_color);
+  gimp_context_get_foreground (&saved_colour);
 
   state = g_new (PlugInVals, 1);
   memcpy (state, vals, sizeof (PlugInVals));
@@ -283,7 +283,6 @@ dialog (gint32 image_ID,
   preview_init_mem (&preview_data);
   g_free (preview_data.buffer);
   preview_data.buffer = preview_build_buffer (preview_data.layer_ID);
-  //preview_data.buffer = preview_build_buffer_new (preview_data.orig_layer_ID);
 
   gimp_image_remove_layer (image_ID, preview_data.layer_ID);
   gimp_image_undo_thaw (image_ID);
@@ -461,28 +460,28 @@ dialog (gint32 image_ID,
                              "Use it together with \"Output on a new layer\", "
                              "and resize in one direction at a time"), NULL);
 
-  color_start = g_new (GimpRGB, 1);
-  color_end = g_new (GimpRGB, 1);
+  colour_start = g_new (GimpRGB, 1);
+  colour_end = g_new (GimpRGB, 1);
 
-  gimp_rgba_set (color_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
-  gimp_rgba_set (color_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
+  gimp_rgba_set (colour_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
+  gimp_rgba_set (colour_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
 
   out_seams_col_button2 =
-    gimp_color_button_new ("Seam-color-end", 14, 14, color_end,
+    gimp_color_button_new (_("Last leams colour"), 14, 14, colour_end,
                            GIMP_COLOR_AREA_FLAT);
   gtk_box_pack_end (GTK_BOX (out_seams_hbox), out_seams_col_button2, FALSE,
                     FALSE, 0);
-  //gtk_widget_show (out_seams_col_button2);
+  gtk_widget_show (out_seams_col_button2);
 
   g_signal_connect(out_seams_button, "toggled", G_CALLBACK(callback_out_seams_button), (gpointer) (out_seams_col_button2));
 
   callback_out_seams_button(out_seams_button, (gpointer) out_seams_col_button2);
 
   gimp_help_set_help_data (out_seams_col_button2,
-                           _("Color to use for the last seams"), NULL);
+                           _("Colour to use for the last seams"), NULL);
 
   out_seams_col_button1 =
-    gimp_color_button_new ("Seam-color-start", 14, 14, color_start,
+    gimp_color_button_new (_("First seams colour"), 14, 14, colour_start,
                            GIMP_COLOR_AREA_FLAT);
   gtk_box_pack_end (GTK_BOX (out_seams_hbox), out_seams_col_button1, FALSE,
                     FALSE, 0);
@@ -493,7 +492,7 @@ dialog (gint32 image_ID,
   callback_out_seams_button(out_seams_button, (gpointer) out_seams_col_button1);
 
   gimp_help_set_help_data (out_seams_col_button1,
-                           _("Color to use for the first seams"), NULL);
+                           _("Colour to use for the first seams"), NULL);
 
 
   /* Advanced settings page */
@@ -675,21 +674,21 @@ dialog (gint32 image_ID,
       state->output_seams =
         gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (out_seams_button));
 
-      /* save vsmap colors */
+      /* save vsmap colours */
       if (state->output_seams)
         {
 	  gimp_color_button_get_color (GIMP_COLOR_BUTTON (out_seams_col_button1),
-			               color_start);
+			               colour_start);
 	  gimp_color_button_get_color (GIMP_COLOR_BUTTON (out_seams_col_button2),
-				       color_end);
+				       colour_end);
 
-	  col_vals->r1 = color_start->r;
-	  col_vals->g1 = color_start->g;
-	  col_vals->b1 = color_start->b;
+	  col_vals->r1 = colour_start->r;
+	  col_vals->g1 = colour_start->g;
+	  col_vals->b1 = colour_start->b;
 
-	  col_vals->r2 = color_end->r;
-	  col_vals->g2 = color_end->g;
-	  col_vals->b2 = color_end->b;
+	  col_vals->r2 = colour_end->r;
+	  col_vals->g2 = colour_end->g;
+	  col_vals->b2 = colour_end->b;
 	}
 
       /* save mask behavior */
@@ -712,7 +711,7 @@ dialog (gint32 image_ID,
 
   if (context_calls > 0)
     {
-      gimp_context_set_foreground (&saved_color);
+      gimp_context_set_foreground (&saved_colour);
     }
 
   gimp_drawable_detach(preview_data.drawable);
@@ -789,7 +788,6 @@ callback_pres_combo_get_active (GtkWidget * combo, gpointer data)
       gimp_layer_add_alpha (pres_layer_ID);
       g_free (PREVIEW_DATA (data)->pres_buffer);
       PREVIEW_DATA (data)->pres_buffer = preview_build_buffer (pres_layer_ID);
-      //PREVIEW_DATA (data)->pres_buffer = preview_build_buffer_new (PREVIEW_DATA(data)->vals->pres_layer_ID);
       gimp_image_remove_layer (PREVIEW_DATA (data)->image_ID, pres_layer_ID);
       gimp_image_undo_thaw (PREVIEW_DATA (data)->image_ID);
 
@@ -875,7 +873,7 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   *(NEW_LAYER_DATA (data)->layer_ID) = layer_ID;
   *(NEW_LAYER_DATA (data)->status) = TRUE;
   context_calls++;
-  gimp_context_set_foreground (&(NEW_LAYER_DATA (data)->color));
+  gimp_context_set_foreground (&(NEW_LAYER_DATA (data)->colour));
 
   gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH);
 }
@@ -1195,7 +1193,7 @@ preview_build_buffer_new (gint32 layer_ID)
   width = gimp_drawable_width(layer_ID);
   height = gimp_drawable_height(layer_ID);
   bpp = gimp_drawable_bpp(layer_ID);
-  //isgray = gimp_drawable_is_gray (layer_ID);
+  /*isgray = gimp_drawable_is_gray (layer_ID); */
 
   gimp_pixel_rgn_init (&rgn_in,
                        drawable, 0, 0, width, height,
@@ -1290,7 +1288,7 @@ preview_build_buffer_new (gint32 layer_ID)
 
   return buffer;
 }
-#endif //0
+#endif /* 0 */
 
 static guchar *
 preview_build_buffer (gint32 layer_ID)
@@ -1502,8 +1500,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   /* (here "%s" represents the selected layer's name) */
   snprintf (new_pres_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s pres mask"),
             gimp_drawable_get_name (preview_data.orig_layer_ID));
-  //gimp_rgb_set (&(new_pres_layer_data->color), 1, 1, 0);
-  gimp_rgb_set (&(new_pres_layer_data->color), 0, 1, 0);
+  gimp_rgb_set (&(new_pres_layer_data->colour), 0, 1, 0);
 
   new_disc_layer_data->layer_ID = &(state->disc_layer_ID);
   new_disc_layer_data->status = &(ui_state->disc_status);
@@ -1511,8 +1508,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   /* (here "%s" represents the selected layer's name) */
   snprintf (new_disc_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s disc mask"),
             gimp_drawable_get_name (preview_data.orig_layer_ID));
-  //gimp_rgb_set (&(new_disc_layer_data->color), 0.5, 0.5, 1);
-  gimp_rgb_set (&(new_disc_layer_data->color), 1, 0, 0);
+  gimp_rgb_set (&(new_disc_layer_data->colour), 1, 0, 0);
 
   num_extra_layers = count_extra_layers (image_ID, drawable);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);

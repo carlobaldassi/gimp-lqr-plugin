@@ -30,10 +30,6 @@
 #include <libgimp/gimp.h>
 
 #include "lqr.h"
-#include "lqr_gradient.h"
-#include "lqr_raster.h"
-#include "lqr_seams_buffer.h"
-#include "lqr_seams_buffer_list.h"
 
 #include "io_functions.h"
 
@@ -52,7 +48,6 @@ render (gint32 image_ID,
         PlugInColVals * col_vals)
 {
   LqrRaster *rasta;
-  //LqrCarver *rasta;
   gint32 mask_ID;
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
@@ -66,10 +61,10 @@ render (gint32 image_ID,
   gint bpp;
   gint x_off, y_off, aux_x_off, aux_y_off;
   GimpDrawable * drawable_pres, * drawable_disc;
-  GimpRGB color_start, color_end;
+  LqrColourRGBA colour_start, colour_end;
 #ifdef __LQR_CLOCK__
   double clock1, clock2, clock3, clock4;
-#endif //CLOCK
+#endif /* __LQR_CLOCK__ */
 
   if (drawable_vals->layer_ID)
     {
@@ -188,7 +183,7 @@ render (gint32 image_ID,
 #ifdef __LQR_CLOCK__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ begin: clock: %g ]\n", clock1);
-#endif // __LQR_CLOCK__
+#endif /* __LQR_CLOCK__ */
 
   /* lqr raster initialization */
   rgb_buffer = rgb_buffer_from_layer (layer_ID);
@@ -202,10 +197,10 @@ render (gint32 image_ID,
   lqr_raster_set_resize_order (rasta, vals->res_order);
   if (vals->output_seams)
     {
-      gimp_rgba_set (&color_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
-      gimp_rgba_set (&color_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
+      lqr_colour_rgba_set (&colour_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
+      lqr_colour_rgba_set (&colour_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
 
-      lqr_raster_set_output_seams(rasta, color_start, color_end);
+      lqr_raster_set_output_seams(rasta, colour_start, colour_end);
     }
   if (vals->resize_aux_layers)
     {
@@ -213,14 +208,12 @@ render (gint32 image_ID,
         {
           rgb_buffer = rgb_buffer_from_layer (vals->pres_layer_ID);
 	  MEMCHECK (rgb_buffer != NULL);
-	  //MEMCHECK (lqr_raster_attach_pres_layer(rasta, vals->pres_layer_ID));
 	  MEMCHECK (lqr_raster_attach_pres_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->pres_layer_ID)));
 	}
       if (vals->disc_layer_ID)
         {
           rgb_buffer = rgb_buffer_from_layer (vals->disc_layer_ID);
 	  MEMCHECK (rgb_buffer != NULL);
-	  //MEMCHECK (lqr_raster_attach_disc_layer(rasta, vals->disc_layer_ID));
 	  MEMCHECK (lqr_raster_attach_disc_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->disc_layer_ID)));
 	}
     }
@@ -228,7 +221,7 @@ render (gint32 image_ID,
 #ifdef __LQR_CLOCK__
   clock2 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ read: clock: %g (%g) ]\n", clock2, clock2 - clock1);
-#endif // __LQR_CLOCK__
+#endif /* __LQR_CLOCK__ */
 
   MEMCHECK (lqr_raster_resize (rasta, new_width, new_height));
 
@@ -290,7 +283,7 @@ render (gint32 image_ID,
   clock3 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ resized: clock : %g (%g) ]\n", clock3, clock3 - clock2);
   fflush (stdout);
-#endif // __LQR_CLOCK__
+#endif /* __LQR_CLOCK__ */
 
   ntiles = vals->new_width / gimp_tile_width () + 1;
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
@@ -364,7 +357,7 @@ render (gint32 image_ID,
 #ifdef __LQR_CLOCK__
   clock4 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ finish: clock: %g (%g) ]\n\n", clock4, clock4 - clock3);
-#endif // __LQR_CLOCK__
+#endif /* __LQR_CLOCK__ */
 
   gimp_drawable_set_visible (layer_ID, TRUE);
   gimp_image_set_active_layer (image_ID, layer_ID);

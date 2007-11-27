@@ -26,9 +26,9 @@
 #ifndef __LQR_CURSOR_H__
 #define __LQR_CURSOR_H__
 
-#ifndef __LQR_H__
-#error "lqr.h must be included prior to lqr_cursor.h"
-#endif /* __LQR_H__ */
+#ifndef __LQR_BASE_H__
+#error "lqr_base.h must be included prior to lqr_cursor.h"
+#endif /* __LQR_BASE_H__ */
 
 /**** LQR_CURSOR CLASS DEFINITION ****/
 /* The lqr_cursors can scan a multisize image according to its

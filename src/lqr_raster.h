@@ -26,9 +26,9 @@
 #ifndef __LQR_RASTER_H__
 #define __LQR_RASTER_H__
 
-#ifndef __LQR_H__
-#error "lqr.h must be included prior to lqr_raster.h"
-#endif /* __LQR_H__ */
+#ifndef __LQR_BASE_H__
+#error "lqr_base.h must be included prior to lqr_raster.h"
+#endif /* __LQR_BASE_H__ */
 
 #ifndef __LQR_GRADIENT_H__
 #error "lqr_gradient.h must be included prior to lqr_raster.h"
@@ -60,8 +60,8 @@ struct _LqrRaster
   gboolean resize_aux_layers;   /* flag to determine whether the auxiliary layers are resized */
   gboolean output_seams;        /* flag to determine whether to output the seam map */
   LqrResizeOrder resize_order;  /* resize order */
-  GimpRGB seam_color_start;     /* start color for the seam map */
-  GimpRGB seam_color_end;       /* end color for the seam map */
+  LqrColourRGBA seam_colour_start;     /* start colour for the seam map */
+  LqrColourRGBA seam_colour_end;       /* end colour for the seam map */
 
   LqrRaster *pres_raster;       /* preservation layer raster */
   LqrRaster *disc_raster;       /* discard layer raster */
@@ -84,7 +84,7 @@ struct _LqrRaster
   gint *vpath;                  /* array of array-coordinates representing a vertical seam */
   gint *vpath_x;                /* array of abscisses representing a vertical seam */
 
-  p_to_f gf;                    /* pointer to a gradient function */
+  LqrGradFunc gf;                    /* pointer to a gradient function */
 
   LqrSeamsBufferList * flushed_vs;  /* linked list of pointers to flushed visibility maps buffers */
 
@@ -129,8 +129,8 @@ void lqr_raster_destroy (LqrRaster * r);
 gboolean lqr_raster_init (LqrRaster *r, gint delta_x, gfloat rigidity);
 
 /* set attributes */
-void lqr_raster_set_gradient_function (LqrRaster * r, LqrGradFunc gf_ind);
-void lqr_raster_set_output_seams (LqrRaster *r, GimpRGB seam_color_start, GimpRGB seam_color_end);
+void lqr_raster_set_gradient_function (LqrRaster * r, LqrGradFuncType gf_ind);
+void lqr_raster_set_output_seams (LqrRaster *r, LqrColourRGBA seam_colour_start, LqrColourRGBA seam_colour_end);
 void lqr_raster_set_resize_order (LqrRaster *r, LqrResizeOrder resize_order);
 gboolean lqr_raster_attach_pres_layer (LqrRaster * r, guchar * buffer, gint bpp);
 gboolean lqr_raster_attach_disc_layer (LqrRaster * r, guchar * buffer, gint bpp);
