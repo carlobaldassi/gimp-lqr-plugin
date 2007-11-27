@@ -25,11 +25,11 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "config.h"
 #include "plugin-intl.h"
 
-#include <libgimp/gimp.h>
 #include "lqr.h"
 
 #ifdef __LQR_DEBUG__
@@ -61,6 +61,7 @@ lqr_raster_new (guchar * buffer, gint width, gint height, gint bpp)
   r->pres_raster = NULL;
   r->disc_raster = NULL;
   r->flushed_vs = NULL;
+  r->progress = NULL;
 
   r->en = NULL;
   r->bias = NULL;
@@ -248,6 +249,12 @@ lqr_raster_set_resize_order (LqrRaster *r, LqrResizeOrder resize_order)
   r->resize_order = resize_order;
 }
 
+void
+lqr_raster_set_progress (LqrRaster *r, LqrProgress *p)
+{
+  r->progress = p;
+}
+
 
 /*** compute maps (energy, minpath & visibility) ***/
 
@@ -408,7 +415,7 @@ lqr_raster_build_vsmap (LqrRaster * r, gint depth)
    * lqr_raster_set_width(w_start - max_level + 1);
    * has been given */
 
-  /* update step for gimp progress */
+  /* update step for progress reprt*/
   update_step = MAX ((depth - r->max_level) / 50, 1);
 
   /* cycle over levels */
@@ -417,7 +424,7 @@ lqr_raster_build_vsmap (LqrRaster * r, gint depth)
 
       if ((l - r->max_level) % update_step == 0)
         {
-          gimp_progress_update ((gdouble) (l - r->max_level) /
+	  lqr_progress_update (r->progress, (gdouble) (l - r->max_level) /
                                 (gdouble) (depth - r->max_level));
         }
 
@@ -1305,7 +1312,7 @@ lqr_raster_resize_width (LqrRaster * r, gint w1)
         {
           TRY_F_F (lqr_raster_transpose (r));
         }
-      gimp_progress_init (_("Resizing width..."));
+      lqr_progress_init (r->progress, _("Resizing width..."));
       TRY_F_F (lqr_raster_build_maps (r, delta + 1));
       lqr_raster_set_width (r, w1);
       if (r->resize_aux_layers == TRUE)
@@ -1323,6 +1330,7 @@ lqr_raster_resize_width (LqrRaster * r, gint w1)
         {
           TRY_F_F (lqr_seams_buffer_flush_vs (r));
         }
+      lqr_progress_end (r->progress);
     }
   return TRUE;
 }
@@ -1348,7 +1356,7 @@ lqr_raster_resize_height (LqrRaster * r, gint h1)
         {
           TRY_F_F (lqr_raster_transpose (r));
         }
-      gimp_progress_init (_("Resizing height..."));
+      lqr_progress_init (r->progress, _("Resizing height..."));
       TRY_F_F (lqr_raster_build_maps (r, delta + 1));
       lqr_raster_set_width (r, h1);
       if (r->resize_aux_layers == TRUE)
@@ -1366,6 +1374,7 @@ lqr_raster_resize_height (LqrRaster * r, gint h1)
         {
           TRY_F_F (lqr_seams_buffer_flush_vs (r));
         }
+      lqr_progress_end (r->progress);
     }
 
   return TRUE;

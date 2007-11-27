@@ -62,6 +62,7 @@ render (gint32 image_ID,
   gint x_off, y_off, aux_x_off, aux_y_off;
   GimpDrawable * drawable_pres, * drawable_disc;
   LqrColourRGBA colour_start, colour_end;
+  LqrProgress * lqr_progress;
 #ifdef __LQR_CLOCK__
   double clock1, clock2, clock3, clock4;
 #endif /* __LQR_CLOCK__ */
@@ -180,6 +181,13 @@ render (gint32 image_ID,
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
                          4 * 2) / 1024 + 1);
 
+  lqr_progress = g_try_new (LqrProgress, 1);
+  MEMCHECK(lqr_progress);
+
+  lqr_progress->init = (LqrProgressFuncInit) gimp_progress_init;
+  lqr_progress->update = (LqrProgressFuncUpdate) gimp_progress_update;
+  lqr_progress->end = (LqrProgressFuncEnd) gimp_progress_end;
+
 #ifdef __LQR_CLOCK__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ begin: clock: %g ]\n", clock1);
@@ -195,6 +203,7 @@ render (gint32 image_ID,
   MEMCHECK (update_bias (rasta, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
   lqr_raster_set_gradient_function (rasta, vals->grad_func);
   lqr_raster_set_resize_order (rasta, vals->res_order);
+  lqr_raster_set_progress (rasta, lqr_progress);
   if (vals->output_seams)
     {
       lqr_colour_rgba_set (&colour_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);

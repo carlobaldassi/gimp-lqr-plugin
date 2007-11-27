@@ -86,6 +86,8 @@ struct _LqrRaster
 
   LqrGradFunc gf;                    /* pointer to a gradient function */
 
+  LqrProgress * progress;	/* pointer to progress update functions */
+
   LqrSeamsBufferList * flushed_vs;  /* linked list of pointers to flushed visibility maps buffers */
 
 };
@@ -134,6 +136,7 @@ void lqr_raster_set_output_seams (LqrRaster *r, LqrColourRGBA seam_colour_start,
 void lqr_raster_set_resize_order (LqrRaster *r, LqrResizeOrder resize_order);
 gboolean lqr_raster_attach_pres_layer (LqrRaster * r, guchar * buffer, gint bpp);
 gboolean lqr_raster_attach_disc_layer (LqrRaster * r, guchar * buffer, gint bpp);
+void lqr_raster_set_progress (LqrRaster *r, LqrProgress *p);
 
 /* image manipulations */
 gboolean lqr_raster_resize (LqrRaster * r, gint w1, gint h1);   /* liquid resize */

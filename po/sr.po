@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 01:12+0100\n"
+"POT-Creation-Date: 2007-11-27 03:27+0100\n"
 "PO-Revision-Date: 2007-10-04 02:41+0200\n"
 "Last-Translator: Vladimir Savic <vladimir.firefly.savic@gmail.com>\n"
 "Language-Team:  <en@li.org>\n"
@@ -199,7 +199,7 @@ msgstr "Примени"
 msgid "Discard"
 msgstr "Одбаци"
 
-#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:81
+#: ../src/interface.c:926 ../src/interface.c:1011 ../src/render.c:82
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr ""
 
@@ -345,19 +345,19 @@ msgstr "Течна промена величине..."
 msgid "Not enough memory"
 msgstr "Нема довољно меморије"
 
-#: ../src/render.c:90
+#: ../src/render.c:91
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:100
+#: ../src/render.c:101
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
-#: ../src/lqr_raster.c:1308
+#: ../src/lqr_raster.c:1315
 msgid "Resizing width..."
 msgstr "Прошири:"
 
-#: ../src/lqr_raster.c:1351
+#: ../src/lqr_raster.c:1359
 msgid "Resizing height..."
 msgstr "Повиси:"
 

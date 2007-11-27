@@ -24,21 +24,30 @@
  */
 
 
-#ifndef __LQR_COLOUR_H__
-#define __LQR_COLOUR_H__
+#ifndef __LQR_PROGRESS_H__
+#define __LQR_PROGRESS_H__
 
-struct _LqrColourRGBA;
+struct _LqrProgress;
 
-typedef struct _LqrColourRGBA LqrColourRGBA;
+typedef struct _LqrProgress LqrProgress;
 
-struct _LqrColourRGBA
+typedef gboolean (*LqrProgressFuncInit)(const gchar*);
+typedef gboolean (*LqrProgressFuncUpdate)(gdouble);
+typedef gboolean (*LqrProgressFuncEnd)(void);
+
+struct _LqrProgress
 {
-  gdouble r;
-  gdouble g;
-  gdouble b;
-  gdouble a;
+  LqrProgressFuncInit init;
+  LqrProgressFuncUpdate update;
+  LqrProgressFuncEnd end;
 };
 
-void lqr_colour_rgba_set(LqrColourRGBA * colour, gdouble red, gdouble green, gdouble blue, gdouble alpha);
+gboolean lqr_progress_init(LqrProgress * p, const gchar * message);
+gboolean lqr_progress_update(LqrProgress * p, gdouble percentage);
+gboolean lqr_progress_end(LqrProgress * p);
 
-#endif /* __LQR_COLOUR_H__ */
+#endif /* __LQR_PROGRESS_H__ */
+
+
+
+

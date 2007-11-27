@@ -27,7 +27,9 @@ gimp_lqr_plugin_SOURCES = \
 	lqr_seams_buffer_list.c \
 	lqr_seams_buffer_list.h \
 	lqr_colour.c    \
-	lqr_colour.h
+	lqr_colour.h	\
+	lqr_progress.c  \
+	lqr_progress.h
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\

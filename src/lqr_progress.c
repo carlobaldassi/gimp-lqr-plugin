@@ -24,21 +24,45 @@
  */
 
 
-#ifndef __LQR_COLOUR_H__
-#define __LQR_COLOUR_H__
+#include <glib.h>
 
-struct _LqrColourRGBA;
+#include "lqr_progress.h"
 
-typedef struct _LqrColourRGBA LqrColourRGBA;
-
-struct _LqrColourRGBA
+gboolean
+lqr_progress_init(LqrProgress * p, const gchar * message)
 {
-  gdouble r;
-  gdouble g;
-  gdouble b;
-  gdouble a;
-};
+  if (p != NULL)
+    {
+      return p->init(message);
+    }
+  else
+    {
+      return TRUE;
+    }
+}
 
-void lqr_colour_rgba_set(LqrColourRGBA * colour, gdouble red, gdouble green, gdouble blue, gdouble alpha);
+gboolean
+lqr_progress_update(LqrProgress * p, gdouble percentage)
+{
+  if (p != NULL)
+    {
+      return p->update(percentage);
+    }
+  else
+    {
+      return TRUE;
+    }
+}
 
-#endif /* __LQR_COLOUR_H__ */
+gboolean
+lqr_progress_end(LqrProgress * p)
+{
+  if (p != NULL)
+    {
+      return p->end();
+    }
+  else
+    {
+      return TRUE;
+    }
+}

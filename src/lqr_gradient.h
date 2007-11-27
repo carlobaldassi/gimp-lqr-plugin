@@ -29,7 +29,6 @@
 
 /**** gradient functions for energy evluation ****/
 typedef double (*LqrGradFunc) (double, double);
-typedef enum _LqrGradFuncType LqrGradFuncType;
 
 enum _LqrGradFuncType
 {
@@ -40,6 +39,8 @@ enum _LqrGradFuncType
   LQR_GF_YABS,                  /* y absolute value : |y|                     */
   LQR_GF_NULL                   /* 0 */
 };
+
+typedef enum _LqrGradFuncType LqrGradFuncType;
 
 double lqr_grad_norm (double x, double y);
 double lqr_grad_norm_bias (double x, double y);

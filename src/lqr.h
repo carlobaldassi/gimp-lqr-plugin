@@ -35,6 +35,7 @@ G_BEGIN_DECLS
 #include <lqr_gradient.h>
 #include <lqr_colour.h>
 #include <lqr_cursor.h>
+#include <lqr_progress.h>
 #include <lqr_seams_buffer.h>
 #include <lqr_seams_buffer_list.h>
 #include <lqr_raster.h>
