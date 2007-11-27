@@ -13,7 +13,7 @@ gimp_lqr_plugin_SOURCES = \
 	render.c	\
 	render.h	\
 	io_functions.c  \
-	io_function.h   \
+	io_functions.h  \
 	lqr.h		\
 	lqr_base.h      \
 	lqr_gradient.c  \

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 03:26+0100\n"
+"POT-Creation-Date: 2007-11-27 06:38+0100\n"
 "PO-Revision-Date: 2007-10-10 05:15+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -379,17 +379,24 @@ msgstr "Изменяется ширина..."
 msgid "Resizing height..."
 msgstr "Изменяется высота..."
 
-#~ msgid "Parsing layer..."
-#~ msgstr "Разбирается слой..."
+#: ../src/io_functions.c:48
+msgid "Parsing layer..."
+msgstr "Разбирается слой..."
 
-#~ msgid "Applying changes..."
-#~ msgstr "Применяются изменения..."
+#: ../src/io_functions.c:173
+msgid "Applying changes..."
+msgstr "Применяются изменения..."
 
-#~ msgid "Drawing seam map..."
-#~ msgstr "Рисуется карта швов..."
+#: ../src/io_functions.c:254
+msgid "Drawing seam map..."
+msgstr "Рисуется карта швов..."
 
-#~ msgid "%s seam map"
-#~ msgstr "%s - карта швов"
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/io_functions.c:295
+#, c-format
+msgid "%s seam map"
+msgstr "%s - карта швов"
 
 #, fuzzy
 #~ msgid "Liquid rescale only"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 03:26+0100\n"
+"POT-Creation-Date: 2007-11-27 06:38+0100\n"
 "PO-Revision-Date: 2007-10-01 21:41-0700\n"
 "Last-Translator: Pete Lypkie <pete.lypkie@gmail.com>\n"
 "Language-Team: zh_CN\n"
@@ -358,11 +358,24 @@ msgstr "正在改变宽度"
 msgid "Resizing height..."
 msgstr "正在改变高度"
 
-#~ msgid "Parsing layer..."
-#~ msgstr "正在解析图层"
+#: ../src/io_functions.c:48
+msgid "Parsing layer..."
+msgstr "正在解析图层"
 
-#~ msgid "Applying changes..."
-#~ msgstr "正在应用变化"
+#: ../src/io_functions.c:173
+msgid "Applying changes..."
+msgstr "正在应用变化"
+
+#: ../src/io_functions.c:254
+msgid "Drawing seam map..."
+msgstr ""
+
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/io_functions.c:295
+#, c-format
+msgid "%s seam map"
+msgstr ""
 
 #, fuzzy
 #~ msgid "Liquid rescale only"

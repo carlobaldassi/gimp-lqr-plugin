@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 03:27+0100\n"
+"POT-Creation-Date: 2007-11-27 06:38+0100\n"
 "PO-Revision-Date: 2007-10-04 02:41+0200\n"
 "Last-Translator: Vladimir Savic <vladimir.firefly.savic@gmail.com>\n"
 "Language-Team:  <en@li.org>\n"
@@ -361,11 +361,24 @@ msgstr "Прошири:"
 msgid "Resizing height..."
 msgstr "Повиси:"
 
-#~ msgid "Parsing layer..."
-#~ msgstr "Расчлањујем слој..."
+#: ../src/io_functions.c:48
+msgid "Parsing layer..."
+msgstr "Расчлањујем слој..."
 
-#~ msgid "Applying changes..."
-#~ msgstr "Примењујем промене:"
+#: ../src/io_functions.c:173
+msgid "Applying changes..."
+msgstr "Примењујем промене:"
+
+#: ../src/io_functions.c:254
+msgid "Drawing seam map..."
+msgstr ""
+
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/io_functions.c:295
+#, c-format
+msgid "%s seam map"
+msgstr ""
 
 #, fuzzy
 #~ msgid "Liquid rescale only"

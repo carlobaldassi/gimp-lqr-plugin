@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 03:27+0100\n"
+"POT-Creation-Date: 2007-11-27 06:38+0100\n"
 "PO-Revision-Date: 2007-10-21 20:08+0200\n"
 "Last-Translator: Alexander Rødseth <rodseth@gmail.com>\n"
 "Language-Team: Norsk bokmål <Norwegian Bokmål <i18n-nb@lister.ping.uio.no>>\n"
@@ -380,17 +380,24 @@ msgstr "Endrer bredden..."
 msgid "Resizing height..."
 msgstr "Endrer høyden..."
 
-#~ msgid "Parsing layer..."
-#~ msgstr "Tolker lag..."
+#: ../src/io_functions.c:48
+msgid "Parsing layer..."
+msgstr "Tolker lag..."
 
-#~ msgid "Applying changes..."
-#~ msgstr "Legger til endringer..."
+#: ../src/io_functions.c:173
+msgid "Applying changes..."
+msgstr "Legger til endringer..."
 
-#~ msgid "Drawing seam map..."
-#~ msgstr "Tegner sømkart..."
+#: ../src/io_functions.c:254
+msgid "Drawing seam map..."
+msgstr "Tegner sømkart..."
 
-#~ msgid "%s seam map"
-#~ msgstr "%s sømkart"
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/io_functions.c:295
+#, c-format
+msgid "%s seam map"
+msgstr "%s sømkart"
 
 #, fuzzy
 #~ msgid "Liquid rescale only"

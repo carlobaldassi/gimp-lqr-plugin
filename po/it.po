@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 03:26+0100\n"
+"POT-Creation-Date: 2007-11-27 06:38+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -395,14 +395,21 @@ msgstr "Sto riscalando l'altezza..."
 msgid "Resizing height..."
 msgstr "Sto riscalando la larghezza..."
 
-#~ msgid "Parsing layer..."
-#~ msgstr "Sto analizzando il livello..."
+#: ../src/io_functions.c:48
+msgid "Parsing layer..."
+msgstr "Sto analizzando il livello..."
 
-#~ msgid "Applying changes..."
-#~ msgstr "Sto applicando i cambiamenti..."
+#: ../src/io_functions.c:173
+msgid "Applying changes..."
+msgstr "Sto applicando i cambiamenti..."
 
-#~ msgid "Drawing seam map..."
-#~ msgstr "Sto disegnando le linee d'azione"
+#: ../src/io_functions.c:254
+msgid "Drawing seam map..."
+msgstr "Sto disegnando le linee d'azione"
 
-#~ msgid "%s seam map"
-#~ msgstr "%s (linee az.)"
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/io_functions.c:295
+#, c-format
+msgid "%s seam map"
+msgstr "%s (linee az.)"

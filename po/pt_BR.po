@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 03:26+0100\n"
+"POT-Creation-Date: 2007-11-27 06:38+0100\n"
 "PO-Revision-Date: 2007-10-11 14:37-0300\n"
 "Last-Translator: Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>\n"
 "Language-Team: Portugês brasileiro <GNOME-l10n <gnome-l10n-br@listas.cipsga."
@@ -387,17 +387,24 @@ msgstr "Redimensionando largura..."
 msgid "Resizing height..."
 msgstr "Redimensionando altura..."
 
-#~ msgid "Parsing layer..."
-#~ msgstr "Analisando camada..."
+#: ../src/io_functions.c:48
+msgid "Parsing layer..."
+msgstr "Analisando camada..."
 
-#~ msgid "Applying changes..."
-#~ msgstr "Aplicando alterações..."
+#: ../src/io_functions.c:173
+msgid "Applying changes..."
+msgstr "Aplicando alterações..."
 
-#~ msgid "Drawing seam map..."
-#~ msgstr "Desenhando mapa de costuras..."
+#: ../src/io_functions.c:254
+msgid "Drawing seam map..."
+msgstr "Desenhando mapa de costuras..."
 
-#~ msgid "%s seam map"
-#~ msgstr "mapa de cost. %s"
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/io_functions.c:295
+#, c-format
+msgid "%s seam map"
+msgstr "mapa de cost. %s"
 
 #, fuzzy
 #~ msgid "Liquid rescale only"

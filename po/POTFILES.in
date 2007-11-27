@@ -5,3 +5,4 @@ src/main.c
 src/render.c
 src/lqr_raster.c
 src/lqr_seams_buffer.c
+src/io_functions.c

@@ -5874,7 +5874,7 @@ GIMP_LIBDIR=`$PKG_CONFIG --variable=gimplibdir gimp-2.0`
 
 
 
-GETTEXT_PACKAGE=gimp22-lqr-plugin
+GETTEXT_PACKAGE=gimp20-lqr-plugin
 
 
 cat >>confdefs.h <<_ACEOF

@@ -2,7 +2,7 @@
 
 [ -x "intltool-update" ] || { echo "error: intltool-update not found, run autogen.sh" > /dev/stderr; exit 1; }
 
-eval $(grep "^[[:space:]]*ALL_LINGUAS[[:space:]]*=[[:space:]]*\".*\"[[:space:]]*$" "configure.in")
+eval $(grep "^[[:space:]]*ALL_LINGUAS[[:space:]]*=[[:space:]]*\".*\"[[:space:]]*$" "configure.ac")
 
 cd po || exit 1;
 

@@ -40,7 +40,7 @@ bin_PROGRAMS = gimp-lqr-plugin$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -215,7 +215,7 @@ gimp_lqr_plugin_SOURCES = \
 	render.c	\
 	render.h	\
 	io_functions.c  \
-	io_function.h   \
+	io_functions.h  \
 	lqr.h		\
 	lqr_base.h      \
 	lqr_gradient.c  \

@@ -63,7 +63,7 @@ AC_SUBST(GIMP_LIBDIR)
 
 dnl i18n stuff
 
-GETTEXT_PACKAGE=gimp22-lqr-plugin
+GETTEXT_PACKAGE=gimp20-lqr-plugin
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
 				    [The gettext translation domain.])

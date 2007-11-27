@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 03:26+0100\n"
+"POT-Creation-Date: 2007-11-27 06:38+0100\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -378,18 +378,24 @@ msgstr "Redimensionare lăţime..."
 msgid "Resizing height..."
 msgstr "Redimensionare înălţime..."
 
-#~ msgid "Parsing layer..."
-#~ msgstr "Analiza strat..."
+#: ../src/io_functions.c:48
+msgid "Parsing layer..."
+msgstr "Analiza strat..."
 
-#~ msgid "Applying changes..."
-#~ msgstr "Se aplică modificările..."
+#: ../src/io_functions.c:173
+msgid "Applying changes..."
+msgstr "Se aplică modificările..."
 
-#~ msgid "Drawing seam map..."
-#~ msgstr "Se desenează harta margini..."
+#: ../src/io_functions.c:254
+msgid "Drawing seam map..."
+msgstr "Se desenează harta margini..."
 
-#, fuzzy
-#~ msgid "%s seam map"
-#~ msgstr "masca salvare %s"
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/io_functions.c:295
+#, fuzzy, c-format
+msgid "%s seam map"
+msgstr "masca salvare %s"
 
 #, fuzzy
 #~ msgid "Liquid rescale only"

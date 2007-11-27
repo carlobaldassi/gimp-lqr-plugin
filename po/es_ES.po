@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-27 03:27+0100\n"
+"POT-Creation-Date: 2007-11-27 06:38+0100\n"
 "PO-Revision-Date: 2007-10-14 18:57+0100\n"
 "Last-Translator: Diego Ruiz <diego.ruiz@opentrends.net>\n"
 "Language-Team:  <es_ES@li.org>\n"
@@ -385,17 +385,24 @@ msgstr "Redimensionando anchura..."
 msgid "Resizing height..."
 msgstr "Redimensionando altura..."
 
-#~ msgid "Parsing layer..."
-#~ msgstr "Parseando capa..."
+#: ../src/io_functions.c:48
+msgid "Parsing layer..."
+msgstr "Parseando capa..."
 
-#~ msgid "Applying changes..."
-#~ msgstr "Aplicando cambios..."
+#: ../src/io_functions.c:173
+msgid "Applying changes..."
+msgstr "Aplicando cambios..."
 
-#~ msgid "Drawing seam map..."
-#~ msgstr "Dibujando mapa de las líneas de acción..."
+#: ../src/io_functions.c:254
+msgid "Drawing seam map..."
+msgstr "Dibujando mapa de las líneas de acción..."
 
-#~ msgid "%s seam map"
-#~ msgstr "%s líneas de acc."
+#. The name of the layer with the seams map
+#. (here "%s" represents the selected layer's name)
+#: ../src/io_functions.c:295
+#, c-format
+msgid "%s seam map"
+msgstr "%s líneas de acc."
 
 #, fuzzy
 #~ msgid "Liquid rescale only"

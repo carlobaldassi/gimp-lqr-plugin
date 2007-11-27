@@ -1,12 +1,12 @@
 #! /bin/bash
 
 [ -f "Makefile" ] || { echo "error: makefile not found"; exit 1; }
-[ -f "configure.in" ] || { echo "error: configure.in not found"; exit 1; }
+[ -f "configure.ac" ] || { echo "error: configure.ac not found"; exit 1; }
 
-NAME=$(head -n 50 configure.in | grep "m4_define(\[plugin_name\], \[.*\])" | sed "s/m4_define(\[plugin_name\], \[\(.*\)\])/\1/")
-MAJOR_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_major_version\], \[.*\])" | sed "s/m4_define(\[plugin_major_version\], \[\(.*\)\])/\1/")
-MINOR_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_minor_version\], \[.*\])" | sed "s/m4_define(\[plugin_minor_version\], \[\(.*\)\])/\1/")
-MICRO_VER=$(head -n 50 configure.in | grep "m4_define(\[plugin_micro_version\], \[.*\])" | sed "s/m4_define(\[plugin_micro_version\], \[\(.*\)\])/\1/")
+NAME=$(head -n 50 configure.ac | grep "m4_define(\[plugin_name\], \[.*\])" | sed "s/m4_define(\[plugin_name\], \[\(.*\)\])/\1/")
+MAJOR_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_major_version\], \[.*\])" | sed "s/m4_define(\[plugin_major_version\], \[\(.*\)\])/\1/")
+MINOR_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_minor_version\], \[.*\])" | sed "s/m4_define(\[plugin_minor_version\], \[\(.*\)\])/\1/")
+MICRO_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_micro_version\], \[.*\])" | sed "s/m4_define(\[plugin_micro_version\], \[\(.*\)\])/\1/")
 
 [ -f "release_subv_src" ] || { echo "error: release_subv_src not found"; exit 1; }
 
