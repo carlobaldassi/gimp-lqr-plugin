@@ -30,11 +30,9 @@
 
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
+#include <lqr/lqr.h>
 
 #include "plugin-intl.h"
-
-#include "lqr_base.h"
-#include "lqr_gradient.h"
 
 #include "main.h"
 #include "interface.h"

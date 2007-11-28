@@ -26,10 +26,10 @@
 #include <stdio.h>
 
 #include <libgimp/gimp.h>
+#include <lqr/lqr.h>
+
 #include "config.h"
 #include "plugin-intl.h"
-
-#include "lqr.h"
 
 #include "io_functions.h"
 

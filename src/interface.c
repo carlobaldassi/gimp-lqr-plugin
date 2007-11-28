@@ -31,11 +31,9 @@
 #include <math.h>
 #include <string.h>
 
+#include <lqr/lqr.h>
+
 #include "plugin-intl.h"
-
-#include "lqr_base.h"
-#include "lqr_gradient.h"
-
 #include "main.h"
 #include "interface.h"
 

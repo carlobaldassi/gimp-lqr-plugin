@@ -50,14 +50,12 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_gimp_lqr_plugin_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
-	render.$(OBJEXT) io_functions.$(OBJEXT) lqr_gradient.$(OBJEXT) \
-	lqr_cursor.$(OBJEXT) lqr_raster.$(OBJEXT) \
-	lqr_seams_buffer.$(OBJEXT) lqr_seams_buffer_list.$(OBJEXT) \
-	lqr_colour.$(OBJEXT) lqr_progress.$(OBJEXT)
+	render.$(OBJEXT) io_functions.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
-gimp_lqr_plugin_DEPENDENCIES = $(am__DEPENDENCIES_1)
+gimp_lqr_plugin_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -136,6 +134,9 @@ LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LOCALEDIR = @LOCALEDIR@
+LQR_CFLAGS = @LQR_CFLAGS@
+LQR_LIBDIR = @LQR_LIBDIR@
+LQR_LIBS = @LQR_LIBS@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAINTAINER_MODE_FALSE = @MAINTAINER_MODE_FALSE@
@@ -215,34 +216,17 @@ gimp_lqr_plugin_SOURCES = \
 	render.c	\
 	render.h	\
 	io_functions.c  \
-	io_functions.h  \
-	lqr.h		\
-	lqr_base.h      \
-	lqr_gradient.c  \
-	lqr_gradient.h  \
-	lqr_cursor.c    \
-	lqr_cursor.h    \
-	lqr_raster.c    \
-	lqr_raster.h    \
-	lqr_seams_buffer.c \
-	lqr_seams_buffer.h \
-	lqr_seams_buffer_list.c \
-	lqr_seams_buffer_list.h \
-	lqr_colour.c    \
-	lqr_colour.h	\
-	lqr_progress.c  \
-	lqr_progress.h
+	io_functions.h
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
-	-DDATADIR=\""$(DATADIR)"\"
-
-INCLUDES = \
+	-DDATADIR=\""$(DATADIR)"\"\
 	-I$(top_srcdir)		\
 	@GIMP_CFLAGS@		\
+	@LQR_CFLAGS@		\
 	-I$(includedir)
 
-LDADD = $(GIMP_LIBS)
+LDADD = $(GIMP_LIBS) $(LQR_LIBS)
 all: all-am
 
 .SUFFIXES:
@@ -311,13 +295,6 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_functions.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_colour.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_cursor.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_gradient.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_progress.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_raster.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_seams_buffer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lqr_seams_buffer_list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/render.Po@am__quote@
 

@@ -13,32 +13,15 @@ gimp_lqr_plugin_SOURCES = \
 	render.c	\
 	render.h	\
 	io_functions.c  \
-	io_functions.h  \
-	lqr.h		\
-	lqr_base.h      \
-	lqr_gradient.c  \
-	lqr_gradient.h  \
-	lqr_cursor.c    \
-	lqr_cursor.h    \
-	lqr_raster.c    \
-	lqr_raster.h    \
-	lqr_seams_buffer.c \
-	lqr_seams_buffer.h \
-	lqr_seams_buffer_list.c \
-	lqr_seams_buffer_list.h \
-	lqr_colour.c    \
-	lqr_colour.h	\
-	lqr_progress.c  \
-	lqr_progress.h
+	io_functions.h
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
-	-DDATADIR=\""$(DATADIR)"\"
-
-INCLUDES =\
+	-DDATADIR=\""$(DATADIR)"\"\
 	-I$(top_srcdir)		\
 	@GIMP_CFLAGS@		\
+	@LQR_CFLAGS@		\
 	-I$(includedir)
 
-LDADD = $(GIMP_LIBS)
+LDADD = $(GIMP_LIBS) $(LQR_LIBS)
 
