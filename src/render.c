@@ -53,7 +53,7 @@ render (gint32 image_ID,
         PlugInImageVals * image_vals, PlugInDrawableVals * drawable_vals,
         PlugInColVals * col_vals)
 {
-  LqrRaster *rasta;
+  LqrCarver *rasta;
   gint32 mask_ID;
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
@@ -200,23 +200,23 @@ render (gint32 image_ID,
   printf ("[ begin: clock: %g ]\n", clock1);
 #endif /* __LQR_CLOCK__ */
 
-  /* lqr raster initialization */
+  /* lqr carver initialization */
   rgb_buffer = rgb_buffer_from_layer (layer_ID);
   MEMCHECK (rgb_buffer != NULL);
-  rasta = lqr_raster_new (rgb_buffer, old_width, old_height, bpp);
+  rasta = lqr_carver_new (rgb_buffer, old_width, old_height, bpp);
   MEMCHECK (rasta != NULL);
-  MEMCHECK (lqr_raster_init (rasta, vals->delta_x, vals->rigidity));
+  MEMCHECK (lqr_carver_init (rasta, vals->delta_x, vals->rigidity));
   MEMCHECK (update_bias (rasta, vals->pres_layer_ID, vals->pres_coeff, x_off, y_off));
   MEMCHECK (update_bias (rasta, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
-  lqr_raster_set_gradient_function (rasta, vals->grad_func);
-  lqr_raster_set_resize_order (rasta, vals->res_order);
-  lqr_raster_set_progress (rasta, lqr_progress);
+  lqr_carver_set_gradient_function (rasta, vals->grad_func);
+  lqr_carver_set_resize_order (rasta, vals->res_order);
+  lqr_carver_set_progress (rasta, lqr_progress);
   if (vals->output_seams)
     {
       lqr_colour_rgba_set (&colour_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
       lqr_colour_rgba_set (&colour_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
 
-      lqr_raster_set_output_seams(rasta, colour_start, colour_end);
+      lqr_carver_set_output_seams(rasta, colour_start, colour_end);
     }
   if (vals->resize_aux_layers)
     {
@@ -224,13 +224,13 @@ render (gint32 image_ID,
         {
           rgb_buffer = rgb_buffer_from_layer (vals->pres_layer_ID);
 	  MEMCHECK (rgb_buffer != NULL);
-	  MEMCHECK (lqr_raster_attach_pres_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->pres_layer_ID)));
+	  MEMCHECK (lqr_carver_attach_pres_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->pres_layer_ID)));
 	}
       if (vals->disc_layer_ID)
         {
           rgb_buffer = rgb_buffer_from_layer (vals->disc_layer_ID);
 	  MEMCHECK (rgb_buffer != NULL);
-	  MEMCHECK (lqr_raster_attach_disc_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->disc_layer_ID)));
+	  MEMCHECK (lqr_carver_attach_disc_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->disc_layer_ID)));
 	}
     }
 
@@ -239,23 +239,23 @@ render (gint32 image_ID,
   printf ("[ read: clock: %g (%g) ]\n", clock2, clock2 - clock1);
 #endif /* __LQR_CLOCK__ */
 
-  MEMCHECK (lqr_raster_resize (rasta, new_width, new_height));
+  MEMCHECK (lqr_carver_resize (rasta, new_width, new_height));
 
   switch (vals->oper_mode)
     {
       case LQR_MODE_NORMAL:
 	break;
       case LQR_MODE_LQRBACK:
-	MEMCHECK (lqr_raster_flatten (rasta));
+	MEMCHECK (lqr_carver_flatten (rasta));
 	if (vals->resize_aux_layers == TRUE)
 	  {
 	    if (vals->pres_layer_ID != 0)
 	      {
-		MEMCHECK (lqr_raster_flatten (rasta->pres_raster));
+		MEMCHECK (lqr_carver_flatten (rasta->pres_carver));
 	      }
 	    if (vals->disc_layer_ID != 0)
 	      {
-		MEMCHECK (lqr_raster_flatten (rasta->disc_raster));
+		MEMCHECK (lqr_carver_flatten (rasta->disc_carver));
 		MEMCHECK (update_bias (rasta, vals->disc_layer_ID, 2 * vals->disc_coeff, x_off, y_off));
 	      }
 	  }
@@ -271,7 +271,7 @@ render (gint32 image_ID,
 	      rasta->resize_order = LQR_RES_ORDER_HOR;
 	      break;
 	  }
-	MEMCHECK (lqr_raster_resize (rasta, new_width, new_height));
+	MEMCHECK (lqr_carver_resize (rasta, new_width, new_height));
 	break;
       case LQR_MODE_SCALEBACK:
 	break;
@@ -305,7 +305,7 @@ render (gint32 image_ID,
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
                          4 * 2) / 1024 + 1);
 
-  MEMCHECK (write_raster_to_layer (rasta, drawable));
+  MEMCHECK (write_carver_to_layer (rasta, drawable));
 
   if (vals->resize_aux_layers == TRUE)
     {
@@ -313,19 +313,19 @@ render (gint32 image_ID,
         {
           gimp_layer_resize (vals->pres_layer_ID, new_width, new_height, 0, 0);
 	  drawable_pres = gimp_drawable_get(vals->pres_layer_ID);
-          MEMCHECK (write_raster_to_layer (rasta->pres_raster, drawable_pres));
+          MEMCHECK (write_carver_to_layer (rasta->pres_carver, drawable_pres));
 	  gimp_drawable_detach(drawable_pres);
         }
       if (vals->disc_layer_ID != 0)
         {
           gimp_layer_resize (vals->disc_layer_ID, new_width, new_height, 0, 0);
 	  drawable_disc = gimp_drawable_get(vals->disc_layer_ID);
-          MEMCHECK (write_raster_to_layer (rasta->disc_raster, drawable_disc));
+          MEMCHECK (write_carver_to_layer (rasta->disc_carver, drawable_disc));
 	  gimp_drawable_detach(drawable_disc);
         }
     }
 
-  lqr_raster_destroy (rasta);
+  lqr_carver_destroy (rasta);
   switch (vals->oper_mode)
     {
       case LQR_MODE_NORMAL:

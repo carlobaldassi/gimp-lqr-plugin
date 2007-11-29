@@ -91,7 +91,7 @@ rgb_buffer_from_layer (gint32 layer_ID)
 }
 
 gboolean
-update_bias (LqrRaster *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off)
+update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off)
 {
   gint x, y, k, bpp, c_bpp;
   gboolean has_alpha;
@@ -161,7 +161,7 @@ update_bias (LqrRaster *r, gint32 layer_ID, gint bias_factor, gint base_x_off, g
 }
 
 gboolean
-write_raster_to_layer (LqrRaster * r, GimpDrawable * drawable)
+write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
 {
   gint32 layer_ID;
   gint x, y, k;
@@ -306,7 +306,7 @@ write_all_seams_buffers (LqrSeamsBufferList * list, gint32 image_ID, gchar * ori
 /* plot the energy (at current size / visibility) to a file
  * (greyscale) */
 gboolean
-lqr_external_write_energy (LqrRaster * r /*, pngwriter& output */ )
+lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
 {
   int x, y;
   double e;
