@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 05:11+0100\n"
+"POT-Creation-Date: 2007-11-29 23:15+0100\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -100,7 +100,7 @@ msgstr ""
 "redimensionare într-o direcţie"
 
 #: ../src/interface.c:468
-msgid "Last leams colour"
+msgid "Last seams colour"
 msgstr ""
 
 #: ../src/interface.c:479

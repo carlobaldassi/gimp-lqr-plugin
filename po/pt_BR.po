@@ -1,4 +1,3 @@
-# translation of pt_BR.po to Portugês brasileiro
 # translation of pt_BR.po to
 # translation of gimp22-lqr-plugin.pt_BR.po to
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
@@ -9,11 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 05:11+0100\n"
-"PO-Revision-Date: 2007-10-11 14:37-0300\n"
-"Last-Translator: Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>\n"
-"Language-Team: Portugês brasileiro <GNOME-l10n <gnome-l10n-br@listas.cipsga."
-"org.br>>\n"
+"POT-Creation-Date: 2007-11-29 23:15+0100\n"
+"PO-Revision-Date: 2007-11-29 21:22+0000\n"
+"Last-Translator: Joao S. O. Bueno <gwidion@mpc.com.br>\n"
+"Language-Team:  <Português brasileiro <GNOME-l10n <gnome-l10n-br@listas."
+"cipsga.>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,23 +41,23 @@ msgstr "Altura:"
 
 #: ../src/interface.c:343
 msgid "Choose mode of operation"
-msgstr ""
+msgstr "Escolha o modo de operação"
 
 #: ../src/interface.c:351
 msgid "Mode:"
-msgstr ""
+msgstr "Modo:"
 
 #: ../src/interface.c:356
 msgid "LqR only"
-msgstr ""
+msgstr "Somente LqR"
 
 #: ../src/interface.c:357
 msgid "LqR + LqR back to the original size"
-msgstr ""
+msgstr "LqR + LqR de volta ao tamanho original"
 
 #: ../src/interface.c:358
 msgid "LqR + scale back to the original size"
-msgstr ""
+msgstr "LqR + redimensionar de volta ao tamanho original"
 
 #. Output settings page
 #: ../src/interface.c:384
@@ -107,20 +106,18 @@ msgstr ""
 "redimensione em uma direção por vez."
 
 #: ../src/interface.c:468
-msgid "Last leams colour"
-msgstr ""
+msgid "Last seams colour"
+msgstr "Cor das útimas costuras"
 
 #: ../src/interface.c:479
-#, fuzzy
 msgid "Colour to use for the last seams"
 msgstr "Cor a usar para as últimas costuras"
 
 #: ../src/interface.c:482
 msgid "First seams colour"
-msgstr ""
+msgstr "Cor das primeiras costuras"
 
 #: ../src/interface.c:493
-#, fuzzy
 msgid "Colour to use for the first seams"
 msgstr "Cor a usar para as primeiras costuras"
 
@@ -139,13 +136,15 @@ msgstr "O aumento deste valor resulta em costuras mais retas"
 
 #: ../src/interface.c:528
 msgid "Seams max step:"
-msgstr ""
+msgstr "Passo máximo das costuras"
 
 #: ../src/interface.c:531
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
 msgstr ""
+"Distância máxima ao longo de uma costura. Aumentar este valor permite "
+"ultrapassar a barreira de 45 graus."
 
 #: ../src/interface.c:548
 msgid ""
@@ -179,19 +178,19 @@ msgstr "Nula"
 
 #: ../src/interface.c:583
 msgid "This controls the order of operations if rescaling in both directions"
-msgstr ""
+msgstr "Controa a ordem das operações ao redimensionar em ambas as direções"
 
 #: ../src/interface.c:592
 msgid "Rescale order:"
-msgstr ""
+msgstr "Ordem do redimensionamento:"
 
 #: ../src/interface.c:597
 msgid "Horizontal first"
-msgstr ""
+msgstr "Horizontal primeiro"
 
 #: ../src/interface.c:598
 msgid "Vertical first"
-msgstr ""
+msgstr "Vertical primeiro"
 
 #. Mask page
 #: ../src/interface.c:615
@@ -338,34 +337,36 @@ msgstr "Coeficiente geral para intensidade de descarte de detalhes"
 
 #: ../src/interface.c:1918
 msgid "Auto size"
-msgstr ""
+msgstr "Tam. Autom."
 
 #: ../src/interface.c:1928
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
+"Tenta determinar o tamanho final necessário para marcar as áreas "
+"máscaradas.\n"
+"Use apenas com máscaras simples"
 
 #: ../src/interface.c:1931
 msgid "horizontal"
-msgstr ""
+msgstr "horizontal"
 
 #: ../src/interface.c:1931
 msgid "vertical"
-msgstr ""
+msgstr "vertical"
 
 #: ../src/interface.c:1940
 msgid "Resizing direction for auto size"
-msgstr ""
+msgstr "Direção de redimensionamento para cálculo automático de tamanho"
 
 #: ../src/main.c:162
 msgid "scaling which keeps layer features (or removes them)"
-msgstr ""
+msgstr "redimensionamento que mantém ou remove detalhes da camada."
 
 #: ../src/main.c:166
-#, fuzzy
 msgid "Li_quid rescale..."
-msgstr "Redimensionamento Líquido..."
+msgstr "Redimensionamento Lí_quido..."
 
 #: ../src/render.c:41
 msgid "Not enough memory"
@@ -405,14 +406,3 @@ msgstr "Desenhando mapa de costuras..."
 #, c-format
 msgid "%s seam map"
 msgstr "mapa de cost. %s"
-
-#, fuzzy
-#~ msgid "Liquid rescale only"
-#~ msgstr "Redimensionamento Líquido..."
-
-#~ msgid "LiquidRescaling (content-aware rescaling)"
-#~ msgstr ""
-#~ "Redimensionamento Líquido (redimensionamento dependente do conteúdo)"
-
-#~ msgid "Not enough memory, aborting"
-#~ msgstr "Memória insuficiente, abortando"

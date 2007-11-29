@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 05:11+0100\n"
+"POT-Creation-Date: 2007-11-29 23:15+0100\n"
 "PO-Revision-Date: 2007-10-15 21:14+0200\n"
 "Last-Translator: Christoph Schäfer <christoph-schaefer@gmx.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -106,7 +106,7 @@ msgstr ""
 "auf einer neuen Ebene\" und der verändernsie die die Größe in eine Richtung."
 
 #: ../src/interface.c:468
-msgid "Last leams colour"
+msgid "Last seams colour"
 msgstr ""
 
 #: ../src/interface.c:479

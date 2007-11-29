@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 05:11+0100\n"
+"POT-Creation-Date: 2007-11-29 23:15+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -104,7 +104,7 @@ msgstr ""
 "e ridimensionando una direzione alla volta"
 
 #: ../src/interface.c:468
-msgid "Last leams colour"
+msgid "Last seams colour"
 msgstr "Colore delle ultime linee"
 
 #: ../src/interface.c:479

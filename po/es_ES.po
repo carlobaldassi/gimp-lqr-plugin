@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 05:11+0100\n"
+"POT-Creation-Date: 2007-11-29 23:15+0100\n"
 "PO-Revision-Date: 2007-10-14 18:57+0100\n"
 "Last-Translator: Diego Ruiz <diego.ruiz@opentrends.net>\n"
 "Language-Team:  <es_ES@li.org>\n"
@@ -102,7 +102,7 @@ msgstr ""
 "redimensionar solo en una dirección cada vez"
 
 #: ../src/interface.c:468
-msgid "Last leams colour"
+msgid "Last seams colour"
 msgstr ""
 
 #: ../src/interface.c:479

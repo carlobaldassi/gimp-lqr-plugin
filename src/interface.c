@@ -465,7 +465,7 @@ dialog (gint32 image_ID,
   gimp_rgba_set (colour_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
 
   out_seams_col_button2 =
-    gimp_color_button_new (_("Last leams colour"), 14, 14, colour_end,
+    gimp_color_button_new (_("Last seams colour"), 14, 14, colour_end,
                            GIMP_COLOR_AREA_FLAT);
   gtk_box_pack_end (GTK_BOX (out_seams_hbox), out_seams_col_button2, FALSE,
                     FALSE, 0);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 05:11+0100\n"
+"POT-Creation-Date: 2007-11-29 23:15+0100\n"
 "PO-Revision-Date: 2007-10-04 02:41+0200\n"
 "Last-Translator: Vladimir Savic <vladimir.firefly.savic@gmail.com>\n"
 "Language-Team:  <en@li.org>\n"
@@ -98,7 +98,7 @@ msgid ""
 msgstr ""
 
 #: ../src/interface.c:468
-msgid "Last leams colour"
+msgid "Last seams colour"
 msgstr ""
 
 #: ../src/interface.c:479

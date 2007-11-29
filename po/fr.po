@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 05:11+0100\n"
-"PO-Revision-Date: 2007-10-13 14:31+0200\n"
+"POT-Creation-Date: 2007-11-30 00:43+0100\n"
+"PO-Revision-Date: 2007-11-30 00:26+0100\n"
 "Last-Translator: Vincent Picavet <vpicavet@gmail.com>\n"
 "Language-Team:  <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -40,23 +40,23 @@ msgstr "Hauteur:"
 
 #: ../src/interface.c:343
 msgid "Choose mode of operation"
-msgstr ""
+msgstr "Choisir le mode de fonctionnement"
 
 #: ../src/interface.c:351
 msgid "Mode:"
-msgstr ""
+msgstr "Mode :"
 
 #: ../src/interface.c:356
 msgid "LqR only"
-msgstr ""
+msgstr "LqR seulement"
 
 #: ../src/interface.c:357
 msgid "LqR + LqR back to the original size"
-msgstr ""
+msgstr "LqR + LqR vers la taille d'origine"
 
 #: ../src/interface.c:358
 msgid "LqR + scale back to the original size"
-msgstr ""
+msgstr "LqR + redimensionnement vers la taille originale"
 
 #. Output settings page
 #: ../src/interface.c:384
@@ -106,20 +106,18 @@ msgstr ""
 "calque\", et le redimensionnement dans une direction à la fois"
 
 #: ../src/interface.c:468
-msgid "Last leams colour"
-msgstr ""
+msgid "Last seams colour"
+msgstr "Couleur des dernieres lignes"
 
 #: ../src/interface.c:479
-#, fuzzy
 msgid "Colour to use for the last seams"
 msgstr "Couleur à utiliser pour les dernières lignes"
 
 #: ../src/interface.c:482
 msgid "First seams colour"
-msgstr ""
+msgstr "Couleur des premières lignes"
 
 #: ../src/interface.c:493
-#, fuzzy
 msgid "Colour to use for the first seams"
 msgstr "Couleur à utiliser pour les premières lignes"
 
@@ -138,13 +136,15 @@ msgstr "Augmenter cette valeur pour des lignes plus droites"
 
 #: ../src/interface.c:528
 msgid "Seams max step:"
-msgstr ""
+msgstr "Pas maximum des lignes"
 
 #: ../src/interface.c:531
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
 msgstr ""
+"Déplacement maximal le long d'une ligne. Augmenter cette valeur permet de "
+"dépasser la limite de 45 degrés"
 
 #: ../src/interface.c:548
 msgid ""
@@ -180,18 +180,20 @@ msgstr "Zéro"
 #: ../src/interface.c:583
 msgid "This controls the order of operations if rescaling in both directions"
 msgstr ""
+"Ceci contrôle l'ordre des opérations de redimensionnement dans les deux "
+"directions"
 
 #: ../src/interface.c:592
 msgid "Rescale order:"
-msgstr ""
+msgstr "Ordre de redimensionnement :"
 
 #: ../src/interface.c:597
 msgid "Horizontal first"
-msgstr ""
+msgstr "Horizontal d'abord"
 
 #: ../src/interface.c:598
 msgid "Vertical first"
-msgstr ""
+msgstr "Vertical d'abord"
 
 #. Mask page
 #: ../src/interface.c:615
@@ -341,34 +343,36 @@ msgstr "Coefficient global pour l'intensité de suppression des éléments"
 
 #: ../src/interface.c:1918
 msgid "Auto size"
-msgstr ""
+msgstr "Taille auto"
 
 #: ../src/interface.c:1928
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
+"Essayer de régler la taille finale au mieux pour enlever les zones "
+"masquées. \n"
+"A utiliser seulement avec des masques simples"
 
 #: ../src/interface.c:1931
 msgid "horizontal"
-msgstr ""
+msgstr "horizontal"
 
 #: ../src/interface.c:1931
 msgid "vertical"
-msgstr ""
+msgstr "vertical"
 
 #: ../src/interface.c:1940
 msgid "Resizing direction for auto size"
-msgstr ""
+msgstr "Direction de redimensionnement pour la taille automatique"
 
 #: ../src/main.c:162
 msgid "scaling which keeps layer features (or removes them)"
-msgstr ""
+msgstr "Redimensionnement qui conserver les élements du calque (ou les enlève)"
 
 #: ../src/main.c:166
-#, fuzzy
 msgid "Li_quid rescale..."
-msgstr "Redimensionnement liquide ..."
+msgstr "Redimensionnement li_quide ..."
 
 #: ../src/render.c:41
 msgid "Not enough memory"
@@ -410,13 +414,3 @@ msgstr "Création de la carte de lignes..."
 #, c-format
 msgid "%s seam map"
 msgstr "Carte de lignes %s"
-
-#, fuzzy
-#~ msgid "Liquid rescale only"
-#~ msgstr "Redimensionnement liquide ..."
-
-#~ msgid "LiquidRescaling (content-aware rescaling)"
-#~ msgstr "LiquidRescaling (redimensionnement en fonction du contenu)"
-
-#~ msgid "Not enough memory, aborting"
-#~ msgstr "Mémoire pleine, annulation"

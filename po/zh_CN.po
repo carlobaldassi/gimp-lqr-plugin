@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 05:11+0100\n"
+"POT-Creation-Date: 2007-11-29 23:15+0100\n"
 "PO-Revision-Date: 2007-10-01 21:41-0700\n"
 "Last-Translator: Pete Lypkie <pete.lypkie@gmail.com>\n"
 "Language-Team: zh_CN\n"
@@ -97,7 +97,7 @@ msgid ""
 msgstr ""
 
 #: ../src/interface.c:468
-msgid "Last leams colour"
+msgid "Last seams colour"
 msgstr ""
 
 #: ../src/interface.c:479
