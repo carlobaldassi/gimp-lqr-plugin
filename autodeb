@@ -6,7 +6,7 @@ function err_mess ()
 }
 
 [ -f "Makefile" ] || { err_mess "makefile not found"; exit 1; }
-[ -f "confiugre.ac" ] || { err_mess "confiugre.ac not found"; exit 1; }
+[ -f "configure.ac" ] || { err_mess "configure.ac not found"; exit 1; }
 
 FAKE=0
 if [ -n "$1" ]
@@ -35,10 +35,10 @@ PBUILDER_RC_FILE="${HOME}/.pbuilderrc_${DISTRO}"
 
 [ -f "${PBUILDER_RC_FILE}" ] || { err_mess "pbuilder config file not found"; exit 1; }
 
-NAME=$(head -n 50 confiugre.ac | grep "m4_define(\[plugin_name\], \[.*\])" | sed "s/m4_define(\[plugin_name\], \[\(.*\)\])/\1/")
-MAJOR_VER=$(head -n 50 confiugre.ac | grep "m4_define(\[plugin_major_version\], \[.*\])" | sed "s/m4_define(\[plugin_major_version\], \[\(.*\)\])/\1/")
-MINOR_VER=$(head -n 50 confiugre.ac | grep "m4_define(\[plugin_minor_version\], \[.*\])" | sed "s/m4_define(\[plugin_minor_version\], \[\(.*\)\])/\1/")
-MICRO_VER=$(head -n 50 confiugre.ac | grep "m4_define(\[plugin_micro_version\], \[.*\])" | sed "s/m4_define(\[plugin_micro_version\], \[\(.*\)\])/\1/")
+NAME=$(head -n 50 configure.ac | grep "m4_define(\[plugin_name\], \[.*\])" | sed "s/m4_define(\[plugin_name\], \[\(.*\)\])/\1/")
+MAJOR_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_major_version\], \[.*\])" | sed "s/m4_define(\[plugin_major_version\], \[\(.*\)\])/\1/")
+MINOR_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_minor_version\], \[.*\])" | sed "s/m4_define(\[plugin_minor_version\], \[\(.*\)\])/\1/")
+MICRO_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_micro_version\], \[.*\])" | sed "s/m4_define(\[plugin_micro_version\], \[\(.*\)\])/\1/")
 
 VER="${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}"
 
@@ -175,7 +175,14 @@ ubunames ${REL_SUB_VER}
 
 sudo apt-get update || exit 1
 
-sudo pbuilder --build --distribution "${DISTRO}" --configfile "${PBUILDER_RC_FILE}" "${DSC_NAME}" || exit 1
+sudo pbuilder --build \
+	      --override-config \
+	      --distribution "${DISTRO}" \
+	      --configfile "${PBUILDER_RC_FILE}" \
+	      --bindmounts "/var/cache/pbuilder_gutsy/result" \
+	      --othermirror "deb file:/var/cache/pbuilder_gutsy/result ./|deb-src file:/var/cache/pbuilder_gutsy/result ./" \
+	      --hookdir "/var/cache/pbuilder_gutsy/hooks" \
+	      "${DSC_NAME}" || exit 1
 
 cd .. || exit 1
 

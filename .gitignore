@@ -20,3 +20,4 @@ intltool-extract
 src/gimp-lqr-plugin
 po/stamp-it
 po/Makefile.in
+po/gimp20-lqr-plugin.pot
