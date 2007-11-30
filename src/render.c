@@ -38,6 +38,10 @@
 #include "plugin-intl.h"
 
 
+#if 0
+#define __CLOCK_IT__
+#endif
+
 #define MEMCHECK(x) if ((x) == FALSE) { g_message(_("Not enough memory")); return FALSE; }
 
 gboolean
@@ -53,7 +57,8 @@ render (gint32 image_ID,
         PlugInImageVals * image_vals, PlugInDrawableVals * drawable_vals,
         PlugInColVals * col_vals)
 {
-  LqrCarver *rasta;
+  LqrCarver *carver, *aux_carver;
+  LqrCarverList *carver_list;
   gint32 mask_ID;
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
@@ -69,9 +74,9 @@ render (gint32 image_ID,
   GimpDrawable * drawable_pres, * drawable_disc;
   GimpRGB colour_start, colour_end;
   LqrProgress * lqr_progress;
-#ifdef __LQR_CLOCK__
+#ifdef __CLOCK_IT__
   double clock1, clock2, clock3, clock4;
-#endif /* __LQR_CLOCK__ */
+#endif /* __CLOCK_IT__ */
 
   if (drawable_vals->layer_ID)
     {
@@ -200,25 +205,25 @@ render (gint32 image_ID,
   lqr_progress_set_init_width_message(lqr_progress, _("Resizing width..."));
   lqr_progress_set_init_height_message(lqr_progress, _("Resizing height..."));
 
-#ifdef __LQR_CLOCK__
+#ifdef __CLOCK_IT__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ begin: clock: %g ]\n", clock1);
-#endif /* __LQR_CLOCK__ */
+#endif /* __CLOCK_IT__ */
 
   /* lqr carver initialization */
   rgb_buffer = rgb_buffer_from_layer (layer_ID);
   MEMCHECK (rgb_buffer != NULL);
-  rasta = lqr_carver_new (rgb_buffer, old_width, old_height, bpp);
-  MEMCHECK (rasta != NULL);
-  MEMCHECK (lqr_carver_init (rasta, vals->delta_x, vals->rigidity));
-  MEMCHECK (update_bias (rasta, vals->pres_layer_ID, vals->pres_coeff, x_off, y_off));
-  MEMCHECK (update_bias (rasta, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
-  lqr_carver_set_gradient_function (rasta, vals->grad_func);
-  lqr_carver_set_resize_order (rasta, vals->res_order);
-  lqr_carver_set_progress (rasta, lqr_progress);
+  carver = lqr_carver_new (rgb_buffer, old_width, old_height, bpp);
+  MEMCHECK (carver != NULL);
+  MEMCHECK (lqr_carver_init (carver, vals->delta_x, vals->rigidity));
+  MEMCHECK (update_bias (carver, vals->pres_layer_ID, vals->pres_coeff, x_off, y_off));
+  MEMCHECK (update_bias (carver, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
+  lqr_carver_set_gradient_function (carver, vals->grad_func);
+  lqr_carver_set_resize_order (carver, vals->res_order);
+  lqr_carver_set_progress (carver, lqr_progress);
   if (vals->output_seams)
     {
-      lqr_carver_set_output_seams(rasta);
+      lqr_carver_set_dump_vmaps(carver);
     }
   if (vals->resize_aux_layers)
     {
@@ -226,39 +231,48 @@ render (gint32 image_ID,
         {
           rgb_buffer = rgb_buffer_from_layer (vals->pres_layer_ID);
 	  MEMCHECK (rgb_buffer != NULL);
-	  MEMCHECK (lqr_carver_attach_pres_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->pres_layer_ID)));
+	  aux_carver = lqr_carver_new (rgb_buffer, old_width, old_height, gimp_drawable_bpp(vals->pres_layer_ID));
+	  MEMCHECK (aux_carver != NULL);
+	  MEMCHECK (lqr_carver_attach (carver, aux_carver));
 	}
       if (vals->disc_layer_ID)
         {
           rgb_buffer = rgb_buffer_from_layer (vals->disc_layer_ID);
 	  MEMCHECK (rgb_buffer != NULL);
-	  MEMCHECK (lqr_carver_attach_disc_layer(rasta, rgb_buffer, gimp_drawable_bpp(vals->disc_layer_ID)));
+	  aux_carver = lqr_carver_new (rgb_buffer, old_width, old_height, gimp_drawable_bpp(vals->disc_layer_ID));
+	  MEMCHECK (aux_carver != NULL);
+	  MEMCHECK (lqr_carver_attach (carver, aux_carver));
 	}
     }
 
-#ifdef __LQR_CLOCK__
+#ifdef __CLOCK_IT__
   clock2 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ read: clock: %g (%g) ]\n", clock2, clock2 - clock1);
-#endif /* __LQR_CLOCK__ */
+#endif /* __CLOCK_IT__ */
 
-  MEMCHECK (lqr_carver_resize (rasta, new_width, new_height));
+  MEMCHECK (lqr_carver_resize (carver, new_width, new_height));
 
   switch (vals->oper_mode)
     {
       case LQR_MODE_NORMAL:
 	break;
       case LQR_MODE_LQRBACK:
-	MEMCHECK (lqr_carver_flatten (rasta));
+	MEMCHECK (lqr_carver_flatten (carver));
 	if (vals->resize_aux_layers == TRUE)
 	  {
+	    carver_list = lqr_carver_list_start (carver);
 	    if (vals->pres_layer_ID != 0)
 	      {
-		MEMCHECK (lqr_carver_flatten (rasta->pres_carver));
+		aux_carver = lqr_carver_list_current (carver_list);
+		MEMCHECK (lqr_carver_flatten (aux_carver));
+		carver_list = lqr_carver_list_next(carver_list);
 	      }
 	    if (vals->disc_layer_ID != 0)
 	      {
-		MEMCHECK (lqr_carver_flatten (rasta->disc_carver));
-		MEMCHECK (update_bias (rasta, vals->disc_layer_ID, 2 * vals->disc_coeff, x_off, y_off));
+		aux_carver = lqr_carver_list_current (carver_list);
+		MEMCHECK (lqr_carver_flatten (aux_carver));
+		MEMCHECK (update_bias (carver, vals->disc_layer_ID, 2 * vals->disc_coeff, x_off, y_off));
+		carver_list = lqr_carver_list_next(carver_list);
 	      }
 	  }
 	new_width = old_width;
@@ -267,13 +281,13 @@ render (gint32 image_ID,
 	switch (vals->res_order)
 	  {
 	    case LQR_RES_ORDER_HOR:
-	      rasta->resize_order = LQR_RES_ORDER_VERT;
+	      carver->resize_order = LQR_RES_ORDER_VERT;
 	      break;
 	    case LQR_RES_ORDER_VERT:
-	      rasta->resize_order = LQR_RES_ORDER_HOR;
+	      carver->resize_order = LQR_RES_ORDER_HOR;
 	      break;
 	  }
-	MEMCHECK (lqr_carver_resize (rasta, new_width, new_height));
+	MEMCHECK (lqr_carver_resize (carver, new_width, new_height));
 	break;
       case LQR_MODE_SCALEBACK:
 	break;
@@ -282,7 +296,7 @@ render (gint32 image_ID,
 	return FALSE;
     }
 
-  write_all_vmaps (rasta->flushed_vs, image_ID, layer_name, x_off, y_off, colour_start, colour_end);
+  write_all_vmaps (carver->flushed_vs, image_ID, layer_name, x_off, y_off, colour_start, colour_end);
 
   if (vals->resize_canvas == TRUE)
     {
@@ -297,37 +311,42 @@ render (gint32 image_ID,
   gimp_drawable_detach (drawable);
   drawable = gimp_drawable_get (layer_ID);
 
-#ifdef __LQR_CLOCK__
+#ifdef __CLOCK_IT__
   clock3 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ resized: clock : %g (%g) ]\n", clock3, clock3 - clock2);
   fflush (stdout);
-#endif /* __LQR_CLOCK__ */
+#endif /* __CLOCK_IT__ */
 
   ntiles = vals->new_width / gimp_tile_width () + 1;
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
                          4 * 2) / 1024 + 1);
 
-  MEMCHECK (write_carver_to_layer (rasta, drawable));
+  MEMCHECK (write_carver_to_layer (carver, drawable));
 
   if (vals->resize_aux_layers == TRUE)
     {
+      carver_list = lqr_carver_list_start(carver);
       if (vals->pres_layer_ID != 0)
         {
           gimp_layer_resize (vals->pres_layer_ID, new_width, new_height, 0, 0);
 	  drawable_pres = gimp_drawable_get(vals->pres_layer_ID);
-          MEMCHECK (write_carver_to_layer (rasta->pres_carver, drawable_pres));
+	  aux_carver = lqr_carver_list_current (carver_list);
+          MEMCHECK (write_carver_to_layer (aux_carver, drawable_pres));
 	  gimp_drawable_detach(drawable_pres);
+	  carver_list = lqr_carver_list_next(carver_list);
         }
       if (vals->disc_layer_ID != 0)
         {
           gimp_layer_resize (vals->disc_layer_ID, new_width, new_height, 0, 0);
 	  drawable_disc = gimp_drawable_get(vals->disc_layer_ID);
-          MEMCHECK (write_carver_to_layer (rasta->disc_carver, drawable_disc));
+	  aux_carver = lqr_carver_list_current (carver_list);
+          MEMCHECK (write_carver_to_layer (aux_carver, drawable_disc));
 	  gimp_drawable_detach(drawable_disc);
+	  carver_list = lqr_carver_list_next(carver_list);
         }
     }
 
-  lqr_carver_destroy (rasta);
+  lqr_carver_destroy (carver);
   switch (vals->oper_mode)
     {
       case LQR_MODE_NORMAL:
@@ -372,10 +391,10 @@ render (gint32 image_ID,
 
 
 
-#ifdef __LQR_CLOCK__
+#ifdef __CLOCK_IT__
   clock4 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ finish: clock: %g (%g) ]\n\n", clock4, clock4 - clock3);
-#endif /* __LQR_CLOCK__ */
+#endif /* __CLOCK_IT__ */
 
   gimp_drawable_set_visible (layer_ID, TRUE);
   gimp_image_set_active_layer (image_ID, layer_ID);
