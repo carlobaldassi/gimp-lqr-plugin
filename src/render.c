@@ -67,7 +67,7 @@ render (gint32 image_ID,
   gint bpp;
   gint x_off, y_off, aux_x_off, aux_y_off;
   GimpDrawable * drawable_pres, * drawable_disc;
-  LqrColourRGBA colour_start, colour_end;
+  GimpRGB colour_start, colour_end;
   LqrProgress * lqr_progress;
 #ifdef __LQR_CLOCK__
   double clock1, clock2, clock3, clock4;
@@ -183,6 +183,11 @@ render (gint32 image_ID,
         }
     }
 
+  
+  gimp_rgba_set (&colour_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
+  gimp_rgba_set (&colour_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
+
+
   ntiles = old_width / gimp_tile_width () + 1;
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
                          4 * 2) / 1024 + 1);
@@ -213,10 +218,7 @@ render (gint32 image_ID,
   lqr_carver_set_progress (rasta, lqr_progress);
   if (vals->output_seams)
     {
-      lqr_colour_rgba_set (&colour_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
-      lqr_colour_rgba_set (&colour_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
-
-      lqr_carver_set_output_seams(rasta, colour_start, colour_end);
+      lqr_carver_set_output_seams(rasta);
     }
   if (vals->resize_aux_layers)
     {
@@ -280,7 +282,7 @@ render (gint32 image_ID,
 	return FALSE;
     }
 
-  write_all_seams_buffers (rasta->flushed_vs, image_ID, layer_name, x_off, y_off);
+  write_all_vmaps (rasta->flushed_vs, image_ID, layer_name, x_off, y_off, colour_start, colour_end);
 
   if (vals->resize_canvas == TRUE)
     {

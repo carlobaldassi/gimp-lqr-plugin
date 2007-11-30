@@ -230,26 +230,34 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
 }
 
 gboolean
-write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gpointer data)
+write_vmap_to_layer (LqrVMap * vmap, gpointer data)
 {
-  gint w, h, y;
-  gint bpp;
+  gint w, h, bpp;
+  gint depth;
+  gint * buffer;
   gint32 seam_layer_ID;
   gint32 image_ID;
+  GimpDrawable *drawable;
   gint x_off, y_off;
   gchar * name;
+  GimpRGB col_start, col_end;
   GimpPixelRgn rgn_out;
   guchar *outrow;
-  GimpDrawable *drawable;
+  gdouble value, rd, gr, bl, al;
+  gint vs, y, x, k;
   gint update_step;
 
-  image_ID = SEAMS_BUFFER_FUNC_ARG(data)->image_ID;
-  x_off = SEAMS_BUFFER_FUNC_ARG(data)->x_off;
-  y_off = SEAMS_BUFFER_FUNC_ARG(data)->y_off;
-  name = SEAMS_BUFFER_FUNC_ARG(data)->name;
+  image_ID = VMAP_FUNC_ARG(data)->image_ID;
+  x_off = VMAP_FUNC_ARG(data)->x_off;
+  y_off = VMAP_FUNC_ARG(data)->y_off;
+  name = VMAP_FUNC_ARG(data)->name;
+  col_start = VMAP_FUNC_ARG(data)->colour_start;
+  col_end = VMAP_FUNC_ARG(data)->colour_end;
 
-  w = seams_buffer->width;
-  h = seams_buffer->height;
+  w = vmap->width;
+  h = vmap->height;
+  buffer = vmap->buffer;
+  depth = vmap->depth;
 
   gimp_progress_init (_("Drawing seam map..."));
   update_step = MAX ((h - 1) / 20, 1);
@@ -266,9 +274,37 @@ write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gpointer data)
 
   gimp_pixel_rgn_init (&rgn_out, drawable, 0, 0, w, h, TRUE, TRUE);
 
+  outrow = g_try_new (guchar, w * bpp);
+
   for (y = 0; y < h; y++)
     {
-      outrow = seams_buffer->buffer + y * w * bpp;
+      for (x = 0; x < w; x++)
+        {
+	  vs = buffer[y * w + x];
+	  if (vs == 0)
+	    {
+	      for (k = 0; k < bpp; k++)
+		{
+		  outrow[x * bpp + k] = 0;
+		}
+	    }
+	  else
+	    {
+	      value =
+		(double) (depth  + 1 - vs) / (depth + 1);
+	      rd =
+		value * col_start.r + (1 - value) * col_end.r;
+	      gr =
+		value * col_start.g + (1 - value) * col_end.g;
+	      bl =
+		value * col_start.b + (1 - value) * col_end.b;
+	      al = 0.5 * (1 + value);
+	      outrow[x * bpp] = 255 * rd;
+	      outrow[x * bpp + 1] = 255 * gr;
+	      outrow[x * bpp + 2] = 255 * bl;
+	      outrow[x * bpp + 3] = 255 * al;
+	    }
+	}
       gimp_pixel_rgn_set_row (&rgn_out, outrow, 0, y, w);
       if (y % update_step == 0)
         {
@@ -285,10 +321,10 @@ write_seams_buffer_to_layer (LqrSeamsBuffer * seams_buffer, gpointer data)
 }
 
 gboolean
-write_all_seams_buffers (LqrSeamsBufferList * list, gint32 image_ID, gchar * orig_name, gint x_off, gint y_off)
+write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name, gint x_off, gint y_off, GimpRGB col_start, GimpRGB col_end)
 {
   gchar name[LQR_MAX_NAME_LENGTH];
-  SeamsBufferFuncArg data;
+  VMapFuncArg data;
 
   /* The name of the layer with the seams map */
   /* (here "%s" represents the selected layer's name) */
@@ -298,8 +334,10 @@ write_all_seams_buffers (LqrSeamsBufferList * list, gint32 image_ID, gchar * ori
   data.name = name;
   data.x_off = x_off;
   data.y_off = y_off;
+  data.colour_start = col_start;
+  data.colour_end = col_end;
 
-  return lqr_seams_buffer_list_foreach(list, write_seams_buffer_to_layer, (gpointer) (&data));
+  return lqr_vmap_list_foreach(list, write_vmap_to_layer, (gpointer) (&data));
 }
 
 
