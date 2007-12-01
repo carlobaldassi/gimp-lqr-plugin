@@ -93,15 +93,9 @@ rgb_buffer_from_layer (gint32 layer_ID)
 gboolean
 update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off)
 {
-  gint x, y, k, bpp, c_bpp;
-  gboolean has_alpha;
-  gint w, h;
+  guchar *rgb;
+  gint w, h, bpp;
   gint x_off, y_off;
-  gint lw, lh;
-  gint sum;
-  gdouble bias;
-  GimpPixelRgn rgn_in;
-  guchar *inrow;
 
   if ((layer_ID == 0) || (bias_factor == 0))
     {
@@ -109,53 +103,17 @@ update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, g
     }
 
   gimp_drawable_offsets (layer_ID, &x_off, &y_off);
+  x_off -= base_x_off;
+  y_off -= base_y_off;
 
   w = gimp_drawable_width (layer_ID);
   h = gimp_drawable_height (layer_ID);
 
   bpp = gimp_drawable_bpp (layer_ID);
-  has_alpha = gimp_drawable_has_alpha (layer_ID);
-  c_bpp = bpp - (has_alpha ? 1 : 0);
 
-  gimp_pixel_rgn_init (&rgn_in,
-                       gimp_drawable_get (layer_ID), 0, 0, w, h,
-                       FALSE, FALSE);
+  rgb = rgb_buffer_from_layer(layer_ID);
 
-  x_off -= base_x_off;
-  y_off -= base_y_off;
-
-  lw = (MIN (r->w, w + x_off) - MAX (0, x_off));
-  lh = (MIN (r->h, h + y_off) - MAX (0, y_off));
-
-
-  TRY_N_F (inrow = g_try_new (guchar, bpp * lw));
-
-  for (y = MAX (0, y_off); y < MIN (r->h, h + y_off); y++)
-    {
-      gimp_pixel_rgn_get_row (&rgn_in, inrow, MAX (0, -x_off),
-                              y - y_off, lw);
-
-      for (x = 0; x < lw; x++)
-        {
-          sum = 0;
-          for (k = 0; k < c_bpp; k++)
-            {
-              sum += inrow[bpp * x + k];
-            }
-
-          bias = (double) bias_factor *sum / (2 * 255 * c_bpp);
-          if (has_alpha)
-            {
-              bias *= (double) inrow[bpp * (x + 1) - 1] / 255;
-            }
-
-          r->bias[y * r->w + (x + MAX (0, x_off))] += bias;
-
-        }
-
-    }
-
-  g_free (inrow);
+  TRY_F_F (lqr_carver_bias_add_rgb_area (r, rgb, bias_factor, bpp, w, h, x_off, y_off));
 
   return TRUE;
 }

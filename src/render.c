@@ -257,7 +257,7 @@ render (gint32 image_ID,
       case LQR_MODE_NORMAL:
 	break;
       case LQR_MODE_LQRBACK:
-	MEMCHECK (lqr_carver_flatten (carver));
+	MEMCHECK (lqr_carver_swoosh (carver));
 	if (vals->resize_aux_layers == TRUE)
 	  {
 	    carver_list = lqr_carver_list_start (carver);
