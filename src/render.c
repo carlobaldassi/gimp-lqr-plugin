@@ -255,9 +255,9 @@ render (gint32 image_ID,
 
   switch (vals->oper_mode)
     {
-      case LQR_MODE_NORMAL:
+      case OPER_MODE_NORMAL:
 	break;
-      case LQR_MODE_LQRBACK:
+      case OPER_MODE_LQRBACK:
 	MEMCHECK1 (lqr_carver_flatten (carver));
 #if 0
 	if (vals->resize_aux_layers == TRUE)
@@ -290,7 +290,7 @@ render (gint32 image_ID,
 #endif
 	MEMCHECK1 (lqr_carver_resize (carver, new_width, new_height));
 	break;
-      case LQR_MODE_SCALEBACK:
+      case OPER_MODE_SCALEBACK:
 	break;
       default:
 	g_message("error: unknown mode");
@@ -350,10 +350,10 @@ render (gint32 image_ID,
   lqr_carver_destroy (carver);
   switch (vals->oper_mode)
     {
-      case LQR_MODE_NORMAL:
-      case LQR_MODE_LQRBACK:
+      case OPER_MODE_NORMAL:
+      case OPER_MODE_LQRBACK:
 	break;
-      case LQR_MODE_SCALEBACK:
+      case OPER_MODE_SCALEBACK:
 	if (vals->resize_canvas == TRUE)
 	  {
 	    gimp_image_resize (image_ID, old_width, old_height, 0, 0);

@@ -353,9 +353,9 @@ dialog (gint32 image_ID,
   gtk_widget_show (label);
 
   oper_mode_combo_box =
-    gimp_int_combo_box_new (_("LqR only"), LQR_MODE_NORMAL,
-                            _("LqR + LqR back to the original size"), LQR_MODE_LQRBACK,
-                            _("LqR + scale back to the original size"), LQR_MODE_SCALEBACK, NULL);
+    gimp_int_combo_box_new (_("LqR only"), OPER_MODE_NORMAL,
+                            _("LqR + LqR back to the original size"), OPER_MODE_LQRBACK,
+                            _("LqR + scale back to the original size"), OPER_MODE_SCALEBACK, NULL);
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
                                  state->oper_mode);
 

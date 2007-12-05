@@ -66,9 +66,9 @@ const PlugInVals default_vals = {
   100,                          /* new width */
   100,                          /* new height */
   0,                            /* pres layer ID */
-  100,                          /* pres coeff */
+  1000,                         /* pres coeff */
   0,                            /* disc layer ID */
-  100,                          /* disc coeff */
+  1000,                         /* disc coeff */
   0,                            /* rigidity coeff */
   1,                            /* delta x */
   TRUE,                         /* resize canvas */
@@ -78,7 +78,7 @@ const PlugInVals default_vals = {
   LQR_GF_XABS,                  /* grad func */
   LQR_RES_ORDER_HOR,		/* resize order */
   GIMP_MASK_APPLY,              /* mask behavior */
-  LQR_MODE_NORMAL		/* operational mode */
+  OPER_MODE_NORMAL		/* operational mode */
 };
 
 const PlugInColVals default_col_vals = {

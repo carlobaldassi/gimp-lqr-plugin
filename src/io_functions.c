@@ -36,12 +36,11 @@
 guchar * 
 rgb_buffer_from_layer (gint32 layer_ID)
 {
-  gint x, y, k, bpp;
+  gint y, bpp;
   gint w, h;
   gint x_off, y_off;
   GimpDrawable * drawable;
   GimpPixelRgn rgn_in;
-  guchar *inrow;
   guchar * buffer;
   gint update_step;
 
@@ -61,19 +60,9 @@ rgb_buffer_from_layer (gint32 layer_ID)
 
   gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
-  TRY_N_N (inrow = g_try_new (guchar, bpp * w));
-
   for (y = 0; y < h; y++)
     {
-      gimp_pixel_rgn_get_row (&rgn_in, inrow, 0, y, w);
-
-      for (x = 0; x < w; x++)
-        {
-          for (k = 0; k < bpp; k++)
-            {
-              buffer[(y * w + x) * bpp + k] = inrow[x * bpp + k];
-            }
-        }
+      gimp_pixel_rgn_get_row (&rgn_in, buffer + y * w * bpp, 0, y, w);
 
       update_step = MAX ((h - 1) / 20, 1);
       if (y % update_step == 0)
@@ -82,8 +71,6 @@ rgb_buffer_from_layer (gint32 layer_ID)
         }
 
     }
-
-  g_free (inrow);
 
   gimp_drawable_detach(drawable);
 
@@ -122,10 +109,10 @@ LqrRetVal
 write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
 {
   gint32 layer_ID;
-  gint x, y, k;
+  gint y;
   gint w, h;
   GimpPixelRgn rgn_out;
-  guchar *outrow;
+  guchar *out_line;
   gint update_step;
 
   gimp_progress_init (_("Applying changes..."));
@@ -140,35 +127,15 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
                        drawable, 0, 0, w, h, TRUE, TRUE);
 
 
-
-  if (!r->transposed)
+  while (lqr_carver_scan_line (r, &y, &out_line))
     {
-      CATCH_MEM (outrow = g_try_new (guchar, r->bpp * w));
-    }
-  else
-    {
-      CATCH_MEM (outrow = g_try_new (guchar, r->bpp * h));
-    }
-
-  lqr_cursor_reset (r->c);
-
-  for (y = 0; y < r->h; y++)
-    {
-      for (x = 0; x < r->w; x++)
-        {
-          for (k = 0; k < r->bpp; k++)
-            {
-              outrow[r->bpp * x + k] = r->rgb[r->c->now * r->bpp + k];
-            }
-          lqr_cursor_next (r->c);
-        }
       if (!r->transposed)
         {
-          gimp_pixel_rgn_set_row (&rgn_out, outrow, 0, y, w);
+          gimp_pixel_rgn_set_row (&rgn_out, out_line, 0, y, w);
         }
       else
         {
-          gimp_pixel_rgn_set_col (&rgn_out, outrow, y, 0, h);
+          gimp_pixel_rgn_set_col (&rgn_out, out_line, y, 0, h);
         }
 
       if (y % update_step == 0)
@@ -177,8 +144,6 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
         }
 
     }
-
-  g_free (outrow);
 
   gimp_drawable_flush (drawable);
   gimp_drawable_merge_shadow (layer_ID, TRUE);
@@ -305,7 +270,7 @@ LqrRetVal
 lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
 {
   int x, y;
-  double e;
+  //double e;
 
   if (!r->transposed)
     {
@@ -316,12 +281,12 @@ lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
       /* external_resize(r->h, r->w); */
     }
 
-  lqr_cursor_reset (r->c);
+  lqr_carver_scan_reset (r);
   for (y = 1; y <= r->h; y++)
     {
       for (x = 1; x <= r->w; x++)
         {
-          e = r->en[r->c->now];
+          //e = r->en[r->c->now];
           if (!r->transposed)
             {
               /* external_write(x, y, e, e, e); */
@@ -330,7 +295,7 @@ lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
             {
               /* external_write(y, x, e, e, e); */
             }
-          lqr_cursor_next (r->c);
+          lqr_carver_read_next (r);
         }
     }
 

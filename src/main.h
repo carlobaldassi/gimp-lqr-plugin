@@ -28,6 +28,16 @@
 
 #define RESPONSE_REFRESH (1)
 
+/**** OPERATIONAL_MODES ****/
+enum _OperMode
+{
+  OPER_MODE_NORMAL,
+  OPER_MODE_LQRBACK,
+  OPER_MODE_SCALEBACK
+};
+
+typedef enum _OperMode OperMode;
+
 typedef struct
 {
   gint new_width;

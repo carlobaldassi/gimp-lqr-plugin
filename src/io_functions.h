@@ -26,12 +26,8 @@
 #ifndef __IO_FUNCTIONS__
 #define __IO_FUNCTIONS__
 
-#ifndef __LQR_BASE_H__
-#error "lqr_base.h must be included prior to io_functions.h"
-#endif /* __LQR_H__ */
-
-#ifndef __LQR_CARVER_H__
-#error "lqr_carver.h must be included prior to io_functions.h"
+#ifndef __LQR_H__
+#error "lqr/lqr.h must be included prior to io_functions.h"
 #endif /* __LQR_H__ */
 
 struct _VMapFuncArg;
