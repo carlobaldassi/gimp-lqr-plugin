@@ -53,12 +53,12 @@ struct _VMapFuncArg
 /* INPUT/OUTPUT FUNCTIONS */
 
 guchar * rgb_buffer_from_layer (gint32 layer_ID);
-gboolean update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off);
-gboolean write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable);
-gboolean write_vmap_to_layer (LqrVMap * vmap, gpointer data);
-gboolean write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar *orig_name, gint x_off, gint y_off, GimpRGB col_start, GimpRGB col_end);
+LqrRetVal update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off);
+LqrRetVal write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable);
+LqrRetVal write_vmap_to_layer (LqrVMap * vmap, gpointer data);
+LqrRetVal write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar *orig_name, gint x_off, gint y_off, GimpRGB col_start, GimpRGB col_end);
 /* unimplemented */
-gboolean lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ );     /* output the energy */
+LqrRetVal lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ );     /* output the energy */
 
 #endif /* __IO_FUNCTIONS__ */
 

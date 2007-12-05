@@ -16,7 +16,7 @@
     </tr>
     <tr bgcolor="black">
       <td width="100%" align="center">
-        <font size="+2" color="white">Liquid rescaling help page</font>
+        <font size="+2" color="white">Liquid Rescale help page</font>
       </td>
     </tr>  
     <tr>
@@ -32,13 +32,13 @@
 	</p>
         <p>
 		It works both ways, but enlarging gives better results if done in successive steps.
-		It can use extra layers as masks to select what features of the image should be
+		It can use extra layers as masks to select which features of the image should be
 		preserved and which should be discarded.
 	</p>
 	<p>
 		The plugin works on the active layer or floating selection.
  		If a selection is present, it is saved to a channel.
-		If the layer has a transparency mask, an option is shown to select the behavior (apply/discard).
+		If the layer has a transparency mask, an option is given to select the behaviour (apply/discard).
 	</p>
 	
 	<h2>User interface description</h2>
@@ -76,7 +76,7 @@
 			</li><li>
 				Press the <i>"New"</i> button in the <b>"Feature preservation mask"</b> section
 				(this will create a transparent layer, with 50% opacity, and pick an appropriate
-				color).
+				colour).
 			</li><li>
 				Paint on the areas of the image you want to preserve
 			</li><li>
@@ -88,7 +88,8 @@
 	</p>
 		If you want to remove portions of the image, you can choose the scaling direction
 		(horizontal/vertical) and finally press the <i>"Auto size"</i> button to determine
-		the final size atuomatically.
+		the final size automatically (this is only reliable when dealing with very simple
+		masks).
 	</p>
 	<p>
 		<b>Note #1:</b> discarding a feature implies that it will be removed if shrinking
@@ -117,12 +118,12 @@
 			The <i>"New"</i> button creates a transparent layer with 50% opacity and an appropriate name,
 			and sets it as the selected layer mask (note that this fails if the plugin is invoked on a
 			floating selection, because this does not allow to work on other layers).
-			It also sets the foreground color to green; the previous color is restored when the
+			It also sets the foreground colour to green; the previous colour is restored when the
 			dialog is closed.
 		</div>
 		<div>
 			The intensity of the effect of the mask on each pixel is obtained as
-			the average on the pixel's color channels, multiplied by the alpha channel. Thus for an RGB layer
+			the average on the pixel's colour channels, multiplied by the alpha channel. Thus, for an RGB layer
 			with an alpha channel, the maximum value is achieved on white pixels, while black ones
 			and transparent ones are ignored.
 			In general, it is advisable to work in monochrome, and modulate the intensity by the transparency
@@ -140,7 +141,7 @@
 	<p>
 		<div>
 			The <b>Feature discard selection</b> section is nearly identical to the previous one,
-			but the effect is reversed, and the default color for the <i>"New"</i> button is red instead of green.
+			but the effect is reversed, and the default colour for the <i>"New"</i> button is red instead of green.
 		</div>
 		<div>
 			Furthermore, there's an additional button, <i>"Auto size"</i>, which sets the final size of
@@ -152,7 +153,7 @@
 			Note that this option is only suitable for naive object removals, since the final size is
 			determined by simply finding out the maximum number of pixels in a line for which the mask
 			value is above a given threshold, and it may fail if the masks are non-trivial.
-			The threshold is set to the 50% of a full RGB color (e.g. red in the default setting).
+			The threshold is set to the 50% of a full RGB colour (e.g. red in the default setting).
 		</div>
 	</p>
 
@@ -185,25 +186,27 @@
 	<p>
 		<b>Output the seams on a new layer.</b>
 		Specifies whether to create a new layer with the seams map.
-		The seams color range can be manually choosen with the two buttons on the right.
+		The seams colour range can be manually choosen with the two buttons on the right.
 		The seams are computed on the original layer as far as they are needed for the new size
 		(e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining
 		areas are transparent. In order to read the result, use this option together with
 		<i>Output on a new layer</i>, and overlay the seam map to the original layer.
 		If you rescale in two directions at once, you will obtain two maps, but the second
 		one will be computed over an invisible intermediate image, so this is not very useful.
+		The same applies in the case you choose to rescale back to the original size with LqR.
 	</p>
 	<h3>Advanced</h3>
 	<p>
 		<center><img title="Advanced" alt="Advanced" src="../images/dialog3.png"></center>
 	</p>
 	<p>
-		This page has some of options to tweak the plugin behavior.
+		This page has some options which can be used to tweak the plugin behavior.
 	</p>
 	<p>
 		<b>Seams rigidity. </b>
 		Use this value to give a negative bias to the seams which are not straight. May be useful
-		to prevent distortions in some situations, or to avoid artifacts from pixel skipping.
+		to prevent distortions in some situations, or to avoid artifacts from pixel skipping
+		(it is better to use low values in such case).
 		The bias is proportional to the difference in the transversal coordinate between each
 		two successive points, elevated to the power of 1.5, and summed up for the whole seam.
 	</p>
@@ -237,8 +240,6 @@
 		<b>Rescale order. </b>
 		When rescaling in both directions at the same time, it can be choosen whether to resize
 		first in the horizontal and then in the vertical direction, or vice versa.
-		If the mode of operation is "Lqr + Lqr back to the original size", the order is reversed
-		when scaling back.
       </td>
     </tr>
   </table>

@@ -90,7 +90,7 @@ rgb_buffer_from_layer (gint32 layer_ID)
   return buffer;
 }
 
-gboolean
+LqrRetVal
 update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off)
 {
   guchar *rgb;
@@ -99,7 +99,7 @@ update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, g
 
   if ((layer_ID == 0) || (bias_factor == 0))
     {
-      return TRUE;
+      return LQR_OK;
     }
 
   gimp_drawable_offsets (layer_ID, &x_off, &y_off);
@@ -113,12 +113,12 @@ update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, g
 
   rgb = rgb_buffer_from_layer(layer_ID);
 
-  TRY_F_F (lqr_carver_bias_add_rgb_area (r, rgb, bias_factor, bpp, w, h, x_off, y_off));
+  CATCH (lqr_carver_bias_add_rgb_area (r, rgb, bias_factor, bpp, w, h, x_off, y_off));
 
-  return TRUE;
+  return LQR_OK;
 }
 
-gboolean
+LqrRetVal
 write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
 {
   gint32 layer_ID;
@@ -143,11 +143,11 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
 
   if (!r->transposed)
     {
-      TRY_N_F (outrow = g_try_new (guchar, r->bpp * w));
+      CATCH_MEM (outrow = g_try_new (guchar, r->bpp * w));
     }
   else
     {
-      TRY_N_F (outrow = g_try_new (guchar, r->bpp * h));
+      CATCH_MEM (outrow = g_try_new (guchar, r->bpp * h));
     }
 
   lqr_cursor_reset (r->c);
@@ -184,10 +184,10 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
   gimp_drawable_merge_shadow (layer_ID, TRUE);
   gimp_drawable_update (layer_ID, 0, 0, w, h);
 
-  return TRUE;
+  return LQR_OK;
 }
 
-gboolean
+LqrRetVal
 write_vmap_to_layer (LqrVMap * vmap, gpointer data)
 {
   gint w, h, bpp;
@@ -232,7 +232,7 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
 
   gimp_pixel_rgn_init (&rgn_out, drawable, 0, 0, w, h, TRUE, TRUE);
 
-  outrow = g_try_new (guchar, w * bpp);
+  CATCH_MEM (outrow = g_try_new (guchar, w * bpp));
 
   for (y = 0; y < h; y++)
     {
@@ -275,10 +275,10 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
   gimp_drawable_update (seam_layer_ID, 0, 0, w, h);
   gimp_drawable_set_visible (seam_layer_ID, FALSE);
 
-  return TRUE;
+  return LQR_OK;
 }
 
-gboolean
+LqrRetVal
 write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name, gint x_off, gint y_off, GimpRGB col_start, GimpRGB col_end)
 {
   gchar name[LQR_MAX_NAME_LENGTH];
@@ -301,7 +301,7 @@ write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name, gint x_
 
 /* plot the energy (at current size / visibility) to a file
  * (greyscale) */
-gboolean
+LqrRetVal
 lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
 {
   int x, y;
@@ -334,7 +334,7 @@ lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
         }
     }
 
-  return TRUE;
+  return LQR_OK;
 }
 
 
