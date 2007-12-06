@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 23:15+0100\n"
+"POT-Creation-Date: 2007-12-06 21:16+0100\n"
 "PO-Revision-Date: 2007-09-04 18:23+0100\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@yahoo.it>\n"
 "Language-Team: Italian <carlobaldassi@yahoo.it>\n"
@@ -209,7 +209,7 @@ msgstr "Applica"
 msgid "Discard"
 msgstr "Elimina"
 
-#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:88
+#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:94
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Errore: sembra che il livello selezionato non sia più valido"
 
@@ -371,45 +371,45 @@ msgstr "scala il livello mantenendo i contenuti (o rimuovendoli)"
 msgid "Li_quid rescale..."
 msgstr "Li_quid rescale..."
 
-#: ../src/render.c:41
+#: ../src/render.c:45 ../src/render.c:46
 msgid "Not enough memory"
 msgstr "Memoria insufficiente"
 
-#: ../src/render.c:97
+#: ../src/render.c:103
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Errore: sembra che il livello per la preservazione dei contenuti non sia più "
 "valido"
 
-#: ../src/render.c:107
+#: ../src/render.c:113
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Errore: sembra che il livello per l'eliminazione dei contenuti non sia più "
 "valido"
 
-#: ../src/render.c:195
+#: ../src/render.c:206
 msgid "Resizing width..."
 msgstr "Sto riscalando l'altezza..."
 
-#: ../src/render.c:196
+#: ../src/render.c:207
 msgid "Resizing height..."
 msgstr "Sto riscalando la larghezza..."
 
-#: ../src/io_functions.c:48
+#: ../src/io_functions.c:47
 msgid "Parsing layer..."
 msgstr "Sto analizzando il livello..."
 
-#: ../src/io_functions.c:173
+#: ../src/io_functions.c:118
 msgid "Applying changes..."
 msgstr "Sto applicando i cambiamenti..."
 
-#: ../src/io_functions.c:254
+#: ../src/io_functions.c:185
 msgid "Drawing seam map..."
 msgstr "Sto disegnando le linee d'azione"
 
 #. The name of the layer with the seams map
 #. (here "%s" represents the selected layer's name)
-#: ../src/io_functions.c:295
+#: ../src/io_functions.c:254
 #, c-format
 msgid "%s seam map"
 msgstr "%s (linee az.)"

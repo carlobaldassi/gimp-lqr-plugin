@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 23:15+0100\n"
+"POT-Creation-Date: 2007-12-06 21:16+0100\n"
 "PO-Revision-Date: 2007-10-15 21:14+0200\n"
 "Last-Translator: Christoph Schäfer <christoph-schaefer@gmx.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -209,7 +209,7 @@ msgstr "Anwenden"
 msgid "Discard"
 msgstr "Verwerfen"
 
-#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:88
+#: ../src/interface.c:924 ../src/interface.c:1009 ../src/render.c:94
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Fehler. Die ausgewählte Ebene ist anscheinend nicht mehr gültig"
 
@@ -370,45 +370,45 @@ msgstr ""
 msgid "Li_quid rescale..."
 msgstr "Flüssige Neuskalierung ..."
 
-#: ../src/render.c:41
+#: ../src/render.c:45 ../src/render.c:46
 msgid "Not enough memory"
 msgstr "Nicht genug Arbeitsspeicher vorhanden"
 
-#: ../src/render.c:97
+#: ../src/render.c:103
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 "Fehler. Die ausgewählte Ebenezum Erhalten von Ebenen ist anscheinend nicht "
 "mehr gültig"
 
-#: ../src/render.c:107
+#: ../src/render.c:113
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 "Fehler. Die ausgewählte Ebene zum Verwerfen von Elementen ist anscheinend "
 "nicht mehr gültig"
 
-#: ../src/render.c:195
+#: ../src/render.c:206
 msgid "Resizing width..."
 msgstr "Ändere die Breite ..."
 
-#: ../src/render.c:196
+#: ../src/render.c:207
 msgid "Resizing height..."
 msgstr "Ändere die Höhe ..."
 
-#: ../src/io_functions.c:48
+#: ../src/io_functions.c:47
 msgid "Parsing layer..."
 msgstr "Analysiere die Ebene ..."
 
-#: ../src/io_functions.c:173
+#: ../src/io_functions.c:118
 msgid "Applying changes..."
 msgstr "Änderungen anwenden ..."
 
-#: ../src/io_functions.c:254
+#: ../src/io_functions.c:185
 msgid "Drawing seam map..."
 msgstr "Zeichne die Nähtekarte ..."
 
 #. The name of the layer with the seams map
 #. (here "%s" represents the selected layer's name)
-#: ../src/io_functions.c:295
+#: ../src/io_functions.c:254
 #, fuzzy, c-format
 msgid "%s seam map"
 msgstr "Zeichne die Nähtekarte ..."

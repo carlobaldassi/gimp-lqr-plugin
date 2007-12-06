@@ -1,0 +1,86 @@
+#!/bin/bash
+
+function err_mess ()
+{
+	echo "$(basename $0): error: $1" > /dev/stderr;
+}
+
+[ -f "Makefile" ] || { err_mess "makefile not found"; exit 1; }
+[ -f "configure.ac" ] || { err_mess "configure.ac not found"; exit 1; }
+
+DISTRO="gutsy"
+if [ -n "$1" ]
+then
+	DISTRO="$1";
+	shift;
+fi
+case $DISTRO in
+	gutsy|hardy);;
+	default) err_mess "unknown distro: $DISTRO";
+		 exit 1;
+		 ;;
+esac
+
+NAME=$(head -n 50 configure.ac | grep "m4_define(\[plugin_name\], \[.*\])" | sed "s/m4_define(\[plugin_name\], \[\(.*\)\])/\1/")
+MAJOR_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_major_version\], \[.*\])" | sed "s/m4_define(\[plugin_major_version\], \[\(.*\)\])/\1/")
+MINOR_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_minor_version\], \[.*\])" | sed "s/m4_define(\[plugin_minor_version\], \[\(.*\)\])/\1/")
+MICRO_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_micro_version\], \[.*\])" | sed "s/m4_define(\[plugin_micro_version\], \[\(.*\)\])/\1/")
+
+
+VER="${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}"
+
+DEBIAN_IN_DIR="debian.in"
+REL_SUB_VER_FILE="${DEBIAN_IN_DIR}/${DISTRO}/release_subv"
+
+[ -f "$REL_SUB_VER_FILE" ] || { err_mess "release_subv not found"; exit 1; }
+
+REL_SUB_VER="$(cat "${REL_SUB_VER_FILE}")";
+echo "$REL_SUB_VER" | grep -q "[[:digit:]]\+" || { err_mess "invalid release subversion: $REL_SUB_VER"; exit 1;}
+
+NAME_HYPHEN="${NAME}-${VER}"
+
+RESULTS_DIR="/var/cache/pbuilder_${DISTRO}/result"
+BUILD_DIR="${HOME}/deb_builds/${DISTRO}/${NAME_HYPHEN}"
+DEB_DIR_TEMPL="${DEBIAN_IN_DIR}/${DISTRO}/debian.template"
+
+if [ -f "$DEB_DIR_TEMPL/changelog" ]
+then
+	echo "Changelog found:"
+	cat "$DEB_DIR_TEMPL/changelog" | sed "s/.*/ > &/"
+	echo
+	ANSW="maybe"
+	while [[ $ANSW != yes && $ANSW != no ]]
+	do
+		echo -n "Delete it? (yes/no) "
+		read ANSW
+	done
+	if [[ $ANSW == no ]]
+	then
+		exit 0;
+	fi
+	rm -f "$DEB_DIR_TEMPL/changelog" || exit 1;
+fi
+
+echo "0" > "${REL_SUB_VER_FILE}" || exit 0
+
+if [ -d "${BUILD_DIR}" ]
+then
+	echo "Build directory found:"
+	echo
+	ls -1 ${BUILD_DIR} | sed "s/.*/ > &/"
+	echo
+	ANSW="maybe"
+	while [[ $ANSW != yes && $ANSW != no ]]
+	do
+		echo -n "Delete it? (yes/no) "
+		read ANSW
+	done
+	if [[ $ANSW == no ]]
+	then
+		exit 0;
+	fi
+	rm -fr "${BUILD_DIR}" || exit 1;
+fi
+
+
+echo "Done"

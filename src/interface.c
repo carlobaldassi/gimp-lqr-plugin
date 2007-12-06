@@ -31,7 +31,7 @@
 #include <math.h>
 #include <string.h>
 
-#include <lqr/lqr.h>
+#include <lqr.h>
 
 #include "plugin-intl.h"
 #include "main.h"

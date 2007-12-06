@@ -30,7 +30,7 @@
 
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
-#include <lqr/lqr.h>
+#include <lqr.h>
 
 #include "plugin-intl.h"
 

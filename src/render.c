@@ -29,7 +29,7 @@
 
 #include <libgimp/gimp.h>
 
-#include <lqr/lqr.h>
+#include <lqr.h>
 
 #include "io_functions.h"
 
