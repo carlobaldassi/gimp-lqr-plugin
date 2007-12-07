@@ -33,15 +33,15 @@
 
 #include "io_functions.h"
 
-guchar * 
+guchar *
 rgb_buffer_from_layer (gint32 layer_ID)
 {
   gint y, bpp;
   gint w, h;
   gint x_off, y_off;
-  GimpDrawable * drawable;
+  GimpDrawable *drawable;
   GimpPixelRgn rgn_in;
-  guchar * buffer;
+  guchar *buffer;
   gint update_step;
 
   gimp_progress_init (_("Parsing layer..."));
@@ -51,12 +51,11 @@ rgb_buffer_from_layer (gint32 layer_ID)
 
   bpp = gimp_drawable_bpp (layer_ID);
 
-  TRY_N_N (buffer = g_try_new (guchar , bpp * w * h));
+  TRY_N_N (buffer = g_try_new (guchar, bpp * w * h));
 
-  drawable = gimp_drawable_get(layer_ID);
+  drawable = gimp_drawable_get (layer_ID);
 
-  gimp_pixel_rgn_init (&rgn_in,
-                       drawable, 0, 0, w, h, FALSE, FALSE);
+  gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, w, h, FALSE, FALSE);
 
   gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
@@ -72,13 +71,14 @@ rgb_buffer_from_layer (gint32 layer_ID)
 
     }
 
-  gimp_drawable_detach(drawable);
+  gimp_drawable_detach (drawable);
 
   return buffer;
 }
 
 LqrRetVal
-update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, gint base_y_off)
+update_bias (LqrCarver * r, gint32 layer_ID, gint bias_factor,
+             gint base_x_off, gint base_y_off)
 {
   guchar *rgb;
   gint w, h, bpp;
@@ -98,9 +98,10 @@ update_bias (LqrCarver *r, gint32 layer_ID, gint bias_factor, gint base_x_off, g
 
   bpp = gimp_drawable_bpp (layer_ID);
 
-  rgb = rgb_buffer_from_layer(layer_ID);
+  rgb = rgb_buffer_from_layer (layer_ID);
 
-  CATCH (lqr_carver_bias_add_rgb_area (r, rgb, bias_factor, bpp, w, h, x_off, y_off));
+  CATCH (lqr_carver_bias_add_rgb_area
+         (r, rgb, bias_factor, bpp, w, h, x_off, y_off));
 
   return LQR_OK;
 }
@@ -123,8 +124,7 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
   w = gimp_drawable_width (layer_ID);
   h = gimp_drawable_height (layer_ID);
 
-  gimp_pixel_rgn_init (&rgn_out,
-                       drawable, 0, 0, w, h, TRUE, TRUE);
+  gimp_pixel_rgn_init (&rgn_out, drawable, 0, 0, w, h, TRUE, TRUE);
 
 
   while (lqr_carver_scan_line (r, &y, &out_line))
@@ -157,12 +157,12 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
 {
   gint w, h, bpp;
   gint depth;
-  gint * buffer;
+  gint *buffer;
   gint32 seam_layer_ID;
   gint32 image_ID;
   GimpDrawable *drawable;
   gint x_off, y_off;
-  gchar * name;
+  gchar *name;
   GimpRGB col_start, col_end;
   GimpPixelRgn rgn_out;
   guchar *outrow;
@@ -170,12 +170,12 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
   gint vs, y, x, k;
   gint update_step;
 
-  image_ID = VMAP_FUNC_ARG(data)->image_ID;
-  x_off = VMAP_FUNC_ARG(data)->x_off;
-  y_off = VMAP_FUNC_ARG(data)->y_off;
-  name = VMAP_FUNC_ARG(data)->name;
-  col_start = VMAP_FUNC_ARG(data)->colour_start;
-  col_end = VMAP_FUNC_ARG(data)->colour_end;
+  image_ID = VMAP_FUNC_ARG (data)->image_ID;
+  x_off = VMAP_FUNC_ARG (data)->x_off;
+  y_off = VMAP_FUNC_ARG (data)->y_off;
+  name = VMAP_FUNC_ARG (data)->name;
+  col_start = VMAP_FUNC_ARG (data)->colour_start;
+  col_end = VMAP_FUNC_ARG (data)->colour_end;
 
   w = vmap->width;
   h = vmap->height;
@@ -203,31 +203,27 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
     {
       for (x = 0; x < w; x++)
         {
-	  vs = buffer[y * w + x];
-	  if (vs == 0)
-	    {
-	      for (k = 0; k < bpp; k++)
-		{
-		  outrow[x * bpp + k] = 0;
-		}
-	    }
-	  else
-	    {
-	      value =
-		(double) (depth  + 1 - vs) / (depth + 1);
-	      rd =
-		value * col_start.r + (1 - value) * col_end.r;
-	      gr =
-		value * col_start.g + (1 - value) * col_end.g;
-	      bl =
-		value * col_start.b + (1 - value) * col_end.b;
-	      al = 0.5 * (1 + value);
-	      outrow[x * bpp] = 255 * rd;
-	      outrow[x * bpp + 1] = 255 * gr;
-	      outrow[x * bpp + 2] = 255 * bl;
-	      outrow[x * bpp + 3] = 255 * al;
-	    }
-	}
+          vs = buffer[y * w + x];
+          if (vs == 0)
+            {
+              for (k = 0; k < bpp; k++)
+                {
+                  outrow[x * bpp + k] = 0;
+                }
+            }
+          else
+            {
+              value = (double) (depth + 1 - vs) / (depth + 1);
+              rd = value * col_start.r + (1 - value) * col_end.r;
+              gr = value * col_start.g + (1 - value) * col_end.g;
+              bl = value * col_start.b + (1 - value) * col_end.b;
+              al = 0.5 * (1 + value);
+              outrow[x * bpp] = 255 * rd;
+              outrow[x * bpp + 1] = 255 * gr;
+              outrow[x * bpp + 2] = 255 * bl;
+              outrow[x * bpp + 3] = 255 * al;
+            }
+        }
       gimp_pixel_rgn_set_row (&rgn_out, outrow, 0, y, w);
       if (y % update_step == 0)
         {
@@ -244,7 +240,8 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
 }
 
 LqrRetVal
-write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name, gint x_off, gint y_off, GimpRGB col_start, GimpRGB col_end)
+write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name,
+                 gint x_off, gint y_off, GimpRGB col_start, GimpRGB col_end)
 {
   gchar name[LQR_MAX_NAME_LENGTH];
   VMapFuncArg data;
@@ -260,7 +257,8 @@ write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name, gint x_
   data.colour_start = col_start;
   data.colour_end = col_end;
 
-  return lqr_vmap_list_foreach(list, write_vmap_to_layer, (gpointer) (&data));
+  return lqr_vmap_list_foreach (list, write_vmap_to_layer,
+                                (gpointer) (&data));
 }
 
 
@@ -295,11 +293,9 @@ lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
             {
               /* external_write(y, x, e, e, e); */
             }
-          lqr_carver_read_next (r);
+          //lqr_carver_read_next (r);
         }
     }
 
   return LQR_OK;
 }
-
-

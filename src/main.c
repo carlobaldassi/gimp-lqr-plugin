@@ -76,9 +76,9 @@ const PlugInVals default_vals = {
   FALSE,                        /* output on a new layer */
   FALSE,                        /* output seams */
   LQR_GF_XABS,                  /* grad func */
-  LQR_RES_ORDER_HOR,		/* resize order */
+  LQR_RES_ORDER_HOR,            /* resize order */
   GIMP_MASK_APPLY,              /* mask behavior */
-  OPER_MODE_NORMAL		/* operational mode */
+  OPER_MODE_NORMAL              /* operational mode */
 };
 
 const PlugInColVals default_col_vals = {
@@ -121,8 +121,7 @@ GimpPlugInInfo PLUG_IN_INFO = {
 
 MAIN ()
 
-static void
-query (void)
+static void query (void)
 {
   gchar *help_path;
   gchar *help_uri;
@@ -165,7 +164,6 @@ query (void)
                           "Carlo Baldassi <carlobaldassi@yahoo.it>", "2007",
                           N_("Li_quid rescale..."), "RGB*, GRAY*",
                           GIMP_PLUGIN, G_N_ELEMENTS (args), 0, args, NULL);
-  /* what about INDEXED* images ? */
 
   gimp_plugin_menu_register (PLUG_IN_NAME, "<Image>/Layer/");
 }
@@ -237,7 +235,7 @@ run (const gchar * name,
               vals.grad_func = param[15].data.d_int32;
               vals.res_order = param[16].data.d_int32;
               vals.mask_behavior = param[17].data.d_int32;
-	      vals.oper_mode = param[18].data.d_int32;
+              vals.oper_mode = param[18].data.d_int32;
             }
           break;
 
@@ -247,7 +245,7 @@ run (const gchar * name,
           gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
           gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
 
-          /* gimp_context_push(); */ /* doesn't work! why? */
+          /* gimp_context_push(); */
           if (!dialog (image_ID, drawable,
                        &vals, &image_vals, &drawable_vals, &ui_vals,
                        &col_vals))

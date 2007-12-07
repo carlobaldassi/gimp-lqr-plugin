@@ -82,7 +82,7 @@ static void callback_dialog_response (GtkWidget * dialog, gint response_id,
 static void preview_init_mem (PreviewData * preview_data);
 static guchar *preview_build_buffer (gint32 layer_ID);
 #if 0
-static guchar * preview_build_buffer_new (gint32 layer_ID);
+static guchar *preview_build_buffer_new (gint32 layer_ID);
 #endif
 static void preview_build_pixbuf (PreviewData * preview_data);
 
@@ -192,7 +192,7 @@ dialog (gint32 image_ID,
     {
       disc_combo_awaked = TRUE;
     }
-  
+
   layer_ID = drawable->drawable_id;
 
   state->new_width = gimp_drawable_width (layer_ID);
@@ -251,14 +251,14 @@ dialog (gint32 image_ID,
   preview_data.image_ID = image_ID;
   preview_data.vals = state;
   preview_data.ui_vals = ui_state;
-  wfactor = (gfloat) gimp_drawable_width(layer_ID) / PREVIEW_MAX_WIDTH;
-  hfactor = (gfloat) gimp_drawable_height(layer_ID) / PREVIEW_MAX_HEIGHT;
+  wfactor = (gfloat) gimp_drawable_width (layer_ID) / PREVIEW_MAX_WIDTH;
+  hfactor = (gfloat) gimp_drawable_height (layer_ID) / PREVIEW_MAX_HEIGHT;
   preview_data.factor = MAX (wfactor, hfactor);
   preview_data.factor = MAX (preview_data.factor, 1);
 
 
-  preview_data.old_width = gimp_drawable_width(layer_ID);
-  preview_data.old_height = gimp_drawable_height(layer_ID);
+  preview_data.old_width = gimp_drawable_width (layer_ID);
+  preview_data.old_height = gimp_drawable_height (layer_ID);
   gimp_drawable_offsets (layer_ID, &(preview_data.x_off),
                          &(preview_data.y_off));
   preview_data.width =
@@ -266,7 +266,7 @@ dialog (gint32 image_ID,
   preview_data.height =
     gimp_drawable_height (preview_data.orig_layer_ID) / preview_data.factor;
 
-  
+
   gimp_image_undo_freeze (image_ID);
   preview_data.layer_ID = gimp_layer_copy (layer_ID);
   gimp_image_add_layer (image_ID, preview_data.layer_ID, 1);
@@ -275,7 +275,7 @@ dialog (gint32 image_ID,
                     preview_data.height, TRUE);
   gimp_layer_add_alpha (preview_data.layer_ID);
   preview_data.drawable = gimp_drawable_get (preview_data.layer_ID);
-  
+
   preview_data.toggle = TRUE;
 
   preview_init_mem (&preview_data);
@@ -340,8 +340,7 @@ dialog (gint32 image_ID,
   gtk_widget_show (mode_event_box);
 
   gimp_help_set_help_data (mode_event_box,
-                           _("Choose mode of operation"),
-                           NULL);
+                           _("Choose mode of operation"), NULL);
 
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
@@ -354,8 +353,10 @@ dialog (gint32 image_ID,
 
   oper_mode_combo_box =
     gimp_int_combo_box_new (_("LqR only"), OPER_MODE_NORMAL,
-                            _("LqR + LqR back to the original size"), OPER_MODE_LQRBACK,
-                            _("LqR + scale back to the original size"), OPER_MODE_SCALEBACK, NULL);
+                            _("LqR + LqR back to the original size"),
+                            OPER_MODE_LQRBACK,
+                            _("LqR + scale back to the original size"),
+                            OPER_MODE_SCALEBACK, NULL);
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
                                  state->oper_mode);
 
@@ -471,9 +472,12 @@ dialog (gint32 image_ID,
                     FALSE, 0);
   gtk_widget_show (out_seams_col_button2);
 
-  g_signal_connect(out_seams_button, "toggled", G_CALLBACK(callback_out_seams_button), (gpointer) (out_seams_col_button2));
+  g_signal_connect (out_seams_button, "toggled",
+                    G_CALLBACK (callback_out_seams_button),
+                    (gpointer) (out_seams_col_button2));
 
-  callback_out_seams_button(out_seams_button, (gpointer) out_seams_col_button2);
+  callback_out_seams_button (out_seams_button,
+                             (gpointer) out_seams_col_button2);
 
   gimp_help_set_help_data (out_seams_col_button2,
                            _("Colour to use for the last seams"), NULL);
@@ -485,9 +489,12 @@ dialog (gint32 image_ID,
                     FALSE, 0);
   gtk_widget_show (out_seams_col_button1);
 
-  g_signal_connect(out_seams_button, "toggled", G_CALLBACK(callback_out_seams_button), (gpointer) (out_seams_col_button1));
+  g_signal_connect (out_seams_button, "toggled",
+                    G_CALLBACK (callback_out_seams_button),
+                    (gpointer) (out_seams_col_button1));
 
-  callback_out_seams_button(out_seams_button, (gpointer) out_seams_col_button1);
+  callback_out_seams_button (out_seams_button,
+                             (gpointer) out_seams_col_button1);
 
   gimp_help_set_help_data (out_seams_col_button1,
                            _("Colour to use for the first seams"), NULL);
@@ -529,12 +536,11 @@ dialog (gint32 image_ID,
                               SPIN_BUTTON_WIDTH, state->delta_x, 0,
                               MAX_DELTA_X, 1, 1, 0, TRUE, 0, 0,
                               _("Maximum displacement along a seam. "
-				"Increasing this value allows to overcome "
-				"the 45 degrees bound"), NULL);
+                                "Increasing this value allows to overcome "
+                                "the 45 degrees bound"), NULL);
 
   g_signal_connect (adj, "value_changed",
-                    G_CALLBACK (gimp_int_adjustment_update),
-                    &state->delta_x);
+                    G_CALLBACK (gimp_int_adjustment_update), &state->delta_x);
 
   /* Gradient */
 
@@ -544,10 +550,9 @@ dialog (gint32 image_ID,
   gtk_widget_show (gradient_event_box);
 
   gimp_help_set_help_data (gradient_event_box,
-                           _
-                           ("This affects the automatic feature recognition.\n"
-                            "It's the function which will be applied to "
-                            "the components of the gradient on each pixel"),
+                           _("This affects the automatic feature recognition.\n"
+                             "It's the function which will be applied to "
+                             "the components of the gradient on each pixel"),
                            NULL);
 
   hbox = gtk_hbox_new (FALSE, 4);
@@ -579,10 +584,8 @@ dialog (gint32 image_ID,
   gtk_widget_show (res_order_event_box);
 
   gimp_help_set_help_data (res_order_event_box,
-                           _
-                           ("This controls the order of operations "
-                            "if rescaling in both directions"),
-                           NULL);
+                           _("This controls the order of operations "
+                             "if rescaling in both directions"), NULL);
 
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
@@ -595,8 +598,7 @@ dialog (gint32 image_ID,
 
   res_order_combo_box =
     gimp_int_combo_box_new (_("Horizontal first"), LQR_RES_ORDER_HOR,
-                            _("Vertical first"), LQR_RES_ORDER_VERT,
-                            NULL);
+                            _("Vertical first"), LQR_RES_ORDER_VERT, NULL);
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
                                  state->res_order);
 
@@ -650,7 +652,9 @@ dialog (gint32 image_ID,
       ui_state->chain_active =
         gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
                                       (coordinates));
-      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX(disc_toggle_data.guess_dir_combo), &(ui_state->guess_direction));
+      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX
+                                     (disc_toggle_data.guess_dir_combo),
+                                     &(ui_state->guess_direction));
       state->new_width =
         (gint) gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0);
       state->new_height =
@@ -675,19 +679,19 @@ dialog (gint32 image_ID,
       /* save vsmap colours */
       if (state->output_seams)
         {
-	  gimp_color_button_get_color (GIMP_COLOR_BUTTON (out_seams_col_button1),
-			               colour_start);
-	  gimp_color_button_get_color (GIMP_COLOR_BUTTON (out_seams_col_button2),
-				       colour_end);
+          gimp_color_button_get_color (GIMP_COLOR_BUTTON
+                                       (out_seams_col_button1), colour_start);
+          gimp_color_button_get_color (GIMP_COLOR_BUTTON
+                                       (out_seams_col_button2), colour_end);
 
-	  col_vals->r1 = colour_start->r;
-	  col_vals->g1 = colour_start->g;
-	  col_vals->b1 = colour_start->b;
+          col_vals->r1 = colour_start->r;
+          col_vals->g1 = colour_start->g;
+          col_vals->b1 = colour_start->b;
 
-	  col_vals->r2 = colour_end->r;
-	  col_vals->g2 = colour_end->g;
-	  col_vals->b2 = colour_end->b;
-	}
+          col_vals->r2 = colour_end->r;
+          col_vals->g2 = colour_end->g;
+          col_vals->b2 = colour_end->b;
+        }
 
       /* save mask behavior */
       if (has_mask == TRUE)
@@ -712,7 +716,7 @@ dialog (gint32 image_ID,
       gimp_context_set_foreground (&saved_colour);
     }
 
-  gimp_drawable_detach(preview_data.drawable);
+  gimp_drawable_detach (preview_data.drawable);
 
   return run;
 }
@@ -839,10 +843,12 @@ callback_combo_set_sensitive (GtkWidget * button, gpointer data)
                             (TOGGLE_DATA (data)->scale), button_status);
   gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SPINBUTTON
                             (TOGGLE_DATA (data)->scale), button_status);
-  if (TOGGLE_DATA(data)->guess_button)
+  if (TOGGLE_DATA (data)->guess_button)
     {
-      gtk_widget_set_sensitive (TOGGLE_DATA (data)->guess_button, button_status);
-      gtk_widget_set_sensitive (TOGGLE_DATA (data)->guess_dir_combo, button_status);
+      gtk_widget_set_sensitive (TOGGLE_DATA (data)->guess_button,
+                                button_status);
+      gtk_widget_set_sensitive (TOGGLE_DATA (data)->guess_dir_combo,
+                                button_status);
     }
   *((gboolean *) (TOGGLE_DATA (data)->status)) = button_status;
 }
@@ -876,33 +882,42 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH);
 }
 
-static void callback_guess_button (GtkWidget * button, gpointer data)
+static void
+callback_guess_button (GtkWidget * button, gpointer data)
 {
   gint new_width, new_height;
-  new_width = PREVIEW_DATA(data)->old_width;
-  new_height = PREVIEW_DATA(data)->old_height;
-  switch (PREVIEW_DATA(data)->guess_direction)
+  new_width = PREVIEW_DATA (data)->old_width;
+  new_height = PREVIEW_DATA (data)->old_height;
+  switch (PREVIEW_DATA (data)->guess_direction)
     {
-      case 0 : new_width = guess_new_width (button, data);
-	       break;
-      case 1 : new_height = guess_new_height (button, data);
-	       break;
-      default : g_message("You just found a bug");
+    case 0:
+      new_width = guess_new_width (button, data);
+      break;
+    case 1:
+      new_height = guess_new_height (button, data);
+      break;
+    default:
+      g_message ("You just found a bug");
     }
 
-  gimp_size_entry_set_refval(GIMP_SIZE_ENTRY(PREVIEW_DATA(data)->coordinates),
-     0, new_width);
-  gimp_size_entry_set_refval(GIMP_SIZE_ENTRY(PREVIEW_DATA(data)->coordinates),
-     1, new_height);
+  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+                              (PREVIEW_DATA (data)->coordinates), 0,
+                              new_width);
+  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+                              (PREVIEW_DATA (data)->coordinates), 1,
+                              new_height);
 }
 
-static void callback_guess_direction (GtkWidget * combo, gpointer data)
+static void
+callback_guess_direction (GtkWidget * combo, gpointer data)
 {
-  gimp_int_combo_box_get_active(GIMP_INT_COMBO_BOX(combo), &(PREVIEW_DATA(data)->guess_direction));
-  ui_state->guess_direction = PREVIEW_DATA(data)->guess_direction;
+  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (combo),
+                                 &(PREVIEW_DATA (data)->guess_direction));
+  ui_state->guess_direction = PREVIEW_DATA (data)->guess_direction;
 }
 
-static gint guess_new_width (GtkWidget * button, gpointer data)
+static gint
+guess_new_width (GtkWidget * button, gpointer data)
 {
   gint32 disc_layer_ID;
   GimpDrawable *drawable;
@@ -919,37 +934,39 @@ static gint guess_new_width (GtkWidget * button, gpointer data)
   gint max_mask_size = 0;
   gint new_width;
 
-  disc_layer_ID = PREVIEW_DATA(data)->vals->disc_layer_ID;
-  if (!gimp_drawable_is_valid(disc_layer_ID)) {
+  disc_layer_ID = PREVIEW_DATA (data)->vals->disc_layer_ID;
+  if (!gimp_drawable_is_valid (disc_layer_ID))
+    {
       g_message (_("Error: it seems that the selected layer "
                    "is no longer valid"));
-      return PREVIEW_DATA(data)->old_width; /* Should refresh here */
-  }
+      return PREVIEW_DATA (data)->old_width;    /* Should refresh here */
+    }
 
-  width = gimp_drawable_width(disc_layer_ID);
-  height = gimp_drawable_height(disc_layer_ID);
+  width = gimp_drawable_width (disc_layer_ID);
+  height = gimp_drawable_height (disc_layer_ID);
   has_alpha = gimp_drawable_has_alpha (disc_layer_ID);
   bpp = gimp_drawable_bpp (disc_layer_ID);
   c_bpp = bpp - (has_alpha ? 1 : 0);
 
-  drawable = gimp_drawable_get(disc_layer_ID);
+  drawable = gimp_drawable_get (disc_layer_ID);
   gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, width, height, FALSE, FALSE);
 
 
   gimp_drawable_offsets (disc_layer_ID, &x_off, &y_off);
 
-  x_off -= PREVIEW_DATA(data)->x_off;
-  y_off -= PREVIEW_DATA(data)->y_off;
+  x_off -= PREVIEW_DATA (data)->x_off;
+  y_off -= PREVIEW_DATA (data)->y_off;
 
-  lw = (MIN (PREVIEW_DATA(data)->old_width, width + x_off) - MAX (0, x_off));
-  lh = (MIN (PREVIEW_DATA(data)->old_height, height + y_off) - MAX (0, y_off));
+  lw = (MIN (PREVIEW_DATA (data)->old_width, width + x_off) - MAX (0, x_off));
+  lh =
+    (MIN (PREVIEW_DATA (data)->old_height, height + y_off) - MAX (0, y_off));
 
   inrow = g_try_new (guchar, bpp * lw);
 
-  for (y = MAX (0, y_off); y < MIN (PREVIEW_DATA(data)->old_height, height + y_off); y++)
+  for (y = MAX (0, y_off);
+       y < MIN (PREVIEW_DATA (data)->old_height, height + y_off); y++)
     {
-      gimp_pixel_rgn_get_row (&rgn_in, inrow, MAX (0, -x_off),
-                              y - y_off, lw);
+      gimp_pixel_rgn_get_row (&rgn_in, inrow, MAX (0, -x_off), y - y_off, lw);
 
       mask_size = 0;
       for (x = 0; x < lw; x++)
@@ -966,28 +983,29 @@ static gint guess_new_width (GtkWidget * button, gpointer data)
               sum *= (gdouble) inrow[bpp * (x + 1) - 1] / 255;
             }
 
-	  if (sum >= (0.5 / c_bpp))
-	    {
-	      mask_size++;
-	    }
+          if (sum >= (0.5 / c_bpp))
+            {
+              mask_size++;
+            }
         }
       if (mask_size > max_mask_size)
         {
-	  max_mask_size = mask_size;
-	}
+          max_mask_size = mask_size;
+        }
 
     }
 
-  new_width = PREVIEW_DATA(data)->old_width - max_mask_size;
+  new_width = PREVIEW_DATA (data)->old_width - max_mask_size;
 
   g_free (inrow);
-  gimp_drawable_detach(drawable);
+  gimp_drawable_detach (drawable);
 
   return new_width;
 
 }
 
-static gint guess_new_height (GtkWidget * button, gpointer data)
+static gint
+guess_new_height (GtkWidget * button, gpointer data)
 {
   gint32 disc_layer_ID;
   GimpDrawable *drawable;
@@ -1004,38 +1022,40 @@ static gint guess_new_height (GtkWidget * button, gpointer data)
   gint max_mask_size = 0;
   gint new_height;
 
-  disc_layer_ID = PREVIEW_DATA(data)->vals->disc_layer_ID;
-  if (!gimp_drawable_is_valid(disc_layer_ID)) {
+  disc_layer_ID = PREVIEW_DATA (data)->vals->disc_layer_ID;
+  if (!gimp_drawable_is_valid (disc_layer_ID))
+    {
       g_message (_("Error: it seems that the selected layer "
                    "is no longer valid"));
-      return PREVIEW_DATA(data)->old_height; /* Should refresh here */
-  }
+      return PREVIEW_DATA (data)->old_height;   /* Should refresh here */
+    }
 
-  width = gimp_drawable_width(disc_layer_ID);
-  height = gimp_drawable_height(disc_layer_ID);
+  width = gimp_drawable_width (disc_layer_ID);
+  height = gimp_drawable_height (disc_layer_ID);
   has_alpha = gimp_drawable_has_alpha (disc_layer_ID);
   bpp = gimp_drawable_bpp (disc_layer_ID);
   c_bpp = bpp - (has_alpha ? 1 : 0);
 
-  drawable = gimp_drawable_get(disc_layer_ID);
+  drawable = gimp_drawable_get (disc_layer_ID);
   gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, width, height, FALSE, FALSE);
 
 
   gimp_drawable_offsets (disc_layer_ID, &x_off, &y_off);
 
-  x_off -= PREVIEW_DATA(data)->x_off;
-  y_off -= PREVIEW_DATA(data)->y_off;
+  x_off -= PREVIEW_DATA (data)->x_off;
+  y_off -= PREVIEW_DATA (data)->y_off;
 
-  lw = (MIN (PREVIEW_DATA(data)->old_width, width + x_off) - MAX (0, x_off));
-  lh = (MIN (PREVIEW_DATA(data)->old_height, height + y_off) - MAX (0, y_off));
+  lw = (MIN (PREVIEW_DATA (data)->old_width, width + x_off) - MAX (0, x_off));
+  lh =
+    (MIN (PREVIEW_DATA (data)->old_height, height + y_off) - MAX (0, y_off));
 
   incol = g_try_new (guchar, bpp * lh);
 
 
-  for (x = MAX (0, x_off); x < MIN (PREVIEW_DATA(data)->old_width, width + x_off); x++)
+  for (x = MAX (0, x_off);
+       x < MIN (PREVIEW_DATA (data)->old_width, width + x_off); x++)
     {
-      gimp_pixel_rgn_get_col (&rgn_in, incol, x - x_off, MAX (0, -y_off),
-                              lh);
+      gimp_pixel_rgn_get_col (&rgn_in, incol, x - x_off, MAX (0, -y_off), lh);
 
       mask_size = 0;
       for (y = 0; y < lh; y++)
@@ -1052,22 +1072,22 @@ static gint guess_new_height (GtkWidget * button, gpointer data)
               sum *= (gdouble) incol[bpp * (y + 1) - 1] / 255;
             }
 
-	  if (sum >= (0.5 / c_bpp))
-	    {
-	      mask_size++;
-	    }
+          if (sum >= (0.5 / c_bpp))
+            {
+              mask_size++;
+            }
         }
       if (mask_size > max_mask_size)
         {
-	  max_mask_size = mask_size;
-	}
+          max_mask_size = mask_size;
+        }
 
     }
 
-  new_height = PREVIEW_DATA(data)->old_height - max_mask_size;
+  new_height = PREVIEW_DATA (data)->old_height - max_mask_size;
 
   g_free (incol);
-  gimp_drawable_detach(drawable);
+  gimp_drawable_detach (drawable);
 
   return new_height;
 }
@@ -1077,11 +1097,14 @@ callback_out_seams_button (GtkWidget * button, gpointer data)
 {
   gboolean button_status =
     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button));
-  if (button_status) {
-	  gtk_widget_show(GTK_WIDGET(data));
-  } else {
-	  gtk_widget_hide(GTK_WIDGET(data));
-  }
+  if (button_status)
+    {
+      gtk_widget_show (GTK_WIDGET (data));
+    }
+  else
+    {
+      gtk_widget_hide (GTK_WIDGET (data));
+    }
 }
 
 
@@ -1182,20 +1205,19 @@ preview_build_buffer_new (gint32 layer_ID)
   GimpDrawable *drawable;
   guchar *buffer;
 
-  printf("build buffer\n"); fflush(stdout);
+  printf ("build buffer\n");
+  fflush (stdout);
 
   drawable = gimp_drawable_get (layer_ID);
 
   gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
-  width = gimp_drawable_width(layer_ID);
-  height = gimp_drawable_height(layer_ID);
-  bpp = gimp_drawable_bpp(layer_ID);
+  width = gimp_drawable_width (layer_ID);
+  height = gimp_drawable_height (layer_ID);
+  bpp = gimp_drawable_bpp (layer_ID);
   /*isgray = gimp_drawable_is_gray (layer_ID); */
 
-  gimp_pixel_rgn_init (&rgn_in,
-                       drawable, 0, 0, width, height,
-                       FALSE, FALSE);
+  gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, width, height, FALSE, FALSE);
 
   x_off -= preview_data.x_off;
   y_off -= preview_data.y_off;
@@ -1209,80 +1231,123 @@ preview_build_buffer_new (gint32 layer_ID)
 
   buffer = g_new0 (guchar, 4 * preview_data.width * preview_data.height);
 
-  printf("w,h=%i,%i xo,yo=%i,%i lw,lh=%i,%i ss=%i pdw,pdh=%i,%i pdxo,pdyo=%i,%i\n", width, height, x_off, y_off, lw, lh, sq_size, preview_data.width, preview_data.height, preview_data.x_off, preview_data.y_off); fflush(stdout);
+  printf
+    ("w,h=%i,%i xo,yo=%i,%i lw,lh=%i,%i ss=%i pdw,pdh=%i,%i pdxo,pdyo=%i,%i\n",
+     width, height, x_off, y_off, lw, lh, sq_size, preview_data.width,
+     preview_data.height, preview_data.x_off, preview_data.y_off);
+  fflush (stdout);
 
   for (y = 0; y < preview_data.old_height; y++)
-  {
-	  aux = inrect;
-	  if (y < y_off / sq_size) {
-		  continue;
-		  printf("  0 : y=%i cont\n", y); fflush(stdout);
-	  } else if (y == y_off / sq_size) {
-		  if (y < (((height + y_off) / sq_size) - 1)) {
-			  printf(" 1,0 : y=%i\n", y); fflush(stdout);
-			  aux = inrect + (y_off % sq_size) * lw;
-			  gimp_pixel_rgn_get_rect(&rgn_in, aux, MAX(0, -x_off),
-					 y_off, lw, sq_size - y_off % sq_size);
-		  } else if (y == (((height + y_off) / sq_size) - 1)) {
-			  printf(" 1,1 : y=%i\n", y); fflush(stdout);
-			  aux = inrect + (y_off % sq_size) * lw;
-			  gimp_pixel_rgn_get_rect(&rgn_in, aux, MAX(0, -x_off),
-					 y_off, lw, height);
-		  } else {
-			  printf(" 1,x : y=%i\n", y); fflush(stdout);
-			  g_assert(0);
-		  }
-	  } else if (y < (((height + y_off) / sq_size) - 1)) {
-		  printf(" 2 : y=%i\n", y); fflush(stdout);
-		  gimp_pixel_rgn_get_rect(&rgn_in, aux, MAX(0, -x_off),
-				 y * sq_size, lw, sq_size);
-	  } else if (y == (((height + y_off) / sq_size) - 1)) {
-		  printf(" 3 : y=%i\n", y); fflush(stdout);
-		  gimp_pixel_rgn_get_rect(&rgn_in, aux, MAX(0, -x_off),
-				 y * sq_size, lw, height + y_off - y * sq_size);
-	  } else {
-		  printf(" 4 : y=%i cont\n", y); fflush(stdout);
-		  continue;
-	  }
-	  for (x = 0; x < preview_data.old_width; x++)
-	  {
-		  z0 = y * preview_data.width + x;
-		  for (k = 0; k < bpp; k++) {
-			  sum[k] = 0;
-		  }
-		  for (y1 = 0; y1 < sq_size; y1++) {
-			  for (x1 = 0; x1 < sq_size; x1++) {
-				  z1 = (y1 * lw) + x * sq_size + x1 - MAX(0,-x_off);
-				  if (x * sq_size + x1 < x_off) {
-					  /* */
-				  } else if (x * sq_size + x1 < width + x_off - 1) {
-					  if (y * sq_size + y1 < y_off) {
-						  /* */
-					  } else if (y * sq_size + y1 < height + y_off - 1) {
-						  for (k = 0; k < bpp; k++) {
-							  sum[k] += inrect[z1 * bpp + k];
-						  }
-					  } else {
-						  /* */
-					  }
-				  } else {
-					  /* */
-				  }
-			  }
-		  }
-		  for (k = 0; k < bpp; k++) {
-			  buffer[z0 * 4 + k] = sum[k] / (sq_size * sq_size);
-		  }
-	  }
-  }
-  if (bpp < 4) {
-	  /* TODO */
-	  g_assert(bpp == 4);
-  }
+    {
+      aux = inrect;
+      if (y < y_off / sq_size)
+        {
+          continue;
+          printf ("  0 : y=%i cont\n", y);
+          fflush (stdout);
+        }
+      else if (y == y_off / sq_size)
+        {
+          if (y < (((height + y_off) / sq_size) - 1))
+            {
+              printf (" 1,0 : y=%i\n", y);
+              fflush (stdout);
+              aux = inrect + (y_off % sq_size) * lw;
+              gimp_pixel_rgn_get_rect (&rgn_in, aux, MAX (0, -x_off),
+                                       y_off, lw, sq_size - y_off % sq_size);
+            }
+          else if (y == (((height + y_off) / sq_size) - 1))
+            {
+              printf (" 1,1 : y=%i\n", y);
+              fflush (stdout);
+              aux = inrect + (y_off % sq_size) * lw;
+              gimp_pixel_rgn_get_rect (&rgn_in, aux, MAX (0, -x_off),
+                                       y_off, lw, height);
+            }
+          else
+            {
+              printf (" 1,x : y=%i\n", y);
+              fflush (stdout);
+              g_assert (0);
+            }
+        }
+      else if (y < (((height + y_off) / sq_size) - 1))
+        {
+          printf (" 2 : y=%i\n", y);
+          fflush (stdout);
+          gimp_pixel_rgn_get_rect (&rgn_in, aux, MAX (0, -x_off),
+                                   y * sq_size, lw, sq_size);
+        }
+      else if (y == (((height + y_off) / sq_size) - 1))
+        {
+          printf (" 3 : y=%i\n", y);
+          fflush (stdout);
+          gimp_pixel_rgn_get_rect (&rgn_in, aux, MAX (0, -x_off),
+                                   y * sq_size, lw,
+                                   height + y_off - y * sq_size);
+        }
+      else
+        {
+          printf (" 4 : y=%i cont\n", y);
+          fflush (stdout);
+          continue;
+        }
+      for (x = 0; x < preview_data.old_width; x++)
+        {
+          z0 = y * preview_data.width + x;
+          for (k = 0; k < bpp; k++)
+            {
+              sum[k] = 0;
+            }
+          for (y1 = 0; y1 < sq_size; y1++)
+            {
+              for (x1 = 0; x1 < sq_size; x1++)
+                {
+                  z1 = (y1 * lw) + x * sq_size + x1 - MAX (0, -x_off);
+                  if (x * sq_size + x1 < x_off)
+                    {
+                      /* */
+                    }
+                  else if (x * sq_size + x1 < width + x_off - 1)
+                    {
+                      if (y * sq_size + y1 < y_off)
+                        {
+                          /* */
+                        }
+                      else if (y * sq_size + y1 < height + y_off - 1)
+                        {
+                          for (k = 0; k < bpp; k++)
+                            {
+                              sum[k] += inrect[z1 * bpp + k];
+                            }
+                        }
+                      else
+                        {
+                          /* */
+                        }
+                    }
+                  else
+                    {
+                      /* */
+                    }
+                }
+            }
+          for (k = 0; k < bpp; k++)
+            {
+              buffer[z0 * 4 + k] = sum[k] / (sq_size * sq_size);
+            }
+        }
+    }
+  if (bpp < 4)
+    {
+      /* TODO */
+      g_assert (bpp == 4);
+    }
 
-  g_free(inrect);
-  gimp_drawable_detach(drawable);
-  printf("built\n"); fflush(stdout);
+  g_free (inrect);
+  gimp_drawable_detach (drawable);
+  printf ("built\n");
+  fflush (stdout);
 
   return buffer;
 }
@@ -1301,8 +1366,8 @@ preview_build_buffer (gint32 layer_ID)
   guchar *buffer;
 
   drawable = gimp_drawable_get (layer_ID);
-  width = gimp_drawable_width(layer_ID);
-  height = gimp_drawable_height(layer_ID);
+  width = gimp_drawable_width (layer_ID);
+  height = gimp_drawable_height (layer_ID);
   isgray = gimp_drawable_is_gray (layer_ID);
 
   gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, width, height, FALSE, FALSE);
@@ -1340,7 +1405,7 @@ preview_build_buffer (gint32 layer_ID)
     }
 
   g_free (inrow);
-  gimp_drawable_detach(drawable);
+  gimp_drawable_detach (drawable);
   return buffer;
 }
 
@@ -1681,8 +1746,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                               _("Strength:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
                               state->pres_coeff, 0, MAX_COEFF, 1, 10, 0,
                               TRUE, 0, 0,
-                              _
-                              ("Overall coefficient for feature preservation intensity"),
+                              _("Overall coefficient for feature preservation intensity"),
                               NULL);
   g_signal_connect (adj, "value_changed",
                     G_CALLBACK (gimp_int_adjustment_update),
@@ -1872,8 +1936,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                               _("Strength:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
                               state->disc_coeff, 0, MAX_COEFF, 1, 10, 0,
                               TRUE, 0, 0,
-                              _
-                              ("Overall coefficient for feature discard intensity"),
+                              _("Overall coefficient for feature discard intensity"),
                               NULL);
   g_signal_connect (adj, "value_changed",
                     G_CALLBACK (gimp_int_adjustment_update),
@@ -1915,37 +1978,45 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (disc_vbox2), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
-  guess_button = gtk_button_new_with_label(_("Auto size"));
+  guess_button = gtk_button_new_with_label (_("Auto size"));
   gtk_box_pack_start (GTK_BOX (hbox), guess_button, FALSE, FALSE, 0);
-  gtk_widget_show(guess_button);
+  gtk_widget_show (guess_button);
 
   disc_toggle_data.guess_button = (gpointer) guess_button;
-  
+
   gtk_widget_set_sensitive (guess_button,
                             (ui_state->disc_status
                              && features_are_sensitive));
 
-  gimp_help_set_help_data (guess_button, _("Try to set the final size as needed to remove the masked areas.\n"
-			                   "Only use with simple masks"), NULL);
+  gimp_help_set_help_data (guess_button,
+                           _("Try to set the final size as needed to remove the masked areas.\n"
+                            "Only use with simple masks"), NULL);
 
-  guess_dir_combo = gimp_int_combo_box_new (_("horizontal"), 0, _("vertical"), 1, NULL);
+  guess_dir_combo =
+    gimp_int_combo_box_new (_("horizontal"), 0, _("vertical"), 1, NULL);
   gtk_box_pack_end (GTK_BOX (hbox), guess_dir_combo, TRUE, TRUE, 0);
-  gtk_widget_show(guess_dir_combo);
+  gtk_widget_show (guess_dir_combo);
 
-  gimp_int_combo_box_set_active(GIMP_INT_COMBO_BOX(guess_dir_combo), ui_state->guess_direction);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (guess_dir_combo),
+                                 ui_state->guess_direction);
 
   disc_toggle_data.guess_dir_combo = (gpointer) guess_dir_combo;
   preview_data.guess_direction = ui_state->guess_direction;
 
-  gimp_help_set_help_data (guess_dir_combo, _("Resizing direction for auto size"), NULL);
+  gimp_help_set_help_data (guess_dir_combo,
+                           _("Resizing direction for auto size"), NULL);
 
-  gtk_widget_set_sensitive (guess_dir_combo, (ui_state->disc_status && features_are_sensitive));
+  gtk_widget_set_sensitive (guess_dir_combo,
+                            (ui_state->disc_status
+                             && features_are_sensitive));
 
   g_signal_connect (guess_dir_combo, "changed",
-      G_CALLBACK(callback_guess_direction), (gpointer) &preview_data);
+                    G_CALLBACK (callback_guess_direction),
+                    (gpointer) & preview_data);
 
   g_signal_connect (guess_button, "clicked",
-      G_CALLBACK(callback_guess_button), (gpointer) &preview_data);
+                    G_CALLBACK (callback_guess_button),
+                    (gpointer) & preview_data);
 
 
 
@@ -1954,4 +2025,3 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 
 
 }
-
