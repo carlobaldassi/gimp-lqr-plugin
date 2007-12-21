@@ -50,14 +50,20 @@
 
 	  <h3>Selezionare le nuove dimensioni</h3>
 	  <p>
-	  In questa sezione è possibile impostare le dimensioni finali dell'immagine.
-	  È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui
-	  si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin
-	  agisce sempre prima nel senso della larghezza, e poi in altezza
-	  (per nessun particolare motivo).
-	  L'ordine inverso si può ottenere semplicemento usando il plugin due volte,
-	  la prima modificando l'altezza e lasciando la larghezza invariata, la seconda
-	  il viceversa.
+		  <div>
+			  In questa sezione è possibile impostare le dimensioni finali dell'immagine.
+			  È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui
+			  si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin
+			  agisce prima nel senso della larghezza, e poi in altezza. Questo compurtamento
+			  può essere modificato attrverso un'opzione nella linguetta <i>Avanzato</i>.
+		  </div>
+		  <div>
+			  La modalità predefinita è di ridimensionare "liquidamente" l'immagine fino
+			  alle dimensioni specificate. Le altre opzioni possono essere usate per
+			  riportare l'immagine alle dimensioni iniziali una volta terminato,
+			  riutilizzando il LiquidRescale oppure il ridimensionamento standard.
+		  </div>
+
 	  </p>
 
 	  <h3>Maschere per i contenuti</h3>
@@ -82,10 +88,25 @@
 	  </ul>
 	  </p>
 	  <p>
-	  <b>NOTA:</b> eliminare un contenuto significa che la zona dell'immagine interessata
-	  verà eliminata se si restringe l'immagine, ma verrà gonfiata se si allarga l'immagine,
-	  dal momento che sarà trattata come se fosse sfondo di nessuna importanza, da poter
-	  comprimere e espandere a piacere.
+		  Volendo eliminare porzioni di immagine, un metodo rapido per impostare le dimensioni
+		  finali è, dopo aver impostato una maschera per l'eliminazione, di selezionare una direzione
+		  di ridimensionamento (orizzontale/verticale) e cliccare sul pulsante <i>"Auto dimensionamento"</i>.
+		  (Questo metodo tuttavia funziona solo con maschere molto semplici).
+	  </p>
+	  <p>
+		  <b>NOTA #1:</b> eliminare un contenuto significa che la zona dell'immagine interessata
+		  verà eliminata se si restringe l'immagine, ma verrà gonfiata se si allarga l'immagine,
+		  dal momento che sarà trattata come se fosse sfondo di nessuna importanza, da poter
+		  comprimere e espandere a piacere.
+	  </p>
+	  <p>
+		  <b>NOTA #2:</b> la preservazione dei contenuti non è possibile se si cerca di ingrandire
+		  troppo l'immagine, poiché il processo di allargamento è l'inverso del processo di
+		  restringimento, quindi la massima quantità di pixel che è possibile aggiungere a un layer
+		  corrisponde al numero di pixel che non sono protetti.
+		  Per esempio, se avete un'immagine larga 1000 pixel e averte contrassegnato una porzione
+		  da preservare larga 800 pixel, la larghezza finale dovrebbe essere inferiore ai 1200
+		  pixel. Per ingrandire di più, procedete in passi successivi.
 	  </p>
 
 	  <h4>Descrizione completa</h4>
@@ -128,9 +149,25 @@
 	  </div>
 	  </p>
 	  <p>
-	  La sezione <b>Selezione dei contenuti da eliminare</b> è identica alla precedente,
-	  ma l'effetto è invertito. Inolte, il colore impostato dal pulssante <i>"Nuovo"</i>
-	  è il rosso anziché il verde.
+		  <div>
+			  La sezione <b>Selezione dei contenuti da eliminare</b> è identica alla precedente,
+			  ma l'effetto è invertito, e il colore impostato dal pulsante <i>"Nuovo"</i>
+			  è il rosso anziché il verde.
+		  </div>
+		<div>
+			In più, c'è un ulteriore pulsante, <i>"Auto dimensionamento"</i>, che serve per impostare
+			automaticamente le dimensioni finali del livello. Il menu accanto può essere usato per
+			determinare se agire in orizzontale o in verticale (l'altra direzione viene impostata
+			al suo valore iniziale).
+		</div>
+		<div>
+			Si noti che questa opzione è adeguata solamente per operazioni di rimozione elementari,
+			poiché le dimensioni finali sono calcolate semplicemente a partire dal massimo numero
+			di pixel per riga (o colonna) per i quali la maschera supera una data soglia, e questo
+			metodo può facilmente fallire se la maschera è troppo complicata.
+			La soglia corrisponde al 50% di un colore RGB pieno (ad es. del rosso con le impostazioni
+			di default).
+		</div>
 	  </p>
 
 	  <h3>Output</h3>
@@ -189,8 +226,28 @@
 	  <p>
 	  <b>Rigidità delle linee.</b>
 	  Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte.
-	  Può risultare utile per ridurre le distorsioni in certi casi.
+	  Può risultare utile per ridurre le distorsioni in certi casi, o per evitare
+	  di introdurre gli errori derivanti da un valore troppo alto del passo (vedi sotto -
+	  è consigliabile usare valori bassi in questo caso).
+	  La penalizzazione è proporzionale alla somma delle differenze di coordinate trasversali
+	  (passo) per ogni coppia di punti successivi della linea, elevate alla potenza di 1.5.
 	  </p>
+	<p>
+		<div>
+			<b>Passo massimo delle linee. </b>
+			Questa opzione permette di impostare il massimo passo trasversale ammesso
+			tra due pixel successivi delle linee d'azione. L'algoritmo standard usa
+			un passo = 1, che significa che ogni pixel di una linea può essere
+			spostato al massimo di un pixel rispetto ai suoi vicini. Questo
+			comporta che le linee d'azione possono formare un angolo massimo di 45 gradi
+			rispetto alla loro base.
+		</div>
+		<div>
+			Aumentare il valore del passo massimo è l'unico modo di superare questo limite,
+			tuttavia può portare all'introduzione di errori visibili. Per bilanciare
+			questo effetto è consigliabile agire sul parametro di rigidità.
+		</div>
+	<p>
 	  <p>
 	  <b>Funzione gradiente.</b>
 	  È possibile scegliere quale funzione deve essere utilizzata per calcolare
@@ -204,6 +261,11 @@
 	  automatico dei contenuti; l'utente può così generare la propria mappa dell'
 	  energia (per es. con un altro plugin).
 	  </p>
+	<p>
+		<b>Ordine del ridimensionamento. </b>
+		Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere
+		se procedere prima in orizzontale e poi in verticale, o viceversa.
+      </td>
 	</td>
       </tr>
     </table>
