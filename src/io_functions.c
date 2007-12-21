@@ -38,7 +38,6 @@ rgb_buffer_from_layer (gint32 layer_ID)
 {
   gint y, bpp;
   gint w, h;
-  gint x_off, y_off;
   GimpDrawable *drawable;
   GimpPixelRgn rgn_in;
   guchar *buffer;
@@ -57,8 +56,6 @@ rgb_buffer_from_layer (gint32 layer_ID)
 
   gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, w, h, FALSE, FALSE);
 
-  gimp_drawable_offsets (layer_ID, &x_off, &y_off);
-
   for (y = 0; y < h; y++)
     {
       gimp_pixel_rgn_get_row (&rgn_in, buffer + y * w * bpp, 0, y, w);
@@ -68,7 +65,6 @@ rgb_buffer_from_layer (gint32 layer_ID)
         {
           gimp_progress_update ((gdouble) y / (h - 1));
         }
-
     }
 
   gimp_drawable_detach (drawable);
