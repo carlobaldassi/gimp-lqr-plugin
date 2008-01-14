@@ -5879,7 +5879,7 @@ fi
 GIMP_LIBDIR=`$PKG_CONFIG --variable=gimplibdir gimp-2.0`
 
 
-LQR_REQUIRED_VERSION=0.0.1
+LQR_REQUIRED_VERSION=0.1.0
 
 
 pkg_failed=no
@@ -5993,13 +5993,11 @@ echo "${ECHO_T}yes" >&6; }
 	:
 fi
 
-LQR_CFLAGS=`$PKG_CONFIG --cflags lqr-1`
 
 
-LQR_LIBS=`$PKG_CONFIG --libs lqr-1`
 
 
-LQR_LIBDIR=`#PACKAGE_CONFIG --variable=libdir lqr-1`
+LQR_LIBDIR=`$PKG_CONFIG --variable=libdir lqr-1`
 
 
 
