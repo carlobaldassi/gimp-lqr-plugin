@@ -39,10 +39,12 @@ then
 	then
 		intltool-update-all || exit 1
 	else
+		cd po || exit 1
 		for LL in $LANGS
 		do
-			intltool-update $LL || exit 1
+			../intltool-update $LL || exit 1
 		done
+		cd .. || exit 1
 	fi
 fi
 

@@ -6011,7 +6011,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-ALL_LINGUAS="it fr ru pt_BR de eu_ES zh_CN es_AR hu ro_RO sr es_ES nb_NO"
+ALL_LINGUAS="it fr ru pt_BR de eu_ES zh_CN es_AR hu ro_RO sr es_ES nb_NO zh_TW"
 
 
 case "$am__api_version" in
