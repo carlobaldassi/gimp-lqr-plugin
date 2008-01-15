@@ -1,53 +1,48 @@
-# translation of de.po to
-# translation of fr.po to
-# translation of gimp22-lqr-plugin.po to
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-# Vincent Picavet <vpicavet@gmail.com>, 2007.
-# Christoph Schäfer <christoph-schaefer@gmx.de>, 2007.
-# Marco Wollkopf <marco.wollkopf@t-online.de>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: de\n"
+"Project-Id-Version: 0.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-13 05:00+0100\n"
-"PO-Revision-Date: 2008-01-15 07:40+0100\n"
-"Last-Translator: Marco Wollkopf <marco.wollkopf@t-online.de>\n"
-"Language-Team:  <de@li.org>\n"
+"POT-Creation-Date: 2008-01-15 21:30+0100\n"
+"PO-Revision-Date: 2007-10-01 21:41-0700\n"
+"Last-Translator: James Huang <elastic192@gmail.com>\n"
+"Language-Team: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
 
 #: ../src/interface.c:223
 msgid "GIMP LiquidRescale Plug-In"
-msgstr "GIMP LiquidRescale Plug-In"
+msgstr "GIMP LiquidRescale 插件"
 
 #: ../src/interface.c:245
 msgid "Selected layer"
-msgstr "Ausgewählte Ebene"
+msgstr "作用圖層"
 
 #. New size
 #: ../src/interface.c:306
 msgid "Select new width and height"
-msgstr "Wählen Sie eine neue Höhe und Breite aus"
+msgstr "請選擇新的寬度與高度"
 
 #: ../src/interface.c:326
 msgid "Width:"
-msgstr "Breite:"
+msgstr "寬度"
 
 #: ../src/interface.c:328
 msgid "Height:"
-msgstr "Höhe:"
+msgstr "高度"
 
 #: ../src/interface.c:343
 msgid "Choose mode of operation"
-msgstr ""
+msgstr "選擇操作模式"
 
 #: ../src/interface.c:350
 msgid "Mode:"
-msgstr ""
+msgstr "模式"
 
 #: ../src/interface.c:355
 msgid "LqR only"
@@ -64,37 +59,35 @@ msgstr ""
 #. Output settings page
 #: ../src/interface.c:385
 msgid "Output"
-msgstr "Ausgabe"
+msgstr "輸出"
 
 #: ../src/interface.c:400
 msgid "Output on a new layer"
-msgstr "Ausgabe auf einer neuen Ebene"
+msgstr "輸出至新圖層"
 
 #: ../src/interface.c:408
 msgid "Outputs the resulting image on a new layer"
-msgstr "Gibt das resultierende Bild auf einer neuen Ebene aus"
+msgstr "將結果影像輸出至新圖層"
 
 #: ../src/interface.c:412
 msgid "Resize image canvas"
-msgstr "Größe des Bildhintergrundes anpassen"
+msgstr "改變畫布大小"
 
 #: ../src/interface.c:420
 msgid "Resize and translate the image canvas to fit the resized layer"
-msgstr "Ändert die Größe und passt das Bild an die geänderte Ebene an"
+msgstr "改變畫布來符合圖層大小"
 
 #: ../src/interface.c:424
 msgid "Resize preserve/discard layers"
-msgstr "Größe der Ebenen anpassen"
+msgstr "改變保持或丟棄的圖層大小"
 
 #: ../src/interface.c:441
 msgid "Resize the layers used as masks along with the active layer"
 msgstr ""
-"Ändert die Größe der Ebenen, die als Masken verwendet werden und die aktive "
-"Ebene"
 
 #: ../src/interface.c:448
 msgid "Output the seams"
-msgstr "Nähte ausgeben"
+msgstr ""
 
 #: ../src/interface.c:457
 msgid ""
@@ -102,40 +95,35 @@ msgid ""
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
 "in one direction at a time"
 msgstr ""
-"Erzeugt eine besondere Ausgabeebene mit den Nähten, so daß das Ergebnis "
-"überprüft werden kann. Verwenden Sie diese Funktion zusammen mit \"Ausgabe "
-"auf einer neuen Ebene\" und der verändern sie die Größe in eine Richtung."
 
 #: ../src/interface.c:469
 msgid "Last seams colour"
 msgstr ""
 
 #: ../src/interface.c:483
-#, fuzzy
 msgid "Colour to use for the last seams"
-msgstr "Farbe für die letzten Nähte"
+msgstr ""
 
 #: ../src/interface.c:486
 msgid "First seams colour"
 msgstr ""
 
 #: ../src/interface.c:500
-#, fuzzy
 msgid "Colour to use for the first seams"
-msgstr "Farbe für die ersten Nähte"
+msgstr ""
 
 #. Advanced settings page
 #: ../src/interface.c:505
 msgid "Advanced"
-msgstr "Erweitert"
+msgstr "進階"
 
 #: ../src/interface.c:523
 msgid "Seams rigidity:"
-msgstr "Starrheit der Nähte"
+msgstr ""
 
 #: ../src/interface.c:526
 msgid "Increasing this value results in straighter seams"
-msgstr "Durch das Erhöhen dieses Wertes werden geradere Nähte erzeugt"
+msgstr ""
 
 #: ../src/interface.c:535
 msgid "Seams max step:"
@@ -153,29 +141,27 @@ msgid ""
 "It's the function which will be applied to the components of the gradient on "
 "each pixel"
 msgstr ""
-"Dies beeinflusst die automatische Elementerkennung.\n"
-"Die Funktion wird auf die Verlaufskomponenten eines jeden Pixels angewandt"
 
 #: ../src/interface.c:563
 msgid "Gradient function:"
-msgstr "Verlaufsfunktion auswählen:"
+msgstr ""
 
 #: ../src/interface.c:568
 msgid "Transversal absolute value"
-msgstr "Durchschnitt der absoluten Werte"
+msgstr ""
 
 #: ../src/interface.c:569
 msgid "Sum of absolute values"
-msgstr "Summe der absoluten Werte"
+msgstr ""
 
 #: ../src/interface.c:570
 msgid "Norm"
-msgstr "Normal"
+msgstr ""
 
 #. Null can be translated as Zero
 #: ../src/interface.c:572
 msgid "Null"
-msgstr "Null"
+msgstr ""
 
 #: ../src/interface.c:587
 msgid "This controls the order of operations if rescaling in both directions"
@@ -183,40 +169,40 @@ msgstr ""
 
 #: ../src/interface.c:595
 msgid "Rescale order:"
-msgstr ""
+msgstr "縮放順序"
 
 #: ../src/interface.c:600
 msgid "Horizontal first"
-msgstr ""
+msgstr "水平優先"
 
 #: ../src/interface.c:601
 msgid "Vertical first"
-msgstr ""
+msgstr "垂直優先"
 
 #. Mask page
 #: ../src/interface.c:617
 msgid "Mask"
-msgstr "Maske"
+msgstr "遮罩"
 
 #: ../src/interface.c:625
 msgid "Select behavior for the mask"
-msgstr "Auswahl des Maskenverhaltens"
+msgstr "選擇遮罩作用"
 
 #: ../src/interface.c:630
 msgid "Apply"
-msgstr "Anwenden"
+msgstr "套用"
 
 #: ../src/interface.c:630
 msgid "Discard"
-msgstr "Verwerfen"
+msgstr "丟棄"
 
 #: ../src/interface.c:940 ../src/interface.c:1028 ../src/render.c:94
 msgid "Error: it seems that the selected layer is no longer valid"
-msgstr "Fehler. Die ausgewählte Ebene ist anscheinend nicht mehr gültig"
+msgstr "錯誤: 選擇的圖層似乎已經失效"
 
 #: ../src/interface.c:1554
 msgid "Feature masks"
-msgstr "Elementmasken "
+msgstr "特徵遮罩"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
@@ -236,7 +222,7 @@ msgstr ""
 #: ../src/interface.c:1593
 #, fuzzy
 msgid "Feature preservation mask"
-msgstr "Auswahl der zu erhaltenden Elemente"
+msgstr "特徵保留遮罩"
 
 #: ../src/interface.c:1598
 #, c-format
@@ -246,56 +232,49 @@ msgid ""
 "\"Refresh\" button.\n"
 "Note that painting in black has no effect"
 msgstr ""
-"Um Elemente zu erhalten, müssen weitere Ebenen erzeugt werden.\n"
-"Sie können eine neue Ebene mit dem \"Neu\"-Button erzeugen und darauf "
-"zeichnen. Drücken Sie anschließend \"Aktualisieren\".\n"
-"Beachten Sie, daß das Zeichnen mit Schwarz ergebnislos bleibt."
+"需要額外的圖層來啟用這項保留特性.\n"
+"你可以按 \"新增\" 來新增一個圖層並在其上塗上顏色, 之後按 \"重新整理\" .\n"
+"注意: 用黑色是無作用的"
 
 #: ../src/interface.c:1631
 msgid "Preserve features"
-msgstr "Elemente erhalten"
+msgstr "保留特徵"
 
 #: ../src/interface.c:1647
 msgid "Use an extra layer to preserve selected areas from distortion"
-msgstr ""
-"Verwendet eine Extraebene, um zu verhindern, daß die ausgewählten Bereiche "
-"verzerrt werden."
+msgstr "在變形中使用額外的圖層來保留選擇的區域"
 
 #: ../src/interface.c:1650 ../src/interface.c:1840
 msgid "New"
-msgstr "Neu"
+msgstr "新增"
 
 #: ../src/interface.c:1655
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
-msgstr ""
-"Erzeugt eine neue transparente Ebene, die als Ebene zum Erhalten von "
-"Elementen verwendet wird"
+msgstr "創建一個新的透明圖層來作為保留的遮罩"
 
 #: ../src/interface.c:1694
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
-"Die Ebene, die als Maske zum Erhalten von Elementen verwendet wird.\n"
-"Verwenden Sie \"Aktualisieren\", um die Liste zu aktualisieren."
 
 #: ../src/interface.c:1725 ../src/interface.c:1918
 msgid "Layer:"
-msgstr "Ebene:"
+msgstr "圖層"
 
 #: ../src/interface.c:1746 ../src/interface.c:1936
 msgid "Strength:"
-msgstr "Stärke:"
+msgstr "強度"
 
 #: ../src/interface.c:1749
 msgid "Overall coefficient for feature preservation intensity"
-msgstr "Globaler Koeffizient der Intensität der zu erhaltenden Elemente"
+msgstr "特徵保留強度的整體係數"
 
 #. Feature discard
 #: ../src/interface.c:1782
 #, fuzzy
 msgid "Feature discard mask"
-msgstr "Auswahl der zu verwerfenden Elemente"
+msgstr "特徵刪除遮罩"
 
 #: ../src/interface.c:1787
 #, c-format
@@ -305,44 +284,38 @@ msgid ""
 "\"Refresh\" button.\n"
 "Note that painting in black has no effect"
 msgstr ""
-"Um Elemente zu verwerfen, müssen weitere Ebenen erzeugt werden.\n"
-"Sie können eine neue Ebene mit dem \"Neu\"-Button erzeugen und darauf "
-"zeichnen. Drücken Sie anschließend \"Aktualisieren\".\n"
-"Beachten Sie, daß das Zeichnen mit Schwarz ergebnislos bleibt."
+"需要額外的圖層來啟用這項刪除特性.\n"
+"你可以按 \"新增\" 來新增一個圖層並在其上塗上顏色, 之後按 \"重新整理\" .\n"
+"注意: 用黑色是無作用的"
 
 #: ../src/interface.c:1818
 msgid "Discard features"
-msgstr "Elemente verwerfen"
+msgstr "刪除特徵"
 
 #: ../src/interface.c:1835
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
 msgstr ""
-"Verwendet eine Extraebene, um die ausgewählten Bereiche als bedeutungslos zu "
-"kennzeichnen (nützlich, um Teile des Bildes beim Verkleinern zu entfernen)"
+"使用一額外圖層將其選擇區域視為無意義的(這在縮小過程中移除部份區域是很有用的)"
 
 #: ../src/interface.c:1845
 msgid "Creates a new transparent layer ready to be used as a discard mask"
-msgstr ""
-"Erzeugt eine neue transparente Ebene, die als Ebene zum Verwenden von "
-"Elementen verwendet wird"
+msgstr "創建一個新的透明圖層來作為刪除的遮罩"
 
 #: ../src/interface.c:1883
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
-"Die Ebene, die als Maske zum Verwerfen von Elementen verwendet wird.\n"
-"Verwenden Sie \"Aktualisieren\", um die Liste zu aktualisieren."
 
 #: ../src/interface.c:1939
 msgid "Overall coefficient for feature discard intensity"
-msgstr "Globaler Koeffizient der Intensität der zu verwerfenden Elemente"
+msgstr "特徵刪除強度的整體係數"
 
 #: ../src/interface.c:1981
 msgid "Auto size"
-msgstr ""
+msgstr "自動大小"
 
 #: ../src/interface.c:1992
 msgid ""
@@ -352,15 +325,15 @@ msgstr ""
 
 #: ../src/interface.c:1996
 msgid "horizontal"
-msgstr ""
+msgstr "水平"
 
 #: ../src/interface.c:1996
 msgid "vertical"
-msgstr ""
+msgstr "垂直"
 
 #: ../src/interface.c:2007
 msgid "Resizing direction for auto size"
-msgstr ""
+msgstr "自動大小的縮放方向"
 
 #: ../src/main.c:161
 msgid "scaling which keeps layer features (or removes them)"
@@ -369,48 +342,43 @@ msgstr ""
 #: ../src/main.c:165
 #, fuzzy
 msgid "Li_quid rescale..."
-msgstr "Flüssige Neuskalierung ..."
+msgstr "Liquid改變大小"
 
 #: ../src/render.c:45 ../src/render.c:46
 msgid "Not enough memory"
-msgstr "Nicht genug Arbeitsspeicher vorhanden"
+msgstr "記憶體不足"
 
 #: ../src/render.c:103
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
-"Fehler. Die ausgewählte Ebene zum Erhalten von Ebenen ist anscheinend nicht "
-"mehr gültig"
 
 #: ../src/render.c:113
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
-"Fehler. Die ausgewählte Ebene zum Verwerfen von Elementen ist anscheinend "
-"nicht mehr gültig"
 
 #: ../src/render.c:206
 msgid "Resizing width..."
-msgstr "Ändere die Breite ..."
+msgstr "正在改變寬度"
 
 #: ../src/render.c:208
 msgid "Resizing height..."
-msgstr "Ändere die Höhe ..."
+msgstr "正在改變高度"
 
 #: ../src/io_functions.c:46
 msgid "Parsing layer..."
-msgstr "Analysiere die Ebene ..."
+msgstr "正在解析圖層"
 
 #: ../src/io_functions.c:115
 msgid "Applying changes..."
-msgstr "Änderungen anwenden ..."
+msgstr "正在套用變化"
 
 #: ../src/io_functions.c:181
 msgid "Drawing seam map..."
-msgstr "Zeichne die Nähtekarte ..."
+msgstr ""
 
 #. The name of the layer with the seams map
 #. (here "%s" represents the selected layer's name)
 #: ../src/io_functions.c:247
-#, fuzzy, c-format
+#, c-format
 msgid "%s seam map"
 msgstr ""
-
