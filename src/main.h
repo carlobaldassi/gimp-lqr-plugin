@@ -25,6 +25,8 @@
 #define __MAIN_H__
 
 #define RESPONSE_REFRESH (1)
+#define RESPONSE_FEAT_REFRESH (2)
+#define RESPONSE_ADV_REFRESH (3)
 
 /**** OPERATIONAL_MODES ****/
 enum _OperMode
@@ -45,6 +47,7 @@ typedef struct
   gint32 disc_layer_ID;
   gint disc_coeff;
   gfloat rigidity;
+  gint32 rigmask_layer_ID;
   gint delta_x;
   gboolean resize_aux_layers;
   gboolean resize_canvas;
@@ -72,6 +75,7 @@ typedef struct
   gboolean chain_active;
   gboolean pres_status;
   gboolean disc_status;
+  gboolean rigmask_status;
   gint guess_direction;
 } PlugInUIVals;
 
@@ -105,6 +109,7 @@ typedef struct
   guchar *buffer;
   guchar *pres_buffer;
   guchar *disc_buffer;
+  guchar *rigmask_buffer;
   guchar *preview_buffer;
   gboolean toggle;
   PlugInVals *vals;
@@ -113,6 +118,7 @@ typedef struct
   GtkWidget *area;
   GtkWidget *pres_combo;
   GtkWidget *disc_combo;
+  GtkWidget *rigmask_combo;
   GtkWidget *coordinates;
   gint guess_direction;
 } PreviewData;
@@ -144,7 +150,9 @@ typedef struct
 {
   GtkWidget *notebook;
   GtkWidget *features_page;
+  GtkWidget *advanced_page;
   gint features_page_ID;
+  gint advanced_page_ID;
   GtkWidget *label;
   gint32 image_ID;
   GimpDrawable *drawable;
@@ -167,6 +175,7 @@ typedef struct
   gboolean *status;
   gchar name[LQR_MAX_NAME_LENGTH];
   GimpRGB colour;
+  gboolean presdisc;
 } NewLayerData;
 
 #define NEW_LAYER_DATA(data) ((NewLayerData*)(data))

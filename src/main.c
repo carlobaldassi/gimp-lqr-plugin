@@ -68,6 +68,7 @@ const PlugInVals default_vals = {
   0,                            /* disc layer ID */
   1000,                         /* disc coeff */
   0,                            /* rigidity coeff */
+  0,				/* rigmask layer ID */
   1,                            /* delta x */
   TRUE,                         /* resize canvas */
   TRUE,                         /* resize aux layers */
@@ -135,6 +136,7 @@ static void query (void)
     {GIMP_PDB_INT32, "disc_layer", "Layer that marks areas to discard"},
     {GIMP_PDB_INT32, "disc_coeff", "Discard coefficient"},
     {GIMP_PDB_FLOAT, "rigidity", "Rigidity coefficient"},
+    {GIMP_PDB_INT32, "rigidity_mask_layer", "Layer used as rigidity mask"},
     {GIMP_PDB_INT32, "delta_x", "max displacement of seams"},
     {GIMP_PDB_INT32, "resize_aux_layers",
      "Whether to resize auxiliary layers"},
@@ -212,7 +214,7 @@ run (const gchar * name,
       switch (run_mode)
         {
         case GIMP_RUN_NONINTERACTIVE:
-          if (n_params != 19)
+          if (n_params != 20)
             {
               status = GIMP_PDB_CALLING_ERROR;
             }
@@ -225,15 +227,16 @@ run (const gchar * name,
               vals.disc_layer_ID = param[7].data.d_int32;
               vals.disc_coeff = param[8].data.d_int32;
               vals.rigidity = param[9].data.d_int32;
-              vals.delta_x = param[10].data.d_int32;
-              vals.resize_aux_layers = param[11].data.d_int32;
-              vals.resize_canvas = param[12].data.d_int32;
-              vals.new_layer = param[13].data.d_int32;
-              vals.output_seams = param[14].data.d_int32;
-              vals.grad_func = param[15].data.d_int32;
-              vals.res_order = param[16].data.d_int32;
-              vals.mask_behavior = param[17].data.d_int32;
-              vals.oper_mode = param[18].data.d_int32;
+              vals.rigmask_layer_ID = param[10].data.d_int32;
+              vals.delta_x = param[11].data.d_int32;
+              vals.resize_aux_layers = param[12].data.d_int32;
+              vals.resize_canvas = param[13].data.d_int32;
+              vals.new_layer = param[14].data.d_int32;
+              vals.output_seams = param[15].data.d_int32;
+              vals.grad_func = param[16].data.d_int32;
+              vals.res_order = param[17].data.d_int32;
+              vals.mask_behavior = param[18].data.d_int32;
+              vals.oper_mode = param[19].data.d_int32;
             }
           break;
 
@@ -278,6 +281,10 @@ run (const gchar * name,
       if ((vals.disc_layer_ID == -1) || (ui_vals.disc_status == FALSE))
         {
           vals.disc_layer_ID = 0;
+        }
+      if ((vals.rigmask_layer_ID == -1) || (ui_vals.rigmask_status == FALSE))
+        {
+          vals.rigmask_layer_ID = 0;
         }
       gimp_image_undo_group_start (image_ID);
       render_success =

@@ -101,6 +101,36 @@ update_bias (LqrCarver * r, gint32 layer_ID, gint bias_factor,
 }
 
 LqrRetVal
+set_rigmask (LqrCarver * r, gint32 layer_ID, gint base_x_off, gint base_y_off)
+{
+  guchar *rgb;
+  gint w, h, bpp;
+  gint x_off, y_off;
+
+  if (layer_ID == 0)
+    {
+      return LQR_OK;
+    }
+
+  gimp_drawable_offsets (layer_ID, &x_off, &y_off);
+  x_off -= base_x_off;
+  y_off -= base_y_off;
+
+  w = gimp_drawable_width (layer_ID);
+  h = gimp_drawable_height (layer_ID);
+
+  bpp = gimp_drawable_bpp (layer_ID);
+
+  rgb = rgb_buffer_from_layer (layer_ID);
+
+  CATCH (lqr_carver_rigmask_add_rgb_area
+         (r, rgb, bpp, w, h, x_off, y_off));
+
+  return LQR_OK;
+}
+
+
+LqrRetVal
 write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
 {
   gint32 layer_ID;

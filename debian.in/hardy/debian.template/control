@@ -2,12 +2,12 @@ Source: gimp-lqr-plugin
 Section: universe/graphics
 Priority: extra
 Maintainer: Carlo Baldassi <carlobaldassi@yahoo.it>
-Build-Depends: libgimp2.0-dev (>= 2.4), liblqr1-dev (>= 0.0.1), debhelper (>= 5), autotools-dev, libxml-parser-perl (>= 2.34)
+Build-Depends: libgimp2.0-dev (>= 2.4), liblqr1-dev (>= 0.1.1), debhelper (>= 5), autotools-dev, libxml-parser-perl (>= 2.34)
 Standards-Version: 3.7.2
 
 Package: gimp-lqr-plugin
 Architecture: any
-Depends: gimp (>=2.4), liblqr1, ${shlibs:Depends}
+Depends: gimp (>=2.4), liblqr1 (>=0.1.1), ${shlibs:Depends}
 Conflicts: gimp-plugin-registry
 Description: GIMP Liquid Rescale plugin
  This GIMP plugin is a front-end to the LiquidRescale

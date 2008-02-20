@@ -1,3 +1,5 @@
+2008-02-20 Carlo Baldassi <carlobaldassi@gmail.com>
+	* new : introduced the rigidity mask interface
 2008-01-14 Carlo Baldassi <carlobaldassi@yahoo.it>
 	* bugfix : fixed configure.ac
 2007-12-07 Carlo Baldassi <carlobaldassi@yahoo.it>

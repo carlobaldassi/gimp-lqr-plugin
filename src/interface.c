@@ -57,6 +57,7 @@ static gboolean dialog_layer_constraint_func (gint32 image_id,
 
 static void callback_pres_combo_get_active (GtkWidget * combo, gpointer data);
 static void callback_disc_combo_get_active (GtkWidget * combo, gpointer data);
+static void callback_rigmask_combo_get_active (GtkWidget * combo, gpointer data);
 static void callback_combo_set_sensitive (GtkWidget * button, gpointer data);
 static void callback_status_button (GtkWidget * button, gpointer data);
 static void callback_new_mask_button (GtkWidget * button, gpointer data);
@@ -66,6 +67,7 @@ static int guess_new_width (GtkWidget * button, gpointer data);
 static int guess_new_height (GtkWidget * button, gpointer data);
 static void callback_out_seams_button (GtkWidget * button, gpointer data);
 static void refresh_features_page (NotebookData * data);
+static void refresh_advanced_page (NotebookData * data);
 static void callback_pres_combo_set_sensitive_preview (GtkWidget * button,
                                                        gpointer data);
 static void callback_disc_combo_set_sensitive_preview (GtkWidget * button,
@@ -89,6 +91,7 @@ preview_expose_event_callback (GtkWidget * preview_area,
                                GdkEventExpose * event, gpointer data);
 
 GtkWidget *features_page_new (gint32 image_ID, GimpDrawable * drawable);
+GtkWidget *advanced_page_new (gint32 image_ID, GimpDrawable * drawable);
 
 
 /*  Local variables  */
@@ -102,14 +105,19 @@ PlugInVals *state;
 NotebookData *notebook_data;
 NewLayerData *new_pres_layer_data;
 NewLayerData *new_disc_layer_data;
+NewLayerData *new_rigmask_layer_data;
 gboolean features_are_sensitive;
 PreviewData preview_data;
 ResponseData response_data;
 PresDiscStatus presdisc_status;
 ToggleData pres_toggle_data;
 ToggleData disc_toggle_data;
+ToggleData rigmask_toggle_data;
 gboolean pres_combo_awaked = FALSE;
 gboolean disc_combo_awaked = FALSE;
+gboolean rigmask_combo_awaked = FALSE;
+GtkWidget *grad_func_combo_box;
+GtkWidget *res_order_combo_box;
 
 GtkWidget *dlg;
 GtkTooltips *dlg_tips;
@@ -128,7 +136,7 @@ dialog (gint32 image_ID,
   gint32 layer_ID;
   GimpRGB saved_colour;
   gint num_extra_layers;
-  GtkWidget *gradient_event_box;
+  //GtkWidget *gradient_event_box;
   GtkWidget *main_hbox;
   GtkWidget *vbox;
   GtkWidget *vbox2;
@@ -137,16 +145,19 @@ dialog (gint32 image_ID,
   GtkWidget *notebook;
   gfloat wfactor, hfactor;
   GtkWidget *preview_area;
-  GtkWidget *table;
+  //GtkWidget *table;
   GtkWidget *coordinates;
   GtkWidget *mode_event_box;
   GtkWidget *oper_mode_combo_box;
   GtkWidget *features_page;
+  GtkWidget *advanced_page;
   GtkWidget *thispage;
   GtkWidget *label;
-  GtkWidget *grad_func_combo_box;
-  GtkWidget *res_order_event_box;
-  GtkWidget *res_order_combo_box;
+  //GtkWidget *combo;
+  //gint row;
+  //GtkWidget *grad_func_combo_box;
+  //GtkWidget *res_order_event_box;
+  //GtkWidget *res_order_combo_box;
   GtkWidget *new_layer_button;
   GtkWidget *resize_canvas_button;
   GtkWidget *resize_aux_layers_button;
@@ -158,7 +169,7 @@ dialog (gint32 image_ID,
   GtkWidget *out_seams_col_button2;
   GtkWidget *mask_behavior_combo_box = NULL;
   gboolean has_mask = FALSE;
-  GtkObject *adj;
+  //GtkObject *adj;
   gboolean run = FALSE;
   GimpUnit unit;
   gdouble xres, yres;
@@ -419,7 +430,7 @@ dialog (gint32 image_ID,
                              "canvas to fit the resized layer"), NULL);
 
   resize_aux_layers_button =
-    gtk_check_button_new_with_label (_("Resize preserve/discard layers"));
+    gtk_check_button_new_with_label (_("Resize auxiliary layers"));
 
   gtk_box_pack_start (GTK_BOX (vbox), resize_aux_layers_button, FALSE, FALSE,
                       0);
@@ -436,7 +447,7 @@ dialog (gint32 image_ID,
   gtk_widget_show (resize_aux_layers_button);
 
   gimp_help_set_help_data (resize_aux_layers_button,
-                           _("Resize the layers used as masks "
+                           _("Resize the layers used as features or rigidity masks "
                              "along with the active layer"), NULL);
 
   out_seams_hbox = gtk_hbox_new (FALSE, 4);
@@ -498,6 +509,7 @@ dialog (gint32 image_ID,
                            _("Colour to use for the first seams"), NULL);
 
 
+#if 0
   /* Advanced settings page */
 
   label = gtk_label_new (_("Advanced"));
@@ -510,14 +522,16 @@ dialog (gint32 image_ID,
 
   /* Rigidity */
 
-  table = gtk_table_new (2, 2, FALSE);
+  table = gtk_table_new (3, 2, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_box_pack_start (GTK_BOX (thispage), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
-  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
+  row = 0;
+
+  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
                               _("Seams rigidity:"), SCALE_WIDTH,
                               SPIN_BUTTON_WIDTH, state->rigidity, 0,
                               MAX_RIGIDITY, 0.2, 10, 2, TRUE, 0, 0,
@@ -527,9 +541,31 @@ dialog (gint32 image_ID,
                     G_CALLBACK (gimp_float_adjustment_update),
                     &state->rigidity);
 
+  combo =
+    gimp_layer_combo_box_new (dialog_layer_constraint_func,
+                              (gpointer *) drawable);
+
+  g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
+  
+  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (combo),
+                              layer_ID,
+                              G_CALLBACK (callback_rigmask_combo_get_active),
+                              (gpointer) (&preview_data));
+
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (combo), state->rigmask_layer_ID);
+
+  gtk_widget_set_sensitive (combo, ui_state->disc_status
+                            && features_are_sensitive);
+
+  label = gimp_table_attach_aligned (GTK_TABLE (table), 0, row++,
+                                     _("Rigidity mask:"), 0.0, 0.5, combo, 1, FALSE);
+
+
+
+
   /* Delta x */
 
-  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, 1,
+  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
                               _("Seams max step:"), SCALE_WIDTH,
                               SPIN_BUTTON_WIDTH, state->delta_x, 0,
                               MAX_DELTA_X, 1, 1, 0, TRUE, 0, 0,
@@ -602,9 +638,15 @@ dialog (gint32 image_ID,
 
   gtk_box_pack_start (GTK_BOX (hbox), res_order_combo_box, TRUE, TRUE, 0);
   gtk_widget_show (res_order_combo_box);
+#endif
 
+  /* Advanced (new) */
 
-
+  advanced_page = advanced_page_new (image_ID, drawable);
+  gtk_widget_show (advanced_page);
+  notebook_data->advanced_page_ID =
+    gtk_notebook_append_page_menu (GTK_NOTEBOOK (notebook), advanced_page,
+                                    notebook_data->label, NULL);
 
   /* Mask */
 
@@ -755,7 +797,14 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
   switch (response_id)
     {
     case RESPONSE_REFRESH:
+      refresh_advanced_page (RESPONSE_DATA (data)->notebook_data);
       refresh_features_page (RESPONSE_DATA (data)->notebook_data);
+      break;
+    case RESPONSE_FEAT_REFRESH:
+      refresh_features_page (RESPONSE_DATA (data)->notebook_data);
+      break;
+    case RESPONSE_ADV_REFRESH:
+      refresh_advanced_page (RESPONSE_DATA (data)->notebook_data);
       break;
     default:
       dialog_response = response_id;
@@ -827,6 +876,36 @@ callback_disc_combo_get_active (GtkWidget * combo, gpointer data)
 }
 
 static void
+callback_rigmask_combo_get_active (GtkWidget * combo, gpointer data)
+{
+  gint32 rigmask_layer_ID;
+  gint x_off, y_off;
+  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (combo),
+                                 &(PREVIEW_DATA (data)->vals->rigmask_layer_ID));
+  if (PREVIEW_DATA (data)->ui_vals->rigmask_status == TRUE)
+    {
+      gimp_image_undo_freeze (PREVIEW_DATA (data)->image_ID);
+      rigmask_layer_ID =
+        gimp_layer_copy (PREVIEW_DATA (data)->vals->rigmask_layer_ID);
+      gimp_image_add_layer (PREVIEW_DATA (data)->image_ID, rigmask_layer_ID, -1);
+      gimp_drawable_offsets (rigmask_layer_ID, &x_off, &y_off);
+      gimp_layer_resize (rigmask_layer_ID, PREVIEW_DATA (data)->old_width,
+                         PREVIEW_DATA (data)->old_height,
+                         x_off - PREVIEW_DATA (data)->x_off,
+                         y_off - PREVIEW_DATA (data)->y_off);
+      gimp_layer_scale (rigmask_layer_ID, PREVIEW_DATA (data)->width,
+                        PREVIEW_DATA (data)->height, TRUE);
+      gimp_layer_add_alpha (rigmask_layer_ID);
+      g_free (PREVIEW_DATA (data)->rigmask_buffer);
+      PREVIEW_DATA (data)->rigmask_buffer = preview_build_buffer (rigmask_layer_ID);
+      gimp_image_remove_layer (PREVIEW_DATA (data)->image_ID, rigmask_layer_ID);
+      gimp_image_undo_thaw (PREVIEW_DATA (data)->image_ID);
+    }
+  preview_build_pixbuf (PREVIEW_DATA (data));
+  gtk_widget_queue_draw (PREVIEW_DATA (data)->area);
+}
+
+static void
 callback_combo_set_sensitive (GtkWidget * button, gpointer data)
 {
   gboolean button_status =
@@ -835,12 +914,15 @@ callback_combo_set_sensitive (GtkWidget * button, gpointer data)
                             button_status);
   gtk_widget_set_sensitive ((GtkWidget *) (TOGGLE_DATA (data)->combo_label),
                             button_status);
-  gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_LABEL
-                            (TOGGLE_DATA (data)->scale), button_status);
-  gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SCALE
-                            (TOGGLE_DATA (data)->scale), button_status);
-  gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SPINBUTTON
-                            (TOGGLE_DATA (data)->scale), button_status);
+  if (TOGGLE_DATA(data)->scale)
+    {
+      gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_LABEL
+				(TOGGLE_DATA (data)->scale), button_status);
+      gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SCALE
+				(TOGGLE_DATA (data)->scale), button_status);
+      gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SPINBUTTON
+				(TOGGLE_DATA (data)->scale), button_status);
+    }
   if (TOGGLE_DATA (data)->guess_button)
     {
       gtk_widget_set_sensitive (TOGGLE_DATA (data)->guess_button,
@@ -877,7 +959,11 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   context_calls++;
   gimp_context_set_foreground (&(NEW_LAYER_DATA (data)->colour));
 
-  gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH);
+  if (NEW_LAYER_DATA(data)->presdisc == TRUE) {
+	  gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FEAT_REFRESH);
+  } else {
+	  gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_ADV_REFRESH);
+  }
 }
 
 static void
@@ -1134,12 +1220,28 @@ callback_disc_combo_set_sensitive_preview (GtkWidget * button, gpointer data)
 }
 
 static void
+callback_rigmask_combo_set_sensitive_preview (GtkWidget * button, gpointer data)
+{
+  if (rigmask_combo_awaked == FALSE)
+    {
+      g_signal_emit_by_name (G_OBJECT (PREVIEW_DATA (data)->rigmask_combo),
+                             "changed");
+      rigmask_combo_awaked = TRUE;
+    }
+  preview_build_pixbuf (PREVIEW_DATA (data));
+  gtk_widget_queue_draw (PREVIEW_DATA (data)->area);
+}
+
+static void
 callback_resize_aux_layers_button_set_sensitive (GtkWidget * button,
                                                  gpointer data)
 {
   if ((PLUGIN_UI_VALS (PRESDISC_STATUS (data)->ui_vals)->pres_status == TRUE)
       || (PLUGIN_UI_VALS (PRESDISC_STATUS (data)->ui_vals)->disc_status ==
-          TRUE))
+          TRUE)
+      || (PLUGIN_UI_VALS (PRESDISC_STATUS (data)->ui_vals)->rigmask_status ==
+          TRUE)
+      )
     {
       gtk_widget_set_sensitive ((GtkWidget *) (PRESDISC_STATUS (data)->
                                                button), TRUE);
@@ -1157,7 +1259,9 @@ static void
 refresh_features_page (NotebookData * data)
 {
   GtkWidget *new_page;
+  gint current_page;
 
+  current_page = gtk_notebook_get_current_page(GTK_NOTEBOOK (data->notebook));
   gtk_notebook_remove_page (GTK_NOTEBOOK (data->notebook),
                             data->features_page_ID);
   new_page = features_page_new (data->image_ID, data->drawable);
@@ -1167,7 +1271,29 @@ refresh_features_page (NotebookData * data)
                                     data->label, NULL);
   data->features_page = new_page;
   gtk_notebook_set_current_page (GTK_NOTEBOOK (data->notebook),
-                                 data->features_page_ID);
+                                 current_page);
+  callback_resize_aux_layers_button_set_sensitive (NULL,
+                                                   (gpointer)
+                                                   (&presdisc_status));
+}
+
+static void
+refresh_advanced_page (NotebookData * data)
+{
+  GtkWidget *new_page;
+  gint current_page;
+
+  current_page = gtk_notebook_get_current_page(GTK_NOTEBOOK (data->notebook));
+  gtk_notebook_remove_page (GTK_NOTEBOOK (data->notebook),
+                            data->advanced_page_ID);
+  new_page = advanced_page_new (data->image_ID, data->drawable);
+  gtk_widget_show (new_page);
+  data->advanced_page_ID =
+    gtk_notebook_append_page_menu (GTK_NOTEBOOK (data->notebook), new_page,
+                                    data->label, NULL);
+  data->advanced_page = new_page;
+  gtk_notebook_set_current_page (GTK_NOTEBOOK (data->notebook),
+                                 current_page);
   callback_resize_aux_layers_button_set_sensitive (NULL,
                                                    (gpointer)
                                                    (&presdisc_status));
@@ -1181,6 +1307,7 @@ preview_init_mem (PreviewData * preview_data)
   preview_data->buffer = NULL;
   preview_data->pres_buffer = NULL;
   preview_data->disc_buffer = NULL;
+  preview_data->rigmask_buffer = NULL;
   preview_data->pixbuf = NULL;
 }
 
@@ -1421,7 +1548,7 @@ preview_build_pixbuf (PreviewData * preview_data)
   gint bpp;
   gint x, y, k;
   gint index, index1;
-  gdouble tfactor_orig, tfactor_pres, tfactor_disc, tfactor;
+  gdouble tfactor_orig, tfactor_pres, tfactor_disc, tfactor_rigmask, tfactor;
   gdouble value;
 
   if (preview_data->pixbuf != NULL)
@@ -1442,6 +1569,7 @@ preview_build_pixbuf (PreviewData * preview_data)
           tfactor_orig = 0;
           tfactor_pres = 1;
           tfactor_disc = 1;
+	  tfactor_rigmask = 1;
           tfactor_orig =
             (gdouble) (255 -
                        preview_data->buffer[index1 * bpp + bpp - 1]) / 255;
@@ -1461,7 +1589,15 @@ preview_build_pixbuf (PreviewData * preview_data)
                            0.5 * preview_data->disc_buffer[(index1 + 1) *
                                                            bpp - 1]) / 255;
             }
-          tfactor = (1 - tfactor_orig) * tfactor_pres * tfactor_disc;
+          if ((preview_data->rigmask_buffer != NULL)
+              && (preview_data->ui_vals->rigmask_status == TRUE))
+            {
+              tfactor_rigmask =
+                (gdouble) (255 -
+                           0.5 * preview_data->rigmask_buffer[(index1 + 1) *
+                                                           bpp - 1]) / 255;
+            }
+          tfactor = (1 - tfactor_orig) * tfactor_pres * tfactor_disc * tfactor_rigmask;
           for (k = 0; k < bpp; k++)
             {
               index = index1 * bpp + k;
@@ -1478,6 +1614,13 @@ preview_build_pixbuf (PreviewData * preview_data)
                     (guchar) ((1 -
                                tfactor_disc) *
                               preview_data->disc_buffer[index]);
+                }
+              if (tfactor_rigmask < 1)
+                {
+                  value +=
+                    (guchar) ((1 -
+                               tfactor_rigmask) *
+                              preview_data->rigmask_buffer[index]);
                 }
               if (value > 255)
                 {
@@ -1562,6 +1705,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   snprintf (new_pres_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s pres mask"),
             gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_pres_layer_data->colour), 0, 1, 0);
+  new_pres_layer_data->presdisc = TRUE;
 
   new_disc_layer_data->layer_ID = &(state->disc_layer_ID);
   new_disc_layer_data->status = &(ui_state->disc_status);
@@ -1570,6 +1714,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   snprintf (new_disc_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s disc mask"),
             gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_disc_layer_data->colour), 1, 0, 0);
+  new_disc_layer_data->presdisc = TRUE;
 
   num_extra_layers = count_extra_layers (image_ID, drawable);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
@@ -2016,6 +2161,375 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                     G_CALLBACK (callback_guess_button),
                     (gpointer) & preview_data);
 
+
+
+
+  return thispage;
+
+
+}
+
+/* Generate advanced options  page */
+
+GtkWidget *
+advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
+{
+  gint32 layer_ID;
+  gint num_extra_layers;
+  GtkWidget *label;
+  GtkWidget *thispage;
+  gchar rigmask_inactive_tip_string[MAX_STRING_SIZE];
+  GtkWidget *rigmask_frame_event_box1;
+  GtkWidget *rigmask_frame_event_box2;
+  GtkWidget *rigmask_combo_event_box;
+  GtkTooltips *rigmask_frame_tips;
+  gint32 old_layer_ID;
+  GtkWidget *frame;
+  GtkWidget *rigmask_vbox;
+  GtkWidget *rigmask_vbox2;
+  GtkWidget *hbox;
+  GtkWidget *rigmask_button;
+  GtkWidget *rigmask_new_button;
+  GtkWidget *table;
+  gint row;
+  GtkWidget *combo;
+  GtkObject *adj;
+
+  GtkWidget *gradient_event_box;
+  //GtkWidget *grad_func_combo_box;
+  GtkWidget *res_order_event_box;
+  //GtkWidget *res_order_combo_box;
+
+  layer_ID = drawable->drawable_id;
+
+  label = gtk_label_new (_("Advanced"));
+  notebook_data->label = label;
+
+  new_rigmask_layer_data = g_new (NewLayerData, 1);
+
+  new_rigmask_layer_data->layer_ID = &(state->rigmask_layer_ID);
+  new_rigmask_layer_data->status = &(ui_state->rigmask_status);
+  /* The name of a newly created layer for rigidity mask */
+  /* (here "%s" represents the selected layer's name) */
+  snprintf (new_rigmask_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s rigidity mask"),
+            gimp_drawable_get_name (preview_data.orig_layer_ID));
+  gimp_rgb_set (&(new_rigmask_layer_data->colour), 0, 0, 1);
+  new_rigmask_layer_data->presdisc = FALSE;
+
+  num_extra_layers = count_extra_layers (image_ID, drawable);
+  features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
+  if (!features_are_sensitive)
+    {
+      ui_state->rigmask_status = FALSE;
+      rigmask_combo_awaked = FALSE;
+    }
+
+  thispage = gtk_vbox_new (FALSE, 12);
+  gtk_container_set_border_width (GTK_CONTAINER (thispage), 12);
+  notebook_data->advanced_page = thispage;
+
+
+  /*  Seams control  */
+
+  frame = gimp_frame_new (_("Seams control"));
+  gtk_box_pack_start (GTK_BOX (thispage), frame, FALSE, FALSE, 0);
+  gtk_widget_show (frame);
+
+  snprintf (rigmask_inactive_tip_string, MAX_STRING_SIZE,
+            _("Extra layers are needed to be used as rigidity masks.\n"
+              "You can create one with the \"New\" button and paint on it, "
+              "then press the \"Refresh\" button.\n"
+              "Note that painting in black has no effect"));
+
+  rigmask_frame_tips = gtk_tooltips_new ();
+
+
+  rigmask_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER (frame), rigmask_vbox);
+  gtk_widget_show (rigmask_vbox);
+
+  table = gtk_table_new (3, 2, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 4);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
+  gtk_box_pack_start (GTK_BOX (rigmask_vbox), table, FALSE, FALSE, 0);
+  gtk_widget_show (table);
+
+  row = 0;
+
+  /* Delta x */
+
+  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
+                              _("Max transversal step:"), SCALE_WIDTH,
+                              SPIN_BUTTON_WIDTH, state->delta_x, 0,
+                              MAX_DELTA_X, 1, 1, 0, TRUE, 0, 0,
+                              _("Maximum displacement along a seam. "
+                                "Increasing this value allows to overcome "
+                                "the 45 degrees bound"), NULL);
+
+  g_signal_connect (adj, "value_changed",
+                    G_CALLBACK (gimp_int_adjustment_update), &state->delta_x);
+
+  /* Rigidity */
+
+
+  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
+                              _("Overall rigidity:"), SCALE_WIDTH,
+                              SPIN_BUTTON_WIDTH, state->rigidity, 0,
+                              MAX_RIGIDITY, 0.2, 10, 2, TRUE, 0, 0,
+                              _("Increasing this value results "
+                                "in straighter seams"), NULL);
+
+  g_signal_connect (adj, "value_changed",
+                    G_CALLBACK (gimp_float_adjustment_update),
+                    &state->rigidity);
+
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (rigmask_vbox), hbox, FALSE, FALSE, 0);
+  gtk_widget_show (hbox);
+
+  rigmask_frame_event_box1 = gtk_event_box_new ();
+  gtk_event_box_set_visible_window (GTK_EVENT_BOX (rigmask_frame_event_box1),
+                                    FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), rigmask_frame_event_box1, FALSE, FALSE, 0);
+  gtk_widget_show (rigmask_frame_event_box1);
+
+
+  if (!features_are_sensitive)
+    {
+      gtk_event_box_set_above_child (GTK_EVENT_BOX (rigmask_frame_event_box1),
+                                     TRUE);
+      gtk_tooltips_set_tip (GTK_TOOLTIPS (rigmask_frame_tips),
+                            rigmask_frame_event_box1,
+                            rigmask_inactive_tip_string, NULL);
+    }
+
+
+  rigmask_button = gtk_check_button_new_with_label (_("Use a rigidity mask"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rigmask_button),
+                                ui_state->rigmask_status);
+
+  gtk_widget_set_sensitive (rigmask_button, features_are_sensitive);
+
+
+  gtk_container_add (GTK_CONTAINER (rigmask_frame_event_box1), rigmask_button);
+  gtk_widget_show (rigmask_button);
+
+  g_signal_connect (rigmask_button, "toggled",
+                    G_CALLBACK
+                    (callback_status_button),
+                    (gpointer) (&ui_state->rigmask_status));
+
+  g_signal_connect (rigmask_button, "toggled",
+                    G_CALLBACK
+                    (callback_resize_aux_layers_button_set_sensitive),
+                    (gpointer) (&presdisc_status));
+
+  callback_resize_aux_layers_button_set_sensitive (NULL,
+                                                   (gpointer)
+                                                   (&presdisc_status));
+
+  gimp_help_set_help_data (rigmask_button,
+                           _("Use an extra layer to mark areas where seams should be straighter"), NULL);
+
+  rigmask_new_button = gtk_button_new_with_label (_("New"));
+  gtk_box_pack_end (GTK_BOX (hbox), rigmask_new_button, FALSE, FALSE, 0);
+  gtk_widget_show (rigmask_new_button);
+
+  gimp_help_set_help_data (rigmask_new_button,
+                           _("Creates a new transparent layer "
+                             "ready to be used as a rigidity mask"),
+                           NULL);
+
+  g_signal_connect (rigmask_new_button, "clicked",
+                    G_CALLBACK
+                    (callback_new_mask_button),
+                    (gpointer) (new_rigmask_layer_data));
+
+  rigmask_frame_event_box2 = gtk_event_box_new ();
+  gtk_event_box_set_visible_window (GTK_EVENT_BOX (rigmask_frame_event_box2),
+                                    FALSE);
+  gtk_box_pack_start (GTK_BOX (rigmask_vbox), rigmask_frame_event_box2, FALSE,
+                      FALSE, 0);
+  gtk_widget_show (rigmask_frame_event_box2);
+
+
+  if (!features_are_sensitive)
+    {
+      gtk_event_box_set_above_child (GTK_EVENT_BOX (rigmask_frame_event_box2),
+                                     TRUE);
+      gtk_tooltips_set_tip (GTK_TOOLTIPS (rigmask_frame_tips),
+                            rigmask_frame_event_box2,
+                            rigmask_inactive_tip_string, NULL);
+    }
+
+  rigmask_vbox2 = gtk_vbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER (rigmask_frame_event_box2), rigmask_vbox2);
+  gtk_widget_show (rigmask_vbox2);
+
+
+  rigmask_combo_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (rigmask_vbox2), rigmask_combo_event_box, FALSE,
+                      FALSE, 0);
+  gtk_widget_show (rigmask_combo_event_box);
+
+  if (features_are_sensitive)
+    {
+      gimp_help_set_help_data (rigmask_combo_event_box,
+                               _("Layer to be used as a mask for "
+                                 "rigidity settings.\n"
+                                 "Use the \"Refresh\" button to update the list"),
+                               NULL);
+    }
+
+  table = gtk_table_new (1, 2, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 4);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
+  gtk_container_add (GTK_CONTAINER (rigmask_combo_event_box), table);
+  gtk_widget_show (table);
+
+  row = 0;
+
+  combo =
+    gimp_layer_combo_box_new (dialog_layer_constraint_func,
+                              (gpointer *) drawable);
+
+  g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
+
+  old_layer_ID = state->rigmask_layer_ID;
+
+  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (combo),
+                              layer_ID,
+                              G_CALLBACK (callback_rigmask_combo_get_active),
+                              (gpointer) (&preview_data));
+
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (combo), old_layer_ID);
+
+  label = gimp_table_attach_aligned (GTK_TABLE (table), 0, row++,
+                                     _("Layer:"), 0.0, 0.5, combo, 1, FALSE);
+
+  gtk_widget_set_sensitive (label, ui_state->rigmask_status
+                            && features_are_sensitive);
+
+  gtk_widget_set_sensitive (combo, ui_state->rigmask_status
+                            && features_are_sensitive);
+  rigmask_toggle_data.combo = (gpointer) combo;
+  rigmask_toggle_data.combo_label = (gpointer) label;
+  preview_data.rigmask_combo = combo;
+
+  gtk_widget_show (combo);
+
+#if 0
+  table = gtk_table_new (1, 2, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 4);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
+  gtk_box_pack_start (GTK_BOX (pres_vbox2), table, FALSE, FALSE, 0);
+  gtk_widget_show (table);
+
+  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
+                              _("Strength:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
+                              state->pres_coeff, 0, MAX_COEFF, 1, 10, 0,
+                              TRUE, 0, 0,
+                              _("Overall coefficient for feature preservation intensity"),
+                              NULL);
+  g_signal_connect (adj, "value_changed",
+                    G_CALLBACK (gimp_int_adjustment_update),
+                    &state->pres_coeff);
+
+  gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_LABEL (adj),
+                            (ui_state->pres_status
+                             && features_are_sensitive));
+  gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SCALE (adj),
+                            (ui_state->pres_status
+                             && features_are_sensitive));
+  gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SPINBUTTON (adj),
+                            (ui_state->pres_status
+                             && features_are_sensitive));
+  pres_toggle_data.scale = (gpointer) adj;
+
+#endif
+
+  rigmask_toggle_data.status = &(ui_state->rigmask_status);
+
+  rigmask_toggle_data.scale = NULL;
+  rigmask_toggle_data.guess_button = NULL;
+  rigmask_toggle_data.guess_dir_combo = NULL;
+ 
+
+
+  g_signal_connect (rigmask_button, "toggled",
+                    G_CALLBACK (callback_combo_set_sensitive),
+                    (gpointer) (&rigmask_toggle_data));
+
+  g_signal_connect (G_OBJECT (rigmask_button), "toggled",
+                    G_CALLBACK (callback_rigmask_combo_set_sensitive_preview),
+                    (gpointer) (&preview_data));
+
+  /* Gradient */
+
+  gradient_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (thispage), gradient_event_box, FALSE, FALSE,
+                      0);
+  gtk_widget_show (gradient_event_box);
+
+  gimp_help_set_help_data (gradient_event_box,
+                           _("This affects the automatic feature recognition.\n"
+                             "It's the function which will be applied to "
+                             "the components of the gradient on each pixel"),
+                           NULL);
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
+  gtk_container_add (GTK_CONTAINER (gradient_event_box), hbox);
+  gtk_widget_show (hbox);
+
+  label = gtk_label_new (_("Gradient function:"));
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  grad_func_combo_box =
+    gimp_int_combo_box_new (_("Transversal absolute value"), LQR_GF_XABS,
+                            _("Sum of absolute values"), LQR_GF_SUMABS,
+                            _("Norm"), LQR_GF_NORM,
+                            /* Null can be translated as Zero */
+                            _("Null"), LQR_GF_NULL, NULL);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
+                                 state->grad_func);
+
+  gtk_box_pack_start (GTK_BOX (hbox), grad_func_combo_box, TRUE, TRUE, 0);
+  gtk_widget_show (grad_func_combo_box);
+
+  /* Resize order */
+
+  res_order_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (thispage), res_order_event_box, FALSE, FALSE,
+                      0);
+  gtk_widget_show (res_order_event_box);
+
+  gimp_help_set_help_data (res_order_event_box,
+                           _("This controls the order of operations "
+                             "if rescaling in both directions"), NULL);
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
+  gtk_container_add (GTK_CONTAINER (res_order_event_box), hbox);
+  gtk_widget_show (hbox);
+
+  label = gtk_label_new (_("Rescale order:"));
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  res_order_combo_box =
+    gimp_int_combo_box_new (_("Horizontal first"), LQR_RES_ORDER_HOR,
+                            _("Vertical first"), LQR_RES_ORDER_VERT, NULL);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
+                                 state->res_order);
+
+  gtk_box_pack_start (GTK_BOX (hbox), res_order_combo_box, TRUE, TRUE, 0);
+  gtk_widget_show (res_order_combo_box);
 
 
 
