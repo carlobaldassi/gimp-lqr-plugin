@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# this is really greedy...
+#
+
+function rmtags() {
+	sed "s@</\?$1\>[^>]*>@@g";
+}
+
+function rmtagsbody() {
+	sed "s@<$1\>[^>]*>[^<]*</$1>@@g";
+}
+
+function subtags() {
+	sed "s@<$1>\([^<]*\)</$1>@$2\1$3@g"
+}
+
+
+cat | \
+	tr -d "\n"							| \
+	tr "\t" " "							| \
+	sed "s/ \+/ /g"							| \
+	rmtags "!doctype"						| \
+	rmtags "html"							| \
+	rmtags "META"							| \
+	rmtags "head"							| \
+	rmtags "body"							| \
+	rmtags "table"							| \
+	rmtags "tr"							| \
+	rmtags "td"							| \
+	rmtags "center"							| \
+	rmtags "font"							| \
+	subtags "b" '**{{{' '}}}**'					| \
+	sed "s/{{{\([^}]*\)[[:space:]]\+}}}/\1/g"			| \
+	sed "s/{{{\([^}]*\)}}}/\1/g"					| \
+	subtags "i" '//' '//'						| \
+	subtags "li" '* ' '\n'						| \
+	subtags "title" '\n+ ' '\n'					| \
+	subtags "h1" '\n+ ' '\n'					| \
+	subtags "h2" '\n++ ' '\n'					| \
+	subtags "h3" '\n+++ ' '\n'					| \
+	subtags "h4" '\n++++ ' '\n'					| \
+	sed "s/<img\>[^>]*src=\"\([^>]*\)\"[^>]*>/[[image \1]]/g"	| \
+	subtags "div" '\n' '\n'						| \
+	sed "s@</\?p>@\n@g"						| \
+	sed "s@</\?ul>@\n@g"						| \
+	sed "s/^[[:space:]]*//"						| \
+	sed "s@\(\[\[image[[:space:]]\+\)\.\./images/\(.*\]\]\)@\1\2@g"	| \
+	cat -s
+echo

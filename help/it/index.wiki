@@ -1,0 +1,81 @@
+
++ Pagina di aiuto per gimp-lqr-plugin
+[[image wilber.png]]     Pagina di aiuto per il plugin Liquid rescale     
+Il plugin Liquid Rescale è un'implementazione dell'algoritmo "content-aware resizing by seam carving" ideato da Shai Avidan e Ariel Shamir. 
+
+Il suo scopo è di ridimensionzre non uniformemente le immagini pur mantenendo le caratteristiche più salienti dell'immagine, evitando possibilmente di distorcerle. Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale". 
+
+Funziona sia rimpicciolentdo che ingrandendo, ma in quest'ultimo caso è preferibile procedere in più passi. È possibile specificare manualmente quali zone dell'immagine devono essere preservate e quali ignorate (o rimosse). 
+
+Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo. Se una selezione è presente, è salvata come canale. Se il livello ha una maschera per la trasparenza, viene mostrata un'opzione per stabilire se applicarla o rimuoverla prima di procedere. 
+
+++ Descrizione dell'interfaccia utente
+
+[[image dialog1_it.png]] 
+
++++ Selezionare le nuove dimensioni
+
+In questa sezione è possibile impostare le dimensioni finali dell'immagine. È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin agisce prima nel senso della larghezza, e poi in altezza. Questo compurtamento può essere modificato attrverso un'opzione nella linguetta //Avanzato//. 
+
+La modalità predefinita è di ridimensionare "liquidamente" l'immagine fino alle dimensioni specificate. Le altre opzioni possono essere usate per riportare l'immagine alle dimensioni iniziali una volta terminato, riutilizzando il LiquidRescale oppure il ridimensionamento standard. 
+
++++ Maschere per i contenuti
+
+++++ Guida rapida
+
+Il sistema più semplice per selezionare manualmente le zone dell'immagine che si vogliono proteggere/ignorare è il seguente: 
+*  Selezionate il livello (non la selezione fluttuante) che volete riscalare e invocate il plugin 
+*  Cliccate il pulsante //"Nuovo"// nella sezione **"Maschera per i contenuti da preservare"** (questo creerà un nuovo livello trasparente, con opacità 50%, e imposterà un colore appropriato) 
+*  Dipingete con il pennello (o altro) le aree che volete preservare 
+*  Cliccate sul pulsante //"Aggiorna"// per vedere le modifiche 
+*  Ripetete il tutto per i contenuti da eliminare 
+
+Volendo eliminare porzioni di immagine, un metodo rapido per impostare le dimensioni finali è, dopo aver impostato una maschera per l'eliminazione, di selezionare una direzione di ridimensionamento (orizzontale/verticale) e cliccare sul pulsante //"Auto dimensionamento"//. (Questo metodo tuttavia funziona solo con maschere molto semplici). 
+
+**NOTA #1:** eliminare un contenuto significa che la zona dell'immagine interessata verà eliminata se si restringe l'immagine, ma verrà gonfiata se si allarga l'immagine, dal momento che sarà trattata come se fosse sfondo di nessuna importanza, da poter comprimere e espandere a piacere. 
+
+**NOTA #2:** la preservazione dei contenuti non è possibile se si cerca di ingrandire troppo l'immagine, poiché il processo di allargamento è l'inverso del processo di restringimento, quindi la massima quantità di pixel che è possibile aggiungere a un layer corrisponde al numero di pixel che non sono protetti. Per esempio, se avete un'immagine larga 1000 pixel e averte contrassegnato una porzione da preservare larga 800 pixel, la larghezza finale dovrebbe essere inferiore ai 1200 pixel. Per ingrandire di più, procedete in passi successivi. 
+
+++++ Descrizione completa
+
+Nella sezione **Selezione del contenuto da preservare** è possibile specificare se ci sono regioni dell'immagine che dovrebbero essere preservate dalle modifiche, attivando l'opzione //Attiva la preservazione dei contenuti// e scegliendo un livello tra quelli che appartengono all'imaggine attuale (e sono diversi dal livello attivo) nel menu //Livelli disponibili//. Il pulsante //"Nuovo"// crea un nuovo livello trasparente con opacit`a 50% e un nome appropriato, e lo imposta come maschera da utilizzare per la preservazione dei contenuti (nota che se il plugin viene lanciato su una selezione fluttuante questa procedura non è adatta, dato che non si potrà lavorare sul nuovo livello). Inoltre, il colore di primo piano viene impostato a verde; il colore precedente viene ripristinato alla chiusura della finestra di dialogo. 
+
+L'intensità dell'effetto su ogni pixel si ricava dalla media dei valori del pixel in ogni canale del colore, moltiplicato per il canale alpha. Quindi per un livello RGB con un canale alpha, il valore massimo si otterrà con i pixel binachi, mentre quelli neri e quelli trasparenti sono ignorati. In generale, è consigliabile lavorare con un solo colore per livello, e modulare l'intensità attraverso la sola trasparenza nel caso in cui si voglia ottenere una regolazione più fine, per esempio utilizzando la maschera veloce. 
+
+Le dimensioni e la posizione dei layer selezionati può essere arbitraria, il plugin utilizza solo le porzioni che si sovrappongono al livello attivo. La scala //"Intensità"// può essere utilizzata come parametro globale per modulare la preservazione dei contenuti. Nota che il valore di intensità tiene conto automaticamente delle dimensioni dell'immagine, ma non di quelle delle aree mascherate: selezioni più sottili (nel verso del ridimensionamento) hanno bisogno di valori di intensità più alti, e viceversa. 
+
+La sezione **Selezione dei contenuti da eliminare** è identica alla precedente, ma l'effetto è invertito, e il colore impostato dal pulsante //"Nuovo"// è il rosso anziché il verde. 
+
+In più, c'è un ulteriore pulsante, //"Auto dimensionamento"//, che serve per impostare automaticamente le dimensioni finali del livello. Il menu accanto può essere usato per determinare se agire in orizzontale o in verticale (l'altra direzione viene impostata al suo valore iniziale). 
+
+Si noti che questa opzione è adeguata solamente per operazioni di rimozione elementari, poiché le dimensioni finali sono calcolate semplicemente a partire dal massimo numero di pixel per riga (o colonna) per i quali la maschera supera una data soglia, e questo metodo può facilmente fallire se la maschera è troppo complicata. La soglia corrisponde al 50% di un colore RGB pieno (ad es. del rosso con le impostazioni di default). 
+
++++ Output
+
+[[image dialog2_it.png]] 
+
+Questa pagina contiene alcune opzioni riguardo all'output del plugin. 
+
+**Scrivi su un nuovo livello.** Specifica se il risultato del ridimensionamento deve essere scritto su un nuovo livello. Per default è disattivata. 
+
+**Ridimensiona la tela.** Specifica se la tela deve essere ridimensionata in modo da adattarsi alle nuove dimensioni del livello attivo. Se quest'opzione è attivata (è il default), il livello attivo verrà anche riposizionato in modo da essere completamente visibile. 
+
+**Ridimensiona i livelli per la preservazione/eliminazione.** Specifica se i livelli che sono stati impostati per la selezione manuale dei contenuti verranno ridimensionati assieme al livello attivo. Se quest'opzione è attivata (è il default), le parti dei livelli in questione che escono dal livello attivo verranno tagliate, dopodichè subiranno lo stesso processo di eliminazione/inserimento di linee del layer attivo. 
+
+**Mostra le linee d'azione.** Specifica se creare un nuovo livello che mostra la mappa delle linee d'azione (che sono le parti dell'immagine che vengono eliminate, se si restringe, o gonfiate, se si allarga). La gamma dei colori delle linee può essere impostata manualmente tramite i due pulsanti sulla destra. Le linee sono calcolate sull'immagine originale in base alla necessità (per es. ne saranno calcolate 100 se si sta restringendo o allargando il livello di 100 pixel); le aree rimanenti restano trasparenti. Per interpretare il risultato, usate questa opzione assieme a //"Scrivi su un nuovo livello"//, e sovrapponete il livello con le linee d'azione a quello originale. Se riscalate in due direzioni contemporaneamente, otterete due mappe, ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi non è molto utile. 
+
++++ Avanzato
+
+[[image dialog3_it.png]] 
+
+Questa pagina contiene alcune opzioni che permettono un controllo avanzato dell'algoritmo di ridimensionamento. 
+
+**Rigidità delle linee.** Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte. Può risultare utile per ridurre le distorsioni in certi casi, o per evitare di introdurre gli errori derivanti da un valore troppo alto del passo (vedi sotto - è consigliabile usare valori bassi in questo caso). La penalizzazione è proporzionale alla somma delle differenze di coordinate trasversali (passo) per ogni coppia di punti successivi della linea, elevate alla potenza di 1.5. 
+
+**Passo massimo delle linee.** Questa opzione permette di impostare il massimo passo trasversale ammesso tra due pixel successivi delle linee d'azione. L'algoritmo standard usa un passo = 1, che significa che ogni pixel di una linea può essere spostato al massimo di un pixel rispetto ai suoi vicini. Questo comporta che le linee d'azione possono formare un angolo massimo di 45 gradi rispetto alla loro base. 
+
+Aumentare il valore del passo massimo è l'unico modo di superare questo limite, tuttavia può portare all'introduzione di errori visibili. Per bilanciare questo effetto è consigliabile agire sul parametro di rigidità. 
+
+**Funzione gradiente.** È possibile scegliere quale funzione deve essere utilizzata per calcolare la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e quali sono irrileventi e possono essere scartati. Usando la funzione //Zero//, unitamente alla preservazione manuale dei contenuti, è possibile soppiantare completamento il riconoscimento automatico dei contenuti; l'utente può così generare la propria mappa dell' energia (per es. con un altro plugin). 
+
+**Ordine del ridimensionamento.** Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere se procedere prima in orizzontale e poi in verticale, o viceversa.     
