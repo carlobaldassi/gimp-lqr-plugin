@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-04 19:02+0200\n"
+"POT-Creation-Date: 2008-05-05 03:24+0200\n"
 "PO-Revision-Date: 2008-04-24 04:40+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -115,129 +115,51 @@ msgstr "Цвет первых швов"
 msgid "Colour to use for the first seams"
 msgstr "Цвет первых швов"
 
-#. Advanced settings page
-#: ../src/interface.c:515 ../src/interface.c:2205
-msgid "Advanced"
-msgstr "Дополнительно"
-
-#: ../src/interface.c:535
-msgid "Seams rigidity:"
-msgstr "Прямота швов:"
-
-#: ../src/interface.c:538 ../src/interface.c:2280
-msgid "Increasing this value results in straighter seams"
-msgstr "Чем выше это значение, тем прямее швы"
-
-#: ../src/interface.c:561
-msgid "Rigidity mask:"
-msgstr "Маска прямоты:"
-
-#: ../src/interface.c:569
-msgid "Seams max step:"
-msgstr "Макс. шаг швов:"
-
-#: ../src/interface.c:572 ../src/interface.c:2266
-msgid ""
-"Maximum displacement along a seam. Increasing this value allows to overcome "
-"the 45 degrees bound"
-msgstr ""
-"Максимальное смещение вдоль шва. Повышение этого значения позволяет "
-"преодолевать границу в 45°."
-
-#: ../src/interface.c:587 ../src/interface.c:2479
-msgid ""
-"This affects the automatic feature recognition.\n"
-"It's the function which will be applied to the components of the gradient on "
-"each pixel"
-msgstr ""
-"Эта функция применяется к компонентам градиента\n"
-"в каждом пикселе и затрагивает автоматическое\n"
-"распознавание значимых объектов."
-
-#: ../src/interface.c:597 ../src/interface.c:2489
-msgid "Gradient function:"
-msgstr "Функция:"
-
-#: ../src/interface.c:602 ../src/interface.c:2494
-msgid "Transversal absolute value"
-msgstr "Поперечное абсолютное значение"
-
-#: ../src/interface.c:603 ../src/interface.c:2495
-msgid "Sum of absolute values"
-msgstr "Сумма абсолютных значений"
-
-#: ../src/interface.c:604 ../src/interface.c:2496
-msgid "Norm"
-msgstr "Обычная"
-
-#. Null can be translated as Zero
-#: ../src/interface.c:606 ../src/interface.c:2498
-msgid "Null"
-msgstr "Ноль"
-
-#: ../src/interface.c:621 ../src/interface.c:2513
-msgid "This controls the order of operations if rescaling in both directions"
-msgstr ""
-"Этот переключатель контролирует порядок выполнения операций в обоих "
-"направлениях"
-
-#: ../src/interface.c:629 ../src/interface.c:2521
-msgid "Rescale order:"
-msgstr "Порядок масштабирования:"
-
-#: ../src/interface.c:634 ../src/interface.c:2526
-msgid "Horizontal first"
-msgstr "Сначала по горизонтали"
-
-#: ../src/interface.c:635 ../src/interface.c:2527
-msgid "Vertical first"
-msgstr "Сначала по вертикали"
-
 #. Mask page
-#: ../src/interface.c:657
+#: ../src/interface.c:525
 msgid "Mask"
 msgstr "Маска"
 
-#: ../src/interface.c:665
+#: ../src/interface.c:533
 msgid "Select behavior for the mask"
 msgstr "Укажите, как работать с масками"
 
-#: ../src/interface.c:670
+#: ../src/interface.c:538
 msgid "Apply"
 msgstr "Применять"
 
-#: ../src/interface.c:670
+#: ../src/interface.c:538
 msgid "Discard"
 msgstr "Не использовать"
 
-#: ../src/interface.c:1024 ../src/interface.c:1112 ../src/render.c:93
+#: ../src/interface.c:892 ../src/interface.c:980 ../src/render.c:93
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Ошибка: похоже, что выбранный слой больше не может быть использован"
 
-#: ../src/interface.c:1695
+#: ../src/interface.c:1563
 msgid "Feature masks"
 msgstr "Маски значимых объектов"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1705
+#: ../src/interface.c:1573
 #, c-format
 msgid "%s pres mask"
 msgstr "%s - маска сохранения"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1714
+#: ../src/interface.c:1582
 #, c-format
 msgid "%s disc mask"
 msgstr "%s - маска удаления"
 
 #. Feature preservation
-#: ../src/interface.c:1736
+#: ../src/interface.c:1604
 msgid "Feature preservation mask"
 msgstr "Маска сохраняемых значимых объектов"
 
-#: ../src/interface.c:1741
+#: ../src/interface.c:1609
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -252,25 +174,25 @@ msgstr ""
 "Обратите внимание, что закрашивание черным цветом\n"
 "ни на что не влияет."
 
-#: ../src/interface.c:1774
+#: ../src/interface.c:1642
 msgid "Preserve features"
 msgstr "Сохранить объекты"
 
-#: ../src/interface.c:1790
+#: ../src/interface.c:1658
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr ""
 "Используйте дополнительный слой для предохранения избранных областей от "
 "искажения"
 
-#: ../src/interface.c:1793 ../src/interface.c:1983 ../src/interface.c:2336
+#: ../src/interface.c:1661 ../src/interface.c:1851 ../src/interface.c:2204
 msgid "New"
 msgstr "Создать слой"
 
-#: ../src/interface.c:1798
+#: ../src/interface.c:1666
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr "Создать новый прозрачный слой для маски сохранения"
 
-#: ../src/interface.c:1837
+#: ../src/interface.c:1705
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -278,24 +200,24 @@ msgstr ""
 "Слой, используемый в качестве маски сохраняемых объектов.\n"
 "Нажимайте кнопку «Обновить» для обновления списка слоев."
 
-#: ../src/interface.c:1868 ../src/interface.c:2061 ../src/interface.c:2411
+#: ../src/interface.c:1736 ../src/interface.c:1929 ../src/interface.c:2279
 msgid "Layer:"
 msgstr "Слой:"
 
-#: ../src/interface.c:1889 ../src/interface.c:2079 ../src/interface.c:2433
+#: ../src/interface.c:1757 ../src/interface.c:1947 ../src/interface.c:2301
 msgid "Strength:"
 msgstr "Сила:"
 
-#: ../src/interface.c:1892 ../src/interface.c:2436
+#: ../src/interface.c:1760 ../src/interface.c:2304
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Коэффициент силы действия при сохранении значимых объектов"
 
 #. Feature discard
-#: ../src/interface.c:1925
+#: ../src/interface.c:1793
 msgid "Feature discard mask"
 msgstr "Маска удаляемых незначимых объектов"
 
-#: ../src/interface.c:1930
+#: ../src/interface.c:1798
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -308,11 +230,11 @@ msgstr ""
 "на созданном слое маску выделения и нажав кнопку «Обновить».\n"
 "Обратите внимание, что закрашивание черным цветом ни на что не влияет."
 
-#: ../src/interface.c:1961
+#: ../src/interface.c:1829
 msgid "Discard features"
 msgstr "Удалить объекты"
 
-#: ../src/interface.c:1978
+#: ../src/interface.c:1846
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -320,11 +242,11 @@ msgstr ""
 "Используйте дополнительный слой для удаления избранных областей, не имеющих "
 "значения (полезно при уменьшении изображения)"
 
-#: ../src/interface.c:1988
+#: ../src/interface.c:1856
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr "Создать новый прозрачный слой для маски удаления"
 
-#: ../src/interface.c:2026
+#: ../src/interface.c:1894
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -332,15 +254,15 @@ msgstr ""
 "Слой, используемый в качестве маски удаляемых объектов.\n"
 "Нажимайте кнопку «Обновить» для обновления списка слоев."
 
-#: ../src/interface.c:2082
+#: ../src/interface.c:1950
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Коэффициент силы действия при удалении значимых объектов"
 
-#: ../src/interface.c:2124
+#: ../src/interface.c:1992
 msgid "Auto size"
 msgstr "Авторазмер"
 
-#: ../src/interface.c:2135
+#: ../src/interface.c:2003
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
@@ -348,31 +270,35 @@ msgstr ""
 "Попробуйте указать конечный размер, чтобы удалить замаскированные области.\n"
 "Используйте только с простыми масками"
 
-#: ../src/interface.c:2139
+#: ../src/interface.c:2007
 msgid "horizontal"
 msgstr "по горизонтали"
 
-#: ../src/interface.c:2139
+#: ../src/interface.c:2007
 msgid "vertical"
 msgstr "по вертикали"
 
-#: ../src/interface.c:2150
+#: ../src/interface.c:2018
 msgid "Resizing direction for auto size"
 msgstr "Направление масштабирования при автоподборе размера"
 
+#: ../src/interface.c:2073
+msgid "Advanced"
+msgstr "Дополнительно"
+
 #. The name of a newly created layer for rigidity mask
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:2214
+#: ../src/interface.c:2082
 #, c-format
 msgid "%s rigidity mask"
 msgstr "%s - маска прямоты"
 
 #. Seams control
-#: ../src/interface.c:2234
+#: ../src/interface.c:2102
 msgid "Seams control"
 msgstr "Контроль над швами"
 
-#: ../src/interface.c:2239
+#: ../src/interface.c:2107
 #, c-format
 msgid ""
 "Extra layers are needed to be used as rigidity masks.\n"
@@ -385,35 +311,96 @@ msgstr ""
 "на созданном слое маску выделения и нажав кнопку «Обновить».\n"
 "Обратите внимание, что закрашивание черным цветом ни на что не влияет."
 
-#: ../src/interface.c:2263
+#: ../src/interface.c:2131
 msgid "Max transversal step:"
 msgstr "Макс. поперечный шаг:"
 
-#: ../src/interface.c:2277
+#: ../src/interface.c:2134
+msgid ""
+"Maximum displacement along a seam. Increasing this value allows to overcome "
+"the 45 degrees bound"
+msgstr ""
+"Максимальное смещение вдоль шва. Повышение этого значения позволяет "
+"преодолевать границу в 45°."
+
+#: ../src/interface.c:2145
 msgid "Overall rigidity:"
 msgstr "Общая прямота:"
 
-#: ../src/interface.c:2309
+#: ../src/interface.c:2148
+msgid "Increasing this value results in straighter seams"
+msgstr "Чем выше это значение, тем прямее швы"
+
+#: ../src/interface.c:2177
 msgid "Use a rigidity mask"
 msgstr "Использовать маску прямоты"
 
-#: ../src/interface.c:2334
+#: ../src/interface.c:2202
 msgid "Use an extra layer to mark areas where seams should be straighter"
 msgstr ""
 "Использовать дополнительный слой для пометки областей, где швы должны быть "
 "прямее"
 
-#: ../src/interface.c:2341
+#: ../src/interface.c:2209
 msgid "Creates a new transparent layer ready to be used as a rigidity mask"
 msgstr "Создать новый прозрачный слой для маски прямоты"
 
-#: ../src/interface.c:2380
+#: ../src/interface.c:2248
 msgid ""
 "Layer to be used as a mask for rigidity settings.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 "Слой, используемый в качестве маски прямоты.\n"
 "Нажимайте кнопку «Обновить» для обновления списка слоев."
+
+#: ../src/interface.c:2347
+msgid ""
+"This affects the automatic feature recognition.\n"
+"It's the function which will be applied to the components of the gradient on "
+"each pixel"
+msgstr ""
+"Эта функция применяется к компонентам градиента\n"
+"в каждом пикселе и затрагивает автоматическое\n"
+"распознавание значимых объектов."
+
+#: ../src/interface.c:2357
+msgid "Gradient function:"
+msgstr "Функция:"
+
+#: ../src/interface.c:2362
+msgid "Transversal absolute value"
+msgstr "Поперечное абсолютное значение"
+
+#: ../src/interface.c:2363
+msgid "Sum of absolute values"
+msgstr "Сумма абсолютных значений"
+
+#: ../src/interface.c:2364
+msgid "Norm"
+msgstr "Обычная"
+
+#. Null can be translated as Zero
+#: ../src/interface.c:2366
+msgid "Null"
+msgstr "Ноль"
+
+#: ../src/interface.c:2381
+msgid "This controls the order of operations if rescaling in both directions"
+msgstr ""
+"Этот переключатель контролирует порядок выполнения операций в обоих "
+"направлениях"
+
+#: ../src/interface.c:2389
+msgid "Rescale order:"
+msgstr "Порядок масштабирования:"
+
+#: ../src/interface.c:2394
+msgid "Horizontal first"
+msgstr "Сначала по горизонтали"
+
+#: ../src/interface.c:2395
+msgid "Vertical first"
+msgstr "Сначала по вертикали"
 
 #: ../src/main.c:161
 msgid "scaling which keeps layer features (or removes them)"
@@ -470,3 +457,12 @@ msgstr "Рисуется карта швов..."
 #, c-format
 msgid "%s seam map"
 msgstr "%s - карта швов"
+
+#~ msgid "Seams rigidity:"
+#~ msgstr "Прямота швов:"
+
+#~ msgid "Rigidity mask:"
+#~ msgstr "Маска прямоты:"
+
+#~ msgid "Seams max step:"
+#~ msgstr "Макс. шаг швов:"

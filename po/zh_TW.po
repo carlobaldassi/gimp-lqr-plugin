@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-15 21:30+0100\n"
+"POT-Creation-Date: 2008-05-05 03:24+0200\n"
 "PO-Revision-Date: 2007-10-01 21:41-0700\n"
 "Last-Translator: James Huang <elastic192@gmail.com>\n"
 "Language-Team: zh_TW\n"
@@ -15,216 +15,152 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/interface.c:223
+#: ../src/interface.c:232
 msgid "GIMP LiquidRescale Plug-In"
 msgstr "GIMP LiquidRescale 插件"
 
-#: ../src/interface.c:245
+#: ../src/interface.c:254
 msgid "Selected layer"
 msgstr "作用圖層"
 
 #. New size
-#: ../src/interface.c:306
+#: ../src/interface.c:315
 msgid "Select new width and height"
 msgstr "請選擇新的寬度與高度"
 
-#: ../src/interface.c:326
+#: ../src/interface.c:335
 msgid "Width:"
 msgstr "寬度"
 
-#: ../src/interface.c:328
+#: ../src/interface.c:337
 msgid "Height:"
 msgstr "高度"
 
-#: ../src/interface.c:343
+#: ../src/interface.c:352
 msgid "Choose mode of operation"
 msgstr "選擇操作模式"
 
-#: ../src/interface.c:350
+#: ../src/interface.c:359
 msgid "Mode:"
 msgstr "模式"
 
-#: ../src/interface.c:355
+#: ../src/interface.c:364
 msgid "LqR only"
 msgstr ""
 
-#: ../src/interface.c:356
+#: ../src/interface.c:365
 msgid "LqR + LqR back to the original size"
 msgstr ""
 
-#: ../src/interface.c:358
+#: ../src/interface.c:367
 msgid "LqR + scale back to the original size"
 msgstr ""
 
 #. Output settings page
-#: ../src/interface.c:385
+#: ../src/interface.c:394
 msgid "Output"
 msgstr "輸出"
 
-#: ../src/interface.c:400
+#: ../src/interface.c:409
 msgid "Output on a new layer"
 msgstr "輸出至新圖層"
 
-#: ../src/interface.c:408
+#: ../src/interface.c:417
 msgid "Outputs the resulting image on a new layer"
 msgstr "將結果影像輸出至新圖層"
 
-#: ../src/interface.c:412
+#: ../src/interface.c:421
 msgid "Resize image canvas"
 msgstr "改變畫布大小"
 
-#: ../src/interface.c:420
+#: ../src/interface.c:429
 msgid "Resize and translate the image canvas to fit the resized layer"
 msgstr "改變畫布來符合圖層大小"
 
-#: ../src/interface.c:424
-msgid "Resize preserve/discard layers"
+#: ../src/interface.c:433
+#, fuzzy
+msgid "Resize auxiliary layers"
 msgstr "改變保持或丟棄的圖層大小"
 
-#: ../src/interface.c:441
-msgid "Resize the layers used as masks along with the active layer"
-msgstr ""
-
-#: ../src/interface.c:448
-msgid "Output the seams"
+#: ../src/interface.c:450
+msgid ""
+"Resize the layers used as features or rigidity masks along with the active "
+"layer"
 msgstr ""
 
 #: ../src/interface.c:457
+msgid "Output the seams"
+msgstr ""
+
+#: ../src/interface.c:466
 msgid ""
 "Creates an extra output layer with the seams, for visual inspection of what "
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
 "in one direction at a time"
 msgstr ""
 
-#: ../src/interface.c:469
+#: ../src/interface.c:478
 msgid "Last seams colour"
 msgstr ""
 
-#: ../src/interface.c:483
+#: ../src/interface.c:492
 msgid "Colour to use for the last seams"
 msgstr ""
 
-#: ../src/interface.c:486
+#: ../src/interface.c:495
 msgid "First seams colour"
 msgstr ""
 
-#: ../src/interface.c:500
+#: ../src/interface.c:509
 msgid "Colour to use for the first seams"
 msgstr ""
 
-#. Advanced settings page
-#: ../src/interface.c:505
-msgid "Advanced"
-msgstr "進階"
-
-#: ../src/interface.c:523
-msgid "Seams rigidity:"
-msgstr ""
-
-#: ../src/interface.c:526
-msgid "Increasing this value results in straighter seams"
-msgstr ""
-
-#: ../src/interface.c:535
-msgid "Seams max step:"
-msgstr ""
-
-#: ../src/interface.c:538
-msgid ""
-"Maximum displacement along a seam. Increasing this value allows to overcome "
-"the 45 degrees bound"
-msgstr ""
-
-#: ../src/interface.c:553
-msgid ""
-"This affects the automatic feature recognition.\n"
-"It's the function which will be applied to the components of the gradient on "
-"each pixel"
-msgstr ""
-
-#: ../src/interface.c:563
-msgid "Gradient function:"
-msgstr ""
-
-#: ../src/interface.c:568
-msgid "Transversal absolute value"
-msgstr ""
-
-#: ../src/interface.c:569
-msgid "Sum of absolute values"
-msgstr ""
-
-#: ../src/interface.c:570
-msgid "Norm"
-msgstr ""
-
-#. Null can be translated as Zero
-#: ../src/interface.c:572
-msgid "Null"
-msgstr ""
-
-#: ../src/interface.c:587
-msgid "This controls the order of operations if rescaling in both directions"
-msgstr ""
-
-#: ../src/interface.c:595
-msgid "Rescale order:"
-msgstr "縮放順序"
-
-#: ../src/interface.c:600
-msgid "Horizontal first"
-msgstr "水平優先"
-
-#: ../src/interface.c:601
-msgid "Vertical first"
-msgstr "垂直優先"
-
 #. Mask page
-#: ../src/interface.c:617
+#: ../src/interface.c:525
 msgid "Mask"
 msgstr "遮罩"
 
-#: ../src/interface.c:625
+#: ../src/interface.c:533
 msgid "Select behavior for the mask"
 msgstr "選擇遮罩作用"
 
-#: ../src/interface.c:630
+#: ../src/interface.c:538
 msgid "Apply"
 msgstr "套用"
 
-#: ../src/interface.c:630
+#: ../src/interface.c:538
 msgid "Discard"
 msgstr "丟棄"
 
-#: ../src/interface.c:940 ../src/interface.c:1028 ../src/render.c:94
+#: ../src/interface.c:892 ../src/interface.c:980 ../src/render.c:93
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "錯誤: 選擇的圖層似乎已經失效"
 
-#: ../src/interface.c:1554
+#: ../src/interface.c:1563
 msgid "Feature masks"
 msgstr "特徵遮罩"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1564
+#: ../src/interface.c:1573
 #, c-format
 msgid "%s pres mask"
 msgstr ""
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1572
+#: ../src/interface.c:1582
 #, c-format
 msgid "%s disc mask"
 msgstr ""
 
 #. Feature preservation
-#: ../src/interface.c:1593
+#: ../src/interface.c:1604
 #, fuzzy
 msgid "Feature preservation mask"
 msgstr "特徵保留遮罩"
 
-#: ../src/interface.c:1598
+#: ../src/interface.c:1609
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -236,47 +172,47 @@ msgstr ""
 "你可以按 \"新增\" 來新增一個圖層並在其上塗上顏色, 之後按 \"重新整理\" .\n"
 "注意: 用黑色是無作用的"
 
-#: ../src/interface.c:1631
+#: ../src/interface.c:1642
 msgid "Preserve features"
 msgstr "保留特徵"
 
-#: ../src/interface.c:1647
+#: ../src/interface.c:1658
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr "在變形中使用額外的圖層來保留選擇的區域"
 
-#: ../src/interface.c:1650 ../src/interface.c:1840
+#: ../src/interface.c:1661 ../src/interface.c:1851 ../src/interface.c:2204
 msgid "New"
 msgstr "新增"
 
-#: ../src/interface.c:1655
+#: ../src/interface.c:1666
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr "創建一個新的透明圖層來作為保留的遮罩"
 
-#: ../src/interface.c:1694
+#: ../src/interface.c:1705
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:1725 ../src/interface.c:1918
+#: ../src/interface.c:1736 ../src/interface.c:1929 ../src/interface.c:2279
 msgid "Layer:"
 msgstr "圖層"
 
-#: ../src/interface.c:1746 ../src/interface.c:1936
+#: ../src/interface.c:1757 ../src/interface.c:1947 ../src/interface.c:2301
 msgid "Strength:"
 msgstr "強度"
 
-#: ../src/interface.c:1749
+#: ../src/interface.c:1760 ../src/interface.c:2304
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "特徵保留強度的整體係數"
 
 #. Feature discard
-#: ../src/interface.c:1782
+#: ../src/interface.c:1793
 #, fuzzy
 msgid "Feature discard mask"
 msgstr "特徵刪除遮罩"
 
-#: ../src/interface.c:1787
+#: ../src/interface.c:1798
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -288,52 +224,162 @@ msgstr ""
 "你可以按 \"新增\" 來新增一個圖層並在其上塗上顏色, 之後按 \"重新整理\" .\n"
 "注意: 用黑色是無作用的"
 
-#: ../src/interface.c:1818
+#: ../src/interface.c:1829
 msgid "Discard features"
 msgstr "刪除特徵"
 
-#: ../src/interface.c:1835
+#: ../src/interface.c:1846
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
 msgstr ""
 "使用一額外圖層將其選擇區域視為無意義的(這在縮小過程中移除部份區域是很有用的)"
 
-#: ../src/interface.c:1845
+#: ../src/interface.c:1856
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr "創建一個新的透明圖層來作為刪除的遮罩"
 
-#: ../src/interface.c:1883
+#: ../src/interface.c:1894
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:1939
+#: ../src/interface.c:1950
 msgid "Overall coefficient for feature discard intensity"
 msgstr "特徵刪除強度的整體係數"
 
-#: ../src/interface.c:1981
+#: ../src/interface.c:1992
 msgid "Auto size"
 msgstr "自動大小"
 
-#: ../src/interface.c:1992
+#: ../src/interface.c:2003
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
-#: ../src/interface.c:1996
+#: ../src/interface.c:2007
 msgid "horizontal"
 msgstr "水平"
 
-#: ../src/interface.c:1996
+#: ../src/interface.c:2007
 msgid "vertical"
 msgstr "垂直"
 
-#: ../src/interface.c:2007
+#: ../src/interface.c:2018
 msgid "Resizing direction for auto size"
 msgstr "自動大小的縮放方向"
+
+#: ../src/interface.c:2073
+msgid "Advanced"
+msgstr "進階"
+
+#. The name of a newly created layer for rigidity mask
+#. (here "%s" represents the selected layer's name)
+#: ../src/interface.c:2082
+#, c-format
+msgid "%s rigidity mask"
+msgstr ""
+
+#. Seams control
+#: ../src/interface.c:2102
+msgid "Seams control"
+msgstr ""
+
+#: ../src/interface.c:2107
+#, fuzzy, c-format
+msgid ""
+"Extra layers are needed to be used as rigidity masks.\n"
+"You can create one with the \"New\" button and paint on it, then press the "
+"\"Refresh\" button.\n"
+"Note that painting in black has no effect"
+msgstr ""
+"需要額外的圖層來啟用這項刪除特性.\n"
+"你可以按 \"新增\" 來新增一個圖層並在其上塗上顏色, 之後按 \"重新整理\" .\n"
+"注意: 用黑色是無作用的"
+
+#: ../src/interface.c:2131
+msgid "Max transversal step:"
+msgstr ""
+
+#: ../src/interface.c:2134
+msgid ""
+"Maximum displacement along a seam. Increasing this value allows to overcome "
+"the 45 degrees bound"
+msgstr ""
+
+#: ../src/interface.c:2145
+msgid "Overall rigidity:"
+msgstr ""
+
+#: ../src/interface.c:2148
+msgid "Increasing this value results in straighter seams"
+msgstr ""
+
+#: ../src/interface.c:2177
+msgid "Use a rigidity mask"
+msgstr ""
+
+#: ../src/interface.c:2202
+#, fuzzy
+msgid "Use an extra layer to mark areas where seams should be straighter"
+msgstr "在變形中使用額外的圖層來保留選擇的區域"
+
+#: ../src/interface.c:2209
+#, fuzzy
+msgid "Creates a new transparent layer ready to be used as a rigidity mask"
+msgstr "創建一個新的透明圖層來作為刪除的遮罩"
+
+#: ../src/interface.c:2248
+msgid ""
+"Layer to be used as a mask for rigidity settings.\n"
+"Use the \"Refresh\" button to update the list"
+msgstr ""
+
+#: ../src/interface.c:2347
+msgid ""
+"This affects the automatic feature recognition.\n"
+"It's the function which will be applied to the components of the gradient on "
+"each pixel"
+msgstr ""
+
+#: ../src/interface.c:2357
+msgid "Gradient function:"
+msgstr ""
+
+#: ../src/interface.c:2362
+msgid "Transversal absolute value"
+msgstr ""
+
+#: ../src/interface.c:2363
+msgid "Sum of absolute values"
+msgstr ""
+
+#: ../src/interface.c:2364
+msgid "Norm"
+msgstr ""
+
+#. Null can be translated as Zero
+#: ../src/interface.c:2366
+msgid "Null"
+msgstr ""
+
+#: ../src/interface.c:2381
+msgid "This controls the order of operations if rescaling in both directions"
+msgstr ""
+
+#: ../src/interface.c:2389
+msgid "Rescale order:"
+msgstr "縮放順序"
+
+#: ../src/interface.c:2394
+msgid "Horizontal first"
+msgstr "水平優先"
+
+#: ../src/interface.c:2395
+msgid "Vertical first"
+msgstr "垂直優先"
 
 #: ../src/main.c:161
 msgid "scaling which keeps layer features (or removes them)"
@@ -344,41 +390,46 @@ msgstr ""
 msgid "Li_quid rescale..."
 msgstr "Liquid改變大小"
 
-#: ../src/render.c:45 ../src/render.c:46
+#: ../src/render.c:43 ../src/render.c:44
 msgid "Not enough memory"
 msgstr "記憶體不足"
 
-#: ../src/render.c:103
+#: ../src/render.c:102
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:113
+#: ../src/render.c:112
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr ""
 
-#: ../src/render.c:206
+#: ../src/render.c:122
+#, fuzzy
+msgid "Error: it seems that the rigidity mask layer is no longer valid"
+msgstr "錯誤: 選擇的圖層似乎已經失效"
+
+#: ../src/render.c:223
 msgid "Resizing width..."
 msgstr "正在改變寬度"
 
-#: ../src/render.c:208
+#: ../src/render.c:225
 msgid "Resizing height..."
 msgstr "正在改變高度"
 
-#: ../src/io_functions.c:46
+#: ../src/io_functions.c:44
 msgid "Parsing layer..."
 msgstr "正在解析圖層"
 
-#: ../src/io_functions.c:115
+#: ../src/io_functions.c:143
 msgid "Applying changes..."
 msgstr "正在套用變化"
 
-#: ../src/io_functions.c:181
+#: ../src/io_functions.c:209
 msgid "Drawing seam map..."
 msgstr ""
 
 #. The name of the layer with the seams map
 #. (here "%s" represents the selected layer's name)
-#: ../src/io_functions.c:247
+#: ../src/io_functions.c:275
 #, c-format
 msgid "%s seam map"
 msgstr ""

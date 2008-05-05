@@ -30,21 +30,27 @@ cat | \
 	rmtags "td"							| \
 	rmtags "center"							| \
 	rmtags "font"							| \
+	rmtags "dl"							| \
 	subtags "b" '**{{{' '}}}**'					| \
 	sed "s/{{{\([^}]*\)[[:space:]]\+}}}/\1/g"			| \
 	sed "s/{{{\([^}]*\)}}}/\1/g"					| \
 	subtags "i" '//' '//'						| \
-	subtags "li" '* ' '\n'						| \
-	subtags "title" '\n+ ' '\n'					| \
-	subtags "h1" '\n+ ' '\n'					| \
-	subtags "h2" '\n++ ' '\n'					| \
-	subtags "h3" '\n+++ ' '\n'					| \
-	subtags "h4" '\n++++ ' '\n'					| \
+	subtags "li" '* ' '{{NEWLINE}}'					| \
+	subtags "title" '{{NEWLINE}}+ ' '{{NEWLINE}}'			| \
+	subtags "h1" '{{NEWLINE}}+ ' '{{NEWLINE}}'			| \
+	subtags "h2" '{{NEWLINE}}++ ' '{{NEWLINE}}'			| \
+	subtags "h3" '{{NEWLINE}}+++ ' '{{NEWLINE}}'			| \
+	subtags "h4" '{{NEWLINE}}++++ ' '{{NEWLINE}}'			| \
 	sed "s/<img\>[^>]*src=\"\([^>]*\)\"[^>]*>/[[image \1]]/g"	| \
-	subtags "div" '\n' '\n'						| \
-	sed "s@</\?p>@\n@g"						| \
-	sed "s@</\?ul>@\n@g"						| \
+	subtags "div" '{{NEWLINE}}' '{{NEWLINE}}'			| \
+	subtags "dt" '* ' '.'						| \
+	subtags "dd" '' '{{NEWLINE}}'					| \
+	subtags "dd" '' '{{NEWLINE}}'					| \
+	sed "s@</\?p>@{{NEWLINE}}@g"					| \
+	sed "s@</\?ul>@{{NEWLINE}}@g"					| \
 	sed "s/^[[:space:]]*//"						| \
 	sed "s@\(\[\[image[[:space:]]\+\)\.\./images/\(.*\]\]\)@\1\2@g"	| \
+	sed "s/ \+/ /g"							| \
+	sed "s/[[:space:]]*{{NEWLINE}}[[:space:]]*/\n/g"				| \
 	cat -s
 echo
