@@ -77,6 +77,9 @@ typedef struct
   gboolean disc_status;
   gboolean rigmask_status;
   gint guess_direction;
+  gint last_used_width;
+  gint last_used_height;
+  gint32 last_layer_ID;
 } PlugInUIVals;
 
 #define PLUGIN_UI_VALS(data) ((PlugInUIVals*)data)

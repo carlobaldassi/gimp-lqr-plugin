@@ -1,3 +1,8 @@
+2008-07-28 Carlo Baldassi <carlobaldassi@gmail.com>
+	* new : added reset and revert buttons
+	* modified : now retains last used width and height
+	  if operating on the same layer
+	* bugfix : round width and height values
 2008-02-20 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new : introduced the rigidity mask interface
 2008-01-14 Carlo Baldassi <carlobaldassi@yahoo.it>

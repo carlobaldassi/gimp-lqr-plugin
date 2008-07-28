@@ -61,6 +61,8 @@ static void callback_rigmask_combo_get_active (GtkWidget * combo, gpointer data)
 static void callback_combo_set_sensitive (GtkWidget * button, gpointer data);
 static void callback_status_button (GtkWidget * button, gpointer data);
 static void callback_new_mask_button (GtkWidget * button, gpointer data);
+static void callback_lastvalues_button (GtkWidget * button, gpointer data);
+static void callback_resetvalues_button (GtkWidget * button, gpointer data);
 static void callback_guess_button (GtkWidget * button, gpointer data);
 static void callback_guess_direction (GtkWidget * combo, gpointer data);
 static int guess_new_width (GtkWidget * button, gpointer data);
@@ -136,38 +138,46 @@ dialog (gint32 image_ID,
   gint32 layer_ID;
   GimpRGB saved_colour;
   gint num_extra_layers;
+  gint orig_width, orig_height;
   //GtkWidget *gradient_event_box;
-  GtkWidget *main_hbox;
-  GtkWidget *vbox;
-  GtkWidget *vbox2;
-  GtkWidget *hbox;
-  GtkWidget *frame;
-  GtkWidget *notebook;
+  GtkWidget * main_hbox;
+  GtkWidget * vbox;
+  GtkWidget * vbox2;
+  GtkWidget * vbox3;
+  GtkWidget * hbox;
+  GtkWidget * frame;
+  GtkWidget * notebook;
   gfloat wfactor, hfactor;
-  GtkWidget *preview_area;
+  GtkWidget * preview_area;
   //GtkWidget *table;
-  GtkWidget *coordinates;
-  GtkWidget *mode_event_box;
-  GtkWidget *oper_mode_combo_box;
-  GtkWidget *features_page;
-  GtkWidget *advanced_page;
-  GtkWidget *thispage;
-  GtkWidget *label;
+  GtkWidget * coordinates;
+  GtkWidget * resetvalues_event_box;
+  GtkWidget * resetvalues_button;
+  GtkWidget * resetvalues_icon;
+  GtkWidget * lastvalues_event_box;
+  GtkWidget * lastvalues_button;
+  GtkWidget * lastvalues_icon;
+  GtkWidget * mode_event_box;
+  GtkWidget * oper_mode_combo_box;
+  GtkWidget * features_page;
+  GtkWidget * advanced_page;
+  GtkWidget * thispage;
+  GtkWidget * label;
   //GtkWidget *combo;
   //gint row;
-  //GtkWidget *grad_func_combo_box;
-  //GtkWidget *res_order_event_box;
-  //GtkWidget *res_order_combo_box;
-  GtkWidget *new_layer_button;
-  GtkWidget *resize_canvas_button;
-  GtkWidget *resize_aux_layers_button;
-  GtkWidget *out_seams_hbox;
-  GtkWidget *out_seams_button;
-  GimpRGB *colour_start;
-  GimpRGB *colour_end;
-  GtkWidget *out_seams_col_button1;
-  GtkWidget *out_seams_col_button2;
-  GtkWidget *mask_behavior_combo_box = NULL;
+  //GtkWidget * grad_func_combo_box;
+  //GtkWidget * res_order_event_box;
+  //GtkWidget * res_order_combo_box;
+  GtkWidget * new_layer_button;
+  GtkWidget * resize_canvas_button;
+  GtkWidget * resize_aux_layers_button;
+  GtkWidget * out_seams_hbox;
+  GtkWidget * out_seams_button;
+  GimpRGB * colour_start;
+  GimpRGB * colour_end;
+  GtkWidget * out_seams_col_button1;
+  GtkWidget * out_seams_col_button2;
+  GtkWidget * mask_behavior_combo_box = NULL;
   gboolean has_mask = FALSE;
   //GtkObject *adj;
   gboolean run = FALSE;
@@ -204,9 +214,13 @@ dialog (gint32 image_ID,
 
   layer_ID = drawable->drawable_id;
 
-  state->new_width = gimp_drawable_width (layer_ID);
-  state->new_height = gimp_drawable_height (layer_ID);
-
+  orig_width = gimp_drawable_width (layer_ID);
+  orig_height = gimp_drawable_height (layer_ID);
+  if (layer_ID != ui_state->last_layer_ID)
+    {
+      state->new_width = orig_width;
+      state->new_height = orig_height;
+    }
 
   g_assert (gimp_drawable_is_layer (layer_ID) == TRUE);
 
@@ -298,7 +312,9 @@ dialog (gint32 image_ID,
 
   preview_area = gtk_drawing_area_new ();
   preview_data.area = preview_area;
-  gtk_drawing_area_size (GTK_DRAWING_AREA (preview_area), PREVIEW_MAX_WIDTH,
+  //gtk_drawing_area_size (GTK_DRAWING_AREA (preview_area), PREVIEW_MAX_WIDTH,
+  //                       PREVIEW_MAX_HEIGHT);
+  gtk_widget_set_size_request (preview_area, PREVIEW_MAX_WIDTH,
                          PREVIEW_MAX_HEIGHT);
 
   g_signal_connect (G_OBJECT (preview_area), "expose_event",
@@ -333,14 +349,69 @@ dialog (gint32 image_ID,
     gimp_coordinates_new (unit, "%p", TRUE, TRUE, SPIN_BUTTON_WIDTH,
                           GIMP_SIZE_ENTRY_UPDATE_SIZE, ui_state->chain_active,
                           TRUE, _("Width:"), state->new_width, xres, 2,
-                          state->new_width * 2 - 1, 0, state->new_width,
+                          orig_width * 2 - 1, 0, orig_width,
                           _("Height:"), state->new_height, yres, 2,
-                          state->new_height * 2 - 1, 0, state->new_height);
+                          orig_height * 2 - 1, 0, orig_height);
+
+  if (layer_ID != ui_state->last_layer_ID)
+    {
+      gimp_size_entry_set_refval (GIMP_SIZE_ENTRY(coordinates), 0,
+                                  state->new_width);
+      gimp_size_entry_set_refval (GIMP_SIZE_ENTRY(coordinates), 1,
+                                  state->new_height);
+    }
 
   gtk_box_pack_start (GTK_BOX (hbox), coordinates, FALSE, FALSE, 0);
   gtk_widget_show (coordinates);
 
   preview_data.coordinates = (gpointer) coordinates;
+
+  /* Aux buttons */
+  vbox3 = gtk_vbox_new (FALSE, 1);
+  gtk_box_pack_end (GTK_BOX (hbox), vbox3, FALSE, FALSE, 0);
+  gtk_widget_show(vbox3);
+
+  resetvalues_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (vbox3), resetvalues_event_box, FALSE, FALSE, 0);
+  gtk_widget_show (resetvalues_event_box);
+
+  gimp_help_set_help_data (resetvalues_event_box,
+                           _("Reset width and height to their original value"), NULL);
+
+  resetvalues_button = gtk_button_new ();
+  resetvalues_icon = gtk_image_new_from_stock (GIMP_STOCK_RESET, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER (resetvalues_button), resetvalues_icon);
+  //gtk_box_pack_start (GTK_BOX (hbox), resetvalues_icon, FALSE, FALSE, 0);
+  gtk_widget_show(resetvalues_icon);
+  //gtk_box_pack_start (GTK_BOX (vbox3), resetvalues_button, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (resetvalues_event_box), resetvalues_button);
+  gtk_widget_show (resetvalues_button);
+
+  g_signal_connect (resetvalues_button, "clicked",
+                    G_CALLBACK (callback_resetvalues_button),
+                    (gpointer) & preview_data);
+
+  lastvalues_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (vbox3), lastvalues_event_box, FALSE, FALSE, 0);
+  gtk_widget_show (lastvalues_event_box);
+
+  gimp_help_set_help_data (lastvalues_event_box,
+                           _("Set width and height to the last value used"), NULL);
+
+  lastvalues_button = gtk_button_new ();
+  lastvalues_icon = gtk_image_new_from_stock (GTK_STOCK_REVERT_TO_SAVED, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER (lastvalues_button), lastvalues_icon);
+  //gtk_box_pack_start (GTK_BOX (hbox), lastvalues_icon, FALSE, FALSE, 0);
+  gtk_widget_show(lastvalues_icon);
+  //gtk_box_pack_start (GTK_BOX (vbox3), lastvalues_button, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (lastvalues_event_box), lastvalues_button);
+  gtk_widget_show (lastvalues_button);
+
+  g_signal_connect (lastvalues_button, "clicked",
+                    G_CALLBACK (callback_lastvalues_button),
+                    (gpointer) & preview_data);
+  gtk_widget_set_sensitive (lastvalues_button, ((ui_state->last_used_width != -1) &&
+        (ui_state->last_used_height != -1)) ? TRUE : FALSE);
 
   /* Operational mode combo box */
 
@@ -349,7 +420,8 @@ dialog (gint32 image_ID,
   gtk_widget_show (mode_event_box);
 
   gimp_help_set_help_data (mode_event_box,
-                           _("Choose mode of operation"), NULL);
+                           _("Here you can choose if you want to transform back the "
+                             "image to its original size and how to do it"), NULL);
 
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
@@ -362,10 +434,11 @@ dialog (gint32 image_ID,
 
   oper_mode_combo_box =
     gimp_int_combo_box_new (_("LqR only"), OPER_MODE_NORMAL,
-                            _("LqR + LqR back to the original size"),
+                            _("LqR + scale back"),
+                            OPER_MODE_SCALEBACK, 
+                            _("LqR + LqR back"),
                             OPER_MODE_LQRBACK,
-                            _("LqR + scale back to the original size"),
-                            OPER_MODE_SCALEBACK, NULL);
+                            NULL);
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
                                  state->oper_mode);
 
@@ -564,9 +637,9 @@ dialog (gint32 image_ID,
                                      (disc_toggle_data.guess_dir_combo),
                                      &(ui_state->guess_direction));
       state->new_width =
-        (gint) gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0);
+        ROUND(gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0));
       state->new_height =
-        (gint) gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 1);
+        ROUND(gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 1));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
                                      &(state->oper_mode));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
@@ -832,6 +905,37 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   } else {
 	  gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_ADV_REFRESH);
   }
+}
+
+static void
+callback_lastvalues_button (GtkWidget * button, gpointer data)
+{
+  gint new_width, new_height;
+  new_width = PREVIEW_DATA (data)->ui_vals->last_used_width;
+  new_height = PREVIEW_DATA (data)->ui_vals->last_used_height;
+
+  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+                              (PREVIEW_DATA (data)->coordinates), 0,
+                              new_width);
+  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+                              (PREVIEW_DATA (data)->coordinates), 1,
+                              new_height);
+}
+
+static void
+callback_resetvalues_button (GtkWidget * button, gpointer data)
+{
+  gint new_width, new_height;
+
+  new_width = gimp_drawable_width (PREVIEW_DATA(data)->orig_layer_ID);
+  new_height = gimp_drawable_height (PREVIEW_DATA(data)->orig_layer_ID);
+
+  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+                              (PREVIEW_DATA (data)->coordinates), 0,
+                              new_width);
+  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+                              (PREVIEW_DATA (data)->coordinates), 1,
+                              new_height);
 }
 
 static void

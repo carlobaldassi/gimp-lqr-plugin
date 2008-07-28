@@ -98,10 +98,14 @@ const PlugInDrawableVals default_drawable_vals = {
 };
 
 const PlugInUIVals default_ui_vals = {
-  FALSE,
-  FALSE,
-  FALSE,
-  0,
+  FALSE,        /* chain active */
+  FALSE,        /* pres status */
+  FALSE,        /* disc status */
+  FALSE,        /* rigmask status */
+  0,            /* guess direction */
+  -1,           /* last used width */
+  -1,           /* last used height */
+  0,            /* last layer */
 };
 
 static PlugInVals vals;
@@ -286,6 +290,9 @@ run (const gchar * name,
         {
           vals.rigmask_layer_ID = 0;
         }
+      ui_vals.last_used_width = vals.new_width;
+      ui_vals.last_used_height = vals.new_height;
+      ui_vals.last_layer_ID = drawable->drawable_id;
       gimp_image_undo_group_start (image_ID);
       render_success =
         render (image_ID, drawable, &vals, &image_vals, &drawable_vals,
