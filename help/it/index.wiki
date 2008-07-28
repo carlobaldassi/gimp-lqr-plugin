@@ -15,6 +15,8 @@ Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo
 
 In questa sezione è possibile impostare le dimensioni finali dell'immagine. È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin agisce prima nel senso della larghezza, e poi in altezza. Questo compurtamento può essere modificato attrverso un'opzione nella linguetta //Avanzato//.
 
+I due piccoli pulsanti sulla destra possono essere utilizzati per riportare le dimensioni ai valori originali dell'immagine (sopra) o agli ultimi valori usati (sotto).
+
 La modalità predefinita è di ridimensionare "liquidamente" l'immagine fino alle dimensioni specificate. Le altre opzioni possono essere usate per riportare l'immagine alle dimensioni iniziali una volta terminato, riutilizzando il LiquidRescale oppure il ridimensionamento standard.
 
 +++ Maschere per i contenuti

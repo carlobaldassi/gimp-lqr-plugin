@@ -15,7 +15,9 @@ The plugin works on the active layer or floating selection. If a selection is pr
 
 In this section it is possible to choose the size and the mode of operation. It is advisable to rescale always in one direction at a time. If both the width and the height are changed, rescaling is performed by default on the width first, then on the height. This can be changed in the //Advanced// tab.
 
-The default operational mode is just liquid rescaling to the desired size. The other options are to apply liquid rescaling or the standard scaling back to the original size once the first liquid rescaling is done.
+The two small buttons on the right can be used to reset the size parameters to the image size (top) or set them to the last used values (bottom).
+
+The default operational mode is just liquid rescaling to the desired size. The other options are to apply liquid rescaling or the standard scaling back to the original size once the first liquid rescaling is done. This can be useful for example for object removal and content enhancement.
 
 Note that the final size can be set automatically when removing objects, see below
 
