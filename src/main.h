@@ -24,10 +24,11 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#include "main_common.h"
+
 #define RESPONSE_REFRESH (1)
 #define RESPONSE_FEAT_REFRESH (2)
 #define RESPONSE_ADV_REFRESH (3)
-#define VALS_MAX_NAME_LENGTH (40)
 
 /**** OPERATIONAL_MODES ****/
 enum _OperMode
@@ -38,31 +39,6 @@ enum _OperMode
 };
 
 typedef enum _OperMode OperMode;
-
-typedef struct
-{
-  gint new_width;
-  gint new_height;
-  gint32 pres_layer_ID;
-  gint pres_coeff;
-  gint32 disc_layer_ID;
-  gint disc_coeff;
-  gfloat rigidity;
-  gint32 rigmask_layer_ID;
-  gint delta_x;
-  gboolean resize_aux_layers;
-  gboolean resize_canvas;
-  gboolean new_layer;
-  gboolean output_seams;
-  gint grad_func;
-  gint res_order;
-  gint mask_behavior;
-  gint oper_mode;
-  gchar pres_layer_name[VALS_MAX_NAME_LENGTH];
-  gchar disc_layer_name[VALS_MAX_NAME_LENGTH];
-  gchar rigmask_layer_name[VALS_MAX_NAME_LENGTH];
-} PlugInVals;
-
 
 typedef struct
 {

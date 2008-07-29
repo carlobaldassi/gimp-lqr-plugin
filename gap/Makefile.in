@@ -34,8 +34,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = gimp-lqr-plugin$(EXEEXT)
-subdir = src
+bin_PROGRAMS = plug_in_lqr_iter$(EXEEXT)
+subdir = gap
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -47,13 +47,11 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_gimp_lqr_plugin_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
-	render.$(OBJEXT) io_functions.$(OBJEXT)
-gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
-gimp_lqr_plugin_LDADD = $(LDADD)
+am_plug_in_lqr_iter_OBJECTS = plug_in_lqr_iter.$(OBJEXT)
+plug_in_lqr_iter_OBJECTS = $(am_plug_in_lqr_iter_OBJECTS)
+plug_in_lqr_iter_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
-gimp_lqr_plugin_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+plug_in_lqr_iter_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -61,8 +59,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(gimp_lqr_plugin_SOURCES)
-DIST_SOURCES = $(gimp_lqr_plugin_SOURCES)
+SOURCES = $(plug_in_lqr_iter_SOURCES)
+DIST_SOURCES = $(plug_in_lqr_iter_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -198,27 +196,17 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-gimp_lqr_plugin_SOURCES = \
-	plugin-intl.h	\
-	interface.c	\
-	interface.h	\
-	main.c		\
-	main.h		\
-	main_common.h	\
-	render.c	\
-	render.h	\
-	io_functions.c  \
-	io_functions.h
+plug_in_lqr_iter_SOURCES = \
+	plug_in_lqr_iter.c
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
 	-DDATADIR=\""$(DATADIR)"\"\
 	-I$(top_srcdir)		\
 	@GIMP_CFLAGS@		\
-	@LQR_CFLAGS@		\
 	-I$(includedir)
 
-LDADD = $(GIMP_LIBS) $(LQR_LIBS)
+LDADD = $(GIMP_LIBS)
 all: all-am
 
 .SUFFIXES:
@@ -232,9 +220,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  gap/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  src/Makefile
+	  $(AUTOMAKE) --gnu  gap/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -275,9 +263,9 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-gimp-lqr-plugin$(EXEEXT): $(gimp_lqr_plugin_OBJECTS) $(gimp_lqr_plugin_DEPENDENCIES) 
-	@rm -f gimp-lqr-plugin$(EXEEXT)
-	$(LINK) $(gimp_lqr_plugin_LDFLAGS) $(gimp_lqr_plugin_OBJECTS) $(gimp_lqr_plugin_LDADD) $(LIBS)
+plug_in_lqr_iter$(EXEEXT): $(plug_in_lqr_iter_OBJECTS) $(plug_in_lqr_iter_DEPENDENCIES) 
+	@rm -f plug_in_lqr_iter$(EXEEXT)
+	$(LINK) $(plug_in_lqr_iter_LDFLAGS) $(plug_in_lqr_iter_OBJECTS) $(plug_in_lqr_iter_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -285,10 +273,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_functions.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/render.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/plug_in_lqr_iter.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

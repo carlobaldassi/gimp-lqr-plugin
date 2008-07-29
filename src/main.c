@@ -36,20 +36,6 @@
 #include "interface.h"
 #include "render.h"
 
-
-
-/*  Constants  */
-
-#define PLUG_IN_NAME   "plug-in-lqr"
-
-#define DATA_KEY_VALS    "plug_in_lqr"
-#define DATA_KEY_UI_VALS "plug_in_lqr_ui"
-#define DATA_KEY_COL_VALS "plug_in_lqr_col"
-
-#define PARASITE_KEY     "plug_in_lqr_options"
-
-#define sstrncpy(dest, src, n) { strncpy((dest),(src),(n)); (dest)[(n)-1]='\0'; }
-
 /*  Local function prototypes  */
 
 gint32 layer_from_name(gint32 image_ID, gchar * name);
@@ -172,8 +158,8 @@ static void query (void)
   gimp_install_procedure (PLUG_IN_NAME,
                           N_("scaling which keeps layer features (or removes them)"),
                           "Resize a layer preserving (or removing) content",
-                          "Carlo Baldassi <carlobaldassi@yahoo.it>",
-                          "Carlo Baldassi <carlobaldassi@yahoo.it>", "2007",
+                          "Carlo Baldassi <carlobaldassi@gmail.com>",
+                          "Carlo Baldassi <carlobaldassi@gmail.com>", "2008",
                           N_("Li_quid rescale..."), "RGB*, GRAY*",
                           GIMP_PLUGIN, G_N_ELEMENTS (args), 0, args, NULL);
 
@@ -187,6 +173,11 @@ layer_from_name(gint32 image_ID, gchar * name)
   gint num_layers;
   gint * layer_list;
 
+  if ((name == NULL) || (strncmp(name, "", VALS_MAX_NAME_LENGTH) == 0))
+    {
+      return 0;
+    }
+
   layer_list = gimp_image_get_layers(image_ID, &num_layers);
   for (i = 0; i < num_layers; i++) {
     if (strncmp(name, gimp_drawable_get_name(layer_list[i]), VALS_MAX_NAME_LENGTH) == 0)
@@ -194,7 +185,7 @@ layer_from_name(gint32 image_ID, gchar * name)
         return layer_list[i];
       }
   }
-  return -1;
+  return 0;
 }
 
 
@@ -274,9 +265,9 @@ run (const gchar * name,
               vals.res_order = param[17].data.d_int32;
               vals.mask_behavior = param[18].data.d_int32;
               vals.oper_mode = param[19].data.d_int32;
-              sstrncpy(vals.pres_layer_name, param[20].data.d_string, VALS_MAX_NAME_LENGTH);
-              sstrncpy(vals.disc_layer_name, param[21].data.d_string, VALS_MAX_NAME_LENGTH);
-              sstrncpy(vals.rigmask_layer_name, param[22].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.pres_layer_name, param[20].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.disc_layer_name, param[21].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.rigmask_layer_name, param[22].data.d_string, VALS_MAX_NAME_LENGTH);
               vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
               vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
               vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
@@ -305,18 +296,9 @@ run (const gchar * name,
           gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
           gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
 
-          if ((vals.pres_layer_name != NULL) && (strncmp(vals.pres_layer_name, "", VALS_MAX_NAME_LENGTH) != 0))
-            {
-              vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
-            }
-          if ((vals.disc_layer_name != NULL) && (strncmp(vals.disc_layer_name, "", VALS_MAX_NAME_LENGTH) != 0))
-            {
-              vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
-            }
-          if ((vals.rigmask_layer_name != NULL) && (strncmp(vals.rigmask_layer_name, "", VALS_MAX_NAME_LENGTH) != 0))
-            {
-              vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
-            }
+          vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
+          vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
+          vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
 
           break;
 
@@ -362,7 +344,7 @@ run (const gchar * name,
             }
           else
             {
-              sstrncpy(vals.pres_layer_name, gimp_drawable_get_name(vals.pres_layer_ID), VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.pres_layer_name, gimp_drawable_get_name(vals.pres_layer_ID), VALS_MAX_NAME_LENGTH);
             }
           if ((vals.disc_layer_ID == -1) || (ui_vals.disc_status == FALSE))
             {
@@ -370,7 +352,7 @@ run (const gchar * name,
             }
           else
             {
-              sstrncpy(vals.disc_layer_name, gimp_drawable_get_name(vals.disc_layer_ID), VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.disc_layer_name, gimp_drawable_get_name(vals.disc_layer_ID), VALS_MAX_NAME_LENGTH);
             }
           if ((vals.rigmask_layer_ID == -1) || (ui_vals.rigmask_status == FALSE))
             {
@@ -378,7 +360,7 @@ run (const gchar * name,
             }
           else
             {
-              sstrncpy(vals.rigmask_layer_name, gimp_drawable_get_name(vals.rigmask_layer_ID), VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.rigmask_layer_name, gimp_drawable_get_name(vals.rigmask_layer_ID), VALS_MAX_NAME_LENGTH);
             }
           gimp_set_data (DATA_KEY_VALS, &vals, sizeof (vals));
           gimp_set_data (DATA_KEY_UI_VALS, &ui_vals, sizeof (ui_vals));

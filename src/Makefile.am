@@ -10,6 +10,7 @@ gimp_lqr_plugin_SOURCES = \
 	interface.h	\
 	main.c		\
 	main.h		\
+	main_common.h	\
 	render.c	\
 	render.h	\
 	io_functions.c  \
