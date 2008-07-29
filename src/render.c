@@ -87,7 +87,6 @@ render (gint32 image_ID,
       layer_ID = gimp_image_get_active_layer (image_ID);
     }
 
-
   if (!gimp_drawable_is_valid (layer_ID))
     {
       g_message (_("Error: it seems that the selected layer "

@@ -1,3 +1,5 @@
+2008-07-29 Carlo Baldassi <carlobaldassi@gmail.com>
+	* new : added GAP support for animations
 2008-07-28 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new : added reset and revert buttons
 	* modified : now retains last used width and height

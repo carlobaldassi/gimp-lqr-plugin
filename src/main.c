@@ -48,9 +48,11 @@
 
 #define PARASITE_KEY     "plug_in_lqr_options"
 
+#define sstrncpy(dest, src, n) { strncpy((dest),(src),(n)); (dest)[(n)-1]='\0'; }
 
 /*  Local function prototypes  */
 
+gint32 layer_from_name(gint32 image_ID, gchar * name);
 static void query (void);
 static void run (const gchar * name,
                  gint nparams,
@@ -77,7 +79,10 @@ const PlugInVals default_vals = {
   LQR_GF_XABS,                  /* grad func */
   LQR_RES_ORDER_HOR,            /* resize order */
   GIMP_MASK_APPLY,              /* mask behavior */
-  OPER_MODE_NORMAL              /* operational mode */
+  OPER_MODE_NORMAL,             /* operational mode */
+  "",	                        /* pres_layer_name */
+  "",                           /* disc_layer_name */
+  ""                            /* rigmask_layer_name */
 };
 
 const PlugInColVals default_col_vals = {
@@ -90,11 +95,11 @@ const PlugInColVals default_col_vals = {
 };
 
 const PlugInImageVals default_image_vals = {
-  0
+  0             /* image ID */
 };
 
 const PlugInDrawableVals default_drawable_vals = {
-  0,
+  0             /* layer ID */
 };
 
 const PlugInUIVals default_ui_vals = {
@@ -151,6 +156,9 @@ static void query (void)
     {GIMP_PDB_INT32, "res_order", "Resize order"},
     {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
     {GIMP_PDB_INT32, "oper_mode", "Operational mode"},
+    {GIMP_PDB_STRING, "pres_layer_name", "Preservation layer name (for noninteractive mode only)"},
+    {GIMP_PDB_STRING, "disc_layer_name", "Discard layer name (for noninteractive mode only)"},
+    {GIMP_PDB_STRING, "rigmask_layer_name", "Rigidity mask layer name (for noninteractive mode only)"},
   };
 
   gimp_plugin_domain_register (GETTEXT_PACKAGE, LOCALEDIR);
@@ -171,6 +179,25 @@ static void query (void)
 
   gimp_plugin_menu_register (PLUG_IN_NAME, "<Image>/Layer/");
 }
+
+gint32
+layer_from_name(gint32 image_ID, gchar * name)
+{
+  gint i;
+  gint num_layers;
+  gint * layer_list;
+
+  layer_list = gimp_image_get_layers(image_ID, &num_layers);
+  for (i = 0; i < num_layers; i++) {
+    if (strncmp(name, gimp_drawable_get_name(layer_list[i]), VALS_MAX_NAME_LENGTH) == 0)
+      {
+        return layer_list[i];
+      }
+  }
+  return -1;
+}
+
+
 
 static void
 run (const gchar * name,
@@ -204,7 +231,10 @@ run (const gchar * name,
       active_channel_ID = gimp_image_get_active_channel (image_ID);
       gimp_image_unset_active_channel (image_ID);
     }
-  drawable = gimp_drawable_get (gimp_image_get_active_layer (image_ID));
+  if (!gimp_drawable_is_layer (drawable->drawable_id))
+    {
+      drawable = gimp_drawable_get (gimp_image_get_active_layer (image_ID));
+    }
 
   /*  Initialize with default values  */
   vals = default_vals;
@@ -213,12 +243,15 @@ run (const gchar * name,
   ui_vals = default_ui_vals;
   col_vals = default_col_vals;
 
+  image_vals.image_ID = image_ID;
+  drawable_vals.layer_ID = drawable->drawable_id;
+
   if (strcmp (name, PLUG_IN_NAME) == 0)
     {
       switch (run_mode)
         {
         case GIMP_RUN_NONINTERACTIVE:
-          if (n_params != 20)
+          if (n_params != 23)
             {
               status = GIMP_PDB_CALLING_ERROR;
             }
@@ -226,12 +259,12 @@ run (const gchar * name,
             {
               vals.new_width = param[3].data.d_int32;
               vals.new_height = param[4].data.d_int32;
-              vals.pres_layer_ID = param[5].data.d_int32;
+              //vals.pres_layer_ID = param[5].data.d_int32;
               vals.pres_coeff = param[6].data.d_int32;
-              vals.disc_layer_ID = param[7].data.d_int32;
+              //vals.disc_layer_ID = param[7].data.d_int32;
               vals.disc_coeff = param[8].data.d_int32;
               vals.rigidity = param[9].data.d_int32;
-              vals.rigmask_layer_ID = param[10].data.d_int32;
+              //vals.rigmask_layer_ID = param[10].data.d_int32;
               vals.delta_x = param[11].data.d_int32;
               vals.resize_aux_layers = param[12].data.d_int32;
               vals.resize_canvas = param[13].data.d_int32;
@@ -241,6 +274,12 @@ run (const gchar * name,
               vals.res_order = param[17].data.d_int32;
               vals.mask_behavior = param[18].data.d_int32;
               vals.oper_mode = param[19].data.d_int32;
+              sstrncpy(vals.pres_layer_name, param[20].data.d_string, VALS_MAX_NAME_LENGTH);
+              sstrncpy(vals.disc_layer_name, param[21].data.d_string, VALS_MAX_NAME_LENGTH);
+              sstrncpy(vals.rigmask_layer_name, param[22].data.d_string, VALS_MAX_NAME_LENGTH);
+              vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
+              vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
+              vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
             }
           break;
 
@@ -265,6 +304,20 @@ run (const gchar * name,
           gimp_get_data (DATA_KEY_VALS, &vals);
           gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
           gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
+
+          if ((vals.pres_layer_name != NULL) && (strncmp(vals.pres_layer_name, "", VALS_MAX_NAME_LENGTH) != 0))
+            {
+              vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
+            }
+          if ((vals.disc_layer_name != NULL) && (strncmp(vals.disc_layer_name, "", VALS_MAX_NAME_LENGTH) != 0))
+            {
+              vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
+            }
+          if ((vals.rigmask_layer_name != NULL) && (strncmp(vals.rigmask_layer_name, "", VALS_MAX_NAME_LENGTH) != 0))
+            {
+              vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
+            }
+
           break;
 
         default:
@@ -303,6 +356,30 @@ run (const gchar * name,
 
       if (run_mode == GIMP_RUN_INTERACTIVE)
         {
+          if ((vals.pres_layer_ID == -1) || (ui_vals.pres_status == FALSE))
+            {
+              vals.pres_layer_name[0] = '\0';
+            }
+          else
+            {
+              sstrncpy(vals.pres_layer_name, gimp_drawable_get_name(vals.pres_layer_ID), VALS_MAX_NAME_LENGTH);
+            }
+          if ((vals.disc_layer_ID == -1) || (ui_vals.disc_status == FALSE))
+            {
+              vals.disc_layer_name[0] = '\0';
+            }
+          else
+            {
+              sstrncpy(vals.disc_layer_name, gimp_drawable_get_name(vals.disc_layer_ID), VALS_MAX_NAME_LENGTH);
+            }
+          if ((vals.rigmask_layer_ID == -1) || (ui_vals.rigmask_status == FALSE))
+            {
+              vals.rigmask_layer_name[0] = '\0';
+            }
+          else
+            {
+              sstrncpy(vals.rigmask_layer_name, gimp_drawable_get_name(vals.rigmask_layer_ID), VALS_MAX_NAME_LENGTH);
+            }
           gimp_set_data (DATA_KEY_VALS, &vals, sizeof (vals));
           gimp_set_data (DATA_KEY_UI_VALS, &ui_vals, sizeof (ui_vals));
           gimp_set_data (DATA_KEY_COL_VALS, &col_vals, sizeof (col_vals));

@@ -27,6 +27,7 @@
 #define RESPONSE_REFRESH (1)
 #define RESPONSE_FEAT_REFRESH (2)
 #define RESPONSE_ADV_REFRESH (3)
+#define VALS_MAX_NAME_LENGTH (40)
 
 /**** OPERATIONAL_MODES ****/
 enum _OperMode
@@ -57,12 +58,15 @@ typedef struct
   gint res_order;
   gint mask_behavior;
   gint oper_mode;
+  gchar pres_layer_name[VALS_MAX_NAME_LENGTH];
+  gchar disc_layer_name[VALS_MAX_NAME_LENGTH];
+  gchar rigmask_layer_name[VALS_MAX_NAME_LENGTH];
 } PlugInVals;
 
 
 typedef struct
 {
-  gint32 image_id;
+  gint32 image_ID;
 } PlugInImageVals;
 
 typedef struct
