@@ -70,8 +70,8 @@ const PlugInVals default_vals = {
   0,                            /* rigidity coeff */
   0,				/* rigmask layer ID */
   1,                            /* delta x */
-  TRUE,                         /* resize canvas */
   TRUE,                         /* resize aux layers */
+  TRUE,                         /* resize canvas */
   FALSE,                        /* output on a new layer */
   FALSE,                        /* output seams */
   LQR_GF_XABS,                  /* grad func */
@@ -147,9 +147,9 @@ static void query (void)
     {GIMP_PDB_INT32, "resize_canvas", "Whether to resize canvas"},
     {GIMP_PDB_INT32, "new_layer", "Whether to output on a new layer"},
     {GIMP_PDB_INT32, "seams", "Whether to output the seam map"},
-    {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
     {GIMP_PDB_INT32, "grad_func", "Gradient function to use"},
     {GIMP_PDB_INT32, "res_order", "Resize order"},
+    {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
     {GIMP_PDB_INT32, "oper_mode", "Operational mode"},
   };
 
