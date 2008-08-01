@@ -350,8 +350,8 @@ render (gint32 image_ID,
       return FALSE;
     }
 
-  write_all_vmaps (lqr_vmap_list_start (carver), image_ID, layer_name, x_off,
-                   y_off, colour_start, colour_end);
+  MEMCHECK1 (write_all_vmaps (lqr_vmap_list_start (carver), image_ID, layer_name, x_off,
+                   y_off, colour_start, colour_end));
 
   if (vals->resize_canvas == TRUE)
     {

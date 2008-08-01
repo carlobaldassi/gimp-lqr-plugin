@@ -97,6 +97,8 @@ update_bias (LqrCarver * r, gint32 layer_ID, gint bias_factor,
   CATCH (lqr_carver_bias_add_rgb_area
          (r, rgb, bias_factor, bpp, w, h, x_off, y_off));
 
+  g_free(rgb);
+
   return LQR_OK;
 }
 
@@ -125,6 +127,8 @@ set_rigmask (LqrCarver * r, gint32 layer_ID, gint base_x_off, gint base_y_off)
 
   CATCH (lqr_carver_rigmask_add_rgb_area
          (r, rgb, bpp, w, h, x_off, y_off));
+
+  g_free(rgb);
 
   return LQR_OK;
 }

@@ -1,3 +1,7 @@
+2008-07-31 Carlo Baldassi <carlobaldassi@gmail.com>
+	* bugfix : fixed memory leaks when reading masks
+	* bugfix : protected a memory call when writing
+	  seams
 2008-07-29 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new : added GAP support for animations
 2008-07-28 Carlo Baldassi <carlobaldassi@gmail.com>
