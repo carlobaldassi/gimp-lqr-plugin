@@ -66,6 +66,7 @@ const PlugInVals default_vals = {
   LQR_RES_ORDER_HOR,            /* resize order */
   GIMP_MASK_APPLY,              /* mask behavior */
   OPER_MODE_NORMAL,             /* operational mode */
+  TRUE,                         /* no disc upon enlarging */
   "",	                        /* pres_layer_name */
   "",                           /* disc_layer_name */
   ""                            /* rigmask_layer_name */
@@ -142,6 +143,7 @@ static void query (void)
     {GIMP_PDB_INT32, "res_order", "Resize order"},
     {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
     {GIMP_PDB_INT32, "oper_mode", "Operational mode"},
+    {GIMP_PDB_INT32, "no_disc_on_enlarge", "Ignore discard layer upon enlargement"},
     {GIMP_PDB_STRING, "pres_layer_name", "Preservation layer name (for noninteractive mode only)"},
     {GIMP_PDB_STRING, "disc_layer_name", "Discard layer name (for noninteractive mode only)"},
     {GIMP_PDB_STRING, "rigmask_layer_name", "Rigidity mask layer name (for noninteractive mode only)"},
@@ -205,6 +207,8 @@ run (const gchar * name,
 
   *nreturn_vals = 1;
   *return_vals = values;
+  gboolean run_dialog = TRUE;
+  gint dialog_resp;
   gboolean render_success = FALSE;
 
   /*  Initialize i18n support  */
@@ -242,7 +246,7 @@ run (const gchar * name,
       switch (run_mode)
         {
         case GIMP_RUN_NONINTERACTIVE:
-          if (n_params != 23)
+          if (n_params != 24)
             {
               status = GIMP_PDB_CALLING_ERROR;
             }
@@ -265,9 +269,10 @@ run (const gchar * name,
               vals.res_order = param[17].data.d_int32;
               vals.mask_behavior = param[18].data.d_int32;
               vals.oper_mode = param[19].data.d_int32;
-              g_strlcpy(vals.pres_layer_name, param[20].data.d_string, VALS_MAX_NAME_LENGTH);
-              g_strlcpy(vals.disc_layer_name, param[21].data.d_string, VALS_MAX_NAME_LENGTH);
-              g_strlcpy(vals.rigmask_layer_name, param[22].data.d_string, VALS_MAX_NAME_LENGTH);
+              vals.no_disc_on_enlarge = param[20].data.d_int32;
+              g_strlcpy(vals.pres_layer_name, param[21].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.disc_layer_name, param[22].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.rigmask_layer_name, param[23].data.d_string, VALS_MAX_NAME_LENGTH);
               vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
               vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
               vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
@@ -281,11 +286,30 @@ run (const gchar * name,
           gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
 
           /* gimp_context_push(); */
-          if (!dialog (image_ID, drawable,
-                       &vals, &image_vals, &drawable_vals, &ui_vals,
-                       &col_vals))
+          while (run_dialog == TRUE)
             {
-              status = GIMP_PDB_CANCEL;
+              dialog_resp = dialog (image_ID, drawable,
+                             &vals, &image_vals, &drawable_vals, &ui_vals,
+                             &col_vals);
+              switch (dialog_resp)
+                {
+                  case GTK_RESPONSE_OK:
+                    run_dialog = FALSE;
+                    break;
+                  case RESPONSE_RESET:
+                    vals = default_vals;
+                    image_vals = default_image_vals;
+                    drawable_vals = default_drawable_vals;
+                    ui_vals = default_ui_vals;
+                    col_vals = default_col_vals;
+                    image_vals.image_ID = image_ID;
+                    drawable_vals.layer_ID = drawable->drawable_id;
+                    break;
+                  default:
+                    run_dialog = FALSE;
+                    status = GIMP_PDB_CANCEL;
+                    break;
+                }
             }
           /* gimp_context_pop(); */
           break;

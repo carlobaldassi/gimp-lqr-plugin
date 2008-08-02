@@ -55,6 +55,9 @@ static gint count_extra_layers (gint32 image_ID, GimpDrawable * drawable);
 static gboolean dialog_layer_constraint_func (gint32 image_id,
                                               gint32 layer_id, gpointer data);
 
+static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
+static void callback_size_changed (GtkWidget * size_entry, gpointer data);
+static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
 static void callback_pres_combo_get_active (GtkWidget * combo, gpointer data);
 static void callback_disc_combo_get_active (GtkWidget * combo, gpointer data);
 static void callback_rigmask_combo_get_active (GtkWidget * combo, gpointer data);
@@ -126,7 +129,7 @@ GtkTooltips *dlg_tips;
 
 /*  Public functions  */
 
-gboolean
+gint
 dialog (gint32 image_ID,
         GimpDrawable * drawable,
         PlugInVals * vals,
@@ -180,7 +183,6 @@ dialog (gint32 image_ID,
   GtkWidget * mask_behavior_combo_box = NULL;
   gboolean has_mask = FALSE;
   //GtkObject *adj;
-  gboolean run = FALSE;
   GimpUnit unit;
   gdouble xres, yres;
 
@@ -216,6 +218,7 @@ dialog (gint32 image_ID,
 
   orig_width = gimp_drawable_width (layer_ID);
   orig_height = gimp_drawable_height (layer_ID);
+
   if (layer_ID != ui_state->last_layer_ID)
     {
       state->new_width = orig_width;
@@ -242,10 +245,10 @@ dialog (gint32 image_ID,
       disc_combo_awaked = FALSE;
     }
 
-
   dlg = gimp_dialog_new (_("GIMP LiquidRescale Plug-In"), PLUGIN_NAME,
                          NULL, 0,
                          gimp_standard_help_func, "plug-in-lqr",
+                         GIMP_STOCK_RESET, RESPONSE_RESET,
                          GTK_STOCK_REFRESH, RESPONSE_REFRESH,
                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                          GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
@@ -280,8 +283,8 @@ dialog (gint32 image_ID,
   preview_data.factor = MAX (preview_data.factor, 1);
 
 
-  preview_data.old_width = gimp_drawable_width (layer_ID);
-  preview_data.old_height = gimp_drawable_height (layer_ID);
+  preview_data.old_width = orig_width;
+  preview_data.old_height = orig_height;
   gimp_drawable_offsets (layer_ID, &(preview_data.x_off),
                          &(preview_data.y_off));
   preview_data.width =
@@ -361,6 +364,14 @@ dialog (gint32 image_ID,
                                   state->new_height);
     }
 
+  g_signal_connect (GIMP_SIZE_ENTRY(coordinates), "value-changed",
+                    G_CALLBACK (callback_size_changed),
+                    (gpointer) & preview_data);
+
+  g_signal_connect (GIMP_SIZE_ENTRY(coordinates), "refval-changed",
+                    G_CALLBACK (callback_size_changed),
+                    (gpointer) & preview_data);
+
   gtk_box_pack_start (GTK_BOX (hbox), coordinates, FALSE, FALSE, 0);
   gtk_widget_show (coordinates);
 
@@ -376,7 +387,7 @@ dialog (gint32 image_ID,
   gtk_widget_show (resetvalues_event_box);
 
   gimp_help_set_help_data (resetvalues_event_box,
-                           _("Reset width and height to their original value"), NULL);
+                           _("Reset width and height to their original values"), NULL);
 
   resetvalues_button = gtk_button_new ();
   resetvalues_icon = gtk_image_new_from_stock (GIMP_STOCK_RESET, GTK_ICON_SIZE_MENU);
@@ -396,7 +407,7 @@ dialog (gint32 image_ID,
   gtk_widget_show (lastvalues_event_box);
 
   gimp_help_set_help_data (lastvalues_event_box,
-                           _("Set width and height to the last value used"), NULL);
+                           _("Set width and height to the last used values"), NULL);
 
   lastvalues_button = gtk_button_new ();
   lastvalues_icon = gtk_image_new_from_stock (GTK_STOCK_REVERT_TO_SAVED, GTK_ICON_SIZE_MENU);
@@ -624,10 +635,7 @@ dialog (gint32 image_ID,
   gtk_widget_show (dlg);
   gtk_main ();
 
-  run = (dialog_response == GTK_RESPONSE_OK);
-
-
-  if (run)
+  if (dialog_response == GTK_RESPONSE_OK)
     {
       /*  Save ui values  */
       ui_state->chain_active =
@@ -699,7 +707,7 @@ dialog (gint32 image_ID,
 
   gimp_drawable_detach (preview_data.drawable);
 
-  return run;
+  return dialog_response;
 }
 
 
@@ -754,6 +762,72 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
     }
 }
 
+static void
+callback_set_disc_warning (GtkWidget * dummy, gpointer data)
+{
+  PreviewData *pd = PREVIEW_DATA(data);
+  gboolean issue_warn;
+  gint nw, nh, ow, oh;
+
+  if ((pd->vals->no_disc_on_enlarge == FALSE) ||
+      (pd->ui_vals->disc_status == FALSE) ||
+      (pd->vals->disc_coeff == 0))
+    {
+      gtk_widget_hide (GTK_WIDGET (pd->disc_warning_image));
+    }
+  else
+    {
+      ow = pd->old_width;
+      oh = pd->old_height;
+      nw = pd->vals->new_width;
+      nh = pd->vals->new_height;
+      issue_warn = FALSE;
+      switch (pd->vals->res_order)
+        {
+          case LQR_RES_ORDER_HOR:
+            if ((nw > ow) || ((nw == ow) && (nh > oh)))
+              {
+                issue_warn = TRUE;
+              }
+            break;
+          case LQR_RES_ORDER_VERT:
+            if ((nh > oh) || ((nh == oh) && (nw > ow)))
+              {
+                issue_warn = TRUE;
+              }
+            break;
+        }
+      if (issue_warn == TRUE)
+        {
+          gtk_widget_show (GTK_WIDGET (pd->disc_warning_image));
+        }
+      else
+        {
+          gtk_widget_hide (GTK_WIDGET (pd->disc_warning_image));
+        }
+    }
+
+
+}
+
+static void callback_size_changed (GtkWidget * size_entry, gpointer data)
+{
+  gint new_width, new_height;
+  new_width = ROUND(gimp_size_entry_get_refval(GIMP_SIZE_ENTRY(size_entry), 0));
+  new_height = ROUND(gimp_size_entry_get_refval(GIMP_SIZE_ENTRY(size_entry), 1));
+  PREVIEW_DATA(data)->vals->new_width = new_width;
+  PREVIEW_DATA(data)->vals->new_height = new_height;
+  callback_set_disc_warning(NULL, data);
+}
+
+static void
+callback_res_order_changed (GtkWidget * res_order, gpointer data)
+{
+  gint order;
+  gimp_int_combo_box_get_active(GIMP_INT_COMBO_BOX(res_order), &order);
+  PREVIEW_DATA(data)->vals->res_order = order;
+  callback_set_disc_warning(NULL, data);
+}
 
 static void
 callback_pres_combo_get_active (GtkWidget * combo, gpointer data)
@@ -1655,6 +1729,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *disc_vbox2;
   GtkWidget *disc_button;
   GtkWidget *disc_new_button;
+  GtkWidget *disc_warning_image;
   GtkWidget *guess_button;
   GtkWidget *guess_dir_combo;
   GtkWidget *table;
@@ -1952,6 +2027,16 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                              "(useful to remove parts of the image "
                              "when shrinking)"), NULL);
 
+  disc_warning_image = gtk_image_new_from_stock (GIMP_STOCK_WARNING, 
+      GTK_ICON_SIZE_MENU);
+  gtk_box_pack_start (GTK_BOX (hbox), disc_warning_image, FALSE, FALSE, 0);
+  gimp_help_set_help_data (disc_warning_image,
+      _("Warning: the discard mask information will be ignored with the current settings "
+        "(this can be overridden by unchecking the corrensponding option in the Advanced tab)."), NULL);
+  gtk_widget_hide (disc_warning_image);
+
+  preview_data.disc_warning_image = disc_warning_image;
+
   disc_new_button = gtk_button_new_with_label (_("New"));
   gtk_box_pack_end (GTK_BOX (hbox), disc_new_button, FALSE, FALSE, 0);
   gtk_widget_show (disc_new_button);
@@ -2055,7 +2140,11 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                               NULL);
   g_signal_connect (adj, "value_changed",
                     G_CALLBACK (gimp_int_adjustment_update),
-                    &state->disc_coeff);
+                    (gpointer) &state->disc_coeff);
+
+  g_signal_connect (adj, "value_changed",
+                    G_CALLBACK (callback_set_disc_warning),
+                    (gpointer) &preview_data);
 
 
   gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_LABEL (adj),
@@ -2088,6 +2177,12 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
                     G_CALLBACK
                     (callback_resize_aux_layers_button_set_sensitive),
                     (gpointer) (&presdisc_status));
+
+  g_signal_connect (disc_button, "toggled",
+                    G_CALLBACK
+                    (callback_set_disc_warning),
+                    (gpointer) (&preview_data));
+
 
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_box_pack_start (GTK_BOX (disc_vbox2), hbox, FALSE, FALSE, 0);
@@ -2162,6 +2257,7 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *hbox;
   GtkWidget *rigmask_button;
   GtkWidget *rigmask_new_button;
+  GtkWidget *no_disc_on_enlarge_button;
   GtkWidget *table;
   gint row;
   GtkWidget *combo;
@@ -2497,15 +2593,40 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   res_order_combo_box =
     gimp_int_combo_box_new (_("Horizontal first"), LQR_RES_ORDER_HOR,
                             _("Vertical first"), LQR_RES_ORDER_VERT, NULL);
-  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
-                                 state->res_order);
+  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX(res_order_combo_box), state->res_order, G_CALLBACK(callback_res_order_changed), (gpointer) &preview_data);
+
+  //gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
+  //                               state->res_order);
 
   gtk_box_pack_start (GTK_BOX (hbox), res_order_combo_box, TRUE, TRUE, 0);
   gtk_widget_show (res_order_combo_box);
 
+  /* No discard when enlarging ? */
 
+  no_disc_on_enlarge_button = gtk_check_button_new_with_label (_("Ignore discard mask when enlarging"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (no_disc_on_enlarge_button),
+                                state->no_disc_on_enlarge);
+  
+  gimp_help_set_help_data (no_disc_on_enlarge_button,
+                           _("This will have the same effect as setting the strenght "
+                             "to 0 in the discard mask when the first rescale step is "
+                             "an image enlargment (which normally is the best choice)"), NULL);
+
+  gtk_box_pack_start (GTK_BOX (thispage), no_disc_on_enlarge_button, FALSE, FALSE,
+                      0);
+  gtk_widget_show (no_disc_on_enlarge_button);
+
+  g_signal_connect (no_disc_on_enlarge_button, "toggled",
+                    G_CALLBACK
+                    (callback_status_button),
+                    (gpointer) (&state->no_disc_on_enlarge));
+
+  g_signal_connect (no_disc_on_enlarge_button, "toggled",
+                    G_CALLBACK
+                    (callback_set_disc_warning),
+                    (gpointer) (&preview_data));
+
+  callback_set_disc_warning (no_disc_on_enlarge_button, (gpointer) &preview_data);
 
   return thispage;
-
-
 }

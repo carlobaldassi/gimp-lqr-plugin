@@ -73,6 +73,7 @@ render (gint32 image_ID,
   gint x_off, y_off, aux_x_off, aux_y_off;
   GimpDrawable *drawable_pres, *drawable_disc, *drawable_rigmask;
   GimpRGB colour_start, colour_end;
+  gboolean ignore_disc_mask = FALSE;
   LqrProgress *lqr_progress;
 #ifdef __CLOCK_IT__
   double clock1, clock2, clock3, clock4;
@@ -232,6 +233,29 @@ render (gint32 image_ID,
       rigidity = vals->rigidity;
     }
 
+  if (vals->no_disc_on_enlarge == TRUE)
+    {
+      switch (vals->res_order)
+        {
+          case LQR_RES_ORDER_HOR:
+            if ((new_width > old_width) || ((new_width == old_width) && (new_height > old_height)))
+              {
+                ignore_disc_mask = TRUE;
+              }
+            break;
+          case LQR_RES_ORDER_VERT:
+            if ((new_height > old_height) || ((new_height == old_height) && (new_width > old_width)))
+              {
+                ignore_disc_mask = TRUE;
+              }
+            break;
+          default:
+            g_message ("Error: unknown resize order index");
+            return FALSE;
+        }
+    }
+
+
 #ifdef __CLOCK_IT__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
   printf ("[ begin: clock: %g ]\n", clock1);
@@ -245,8 +269,11 @@ render (gint32 image_ID,
   MEMCHECK1 (lqr_carver_init (carver, vals->delta_x, rigidity));
   MEMCHECK1 (update_bias
              (carver, vals->pres_layer_ID, vals->pres_coeff, x_off, y_off));
-  MEMCHECK1 (update_bias
-             (carver, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
+  if (ignore_disc_mask == FALSE)
+    {
+      MEMCHECK1 (update_bias
+                 (carver, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
+    }
   MEMCHECK1 (set_rigmask
              (carver, vals->rigmask_layer_ID, x_off, y_off));
   lqr_carver_set_gradient_function (carver, vals->grad_func);
@@ -313,9 +340,12 @@ render (gint32 image_ID,
             }
           if (vals->disc_layer_ID != 0)
             {
-              MEMCHECK1 (update_bias
-                         (carver, vals->disc_layer_ID, 2 * vals->disc_coeff,
-                          x_off, y_off));
+              if (ignore_disc_mask == FALSE)
+                {
+                  MEMCHECK1 (update_bias
+                               (carver, vals->disc_layer_ID, 2 * vals->disc_coeff,
+                              x_off, y_off));
+                }
               carver_list = lqr_carver_list_next (carver_list);
             }
           if (vals->rigmask_layer_ID != 0)

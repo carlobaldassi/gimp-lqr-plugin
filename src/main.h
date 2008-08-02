@@ -29,6 +29,7 @@
 #define RESPONSE_REFRESH (1)
 #define RESPONSE_FEAT_REFRESH (2)
 #define RESPONSE_ADV_REFRESH (3)
+#define RESPONSE_RESET (4)
 
 /**** OPERATIONAL_MODES ****/
 enum _OperMode
@@ -103,6 +104,7 @@ typedef struct
   GtkWidget *disc_combo;
   GtkWidget *rigmask_combo;
   GtkWidget *coordinates;
+  GtkWidget *disc_warning_image;
   gint guess_direction;
 } PreviewData;
 
