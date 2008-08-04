@@ -1,6 +1,9 @@
+2008-08-03 Carlo Baldassi <carlobaldassi@gmail.com>
+	* new : info icons for newly created masks
 2008-08-01 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new : discard mask is ignored by default when
 	  enlarging, added option + warning icon
+	* new : added overall reset button
 2008-07-31 Carlo Baldassi <carlobaldassi@gmail.com>
 	* bugfix : fixed memory leaks when reading masks
 	* bugfix : protected a memory call when writing

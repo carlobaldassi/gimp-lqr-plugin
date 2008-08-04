@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-02 03:12+0200\n"
+"POT-Creation-Date: 2008-08-04 03:13+0200\n"
 "PO-Revision-Date: 2007-11-30 00:26+0100\n"
 "Last-Translator: Vincent Picavet <vpicavet@gmail.com>\n"
 "Language-Team:  <fr@li.org>\n"
@@ -17,88 +17,88 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../src/interface.c:248
+#: ../src/interface.c:253
 msgid "GIMP LiquidRescale Plug-In"
 msgstr "Greffon GIMP LiquidRescale"
 
-#: ../src/interface.c:271
+#: ../src/interface.c:276
 msgid "Selected layer"
 msgstr "Calque sélectionné"
 
 #. New size
-#: ../src/interface.c:334
+#: ../src/interface.c:339
 msgid "Select new width and height"
 msgstr "Sélectionner la nouvelle largeur et hauteur"
 
-#: ../src/interface.c:354
+#: ../src/interface.c:359
 msgid "Width:"
 msgstr "Largeur:"
 
-#: ../src/interface.c:356
+#: ../src/interface.c:361
 msgid "Height:"
 msgstr "Hauteur:"
 
-#: ../src/interface.c:390
+#: ../src/interface.c:395
 msgid "Reset width and height to their original values"
 msgstr ""
 
-#: ../src/interface.c:410
+#: ../src/interface.c:415
 msgid "Set width and height to the last used values"
 msgstr ""
 
-#: ../src/interface.c:434
+#: ../src/interface.c:439
 msgid ""
 "Here you can choose if you want to transform back the image to its original "
 "size and how to do it"
 msgstr ""
 
-#: ../src/interface.c:442
+#: ../src/interface.c:447
 msgid "Mode:"
 msgstr "Mode :"
 
-#: ../src/interface.c:447
+#: ../src/interface.c:452
 msgid "LqR only"
 msgstr "LqR seulement"
 
-#: ../src/interface.c:448
+#: ../src/interface.c:453
 #, fuzzy
 msgid "LqR + scale back"
 msgstr "LqR + redimensionnement vers la taille originale"
 
-#: ../src/interface.c:450
+#: ../src/interface.c:455
 #, fuzzy
 msgid "LqR + LqR back"
 msgstr "LqR + LqR vers la taille d'origine"
 
 #. Output settings page
-#: ../src/interface.c:478
+#: ../src/interface.c:483
 msgid "Output"
 msgstr "Sortie"
 
-#: ../src/interface.c:493
+#: ../src/interface.c:498
 msgid "Output on a new layer"
 msgstr "Sortie sur un nouveau calque"
 
-#: ../src/interface.c:501
+#: ../src/interface.c:506
 msgid "Outputs the resulting image on a new layer"
 msgstr "Écrire l'image de résultat sur un nouveau calque"
 
-#: ../src/interface.c:505
+#: ../src/interface.c:510
 msgid "Resize image canvas"
 msgstr "Redimensionner le canevas de l'image"
 
-#: ../src/interface.c:513
+#: ../src/interface.c:518
 msgid "Resize and translate the image canvas to fit the resized layer"
 msgstr ""
 "Redimensionner et déplacer le canevas de l'image pour l'adapter au calque "
 "redimensionné"
 
-#: ../src/interface.c:517
+#: ../src/interface.c:522
 #, fuzzy
 msgid "Resize auxiliary layers"
 msgstr "Redimensionner les calques de conservation/suppression"
 
-#: ../src/interface.c:534
+#: ../src/interface.c:539
 #, fuzzy
 msgid ""
 "Resize the layers used as features or rigidity masks along with the active "
@@ -107,11 +107,11 @@ msgstr ""
 "Redimensionner les calques utilisés comme masques en même temps que le "
 "calque actif"
 
-#: ../src/interface.c:541
+#: ../src/interface.c:546
 msgid "Output the seams"
 msgstr "Écrire les lignes"
 
-#: ../src/interface.c:550
+#: ../src/interface.c:555
 msgid ""
 "Creates an extra output layer with the seams, for visual inspection of what "
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
@@ -121,67 +121,68 @@ msgstr ""
 "de l'action du plugin. Utiliser cette option avec \"Sortie sur un nouveau "
 "calque\", et le redimensionnement dans une direction à la fois"
 
-#: ../src/interface.c:562
+#: ../src/interface.c:567
 msgid "Last seams colour"
 msgstr "Couleur des dernieres lignes"
 
-#: ../src/interface.c:576
+#: ../src/interface.c:581
 msgid "Colour to use for the last seams"
 msgstr "Couleur à utiliser pour les dernières lignes"
 
-#: ../src/interface.c:579
+#: ../src/interface.c:584
 msgid "First seams colour"
 msgstr "Couleur des premières lignes"
 
-#: ../src/interface.c:593
+#: ../src/interface.c:598
 msgid "Colour to use for the first seams"
 msgstr "Couleur à utiliser pour les premières lignes"
 
 #. Mask page
-#: ../src/interface.c:609
+#: ../src/interface.c:614
 msgid "Mask"
 msgstr "Masque"
 
-#: ../src/interface.c:617
-msgid "Select behavior for the mask"
+#: ../src/interface.c:622
+#, fuzzy
+msgid "Select behaviour for the mask"
 msgstr "Sélectionner un comportement pour le masque"
 
-#: ../src/interface.c:622
+#: ../src/interface.c:627
 msgid "Apply"
 msgstr "Appliquer"
 
-#: ../src/interface.c:622
+#: ../src/interface.c:627
 msgid "Discard"
 msgstr "Annuler"
 
-#: ../src/interface.c:1070 ../src/interface.c:1158 ../src/render.c:93
+#: ../src/interface.c:1083 ../src/interface.c:1171 ../src/render.c:93
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Erreur : il semble que le calque sélectionné n'est plus valide"
 
-#: ../src/interface.c:1742
+#: ../src/interface.c:1760
 msgid "Feature masks"
 msgstr "Masques des éléments"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1752
+#: ../src/interface.c:1770
 #, c-format
 msgid "%s pres mask"
 msgstr "Masque de préservation %s"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1761
+#: ../src/interface.c:1780
 #, c-format
 msgid "%s disc mask"
 msgstr "Masque de suppression %s"
 
 #. Feature preservation
-#: ../src/interface.c:1783
+#: ../src/interface.c:1803
 msgid "Feature preservation mask"
 msgstr "Masque de conservation d'éléments"
 
-#: ../src/interface.c:1788
+#: ../src/interface.c:1808
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -193,27 +194,33 @@ msgstr ""
 "d'éléments.\n"
 "Vous pouvez en créer un avec le bouton \"Nouveau\" et peindre dessus"
 
-#: ../src/interface.c:1821
+#: ../src/interface.c:1841
 msgid "Preserve features"
 msgstr "Conserver les éléments"
 
-#: ../src/interface.c:1837
+#: ../src/interface.c:1857
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr ""
 "Utiliser un calque supplémentaire pour préserver les zones sélectionnées de "
 "la déformation"
 
-#: ../src/interface.c:1840 ../src/interface.c:2040 ../src/interface.c:2404
+#: ../src/interface.c:1860 ../src/interface.c:2075 ../src/interface.c:2452
 msgid "New"
 msgstr "Nouveau"
 
-#: ../src/interface.c:1845
+#: ../src/interface.c:1865
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr ""
 "Créer un nouveau calque transparent prêt à être utilisé comme masque de "
 "conservation"
 
-#: ../src/interface.c:1884
+#: ../src/interface.c:1874 ../src/interface.c:2088 ../src/interface.c:2466
+msgid ""
+"Paint the mask on the newly created layer, then come back to this dialog and "
+"click on the \"Refresh\" button"
+msgstr ""
+
+#: ../src/interface.c:1917
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -221,24 +228,24 @@ msgstr ""
 "Calque à utiliser comme masque pour la conservation d'éléments.\n"
 " Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
-#: ../src/interface.c:1915 ../src/interface.c:2118 ../src/interface.c:2479
+#: ../src/interface.c:1948 ../src/interface.c:2165 ../src/interface.c:2539
 msgid "Layer:"
 msgstr "Calque :"
 
-#: ../src/interface.c:1936 ../src/interface.c:2136 ../src/interface.c:2501
+#: ../src/interface.c:1969 ../src/interface.c:2183 ../src/interface.c:2561
 msgid "Strength:"
 msgstr "Force :"
 
-#: ../src/interface.c:1939 ../src/interface.c:2504
+#: ../src/interface.c:1972 ../src/interface.c:2564
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coefficient global pour l'intensité de conservation des éléments"
 
 #. Feature discard
-#: ../src/interface.c:1972
+#: ../src/interface.c:2005
 msgid "Feature discard mask"
 msgstr "Masque de suppression d'éléments"
 
-#: ../src/interface.c:1977
+#: ../src/interface.c:2010
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -252,11 +259,11 @@ msgstr ""
 "ensuite pressez le bouton \"Rafraichir\".\n"
 " Notez que peindre en noir n'a aucun effet"
 
-#: ../src/interface.c:2008
+#: ../src/interface.c:2041
 msgid "Discard features"
 msgstr "Supprimer des éléments"
 
-#: ../src/interface.c:2025
+#: ../src/interface.c:2058
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -265,20 +272,21 @@ msgstr ""
 "si elles étaient inutiles. Efficace pour enlever certaines parties de "
 "l'image lors d'un rétrécissement"
 
-#: ../src/interface.c:2034
+#: ../src/interface.c:2067
 msgid ""
 "Warning: the discard mask information will be ignored with the current "
-"settings (this can be overridden by unchecking the corrensponding option in "
-"the Advanced tab)."
+"settings.\n"
+"(If you know what you're doing you can override this behaviour by unchecking "
+"the corrensponding option in the \"Advanced\" tab)"
 msgstr ""
 
-#: ../src/interface.c:2045
+#: ../src/interface.c:2080
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 "Créer un nouveau calque transparent prêt à être utiliser comme calque de "
 "suppression"
 
-#: ../src/interface.c:2083
+#: ../src/interface.c:2130
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -286,15 +294,15 @@ msgstr ""
 "Calque à utiliser comme un masque pour la suppression d'élément.\n"
 " Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
-#: ../src/interface.c:2139
+#: ../src/interface.c:2186
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coefficient global pour l'intensité de suppression des éléments"
 
-#: ../src/interface.c:2191
+#: ../src/interface.c:2238
 msgid "Auto size"
 msgstr "Taille auto"
 
-#: ../src/interface.c:2202
+#: ../src/interface.c:2249
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
@@ -303,35 +311,35 @@ msgstr ""
 "masquées. \n"
 "A utiliser seulement avec des masques simples"
 
-#: ../src/interface.c:2206
+#: ../src/interface.c:2253
 msgid "horizontal"
 msgstr "horizontal"
 
-#: ../src/interface.c:2206
+#: ../src/interface.c:2253
 msgid "vertical"
 msgstr "vertical"
 
-#: ../src/interface.c:2217
+#: ../src/interface.c:2264
 msgid "Resizing direction for auto size"
 msgstr "Direction de redimensionnement pour la taille automatique"
 
-#: ../src/interface.c:2273
+#: ../src/interface.c:2320
 msgid "Advanced"
 msgstr "Avancé"
 
 #. The name of a newly created layer for rigidity mask
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:2282
+#: ../src/interface.c:2329
 #, fuzzy, c-format
 msgid "%s rigidity mask"
 msgstr "Masque de suppression %s"
 
 #. Seams control
-#: ../src/interface.c:2302
+#: ../src/interface.c:2350
 msgid "Seams control"
 msgstr ""
 
-#: ../src/interface.c:2307
+#: ../src/interface.c:2355
 #, fuzzy, c-format
 msgid ""
 "Extra layers are needed to be used as rigidity masks.\n"
@@ -345,11 +353,11 @@ msgstr ""
 "ensuite pressez le bouton \"Rafraichir\".\n"
 " Notez que peindre en noir n'a aucun effet"
 
-#: ../src/interface.c:2331
+#: ../src/interface.c:2379
 msgid "Max transversal step:"
 msgstr ""
 
-#: ../src/interface.c:2334
+#: ../src/interface.c:2382
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
@@ -357,35 +365,35 @@ msgstr ""
 "Déplacement maximal le long d'une ligne. Augmenter cette valeur permet de "
 "dépasser la limite de 45 degrés"
 
-#: ../src/interface.c:2345
+#: ../src/interface.c:2393
 #, fuzzy
 msgid "Overall rigidity:"
 msgstr "Rigidité des lignes :"
 
-#: ../src/interface.c:2348
+#: ../src/interface.c:2396
 msgid "Increasing this value results in straighter seams"
 msgstr "Augmenter cette valeur pour des lignes plus droites"
 
-#: ../src/interface.c:2377
+#: ../src/interface.c:2425
 #, fuzzy
 msgid "Use a rigidity mask"
 msgstr "Rigidité des lignes :"
 
-#: ../src/interface.c:2402
+#: ../src/interface.c:2450
 #, fuzzy
 msgid "Use an extra layer to mark areas where seams should be straighter"
 msgstr ""
 "Utiliser un calque supplémentaire pour préserver les zones sélectionnées de "
 "la déformation"
 
-#: ../src/interface.c:2409
+#: ../src/interface.c:2457
 #, fuzzy
 msgid "Creates a new transparent layer ready to be used as a rigidity mask"
 msgstr ""
 "Créer un nouveau calque transparent prêt à être utiliser comme calque de "
 "suppression"
 
-#: ../src/interface.c:2448
+#: ../src/interface.c:2508
 #, fuzzy
 msgid ""
 "Layer to be used as a mask for rigidity settings.\n"
@@ -394,7 +402,7 @@ msgstr ""
 "Calque à utiliser comme masque pour la conservation d'éléments.\n"
 " Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
-#: ../src/interface.c:2547
+#: ../src/interface.c:2607
 msgid ""
 "This affects the automatic feature recognition.\n"
 "It's the function which will be applied to the components of the gradient on "
@@ -404,51 +412,51 @@ msgstr ""
 " Il s'agit de la fonction qui sera appliquée aux composants du gradient de "
 "chaque pixel"
 
-#: ../src/interface.c:2557
+#: ../src/interface.c:2617
 msgid "Gradient function:"
 msgstr "Fonction de gradient :"
 
-#: ../src/interface.c:2562
+#: ../src/interface.c:2622
 msgid "Transversal absolute value"
 msgstr "Valeur absolue transversale"
 
-#: ../src/interface.c:2563
+#: ../src/interface.c:2623
 msgid "Sum of absolute values"
 msgstr "Somme des valeurs absolues"
 
-#: ../src/interface.c:2564
+#: ../src/interface.c:2624
 msgid "Norm"
 msgstr "Norme"
 
 #. Null can be translated as Zero
-#: ../src/interface.c:2566
+#: ../src/interface.c:2626
 msgid "Null"
 msgstr "Zéro"
 
-#: ../src/interface.c:2581
+#: ../src/interface.c:2641
 msgid "This controls the order of operations if rescaling in both directions"
 msgstr ""
 "Ceci contrôle l'ordre des opérations de redimensionnement dans les deux "
 "directions"
 
-#: ../src/interface.c:2589
+#: ../src/interface.c:2649
 msgid "Rescale order:"
 msgstr "Ordre de redimensionnement :"
 
-#: ../src/interface.c:2594
+#: ../src/interface.c:2654
 msgid "Horizontal first"
 msgstr "Horizontal d'abord"
 
-#: ../src/interface.c:2595
+#: ../src/interface.c:2655
 msgid "Vertical first"
 msgstr "Vertical d'abord"
 
 #. No discard when enlarging ?
-#: ../src/interface.c:2606
+#: ../src/interface.c:2666
 msgid "Ignore discard mask when enlarging"
 msgstr ""
 
-#: ../src/interface.c:2611
+#: ../src/interface.c:2671
 msgid ""
 "This will have the same effect as setting the strenght to 0 in the discard "
 "mask when the first rescale step is an image enlargment (which normally is "

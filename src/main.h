@@ -161,6 +161,7 @@ typedef struct
   gchar name[LQR_MAX_NAME_LENGTH];
   GimpRGB colour;
   gboolean presdisc;
+  gboolean * info_show;
 } NewLayerData;
 
 #define NEW_LAYER_DATA(data) ((NewLayerData*)(data))
