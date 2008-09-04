@@ -9,16 +9,15 @@ function err_mess ()
 [ -f "configure.ac" ] || { err_mess "configure.ac not found"; exit 1; }
 
 FAKE=0
-if [ -n "$1" ]
+if [ "$1" == "--fake" ]
 then
-	if [ "$1" == "--fake" ]
-	then
-		FAKE=1
-	fi
+	FAKE=1
+	DEBFULLNAME="Me Myself"
+	DEBEMAIL="me@myself.org"
 	shift;
 fi
 
-DISTRO="gutsy"
+DISTRO="hardy"
 if [ -n "$1" ]
 then
 	DISTRO="$1";
@@ -150,24 +149,27 @@ cat "debian/changelog" >> "${TMP_FILE_1}" || exit 1
 
 cp "${TMP_FILE_1}" "${TMP_FILE_2}" || exit 1
 
-vim "${TMP_FILE_1}" || exit 1
+vim +/"< description here >" "${TMP_FILE_1}" || exit 1
 
-diff -q "${TMP_FILE_1}" "${TMP_FILE_2}" > /dev/null
-case $? in
-	0) echo "no changelog description, aborting";
-           cd ../.. || exit 1
-	   rm -fr "${TMP_DIR}" || exit 1;
-	   exit 2;
-	   ;;
-	2) exit 1;
-	   ;;
-esac
+if [ ${FAKE} -eq 0 ]
+then
+	diff -q "${TMP_FILE_1}" "${TMP_FILE_2}" > /dev/null
+	case $? in
+		0) echo "no changelog description, aborting";
+		   cd ../.. || exit 1
+		   rm -fr "${TMP_DIR}" || exit 1;
+		   exit 2;
+		   ;;
+		2) exit 1;
+		   ;;
+	esac
+fi
 	   
 cp "${TMP_FILE_1}" "debian/changelog"
 
 rm -f "${TMP_FILE_1}" "${TMP_FILE_2}" || exit 1
 
-debuild -S || exit 1
+debuild -S -k"${DEBFULLNAME}" || exit 1
 
 cd .. || exit 1
 
@@ -179,9 +181,9 @@ sudo pbuilder --build \
 	      --override-config \
 	      --distribution "${DISTRO}" \
 	      --configfile "${PBUILDER_RC_FILE}" \
-	      --bindmounts "/var/cache/pbuilder_gutsy/result" \
-	      --othermirror "deb file:/var/cache/pbuilder_gutsy/result ./|deb-src file:/var/cache/pbuilder_gutsy/result ./" \
-	      --hookdir "/var/cache/pbuilder_gutsy/hooks" \
+	      --bindmounts "/var/cache/pbuilder_${DISTRO}/result" \
+	      --othermirror "deb file:/var/cache/pbuilder_${DISTRO}/result ./|deb-src file:/var/cache/pbuilder_${DISTRO}/result ./" \
+	      --hookdir "/var/cache/pbuilder_${DISTRO}/hooks" \
 	      "${DSC_NAME}" || exit 1
 
 cd .. || exit 1
