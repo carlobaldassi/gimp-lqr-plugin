@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-13 05:00+0100\n"
+"POT-Creation-Date: 2008-09-05 00:42+0200\n"
 "PO-Revision-Date: 2007-11-29 21:22+0000\n"
 "Last-Translator: Joao S. O. Bueno <gwidion@mpc.com.br>\n"
 "Language-Team:  <Português brasileiro <GNOME-l10n <gnome-l10n-br@listas."
@@ -18,84 +18,84 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../src/interface.c:223
+#: ../src/interface.c:221
 msgid "GIMP LiquidRescale Plug-In"
 msgstr "Plug-in de Redimensionamento Líquido do GIMP"
 
-#: ../src/interface.c:245
+#: ../src/interface.c:243
 msgid "Selected layer"
 msgstr "Camada selecionada"
 
 #. New size
-#: ../src/interface.c:306
+#: ../src/interface.c:304
 msgid "Select new width and height"
 msgstr "Selecione nova largura e altura"
 
-#: ../src/interface.c:326
+#: ../src/interface.c:324
 msgid "Width:"
 msgstr "Largura: "
 
-#: ../src/interface.c:328
+#: ../src/interface.c:326
 msgid "Height:"
 msgstr "Altura:"
 
-#: ../src/interface.c:343
+#: ../src/interface.c:341
 msgid "Choose mode of operation"
 msgstr "Escolha o modo de operação"
 
-#: ../src/interface.c:350
+#: ../src/interface.c:348
 msgid "Mode:"
 msgstr "Modo:"
 
-#: ../src/interface.c:355
+#: ../src/interface.c:353
 msgid "LqR only"
 msgstr "Somente LqR"
 
-#: ../src/interface.c:356
+#: ../src/interface.c:354
 msgid "LqR + LqR back to the original size"
 msgstr "LqR + LqR de volta ao tamanho original"
 
-#: ../src/interface.c:358
+#: ../src/interface.c:356
 msgid "LqR + scale back to the original size"
 msgstr "LqR + redimensionar de volta ao tamanho original"
 
 #. Output settings page
-#: ../src/interface.c:385
+#: ../src/interface.c:383
 msgid "Output"
 msgstr "Saída"
 
-#: ../src/interface.c:400
+#: ../src/interface.c:398
 msgid "Output on a new layer"
 msgstr "Saída em uma nova camada"
 
-#: ../src/interface.c:408
+#: ../src/interface.c:406
 msgid "Outputs the resulting image on a new layer"
 msgstr "Cria uma nova camada para o resultado da operação"
 
-#: ../src/interface.c:412
+#: ../src/interface.c:410
 msgid "Resize image canvas"
 msgstr "Redimensionar tela da imagem"
 
-#: ../src/interface.c:420
+#: ../src/interface.c:418
 msgid "Resize and translate the image canvas to fit the resized layer"
 msgstr ""
 "Redimensiona e reposiciona a tela da imagem para acomodar a camada "
 "redimensionada"
 
-#: ../src/interface.c:424
+#: ../src/interface.c:422
 msgid "Resize preserve/discard layers"
 msgstr "Redimensionar as camadas de preservar/descartar detalhes"
 
-#: ../src/interface.c:441
+#: ../src/interface.c:439
 msgid "Resize the layers used as masks along with the active layer"
 msgstr ""
 "Redimensiona as camadas utilizadas como máscaras junto com a camada ativa"
 
-#: ../src/interface.c:448
+#: ../src/interface.c:446
 msgid "Output the seams"
 msgstr "Saída das costuras"
 
-#: ../src/interface.c:457
+#: ../src/interface.c:455
 msgid ""
 "Creates an extra output layer with the seams, for visual inspection of what "
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
@@ -105,40 +105,40 @@ msgstr ""
 "plug-in fez. Use em conjunto com \"Saída em uma nova camada\",e  "
 "redimensione em uma direção por vez."
 
-#: ../src/interface.c:469
+#: ../src/interface.c:467
 msgid "Last seams colour"
 msgstr "Cor das útimas costuras"
 
-#: ../src/interface.c:483
+#: ../src/interface.c:481
 msgid "Colour to use for the last seams"
 msgstr "Cor a usar para as últimas costuras"
 
-#: ../src/interface.c:486
+#: ../src/interface.c:484
 msgid "First seams colour"
 msgstr "Cor das primeiras costuras"
 
-#: ../src/interface.c:500
+#: ../src/interface.c:498
 msgid "Colour to use for the first seams"
 msgstr "Cor a usar para as primeiras costuras"
 
 #. Advanced settings page
-#: ../src/interface.c:505
+#: ../src/interface.c:503
 msgid "Advanced"
 msgstr "Avançado"
 
-#: ../src/interface.c:523
+#: ../src/interface.c:521
 msgid "Seams rigidity:"
 msgstr "Rigidez das costuras:"
 
-#: ../src/interface.c:526
+#: ../src/interface.c:524
 msgid "Increasing this value results in straighter seams"
 msgstr "O aumento deste valor resulta em costuras mais retas"
 
-#: ../src/interface.c:535
+#: ../src/interface.c:533
 msgid "Seams max step:"
 msgstr "Passo máximo das costuras"
 
-#: ../src/interface.c:538
+#: ../src/interface.c:536
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
@@ -146,7 +146,7 @@ msgstr ""
 "Distância máxima ao longo de uma costura. Aumentar este valor permite "
 "ultrapassar a barreira de 45 graus."
 
-#: ../src/interface.c:553
+#: ../src/interface.c:551
 msgid ""
 "This affects the automatic feature recognition.\n"
 "It's the function which will be applied to the components of the gradient on "
@@ -155,88 +155,88 @@ msgstr ""
 "Isso afeta o reconhecimento automatico de detalhes.\n"
 "É a função que será aplicada nos componentes do gradiente de cada pixel"
 
-#: ../src/interface.c:563
+#: ../src/interface.c:561
 msgid "Gradient function:"
 msgstr "Função de gradiente:"
 
-#: ../src/interface.c:568
+#: ../src/interface.c:566
 msgid "Transversal absolute value"
 msgstr "Valor transversal absoluto"
 
-#: ../src/interface.c:569
+#: ../src/interface.c:567
 msgid "Sum of absolute values"
 msgstr "Soma de valores absolutos"
 
-#: ../src/interface.c:570
+#: ../src/interface.c:568
 msgid "Norm"
 msgstr "Norma"
 
 #. Null can be translated as Zero
-#: ../src/interface.c:572
+#: ../src/interface.c:570
 msgid "Null"
 msgstr "Nula"
 
-#: ../src/interface.c:587
+#: ../src/interface.c:585
 msgid "This controls the order of operations if rescaling in both directions"
 msgstr "Controa a ordem das operações ao redimensionar em ambas as direções"
 
-#: ../src/interface.c:595
+#: ../src/interface.c:593
 msgid "Rescale order:"
 msgstr "Ordem do redimensionamento:"
 
-#: ../src/interface.c:600
+#: ../src/interface.c:598
 msgid "Horizontal first"
 msgstr "Horizontal primeiro"
 
-#: ../src/interface.c:601
+#: ../src/interface.c:599
 msgid "Vertical first"
 msgstr "Vertical primeiro"
 
 #. Mask page
-#: ../src/interface.c:617
+#: ../src/interface.c:615
 msgid "Mask"
 msgstr "Máscara"
 
-#: ../src/interface.c:625
+#: ../src/interface.c:623
 msgid "Select behavior for the mask"
 msgstr "Selecione o comportamento para  a máscara"
 
-#: ../src/interface.c:630
+#: ../src/interface.c:628
 msgid "Apply"
 msgstr "Aplicar"
 
-#: ../src/interface.c:630
+#: ../src/interface.c:628
 msgid "Discard"
 msgstr "Descartar"
 
-#: ../src/interface.c:940 ../src/interface.c:1028 ../src/render.c:94
+#: ../src/interface.c:938 ../src/interface.c:1026 ../src/render.c:92
 msgid "Error: it seems that the selected layer is no longer valid"
 msgstr "Erro: parece que a camada selecionada não é mais válida"
 
-#: ../src/interface.c:1554
+#: ../src/interface.c:1552
 msgid "Feature masks"
 msgstr "Máscaras de detalhes"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1564
+#: ../src/interface.c:1562
 #, c-format
 msgid "%s pres mask"
 msgstr "másc. de preserv. %s"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1572
+#: ../src/interface.c:1570
 #, c-format
 msgid "%s disc mask"
 msgstr "másc. de desc. %s"
 
 #. Feature preservation
-#: ../src/interface.c:1593
+#: ../src/interface.c:1591
 msgid "Feature preservation mask"
 msgstr "Seleção de preservação de detalhes"
 
-#: ../src/interface.c:1598
+#: ../src/interface.c:1596
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -249,25 +249,25 @@ msgstr ""
 "pressionar o botão \"Regenerar\".\n"
 "Note que pintar de preto não tem efeito."
 
-#: ../src/interface.c:1631
+#: ../src/interface.c:1629
 msgid "Preserve features"
 msgstr "Preservar detalhes"
 
-#: ../src/interface.c:1647
+#: ../src/interface.c:1645
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr "Usa uma camada extra para preservar detalhes, evitando sua distorção"
 
-#: ../src/interface.c:1650 ../src/interface.c:1840
+#: ../src/interface.c:1648 ../src/interface.c:1838
 msgid "New"
 msgstr "Nova"
 
-#: ../src/interface.c:1655
+#: ../src/interface.c:1653
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr ""
 "Cria uma nova camada transparente, pronta para ser usada como uma máscara de "
 "preservação"
 
-#: ../src/interface.c:1694
+#: ../src/interface.c:1692
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -275,24 +275,24 @@ msgstr ""
 "Camada a ser usada como máscara para preservação de detalhes.\n"
 "Use o botão \"Regenerar\" para atualizar a lista"
 
-#: ../src/interface.c:1725 ../src/interface.c:1918
+#: ../src/interface.c:1723 ../src/interface.c:1916
 msgid "Layer:"
 msgstr "Camada:"
 
-#: ../src/interface.c:1746 ../src/interface.c:1936
+#: ../src/interface.c:1744 ../src/interface.c:1934
 msgid "Strength:"
 msgstr "Força:"
 
-#: ../src/interface.c:1749
+#: ../src/interface.c:1747
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coeficiente geral para intensidade da preservação de detalhes"
 
 #. Feature discard
-#: ../src/interface.c:1782
+#: ../src/interface.c:1780
 msgid "Feature discard mask"
 msgstr "Máscara de descarte de detalhes"
 
-#: ../src/interface.c:1787
+#: ../src/interface.c:1785
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -305,11 +305,11 @@ msgstr ""
 "pressionar o botão \"Regenerar\".\n"
 "Note que pintar de preto não tem efeito."
 
-#: ../src/interface.c:1818
+#: ../src/interface.c:1816
 msgid "Discard features"
 msgstr "Descarte de detalhes"
 
-#: ../src/interface.c:1835
+#: ../src/interface.c:1833
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -317,13 +317,13 @@ msgstr ""
 "Usa uma camada extra para tratar as áreas selecionadas como se elas fossem "
 "irrelevantes (útil para remover partes da imagem ao encolher)"
 
-#: ../src/interface.c:1845
+#: ../src/interface.c:1843
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 "Cria uma nova camada transparente pronta para ser usada como máscara de "
 "descarte"
 
-#: ../src/interface.c:1883
+#: ../src/interface.c:1881
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -331,15 +331,15 @@ msgstr ""
 "Camada a  ser usada como máscara para descarte de detalhes.\n"
 "Use o botão \"Regenerar\" para atualizar a lista"
 
-#: ../src/interface.c:1939
+#: ../src/interface.c:1937
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coeficiente geral para intensidade de descarte de detalhes"
 
-#: ../src/interface.c:1981
+#: ../src/interface.c:1979
 msgid "Auto size"
 msgstr "Tam. Autom."
 
-#: ../src/interface.c:1992
+#: ../src/interface.c:1990
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
@@ -348,61 +348,61 @@ msgstr ""
 "máscaradas.\n"
 "Use apenas com máscaras simples"
 
-#: ../src/interface.c:1996
+#: ../src/interface.c:1994
 msgid "horizontal"
 msgstr "horizontal"
 
-#: ../src/interface.c:1996
+#: ../src/interface.c:1994
 msgid "vertical"
 msgstr "vertical"
 
-#: ../src/interface.c:2007
+#: ../src/interface.c:2005
 msgid "Resizing direction for auto size"
 msgstr "Direção de redimensionamento para cálculo automático de tamanho"
 
-#: ../src/main.c:161
+#: ../src/main.c:159
 msgid "scaling which keeps layer features (or removes them)"
 msgstr "redimensionamento que mantém ou remove detalhes da camada."
 
-#: ../src/main.c:165
+#: ../src/main.c:163
 msgid "Li_quid rescale..."
 msgstr "Redimensionamento Lí_quido..."
 
-#: ../src/render.c:45 ../src/render.c:46
+#: ../src/render.c:43 ../src/render.c:44
 msgid "Not enough memory"
 msgstr "Não há memória o suficiente"
 
-#: ../src/render.c:103
+#: ../src/render.c:101
 msgid "Error: it seems that the preservation features layer is no longer valid"
 msgstr "Erro: parece que a camada de preservação de detalhes não é mais válida"
 
-#: ../src/render.c:113
+#: ../src/render.c:111
 msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Erro: parece que a camada de descarte de detalhes não é mais válida"
 
-#: ../src/render.c:206
+#: ../src/render.c:204
 msgid "Resizing width..."
 msgstr "Redimensionando largura..."
 
-#: ../src/render.c:208
+#: ../src/render.c:206
 msgid "Resizing height..."
 msgstr "Redimensionando altura..."
 
-#: ../src/io_functions.c:46
+#: ../src/io_functions.c:44
 msgid "Parsing layer..."
 msgstr "Analisando camada..."
 
-#: ../src/io_functions.c:115
+#: ../src/io_functions.c:113
 msgid "Applying changes..."
 msgstr "Aplicando alterações..."
 
-#: ../src/io_functions.c:181
+#: ../src/io_functions.c:179
 msgid "Drawing seam map..."
 msgstr "Desenhando mapa de costuras..."
 
 #. The name of the layer with the seams map
 #. (here "%s" represents the selected layer's name)
-#: ../src/io_functions.c:247
+#: ../src/io_functions.c:245
 #, c-format
 msgid "%s seam map"
 msgstr "mapa de cost. %s"

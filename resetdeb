@@ -5,10 +5,9 @@ function err_mess ()
 	echo "$(basename $0): error: $1" > /dev/stderr;
 }
 
-[ -f "Makefile" ] || { err_mess "makefile not found"; exit 1; }
 [ -f "configure.ac" ] || { err_mess "configure.ac not found"; exit 1; }
 
-DISTRO="gutsy"
+DISTRO="hardy"
 if [ -n "$1" ]
 then
 	DISTRO="$1";
