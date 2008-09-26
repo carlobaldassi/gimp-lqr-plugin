@@ -5,7 +5,9 @@ It aims at resizing pictures non uniformly while preserving the features of the 
 
 It works both ways, but enlarging gives better results if done in successive steps. It can use extra layers as masks to select which features of the image should be preserved and which should be discarded.
 
-The plugin works on the active layer or floating selection. If a selection is present, it is saved to a channel. If the layer has a transparency mask, an option is given to select the behaviour (apply/discard).
+The plugin works on the active layer or floating selection. It can also operate on multiple layers through the //"Filter all layers"// plugin and using the Gimp Ainmation Package facilities for video editing.
+
+The plugin only works on whole layers, if a selection is present it is saved to a channel and removed. If the layer has a transparency mask, an option is given to select the behaviour (apply/discard).
 
 ++ User interface description
 
@@ -13,11 +15,11 @@ The plugin works on the active layer or floating selection. If a selection is pr
 
 +++ Select new width and height
 
-In this section it is possible to choose the size and the mode of operation. It is advisable to rescale always in one direction at a time. If both the width and the height are changed, rescaling is performed by default on the width first, then on the height. This can be changed in the //Advanced// tab.
+In this section it is possible to choose the size and the mode of operation. It is advisable to rescale always in one direction at a time. If both the width and the height are changed, rescaling is performed by default on the width first, then on the height. This can be changed in the //"Advanced"// tab.
 
 The two small buttons on the right can be used to reset the size parameters to the image size (top) or set them to the last used values (bottom).
 
-The default operational mode is just liquid rescaling to the desired size. The other options are to apply liquid rescaling or the standard scaling back to the original size once the first liquid rescaling is done. This can be useful for example for object removal and content enhancement.
+The default mode is just liquid rescaling to the desired size. The other options are to apply liquid rescaling or the standard scaling back to the original size once the first liquid rescaling is done. This can be useful for example for object removal and content enhancement.
 
 Note that the final size can be set automatically when removing objects, see below
 
@@ -28,19 +30,19 @@ Note that the final size can be set automatically when removing objects, see bel
 The easiest way to manually select the features of the image that you want to protect or discard is the following:
 * Select the layer you want to resize (not a floating selection) and invoke the plugin
 * Press the //"New"// button in the **"Feature preservation mask"** section (this will create a transparent layer, with 50% opacity, and pick an appropriate colour).
-* Paint on the areas of the image you want to preserve
-* Press the refresh button if you want to see the mask you painted
+* Put the plugin dialog aside and paint on the areas of the image you want to preserve
+* Go back to the plugin dialog and press the refresh button to see the mask you painted
 * Repeat everything for the features to discard
 
 If you want to remove portions of the image, you can choose the scaling direction (horizontal/vertical) and finally press the //"Auto size"// button to determine the final size automatically (this is only reliable when dealing with very simple masks).
 
-**Note #1:** discarding a feature implies that it will be removed if shrinking the layer, but it will be inflated if enlarging it, since it will be treated as unimportant background which can be removed or expanded as needed.
+**Note #1:** object removal is only possible when shrinking. By default, feature discard masks are ignored when enlarging, because in that case the masked areas would be inflated rather then removed. If you actually want to get this effect, you need to unset the corresponding option in the //"Advanced"// tab.
 
 **Note #2:** preservation of features is not possible if enlarging too much, because the inflation process is the exact reverse of the shrinking process, so the maximum amount of pixels you can add to a layer corresponds to the amount of pixels which are not protected. For example, if you have a 1000 pixel wide image and you have marked a 800 pixel wide area for protection, the final width should be less than 1200 pixels. If you want to enlarge more, do it in steps.
 
 ++++ Full description
 
-In the **"Feature preservation mask"** section it is possible to specify if there are regions of the image which should be preserved from modification, by checking the //"Activate feature preservation"// box, and by choosing a layer among the ones which belong to the current image (different from the active one, which is to be rescaled) in the //"Available layers"// menu. The //"New"// button creates a transparent layer with 50% opacity and an appropriate name, and sets it as the selected layer mask (note that this fails if the plugin is invoked on a floating selection, because this does not allow to work on other layers). It also sets the foreground colour to green; the previous colour is restored when the dialog is closed.
+In the **"Feature preservation mask"** section it is possible to specify if there are regions of the image which should be preserved from modification, by checking the //"Activate feature preservation"// box, and by choosing a layer among the ones which belong to the current image (excluding the active one) in the //"Available layers"// menu. The //"New"// button creates a transparent layer with 50% opacity and an appropriate name, and sets it as the selected layer mask (note that this fails if the plugin is invoked on a floating selection, because Gimp does not allow to work on other layers in such case). It also sets the foreground colour to green; the previous colour is restored when the dialog is closed.
 
 The intensity of the effect of the mask on each pixel is obtained as the average on the pixel's colour channels, multiplied by the alpha channel. Thus, for an RGB layer with an alpha channel, the maximum value is achieved on white pixels, while black ones and transparent ones are ignored. In general, it is advisable to work in monochrome, and modulate the intensity by the transparency in case fine tuning is needed, e.g. by using the quickmask.
 
@@ -75,4 +77,19 @@ This tab has some options which can be used to tweak the plugin behavior.
  * //Use a rigidity mask.// It is possible to specify different rigidity values for different areas of the image, using an auxiliary layer, by following the same procedure used to specify the feature masks (the default colour for newly created rigidity masks is blue). If a rigidity mask is specified, its value at each pixel (computed in the same way as for the feature masks) will be used as a rigidity coefficient, to be multiplied with the overall one. **Note #1:** transparent (or black) areas in the rigidity mask always correspond to 0 rigidity, no matter what the overall value is. **Note #2:** rigid areas have a slight repulsive effect on seams, similar to that of a preservation mask. In order to compensate for this, you may use a discard mask.
 * **Gradient function**. It is possible to choose which function is to be used to calculate the energy map of the image. For each pixel in the image, the x,y components of the gradient are computed from the pixel's four nearest neighbors. The exact form of the energy map depends on the choice of the gradient function, and this in turn determines which elements of the image are more important, and should thus be preserved, and which are not, and can be removed (if shrinking) or inflated (if enlarging). Using the //Null// function in conjunction with the feature preservation mask can be used to override completely the automatic feature detection, thus allowing the user to generate his own energy map (e.g. by another plugin).
 * **Rescale order**. When rescaling in both directions at the same time, it can be choosen whether to resize first in the horizontal and then in the vertical direction, or vice versa.
+* **Ignore dicard mask when enlarging**. The effect of the discard mask is reversed when the plugin is used for enlarging an image; as this is normally undesirable, they are ignored by default when the first scaling direction is to be enlarged (in such cases, a small warning icon will appear in the //"Feature dicard mask"// section). Unset this option if you want to override this behaviour.
++++ Using the plugin for video and animation editing
+
+++++ Using the plugin with GAP
+
+The plugin can take advantage of the Gimp Animation Package (GAP) for video editing, making it possible to apply liquid rescaling to all the frames of a video (please refer to the GAP documentation for instructions about video editing in Gimp).
+
+Note however that the GAP facilities only allow to select the working layer, but the liquid rescale plugin needs auxiliary layers as well to work at its full potential. In order to work around this problem, auxiliary layers are set according to their names: therefore, if you want to use a preservation mask in each frame, for example, you should take care that all the layers which you intend to use as such have the same name in all of the frames. The same applies to discard masks and rigidity masks.
+
+In order to use liquid rescale on all frames, you need select //"Frame Modify"// in the //"Video"// menu; this will open a dialog: in the //"Function"// section select //"Apply filter on layer(s)"//, then set appropriate rules for layer selection and frame range and click OK. Another dialog will appear, asking you to choose a filter: select //plug-in-lqr//, then choose either //"Apply constant"// or //"Apply varying"//.
+In the latter case, you will be presented the liquidrescale plugin dialog twice, once for the first frame and once for the last one: these will set the extreme values for all the graded parameters (such as sizes, strengths, rigidity etc.), and intermediate values will be used in the intermediate frames. However, all the options (such as the resize order, the auxiliary layer names etc.) will be taken from the <u>last</u> dialog for all the intermediate frames.
+
+++++ Applying the plugin to all layers (e.g. for animations)
+
+It is also possible to apply the plugin to all the layers in a given image (for example when editing an animation), using the option //"Filter all layers..."// from the //"Filters"// menu and choosing //"plug-in-lqr"// in the dialog which appears. Operations follow the rules explained in the GAP section; however, you will run into problems if using auxiliary layers as masks, since the plugin will be applied to those as well.
 

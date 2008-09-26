@@ -27,7 +27,7 @@
 	  ideato da Shai Avidan e Ariel Shamir.
 	  </p>
 	  <p>
-	  Il suo scopo è di ridimensionzre non uniformemente le immagini pur mantenendo le
+	  Il suo scopo è di ridimensionare non uniformemente le immagini pur mantenendo le
 	  caratteristiche più salienti dell'immagine, evitando possibilmente di distorcerle.
 	  Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale".
 	  </p>
@@ -38,7 +38,12 @@
 	  </p>
 	  <p>
 	  Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo.
-	  Se una selezione è presente, è salvata come canale.
+	  Può anche essere applicato a più livelli di un immagine attraverso il plugin
+	  <i>"Filtra tutti i livelli"</i> o usando il Gimp Animation Package per l'editing video.
+	  </p>
+	  <p>
+	  Il plugin opera sempre su interi livelli; se una selezione è presente, è salvata come canale
+	  e rimossa.
 	  Se il livello ha una maschera per la trasparenza, viene mostrata un'opzione
 	  per stabilire se applicarla o rimuoverla prima di procedere.
 	  </p>
@@ -84,9 +89,9 @@
 		(questo creerà un nuovo livello trasparente, con opacità 50%, e imposterà un colore
 		appropriato)
 		</li><li>
-		Dipingete con il pennello (o altro) le aree che volete preservare
+		Spostate da un lato la finestra del plugin e dipingete con il pennello (o altro) le aree che volete preservare
 		</li><li>
-		Cliccate sul pulsante <i>"Aggiorna"</i> per vedere le modifiche
+		Tornate alla finestra del plugin e cliccate sul pulsante <i>"Aggiorna"</i> per vedere le modifiche
 		</li><li>
 		Ripetete il tutto per i contenuti da eliminare
 		</li>
@@ -99,10 +104,11 @@
 		(Questo metodo tuttavia funziona solo con maschere molto semplici).
 	  </p>
 	  <p>
-		<b>Nota #1:</b> eliminare un contenuto significa che la zona dell'immagine interessata
-		verà eliminata se si restringe l'immagine, ma verrà gonfiata se si allarga l'immagine,
-		dal momento che sarà trattata come se fosse sfondo di nessuna importanza, da poter
-		comprimere e espandere a piacere.
+		<b>Nota #1:</b> l'eliminazione di parti dell'immaagine è possibile solamente quando
+		la si restringe. Per default, la maschera per la preservazione dei contenuti viene ignorata
+		quando si allarga l'immagine, perché in quel caso le aree contrassegnate verrebbero
+		gonfiate anziché rimosse. Se volete davvero ottenere questo effetto, dovete disattivare
+		l'opzione corrispondente nella linguetta <i>"Avanzato"</i>.
 	  </p>
 	  <p>
 		<b>Nota #2:</b> la preservazione dei contenuti non è possibile se si cerca di ingrandire
@@ -124,7 +130,7 @@
 		un livello tra quelli che appartengono all'imaggine attuale (e sono diversi
 		dal livello attivo) nel menu <i>Livelli disponibili</i>.
 		Il pulsante <i>"Nuovo"</i> crea un nuovo livello trasparente
-		con opacit`a 50% e un nome appropriato, e lo imposta
+		con opacità 50% e un nome appropriato, e lo imposta
 		come maschera da utilizzare per la preservazione dei contenuti
 		(nota che se il plugin viene lanciato su una selezione fluttuante
 		questa procedura non è adatta, dato che non si potrà lavorare
@@ -201,7 +207,7 @@
 			  contenuti e per specificare una maschera per la rigidità verranno ridimensionati
 			  assieme al livello attivo. Se quest'opzione è attivata (è il default), le parti
 			  dei livelli in questione che escono dal livello attivo verranno tagliate, dopodichè
-			  i livelli ausilizrii subiranno lo stesso processo di eliminazione/inserimento di
+			  i livelli ausiliarii subiranno lo stesso processo di eliminazione/inserimento di
 			  linee del layer attivo.
 		  </dd>
 		  <dt><b>Mostra le linee d'azione</b></dt>
@@ -304,7 +310,63 @@
 			Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere
 			se procedere prima in orizzontale e poi in verticale, o viceversa.
 		</dd>
+		<dt><b>Non eliminare i contenuti quando si allarga</b></dt>
+		<dd>
+			L'effetto di una maschera per l'eliminazione dei contenuti è invertito quanto
+			il plugin viene utilizzato per allargare un'immagine; dal momento che ciò
+			non è normalmente l'effetto voluto, la maschera è ignorata per default
+			quando si allarga lungo la prima direzione di ridimensionamento (in tali casi,
+			una piccola icona di avvertimento compare nella sezione <i>"Maschera per
+			i contenuti da eliminare"</i>).
+			Disattivate questa opzione per disabilitare questa verifica.
 		</dl>
+		</dl>
+	</p>
+	<h3>Utilizzo del plugin per l'editing di video e animazioni</h3>
+	<h4>Utilizzo del plugin con GAP</h4>
+	<p>
+		  Il plugin può essere utilizzato assieme al Gimp Animation Package (GAP) per l'editing
+		  video, così da applicare il riscalamento liquido a tutti i frames di un video
+		  (consultate la documentazione di GAP per informazioni riguardo all'editing video con Gimp).
+	<p>
+	</p>
+		  Tuttavia, gli strumenti di GAP permettono di selezionare in maniera diretta soltanto
+		  il livello su cui lavorare, mentre il liquid rescale plugin necessita di utilizzare
+		  dei livelli ausiliarî per sfruttare tutto il suo potenziale.
+		  Per aggirare il problema, i livelli ausiliarî vengono selezionati in base al loro nome:
+		  perciò, se volete usare una maschera per la preservazione dei contenuti in ogni frame,
+		  per esempio, dovrete chiamare allo stesso modo tutti i livelli che intendete usare come
+		  tali. Lo stesso vale per le maschere per la preservazione dei contenuti e le maschere per
+		  la rigidezza.
+	</p>
+	<p>
+		  <div>
+		  Per applicare il riscalamento liquido su tutti i frames, selezionate <i>"Modifica frame"</i>
+		  dal menu <i>"Video"</i>; si aprirà una finestra di dialogo: nella sezione
+		  <i>"Funzione"</i> selezionate <i>"Applica filtri ai livelli"</i>, quindi impostate
+		  le regole appropriate per la selezione dei livelli e dei frames e cliccate OK.
+		  Comparirà una nuova finestra di dialogo, nella quale bisogna scegliere un filtro:
+		  selezionate <i>"plug-in-lqr"</i>, poi scegliete <i>"Applica costante"</i>
+		  oppure <i>"Applica variabile"</i>.
+		  </div><div>
+		  In quest'ultimo caso, la finestra di dialogo del liquid rescale plugin vi verrà
+		  presentata due volte, una per il primo frame e una per l'ultimo: queste impostano
+		  i valori estremi per tutti i parametri graduali (come le dimensioni, le intensità,
+		  la rigidità ecc.), e valori intermedî di questi verranno usati per i frames intermedî.
+		  Tutte le opzioni non graduali, invece, come l'ordine di ridimensionamento, il
+		  nome dei livelli ausiliarî ecc., vengono prese dell'<u>ultima</u> finestra di dialogo
+		  per i livelli intermedî.
+		  </div>
+	</p>
+	<h4>Applicare il plugin su tutti i livelli (ad es. per le animazioni)</h4>
+	<p>
+		  È anche possibile applicare il plugin a tutti i livelli di una data immagine (per
+		  esempio quando si lavora su un'animazione), usando l'opzione <i>"Filtra tutti i
+		  livelli..."</i> dal menu <i>"Filtri"</i> e scegliendo <i>"plug-in-lqr"</i> nella
+		  finestra di dialogo che compare.
+		  Le regole usate sono le stesse descritte nella sezione per l'utilizzo di GAP;
+		  tuttavia, incontrerete dei problemi in questo caso se usate dei livelli ausiliarî come
+		  maschere, poiché il plugin viene applicato anche a questi.
 	</p>
 	</td>
       </tr>
