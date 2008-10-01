@@ -279,6 +279,7 @@ render (gint32 image_ID,
   lqr_carver_set_gradient_function (carver, vals->grad_func);
   lqr_carver_set_resize_order (carver, vals->res_order);
   lqr_carver_set_progress (carver, lqr_progress);
+  lqr_carver_set_side_switch_frequency (carver, 2);
   if (vals->output_seams)
     {
       lqr_carver_set_dump_vmaps (carver);
@@ -380,8 +381,10 @@ render (gint32 image_ID,
       return FALSE;
     }
 
-  MEMCHECK1 (write_all_vmaps (lqr_vmap_list_start (carver), image_ID, layer_name, x_off,
-                   y_off, colour_start, colour_end));
+  if (vals->output_seams) {
+    MEMCHECK1 (write_all_vmaps (lqr_vmap_list_start (carver), image_ID, layer_name, x_off,
+                     y_off, colour_start, colour_end));
+  }
 
   if (vals->resize_canvas == TRUE)
     {
