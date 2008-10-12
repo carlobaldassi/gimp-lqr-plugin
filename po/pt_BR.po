@@ -1,18 +1,19 @@
+# translation of pt_BR.po to Brazilian Portuguese
 # translation of pt_BR.po to
 # translation of gimp22-lqr-plugin.pt_BR.po to
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Joao S. O. Bueno Calligaris <gwidion@mpc.com.br>, 2007.
+# Joao S. O. Bueno <gwidion@mpc.com.br>, 2007, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-04 03:13+0200\n"
-"PO-Revision-Date: 2007-11-29 21:22+0000\n"
+"POT-Creation-Date: 2008-10-12 20:12+0200\n"
+"PO-Revision-Date: 2008-10-10 00:23-0300\n"
 "Last-Translator: Joao S. O. Bueno <gwidion@mpc.com.br>\n"
-"Language-Team:  <Português brasileiro <GNOME-l10n <gnome-l10n-br@listas."
-"cipsga.>\n"
+"Language-Team: Brazilian Portuguese <GNOME-l10n-br <Gnome-l10n-BR@listas."
+"cipsga.org.br>>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -41,17 +42,19 @@ msgstr "Altura:"
 
 #: ../src/interface.c:395
 msgid "Reset width and height to their original values"
-msgstr ""
+msgstr "Restaura a largura e a altura para os valores originais"
 
 #: ../src/interface.c:415
 msgid "Set width and height to the last used values"
-msgstr ""
+msgstr "Configura a largura e a altura para os últimos valores usados"
 
 #: ../src/interface.c:439
 msgid ""
 "Here you can choose if you want to transform back the image to its original "
 "size and how to do it"
 msgstr ""
+"Aqui você pode escolher se quer transformar a imagem de volta a seu tamanho "
+"original, e como faze-lo"
 
 #: ../src/interface.c:447
 msgid "Mode:"
@@ -62,14 +65,12 @@ msgid "LqR only"
 msgstr "Somente LqR"
 
 #: ../src/interface.c:453
-#, fuzzy
 msgid "LqR + scale back"
-msgstr "LqR + redimensionar de volta ao tamanho original"
+msgstr "LqR + redimensionar de volta"
 
 #: ../src/interface.c:455
-#, fuzzy
 msgid "LqR + LqR back"
-msgstr "LqR + LqR de volta ao tamanho original"
+msgstr "LqR + LqR de volta "
 
 #. Output settings page
 #: ../src/interface.c:483
@@ -95,17 +96,16 @@ msgstr ""
 "redimensionada"
 
 #: ../src/interface.c:522
-#, fuzzy
 msgid "Resize auxiliary layers"
-msgstr "Redimensionar as camadas de preservar/descartar detalhes"
+msgstr "Redimensionar camadas auxiliares"
 
 #: ../src/interface.c:539
-#, fuzzy
 msgid ""
 "Resize the layers used as features or rigidity masks along with the active "
 "layer"
 msgstr ""
-"Redimensiona as camadas utilizadas como máscaras junto com a camada ativa"
+"Redimensiona as camadas utilizadas como detalhes ou rigidez junto com a "
+"camada ativa"
 
 #: ../src/interface.c:546
 msgid "Output the seams"
@@ -117,8 +117,8 @@ msgid ""
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
 "in one direction at a time"
 msgstr ""
-"Cria uma camada extra de saída comas costuras, para inspeção visual do que o "
-"plug-in fez. Use em conjunto com \"Saída em uma nova camada\",e  "
+"Cria uma camada extra de saída com as costuras, para inspeção visual do que "
+"o plug-in fez. Use em conjunto com \"Saída em uma nova camada\",e  "
 "redimensione em uma direção por vez."
 
 #: ../src/interface.c:567
@@ -143,7 +143,6 @@ msgid "Mask"
 msgstr "Máscara"
 
 #: ../src/interface.c:622
-#, fuzzy
 msgid "Select behaviour for the mask"
 msgstr "Selecione o comportamento para  a máscara"
 
@@ -218,6 +217,8 @@ msgid ""
 "Paint the mask on the newly created layer, then come back to this dialog and "
 "click on the \"Refresh\" button"
 msgstr ""
+"Pinte a máscara na camada criada, então retorne a este diálogo e clique no "
+"botão de \"Regenerar\"."
 
 #: ../src/interface.c:1917
 msgid ""
@@ -276,6 +277,10 @@ msgid ""
 "(If you know what you're doing you can override this behaviour by unchecking "
 "the corrensponding option in the \"Advanced\" tab)"
 msgstr ""
+"Atenção: a informação da máscara de descarte será ignorada com as "
+"configurações atuais.\n"
+"(Se você sabe o que está fazendo, você pode alterar este comportamento des-"
+"selecionando a opção correspondente na aba \"Avaçado\")"
 
 #: ../src/interface.c:2080
 msgid "Creates a new transparent layer ready to be used as a discard mask"
@@ -297,7 +302,7 @@ msgstr "Coeficiente geral para intensidade de descarte de detalhes"
 
 #: ../src/interface.c:2238
 msgid "Auto size"
-msgstr "Tam. Autom."
+msgstr "Tam. autom."
 
 #: ../src/interface.c:2249
 msgid ""
@@ -327,31 +332,31 @@ msgstr "Avançado"
 #. The name of a newly created layer for rigidity mask
 #. (here "%s" represents the selected layer's name)
 #: ../src/interface.c:2329
-#, fuzzy, c-format
+#, c-format
 msgid "%s rigidity mask"
-msgstr "másc. de desc. %s"
+msgstr "másc. de rigidez %s"
 
 #. Seams control
 #: ../src/interface.c:2350
 msgid "Seams control"
-msgstr ""
+msgstr "Controle de costuras"
 
 #: ../src/interface.c:2355
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Extra layers are needed to be used as rigidity masks.\n"
 "You can create one with the \"New\" button and paint on it, then press the "
 "\"Refresh\" button.\n"
 "Note that painting in black has no effect"
 msgstr ""
-"Camadas extras são necessárias para ativar o descarte de detalhes.\n"
+"Camadas extras são necessárias para serem usadas como máscaras de rigidez\n"
 "Você pode criar uma camada com o botão \"Nova\" e pintar nela, e então "
 "pressionar o botão \"Regenerar\".\n"
 "Note que pintar de preto não tem efeito."
 
 #: ../src/interface.c:2379
 msgid "Max transversal step:"
-msgstr ""
+msgstr "Passo tranversal máx.:"
 
 #: ../src/interface.c:2382
 msgid ""
@@ -362,38 +367,34 @@ msgstr ""
 "ultrapassar a barreira de 45 graus."
 
 #: ../src/interface.c:2393
-#, fuzzy
 msgid "Overall rigidity:"
-msgstr "Rigidez das costuras:"
+msgstr "Rigides geral:"
 
 #: ../src/interface.c:2396
 msgid "Increasing this value results in straighter seams"
 msgstr "O aumento deste valor resulta em costuras mais retas"
 
 #: ../src/interface.c:2425
-#, fuzzy
 msgid "Use a rigidity mask"
-msgstr "Rigidez das costuras:"
+msgstr "Usar uma máscara de rigidez:"
 
 #: ../src/interface.c:2450
-#, fuzzy
 msgid "Use an extra layer to mark areas where seams should be straighter"
-msgstr "Usa uma camada extra para preservar detalhes, evitando sua distorção"
+msgstr ""
+"Usa uma camada extra para marcar areas onde as costuras devem ser mais retas"
 
 #: ../src/interface.c:2457
-#, fuzzy
 msgid "Creates a new transparent layer ready to be used as a rigidity mask"
 msgstr ""
-"Cria uma nova camada transparente pronta para ser usada como máscara de "
-"descarte"
+"Cria uma nova camada transparente pronta para ser usada como uma máscara "
+"rigidez"
 
 #: ../src/interface.c:2508
-#, fuzzy
 msgid ""
 "Layer to be used as a mask for rigidity settings.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
-"Camada a ser usada como máscara para preservação de detalhes.\n"
+"Camada a ser usada como máscara para especificação de rigidez\n"
 "Use o botão \"Regenerar\" para atualizar a lista"
 
 #: ../src/interface.c:2607
@@ -428,7 +429,7 @@ msgstr "Nula"
 
 #: ../src/interface.c:2641
 msgid "This controls the order of operations if rescaling in both directions"
-msgstr "Controa a ordem das operações ao redimensionar em ambas as direções"
+msgstr "Controla a ordem das operações ao redimensionar em ambas as direções"
 
 #: ../src/interface.c:2649
 msgid "Rescale order:"
@@ -445,7 +446,7 @@ msgstr "Vertical primeiro"
 #. No discard when enlarging ?
 #: ../src/interface.c:2666
 msgid "Ignore discard mask when enlarging"
-msgstr ""
+msgstr "Ignora a máscara de descarte ao aumentar"
 
 #: ../src/interface.c:2671
 msgid ""
@@ -453,6 +454,9 @@ msgid ""
 "mask when the first rescale step is an image enlargment (which normally is "
 "the best choice)"
 msgstr ""
+"Isso terá o mesmo efeito que colocar a força em \"0\" na máscara de descarte "
+"quando o primeiro passo do redimensionamento for um aumento da imagem (o que "
+"normalmente é a melhor opção)"
 
 #: ../src/main.c:161
 msgid "scaling which keeps layer features (or removes them)"
@@ -475,9 +479,8 @@ msgid "Error: it seems that the discard features layer is no longer valid"
 msgstr "Erro: parece que a camada de descarte de detalhes não é mais válida"
 
 #: ../src/render.c:122
-#, fuzzy
 msgid "Error: it seems that the rigidity mask layer is no longer valid"
-msgstr "Erro: parece que a camada de descarte de detalhes não é mais válida"
+msgstr "Erro: parece que a camada de máscara de rigidez não é mais válida"
 
 #: ../src/render.c:223
 msgid "Resizing width..."
@@ -505,12 +508,3 @@ msgstr "Desenhando mapa de costuras..."
 #, c-format
 msgid "%s seam map"
 msgstr "mapa de cost. %s"
-
-#~ msgid "Choose mode of operation"
-#~ msgstr "Escolha o modo de operação"
-
-#~ msgid "LqR + LqR back to the original size"
-#~ msgstr "LqR + LqR de volta ao tamanho original"
-
-#~ msgid "Seams max step:"
-#~ msgstr "Passo máximo das costuras"
