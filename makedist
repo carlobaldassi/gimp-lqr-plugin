@@ -30,8 +30,9 @@ REL_SUB_VER=$[ $REL_SUB_VER + 1 ] || exit 1;
 PLUGIN_NAME="${NAME}-${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}"
 NEW_PLUGIN_NAME="${PLUGIN_NAME}-${REL_SUB_VER}"
 TGZ_NAME="${PLUGIN_NAME}.tar.gz"
+TBZ2_NAME="${PLUGIN_NAME}.tar.bz2"
 
-NEW_TGZ_NAME="${NEW_PLUGIN_NAME}.tar.gz"
+NEW_TBZ2_NAME="${NEW_PLUGIN_NAME}.tar.bz2"
 
 if [ "${NOPO}" -eq 0 ]
 then
@@ -48,8 +49,8 @@ then
 	fi
 fi
 
-make dist || exit 1
+make dist-bzip2 || exit 1
 
-mv "${TGZ_NAME}" "${NEW_TGZ_NAME}" || exit 1
+mv "${TBZ2_NAME}" "${NEW_TBZ2_NAME}" || exit 1
 
 echo $REL_SUB_VER > release_subv_src;
