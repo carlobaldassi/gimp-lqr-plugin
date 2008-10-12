@@ -37,7 +37,7 @@
 	</p>
 	<p>
 		The plugin works on the active layer or floating selection. It can also operate on multiple layers
-		through the <i>"Filter all layers"</i> plugin and using the Gimp Ainmation Package facilities for
+		through the <i>"Filter all layers"</i> plugin and using the GIMP Animation Package facilities for
 		video editing.
 	<p>
 	</p>
@@ -127,7 +127,7 @@
 			in the <i>"Available layers"</i> menu.
 			The <i>"New"</i> button creates a transparent layer with 50% opacity and an appropriate name,
 			and sets it as the selected layer mask (note that this fails if the plugin is invoked on a
-			floating selection, because Gimp does not allow to work on other layers in such case).
+			floating selection, because GIMP does not allow to work on other layers in such case).
 			It also sets the foreground colour to green; the previous colour is restored when the
 			dialog is closed.
 		</div>
@@ -136,16 +136,15 @@
 			the average on the pixel's colour channels, multiplied by the alpha channel. Thus, for an RGB layer
 			with an alpha channel, the maximum value is achieved on white pixels, while black ones
 			and transparent ones are ignored.
-			In general, it is advisable to work in monochrome, and modulate the intensity by the transparency
-			in case fine tuning is needed, e.g. by using the quickmask.
+			In general, it is advisable to use a single colour for each mask, and, if needed, fine-tune the strenght
+			of the mask for different areas by using the transparency value, instead of lightness or saturation.
 		</div>
 		<div>
 			The size and position of the selected layer can be arbitrary, the plugin will only use
 			those portions which overlap with the active layer.
 			The <i>"Strength"</i> scale can be used as a global parameter to modulate the feature preservation.
-			Note that the strength value automatically accounts for the size of the image,
-			but not for that of the masked areas: thinner selection areas (in the sense of the resizing) need
-			higher strength values, and vice-versa.
+			Note that thinner selection areas (in the sense of the resizing) need higher strength values, and
+			vice-versa.
 		</div>
 	</p>
 	<p>
@@ -154,16 +153,23 @@
 			but the effect is reversed, and the default colour for the <i>"New"</i> button is red instead of green.
 		</div>
 		<div>
-			Furthermore, there's an additional button, <i>"Auto size"</i>, which sets the final size of
-			the layer automatically. The nearby menu can be used to determine if the scaling will be
-			performed in the horizontal or in the vertical sense (the other direction will be
-			set to its initial value).
+			Furthermore, there's an additional button, <i>"Auto size"</i>, which can be used for "quick &amp; dirty"
+			object removals. When this button is pressed, the plug-in tries to compute the exact amount of rescaling
+			which is needed in order to remove the areas of the image marked by the current discard mask, and sets
+			the final size accordingly (in the <b>"Select new width and height"</b> section).
+			It will always produce a single-direction rescale, either horizontal (it changes just the width
+			and sets the height to its original value) or vertical (it changes just the height and sets the width to
+			its original value); which direction to use must be chosen in the menu nearby the <i>"Auto size"</i>
+			button, before using it.
 		</div>
 		<div>
-			Note that this option is only suitable for naive object removals, since the final size is
-			determined by simply finding out the maximum number of pixels in a line for which the mask
-			value is above a given threshold, and it may fail if the masks are non-trivial.
-			The threshold is set to the 50% of a full RGB colour (e.g. red in the default setting).
+			Note that this option is only suitable for naïve object removals, and it may fail if the masks are
+			non-trivial.
+		</div>
+		<div>
+			<i>[Technical information: the final size is determined by simply finding out the maximum number of
+			pixels in a line for which the mask value is above a given threshold, which is set to the 50% of a full
+			RGB colour (e.g. red in the default setting).]</i>
 		</div>
 	</p>
 
@@ -198,7 +204,7 @@
 		<dt><b>Output the seams on a new layer</b></dt>
 		<dd>
 			Specifies whether to create a new layer with the seams map.
-			The seams colour range can be manually choosen with the two buttons on the right.
+			The seams colour range can be manually chosen with the two buttons on the right.
 			The seams are computed on the original layer as far as they are needed for the new size
 			(e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining
 			areas are transparent. In order to read the result, use this option together with
@@ -225,7 +231,7 @@
 			<dd>
 				<div>
 				This option lets you choose the maximum transversal step that the pixels in the seams can
-				take. In the standard algorithm, corresponing to the default value step = 1, each pixel
+				take. In the standard algorithm, corresponding to the default value step = 1, each pixel
 				in a seam can be shifted by at most one pixel with respect to its neighbors.
 				This implies that the seams can form an angle of at most 45 degrees with respect
 				to their base line.
@@ -238,12 +244,17 @@
 			</dd>
 			<dt>Overall rigidity</dt>
 			<dd>
+				<div>
 				Use this value to give a negative bias to the seams which are not straight. May be useful
 				to prevent distortions in some situations, or to avoid artifacts from pixel skipping
 				(it is better to use low values in such case). This setting applies to the whole
 				selected layer if no rigidity mask is used.
-				The bias is proportional to the difference in the transversal coordinate between each
-				two successive points, elevated to the power of 1.5, and summed up for the whole seam.
+				</div>
+				<div>
+				<i>[Technical information: the bias is proportional to the difference in the transversal
+				coordinate between each two successive points, elevated to the power of 1.5, and summed up
+				for the whole seam.]</i>
+				</div>
 			</dd>
 			<dt>Use a rigidity mask</dt>
 			<dd>
@@ -280,7 +291,7 @@
 		</dd>
 		<dt><b>Rescale order</b></dt>
 		<dd>
-			When rescaling in both directions at the same time, it can be choosen whether to resize
+			When rescaling in both directions at the same time, it can be chosen whether to resize
 			first in the horizontal and then in the vertical direction, or vice versa.
 		</dd>
 		<dt><b>Ignore dicard mask when enlarging</b></dt>
@@ -288,15 +299,15 @@
 			The effect of the discard mask is reversed when the plugin is used for enlarging an image;
 			as this is normally undesirable, they are ignored by default when the
 			first scaling direction is to be enlarged (in such cases, a small warning icon will
-			appear in the <i>"Feature dicard mask"</i> section).
+			appear in the <i>"Feature discard mask"</i> section).
 			Unset this option if you want to override this behaviour.
 		</dl>
       <h3>Using the plugin for video and animation editing</h3>
       <h4>Using the plugin with GAP</h4>
       <p>
-	      	The plugin can take advantage of the Gimp Animation Package (GAP) for video editing,
+	      	The plugin can take advantage of the GIMP Animation Package (GAP) for video editing,
 		making it possible to apply liquid rescaling to all the frames of a video (please refer
-		to the GAP documentation for instructions about video editing in Gimp).
+		to the GAP documentation for instructions about video editing in GIMP).
       <p>
       </p>
 		Note however that the GAP facilities only allow to select the working layer, but the

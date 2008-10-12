@@ -39,7 +39,7 @@
 	  <p>
 	  Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo.
 	  Può anche essere applicato a più livelli di un immagine attraverso il plugin
-	  <i>"Filtra tutti i livelli"</i> o usando il Gimp Animation Package per l'editing video.
+	  <i>"Filtra tutti i livelli"</i> o usando il GIMP Animation Package per l'editing video.
 	  </p>
 	  <p>
 	  Il plugin opera sempre su interi livelli; se una selezione è presente, è salvata come canale
@@ -144,19 +144,17 @@
 		Quindi per un livello RGB con un canale alpha, il valore massimo si otterrà
 		con i pixel binachi, mentre quelli neri e quelli trasparenti
 		sono ignorati. In generale, è consigliabile lavorare con un solo colore per
-		livello, e modulare l'intensità attraverso la sola trasparenza nel caso
-		in cui si voglia ottenere una regolazione più fine, per esempio
-		utilizzando la maschera veloce.
+		maschera, e, se necessario, regolare l'intensità nelle diverse aree cambiando
+		il valore della trasparenza piuttosto che agire sulla luminosità o sulla
+		saturazione.
 	  </div>
 	  <div>
 		Le dimensioni e la posizione dei layer selezionati può essere arbitraria,
 		il plugin utilizza solo le porzioni che si sovrappongono al livello attivo.
 		La scala <i>"Intensità"</i> può essere utilizzata come parametro globale
 		per modulare la preservazione dei contenuti.
-		Nota che il valore di intensità tiene conto automaticamente delle dimensioni
-		dell'immagine, ma non di quelle delle aree mascherate: selezioni più sottili
-		(nel verso del ridimensionamento) hanno bisogno di valori di intensità
-		più alti, e viceversa.
+		Nota selezioni più sottili (nel verso del ridimensionamento) hanno bisogno
+		di valori di intensità più alti, e viceversa.
 	  </div>
 	  </p>
 	  <p>
@@ -166,18 +164,25 @@
 			è il rosso anziché il verde.
 		</div>
 		<div>
-			In più, c'è un ulteriore pulsante, <i>"Auto dimensionamento"</i>, che serve per impostare
-			automaticamente le dimensioni finali del livello. Il menu accanto può essere usato per
-			determinare se agire in orizzontale o in verticale (l'altra direzione viene impostata
-			al suo valore iniziale).
+			In più, rispetto alla sezione precedente, c'è un ulteriore pulsante, <i>"Auto dimensionamento"</i>,
+			che può essere usato per effettuare l'eliminazione "rapida" di aree dell'immagine.
+			Se si preme questo pulsante, il plug-in cerca di calcolare l'ammontare di riscalatura necessaria per
+			rimuovere gli oggetti marcati dall'attuale maschera per l'eliminazione, e imposta corrispondentemente 
+			le dimensioni finali (nella sezione <b>"Selezionare le nuove dimensioni"</b>).
+			Il risultato è sempre un riscalamento in una singola direzione, o in orizzontale (nel qual caso
+			la larghezza viene cambiata e l'altezza viene impostata al valore originario), oppure in
+			verticale (nel qual caso è l'altezza ad essere modificata, mentre la larghezza viene impostata
+			al suo valore originario); questa direzione va specificata attraverso il menu accanto al pulsante
+			<i>"Auto dimensionamento"</i>, prima di premerlo.
 		</div>
 		<div>
 			Si noti che questa opzione è adeguata solamente per operazioni di rimozione elementari,
-			poiché le dimensioni finali sono calcolate semplicemente a partire dal massimo numero
-			di pixel per riga (o colonna) per i quali la maschera supera una data soglia, e questo
-			metodo può facilmente fallire se la maschera è troppo complicata.
-			La soglia corrisponde al 50% di un colore RGB pieno (ad es. del rosso con le impostazioni
-			di default).
+			poiché questo metodo può facilmente sbagliare se la maschera è troppo complicata.
+		</div>
+		<div>
+			<i>[Dettagli tecnici: le dimensioni finali sono calcolate semplicemente a partire dal massimo numero
+			di pixel per riga (o colonna) per i quali la maschera supera una data soglia; questa soglia corrisponde
+			al 50% di un colore RGB pieno (ad es. del rosso con le impostazioni di default).]</i>
 		</div>
 	  </p>
 
@@ -201,13 +206,13 @@
 			  Se quest'opzione è attivata (è il default), il livello attivo verrà anche
 			  riposizionato in modo da essere completamente visibile.
 		  </dd>
-		  <dt><b>Ridimensiona i livelli ausiliarii</b></dt>
+		  <dt><b>Ridimensiona i livelli ausiliarî</b></dt>
 		  <dd>
 			  Specifica se i livelli che sono stati impostati per la selezione manuale dei
 			  contenuti e per specificare una maschera per la rigidità verranno ridimensionati
 			  assieme al livello attivo. Se quest'opzione è attivata (è il default), le parti
 			  dei livelli in questione che escono dal livello attivo verranno tagliate, dopodichè
-			  i livelli ausiliarii subiranno lo stesso processo di eliminazione/inserimento di
+			  i livelli ausiliarî subiranno lo stesso processo di eliminazione/inserimento di
 			  linee del layer attivo.
 		  </dd>
 		  <dt><b>Mostra le linee d'azione</b></dt>
@@ -247,7 +252,7 @@
 			<dt>Massimo passo trasverso</dt>
 			<dd>
 				<div>
-				Questa opzione permette di impostare il massimo passo trasversale ammesso
+				Questa opzione permette di impostare il massimo passo trasvero ammesso
 				tra due pixel successivi delle linee d'azione. L'algoritmo standard usa
 				un passo = 1, che significa che ogni pixel di una linea può essere
 				spostato al massimo di un pixel rispetto ai suoi vicini. Questo
@@ -262,13 +267,17 @@
 			</dd>
 			<dt>Rigidità globale</dt>
 			<dd>
-				  Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte.
-				  Può risultare utile per ridurre le distorsioni in certi casi, o per evitare
-				  di introdurre gli errori derivanti da un valore troppo alto del passo (è consigliabile
-				  usare valori bassi in questo caso). Questo valore viene utilizzato su tutta l'immagine
-				  se non è specificata una maschera per la rigidità.
-				  La penalizzazione è proporzionale alla somma delle differenze di coordinate trasversali
-				  (passo) per ogni coppia di punti successivi della linea, elevate alla potenza di 1.5.
+				<div>
+				Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte.
+				Può risultare utile per ridurre le distorsioni in certi casi, o per evitare
+				di introdurre gli errori derivanti da un valore troppo alto del passo (è consigliabile
+				usare valori bassi in questo caso). Questo valore viene utilizzato su tutta l'immagine
+				se non è specificata una maschera per la rigidità.
+				</div>
+				<div>
+				<i>[Dettagli tecnici: la penalizzazione è proporzionale alla somma delle differenze di coordinate trasversali
+				(passo) per ogni coppia di punti successivi della linea, elevate alla potenza di 1,5.]</i>
+				</div>
 			</dd>
 			<dt>Usa una maschera per la rigidità</dt>
 			<dd>
@@ -325,9 +334,9 @@
 	<h3>Utilizzo del plugin per l'editing di video e animazioni</h3>
 	<h4>Utilizzo del plugin con GAP</h4>
 	<p>
-		  Il plugin può essere utilizzato assieme al Gimp Animation Package (GAP) per l'editing
+		  Il plugin può essere utilizzato assieme al GIMP Animation Package (GAP) per l'editing
 		  video, così da applicare il riscalamento liquido a tutti i frames di un video
-		  (consultate la documentazione di GAP per informazioni riguardo all'editing video con Gimp).
+		  (consultate la documentazione di GAP per informazioni riguardo all'editing video con GIMP).
 	<p>
 	</p>
 		  Tuttavia, gli strumenti di GAP permettono di selezionare in maniera diretta soltanto
