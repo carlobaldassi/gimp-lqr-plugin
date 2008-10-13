@@ -105,6 +105,7 @@ static PlugInImageVals image_vals;
 static PlugInDrawableVals drawable_vals;
 static PlugInUIVals ui_vals;
 static PlugInColVals col_vals;
+static int args_num;
 
 
 GimpPlugInInfo PLUG_IN_INFO = {
@@ -127,9 +128,9 @@ static void query (void)
     {GIMP_PDB_DRAWABLE, "drawable", "Input drawable"},
     {GIMP_PDB_INT32, "width", "Final width"},
     {GIMP_PDB_INT32, "height", "Final height"},
-    {GIMP_PDB_INT32, "pres_layer", "Layer that marks preserved areas"},
-    {GIMP_PDB_INT32, "pres_coeff", "Preservation coefficient"},
-    {GIMP_PDB_INT32, "disc_layer", "Layer that marks areas to discard"},
+    {GIMP_PDB_INT32, "pres_layer", "Layer that marks preserved areas (for interactive mode only)"},
+    {GIMP_PDB_INT32, "pres_coeff", "Preservation coefficient (for interactive mode only)"},
+    {GIMP_PDB_INT32, "disc_layer", "Layer that marks areas to discard (for interactive mode only)"},
     {GIMP_PDB_INT32, "disc_coeff", "Discard coefficient"},
     {GIMP_PDB_FLOAT, "rigidity", "Rigidity coefficient"},
     {GIMP_PDB_INT32, "rigidity_mask_layer", "Layer used as rigidity mask"},
@@ -149,6 +150,8 @@ static void query (void)
     {GIMP_PDB_STRING, "rigmask_layer_name", "Rigidity mask layer name (for noninteractive mode only)"},
   };
 
+  args_num = G_N_ELEMENTS (args);
+
   gimp_plugin_domain_register (GETTEXT_PACKAGE, LOCALEDIR);
 
   help_path = g_build_filename (DATADIR, "help", NULL);
@@ -163,7 +166,7 @@ static void query (void)
                           "Carlo Baldassi <carlobaldassi@gmail.com>",
                           "Carlo Baldassi <carlobaldassi@gmail.com>", "2008",
                           N_("Li_quid rescale..."), "RGB*, GRAY*",
-                          GIMP_PLUGIN, G_N_ELEMENTS (args), 0, args, NULL);
+                          GIMP_PLUGIN, args_num, 0, args, NULL);
 
   gimp_plugin_menu_register (PLUG_IN_NAME, "<Image>/Layer/");
 }
@@ -246,7 +249,7 @@ run (const gchar * name,
       switch (run_mode)
         {
         case GIMP_RUN_NONINTERACTIVE:
-          if (n_params != 24)
+          if (n_params != args_num)
             {
               status = GIMP_PDB_CALLING_ERROR;
             }
@@ -254,12 +257,12 @@ run (const gchar * name,
             {
               vals.new_width = param[3].data.d_int32;
               vals.new_height = param[4].data.d_int32;
-              //vals.pres_layer_ID = param[5].data.d_int32;
+              /* vals.pres_layer_ID = param[5].data.d_int32; */
               vals.pres_coeff = param[6].data.d_int32;
-              //vals.disc_layer_ID = param[7].data.d_int32;
+              /* vals.disc_layer_ID = param[7].data.d_int32; */
               vals.disc_coeff = param[8].data.d_int32;
               vals.rigidity = param[9].data.d_int32;
-              //vals.rigmask_layer_ID = param[10].data.d_int32;
+              /* vals.rigmask_layer_ID = param[10].data.d_int32; */
               vals.delta_x = param[11].data.d_int32;
               vals.resize_aux_layers = param[12].data.d_int32;
               vals.resize_canvas = param[13].data.d_int32;

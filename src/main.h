@@ -26,20 +26,15 @@
 
 #include "main_common.h"
 
+/* Additional responses for dialog */
+
 #define RESPONSE_REFRESH (1)
 #define RESPONSE_FEAT_REFRESH (2)
 #define RESPONSE_ADV_REFRESH (3)
 #define RESPONSE_RESET (4)
 
-/**** OPERATIONAL_MODES ****/
-enum _OperMode
-{
-  OPER_MODE_NORMAL,
-  OPER_MODE_LQRBACK,
-  OPER_MODE_SCALEBACK
-};
 
-typedef enum _OperMode OperMode;
+/* Structs for parameters */
 
 typedef struct
 {
@@ -76,105 +71,16 @@ typedef struct
 } PlugInColVals;
 
 
-typedef struct
+/* Operational modes */
+
+enum _OperMode
 {
-  gint32 image_ID;
-  gint32 orig_layer_ID;
-  gint32 layer_ID;
-  GimpDrawable *drawable;
-  GimpImageType type;
-  gint width;
-  gint height;
-  gint old_width;
-  gint old_height;
-  gint x_off;
-  gint y_off;
-  gfloat factor;
-  guchar *buffer;
-  guchar *pres_buffer;
-  guchar *disc_buffer;
-  guchar *rigmask_buffer;
-  guchar *preview_buffer;
-  gboolean toggle;
-  PlugInVals *vals;
-  PlugInUIVals *ui_vals;
-  GdkPixbuf *pixbuf;
-  GtkWidget *area;
-  GtkWidget *pres_combo;
-  GtkWidget *disc_combo;
-  GtkWidget *rigmask_combo;
-  GtkWidget *coordinates;
-  GtkWidget *disc_warning_image;
-  gint guess_direction;
-} PreviewData;
+  OPER_MODE_NORMAL,
+  OPER_MODE_LQRBACK,
+  OPER_MODE_SCALEBACK
+};
 
-#define PREVIEW_DATA(data) ((PreviewData*)data)
-
-typedef struct
-{
-  gpointer ui_vals;
-  gpointer button;
-} PresDiscStatus;
-
-#define PRESDISC_STATUS(data) ((PresDiscStatus*)data)
-
-typedef struct
-{
-  gpointer ui_toggled;
-  gpointer combo;
-  gpointer combo_label;
-  gpointer scale;
-  gpointer status;
-  gpointer guess_button;
-  gpointer guess_dir_combo;
-} ToggleData;
-
-#define TOGGLE_DATA(data) ((ToggleData*)data)
-
-typedef struct
-{
-  GtkWidget *notebook;
-  GtkWidget *features_page;
-  GtkWidget *advanced_page;
-  gint features_page_ID;
-  gint advanced_page_ID;
-  GtkWidget *label;
-  gint32 image_ID;
-  GimpDrawable *drawable;
-} NotebookData;
-
-#define NOTEBOOK_DATA(data) ((NotebookData*)data)
-
-typedef struct
-{
-  NotebookData *notebook_data;
-  PlugInVals *vals;
-  PlugInUIVals *ui_vals;
-} ResponseData;
-
-#define RESPONSE_DATA(data) ((ResponseData*)data)
-
-typedef struct
-{
-  gint32 *layer_ID;
-  gboolean *status;
-  gchar name[LQR_MAX_NAME_LENGTH];
-  GimpRGB colour;
-  gboolean presdisc;
-  gboolean * info_show;
-} NewLayerData;
-
-#define NEW_LAYER_DATA(data) ((NewLayerData*)(data))
-
-typedef struct
-{
-  gint32 *layer_ID;
-  gint32 *disc_layer_ID;
-  gpointer *coordinates;
-} GuessData;
-
-#define GUESS_DATA(data) ((GuessData*)(data))
-
+typedef enum _OperMode OperMode;
 
 
 /*  Default values  */

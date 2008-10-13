@@ -6,11 +6,15 @@ bindir = $(GIMP_LIBDIR)/plug-ins
 
 gimp_lqr_plugin_SOURCES = \
 	plugin-intl.h	\
-	interface.c	\
-	interface.h	\
+	main_common.h	\
 	main.c		\
 	main.h		\
-	main_common.h	\
+	interface.c	\
+	interface.h	\
+	preview.c       \
+	preview.h       \
+	layers_combo.c  \
+	layers_combo.h  \
 	render.c	\
 	render.h	\
 	io_functions.c  \

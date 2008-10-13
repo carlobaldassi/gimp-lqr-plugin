@@ -25,6 +25,30 @@
 #ifndef __INTERFACE_H__
 #define __INTERFACE_H__
 
+/* Data structs for callbacks */
+
+typedef struct
+{
+  gpointer ui_vals;
+  gpointer button;
+} PresDiscStatus;
+
+#define PRESDISC_STATUS(data) ((PresDiscStatus*)data)
+
+typedef struct
+{
+  GtkWidget *notebook;
+  GtkWidget *features_page;
+  GtkWidget *advanced_page;
+  gint features_page_ID;
+  gint advanced_page_ID;
+  GtkWidget *label;
+  gint32 image_ID;
+  GimpDrawable *drawable;
+} NotebookData;
+
+#define NOTEBOOK_DATA(data) ((NotebookData*)data)
+
 
 /*  Public functions  */
 

@@ -47,8 +47,9 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_gimp_lqr_plugin_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
-	render.$(OBJEXT) io_functions.$(OBJEXT)
+am_gimp_lqr_plugin_OBJECTS = main.$(OBJEXT) interface.$(OBJEXT) \
+	preview.$(OBJEXT) layers_combo.$(OBJEXT) render.$(OBJEXT) \
+	io_functions.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -200,11 +201,15 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 gimp_lqr_plugin_SOURCES = \
 	plugin-intl.h	\
-	interface.c	\
-	interface.h	\
+	main_common.h	\
 	main.c		\
 	main.h		\
-	main_common.h	\
+	interface.c	\
+	interface.h	\
+	preview.c       \
+	preview.h       \
+	layers_combo.c  \
+	layers_combo.h  \
 	render.c	\
 	render.h	\
 	io_functions.c  \
@@ -287,7 +292,9 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_functions.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/layers_combo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/preview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/render.Po@am__quote@
 
 .c.o:
