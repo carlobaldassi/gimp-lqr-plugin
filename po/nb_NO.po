@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-04 03:13+0200\n"
+"POT-Creation-Date: 2008-10-16 20:58+0200\n"
 "PO-Revision-Date: 2007-10-21 20:08+0200\n"
 "Last-Translator: Alexander Rødseth <rodseth@gmail.com>\n"
 "Language-Team: Norsk bokmål <Norwegian Bokmål <i18n-nb@lister.ping.uio.no>>\n"
@@ -16,96 +16,96 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../src/interface.c:253
+#: ../src/interface.c:210
 msgid "GIMP LiquidRescale Plug-In"
 msgstr "Væske-skalering for GIMP"
 
-#: ../src/interface.c:276
+#: ../src/interface.c:233
 msgid "Selected layer"
 msgstr "Valgt lag"
 
 #. New size
-#: ../src/interface.c:339
+#: ../src/interface.c:292
 msgid "Select new width and height"
 msgstr "Velg ny bredde og høyde"
 
-#: ../src/interface.c:359
+#: ../src/interface.c:312
 msgid "Width:"
 msgstr "Bredde:"
 
-#: ../src/interface.c:361
+#: ../src/interface.c:314
 msgid "Height:"
 msgstr "Høyde:"
 
-#: ../src/interface.c:395
+#: ../src/interface.c:351
 msgid "Reset width and height to their original values"
 msgstr ""
 
-#: ../src/interface.c:415
+#: ../src/interface.c:372
 msgid "Set width and height to the last used values"
 msgstr ""
 
-#: ../src/interface.c:439
+#: ../src/interface.c:399
 msgid ""
 "Here you can choose if you want to transform back the image to its original "
 "size and how to do it"
 msgstr ""
 
-#: ../src/interface.c:447
+#: ../src/interface.c:408
 msgid "Mode:"
 msgstr ""
 
-#: ../src/interface.c:452
+#: ../src/interface.c:413
 msgid "LqR only"
 msgstr ""
 
-#: ../src/interface.c:453
+#: ../src/interface.c:414
 msgid "LqR + scale back"
 msgstr ""
 
-#: ../src/interface.c:455
+#: ../src/interface.c:416
 msgid "LqR + LqR back"
 msgstr ""
 
 #. Output settings page
-#: ../src/interface.c:483
+#: ../src/interface.c:442
 msgid "Output"
 msgstr "Resultat"
 
-#: ../src/interface.c:498
+#: ../src/interface.c:457
 msgid "Output on a new layer"
 msgstr "Legg resultatet på et nytt lag"
 
-#: ../src/interface.c:506
+#: ../src/interface.c:465
 msgid "Outputs the resulting image on a new layer"
 msgstr "Legger det resulterende bildet på et nytt lag"
 
-#: ../src/interface.c:510
+#: ../src/interface.c:469
 msgid "Resize image canvas"
 msgstr "Skaler lerretet"
 
-#: ../src/interface.c:518
+#: ../src/interface.c:477
 msgid "Resize and translate the image canvas to fit the resized layer"
 msgstr ""
 "Skaler og flytt lerretet slik at det passer med den nye størrelsen til laget"
 
-#: ../src/interface.c:522
+#: ../src/interface.c:481
 #, fuzzy
 msgid "Resize auxiliary layers"
 msgstr "Endre størrelsen på lagene som brukes for å ta vare på/viske ut trekk"
 
-#: ../src/interface.c:539
+#: ../src/interface.c:499
 #, fuzzy
 msgid ""
 "Resize the layers used as features or rigidity masks along with the active "
 "layer"
 msgstr "Skaler lagene som brukes som masker sammen med det aktive laget"
 
-#: ../src/interface.c:546
+#: ../src/interface.c:506
 msgid "Output the seams"
 msgstr "Inkluder sømmer i resultatet"
 
-#: ../src/interface.c:555
+#: ../src/interface.c:515
 msgid ""
 "Creates an extra output layer with the seams, for visual inspection of what "
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
@@ -115,70 +115,66 @@ msgstr ""
 "sammen med \"Legg resultatet på et nytt lag\" og skalering i en retning av "
 "gangen"
 
-#: ../src/interface.c:567
+#: ../src/interface.c:527
 msgid "Last seams colour"
 msgstr ""
 
-#: ../src/interface.c:581
+#: ../src/interface.c:541
 #, fuzzy
 msgid "Colour to use for the last seams"
 msgstr "Farge som brukes på de siste sømmene"
 
-#: ../src/interface.c:584
+#: ../src/interface.c:544
 msgid "First seams colour"
 msgstr ""
 
-#: ../src/interface.c:598
+#: ../src/interface.c:558
 #, fuzzy
 msgid "Colour to use for the first seams"
 msgstr "Farge som skal brukes på det første sømmene"
 
 #. Mask page
-#: ../src/interface.c:614
+#: ../src/interface.c:574
 msgid "Mask"
 msgstr "Maske"
 
-#: ../src/interface.c:622
+#: ../src/interface.c:582
 #, fuzzy
 msgid "Select behaviour for the mask"
 msgstr "Velg oppførsel for masken"
 
-#: ../src/interface.c:627
+#: ../src/interface.c:587
 msgid "Apply"
 msgstr "Bruk"
 
-#: ../src/interface.c:627
+#: ../src/interface.c:587
 msgid "Discard"
 msgstr "Visk ut"
 
-#: ../src/interface.c:1083 ../src/interface.c:1171 ../src/render.c:93
-msgid "Error: it seems that the selected layer is no longer valid"
-msgstr "Uffda: det ser ut som om det valgte laget ikke lenger kan brukes"
-
-#: ../src/interface.c:1760
+#: ../src/interface.c:930
 msgid "Feature masks"
 msgstr "Maske for trekk ved bildet"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1770
+#: ../src/interface.c:941
 #, c-format
 msgid "%s pres mask"
 msgstr "%s preserveringsmaske"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1780
+#: ../src/interface.c:952
 #, c-format
 msgid "%s disc mask"
 msgstr "%s utviskingsmaske"
 
 #. Feature preservation
-#: ../src/interface.c:1803
+#: ../src/interface.c:975
 msgid "Feature preservation mask"
 msgstr "Preservasjonsmaske"
 
-#: ../src/interface.c:1808
+#: ../src/interface.c:980
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -190,30 +186,30 @@ msgstr ""
 "nytt lag med \"Ny\"-knappen, så kan du tegne på det og trykke på \"Oppfrisk"
 "\".<br>Legg merke til at svartmaling ikke har noen effekt "
 
-#: ../src/interface.c:1841
+#: ../src/interface.c:1013
 msgid "Preserve features"
 msgstr "Behold trekk"
 
-#: ../src/interface.c:1857
+#: ../src/interface.c:1029
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr "Bruk et ekstra lag for å beskytte valgte områder fra forvrengning"
 
-#: ../src/interface.c:1860 ../src/interface.c:2075 ../src/interface.c:2452
+#: ../src/interface.c:1032 ../src/interface.c:1252 ../src/interface.c:1632
 msgid "New"
 msgstr "Ny"
 
-#: ../src/interface.c:1865
+#: ../src/interface.c:1037
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr ""
 "Lager et nytt gjennomsiktig lag, klart til å brukes som preservasjonsmaske"
 
-#: ../src/interface.c:1874 ../src/interface.c:2088 ../src/interface.c:2466
+#: ../src/interface.c:1047 ../src/interface.c:1266 ../src/interface.c:1646
 msgid ""
 "Paint the mask on the newly created layer, then come back to this dialog and "
 "click on the \"Refresh\" button"
 msgstr ""
 
-#: ../src/interface.c:1917
+#: ../src/interface.c:1091
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -221,24 +217,24 @@ msgstr ""
 "Lag som skal brukes som en maske for å beholde trekk ved bildet.<br>Bruk "
 "\"Refresh\"-knappen for å oppdatere listen"
 
-#: ../src/interface.c:1948 ../src/interface.c:2165 ../src/interface.c:2539
+#: ../src/interface.c:1122 ../src/interface.c:1342 ../src/interface.c:1720
 msgid "Layer:"
 msgstr "Lag:"
 
-#: ../src/interface.c:1969 ../src/interface.c:2183 ../src/interface.c:2561
+#: ../src/interface.c:1143 ../src/interface.c:1360
 msgid "Strength:"
 msgstr "Styrke:"
 
-#: ../src/interface.c:1972 ../src/interface.c:2564
+#: ../src/interface.c:1147
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Samlet koeffisient for intensiteten til trekk som beholdes"
 
 #. Feature discard
-#: ../src/interface.c:2005
+#: ../src/interface.c:1181
 msgid "Feature discard mask"
 msgstr "Maske for trekk som viskes ut"
 
-#: ../src/interface.c:2010
+#: ../src/interface.c:1186
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -250,11 +246,11 @@ msgstr ""
 "med \"Ny\"-knappen, så kan du tegne på det og trykke på \"Oppfrisk\"."
 "<br>Legg merke til at svartmaling ikke har noen effekt "
 
-#: ../src/interface.c:2041
+#: ../src/interface.c:1217
 msgid "Discard features"
 msgstr "Visk ut trekk"
 
-#: ../src/interface.c:2058
+#: ../src/interface.c:1234
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -262,7 +258,7 @@ msgstr ""
 "Bruk et ekstra lag for å behandle utvalgte områder som om de var uten "
 "innvirkning (nyttig for å fjerne deler av bildet ved krymping)"
 
-#: ../src/interface.c:2067
+#: ../src/interface.c:1244
 msgid ""
 "Warning: the discard mask information will be ignored with the current "
 "settings.\n"
@@ -270,13 +266,13 @@ msgid ""
 "the corrensponding option in the \"Advanced\" tab)"
 msgstr ""
 
-#: ../src/interface.c:2080
+#: ../src/interface.c:1257
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 "Lager et nytt gjennomsiktig lag, klar til å brukes som maske for trekk som "
 "skal viskes ut"
 
-#: ../src/interface.c:2130
+#: ../src/interface.c:1309
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -284,49 +280,47 @@ msgstr ""
 "Lag som skal brukes som en maske for å viske ut trekk ved bildet.\n"
 "Bruk \"Oppfrisk\"-knappen for å oppdatere listen."
 
-#: ../src/interface.c:2186
+#: ../src/interface.c:1364
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Samlet koeffisient for intensiteten til trekk som viskes ut"
 
-#: ../src/interface.c:2238
+#: ../src/interface.c:1416
 msgid "Auto size"
 msgstr ""
 
-#: ../src/interface.c:2249
+#: ../src/interface.c:1428
 msgid ""
 "Try to set the final size as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
-#: ../src/interface.c:2253
+#: ../src/interface.c:1432
 msgid "horizontal"
 msgstr ""
 
-#: ../src/interface.c:2253
+#: ../src/interface.c:1432
 msgid "vertical"
 msgstr ""
 
-#: ../src/interface.c:2264
+#: ../src/interface.c:1443
 msgid "Resizing direction for auto size"
 msgstr ""
 
-#: ../src/interface.c:2320
+#: ../src/interface.c:1494
 msgid "Advanced"
 msgstr "Avansert"
 
-#. The name of a newly created layer for rigidity mask
-#. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:2329
+#: ../src/interface.c:1505
 #, fuzzy, c-format
 msgid "%s rigidity mask"
 msgstr "%s utviskingsmaske"
 
 #. Seams control
-#: ../src/interface.c:2350
+#: ../src/interface.c:1527
 msgid "Seams control"
 msgstr ""
 
-#: ../src/interface.c:2355
+#: ../src/interface.c:1532
 #, fuzzy, c-format
 msgid ""
 "Extra layers are needed to be used as rigidity masks.\n"
@@ -338,43 +332,43 @@ msgstr ""
 "med \"Ny\"-knappen, så kan du tegne på det og trykke på \"Oppfrisk\"."
 "<br>Legg merke til at svartmaling ikke har noen effekt "
 
-#: ../src/interface.c:2379
+#: ../src/interface.c:1556
 msgid "Max transversal step:"
 msgstr ""
 
-#: ../src/interface.c:2382
+#: ../src/interface.c:1559
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
 msgstr ""
 
-#: ../src/interface.c:2393
+#: ../src/interface.c:1569
 #, fuzzy
 msgid "Overall rigidity:"
 msgstr "Søm-rigiditet:"
 
-#: ../src/interface.c:2396
+#: ../src/interface.c:1572
 msgid "Increasing this value results in straighter seams"
 msgstr "Økning av denne verdien fører til rettere sømmer"
 
-#: ../src/interface.c:2425
+#: ../src/interface.c:1602
 #, fuzzy
 msgid "Use a rigidity mask"
 msgstr "Søm-rigiditet:"
 
-#: ../src/interface.c:2450
+#: ../src/interface.c:1629
 #, fuzzy
 msgid "Use an extra layer to mark areas where seams should be straighter"
 msgstr "Bruk et ekstra lag for å beskytte valgte områder fra forvrengning"
 
-#: ../src/interface.c:2457
+#: ../src/interface.c:1637
 #, fuzzy
 msgid "Creates a new transparent layer ready to be used as a rigidity mask"
 msgstr ""
 "Lager et nytt gjennomsiktig lag, klar til å brukes som maske for trekk som "
 "skal viskes ut"
 
-#: ../src/interface.c:2508
+#: ../src/interface.c:1689
 #, fuzzy
 msgid ""
 "Layer to be used as a mask for rigidity settings.\n"
@@ -383,7 +377,7 @@ msgstr ""
 "Lag som skal brukes som en maske for å beholde trekk ved bildet.<br>Bruk "
 "\"Refresh\"-knappen for å oppdatere listen"
 
-#: ../src/interface.c:2607
+#: ../src/interface.c:1755
 msgid ""
 "This affects the automatic feature recognition.\n"
 "It's the function which will be applied to the components of the gradient on "
@@ -392,60 +386,59 @@ msgstr ""
 "Dette påvirker den automatiske trekk-gjennkjenningen.<br>Denne funksjonen "
 "vil brukes på komponentene til hvert bildepunkts gradient"
 
-#: ../src/interface.c:2617
+#: ../src/interface.c:1765
 msgid "Gradient function:"
 msgstr "Gradientfunksjon:"
 
-#: ../src/interface.c:2622
+#: ../src/interface.c:1770
 msgid "Transversal absolute value"
 msgstr "Absoluttverdi for skjevhet"
 
-#: ../src/interface.c:2623
+#: ../src/interface.c:1771
 msgid "Sum of absolute values"
 msgstr "Sum av absolutte verdier"
 
-#: ../src/interface.c:2624
+#: ../src/interface.c:1772
 msgid "Norm"
 msgstr "Norm"
 
 #. Null can be translated as Zero
-#: ../src/interface.c:2626
+#: ../src/interface.c:1774
 msgid "Null"
 msgstr "Null"
 
-#: ../src/interface.c:2641
+#: ../src/interface.c:1789
 msgid "This controls the order of operations if rescaling in both directions"
 msgstr ""
 
-#: ../src/interface.c:2649
+#: ../src/interface.c:1797
 msgid "Rescale order:"
 msgstr ""
 
-#: ../src/interface.c:2654
+#: ../src/interface.c:1802
 msgid "Horizontal first"
 msgstr ""
 
-#: ../src/interface.c:2655
+#: ../src/interface.c:1803
 msgid "Vertical first"
 msgstr ""
 
-#. No discard when enlarging ?
-#: ../src/interface.c:2666
+#: ../src/interface.c:1815
 msgid "Ignore discard mask when enlarging"
 msgstr ""
 
-#: ../src/interface.c:2671
+#: ../src/interface.c:1821
 msgid ""
 "This will have the same effect as setting the strenght to 0 in the discard "
 "mask when the first rescale step is an image enlargment (which normally is "
 "the best choice)"
 msgstr ""
 
-#: ../src/main.c:161
+#: ../src/main.c:164
 msgid "scaling which keeps layer features (or removes them)"
 msgstr ""
 
-#: ../src/main.c:165
+#: ../src/main.c:168
 #, fuzzy
 msgid "Li_quid rescale..."
 msgstr "Væske-skalering..."
@@ -453,6 +446,10 @@ msgstr "Væske-skalering..."
 #: ../src/render.c:43 ../src/render.c:44
 msgid "Not enough memory"
 msgstr "Tom for minne"
+
+#: ../src/render.c:93
+msgid "Error: it seems that the selected layer is no longer valid"
+msgstr "Uffda: det ser ut som om det valgte laget ikke lenger kan brukes"
 
 #: ../src/render.c:102
 msgid "Error: it seems that the preservation features layer is no longer valid"
