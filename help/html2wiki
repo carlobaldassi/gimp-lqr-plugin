@@ -46,11 +46,15 @@ cat | \
 	subtags "dt" '* ' '.'						| \
 	subtags "dd" '' '{{NEWLINE}}'					| \
 	subtags "dd" '' '{{NEWLINE}}'					| \
+	sed "s@<a href=\"\(#[^\"]*\)\">\([^<]*\)</a>@[\1 \2]@g"		| \
+	sed "s@<a name=\"\([^\"]*\)\">\([^<]*\)</a>@[[# \1 \2]]@g"	| \
 	sed "s@</\?p>@{{NEWLINE}}@g"					| \
 	sed "s@</\?ul>@{{NEWLINE}}@g"					| \
 	sed "s/^[[:space:]]*//"						| \
-	sed "s@\(\[\[image[[:space:]]\+\)\.\./images/\(.*\]\]\)@\1\2@g"	| \
+	sed "s@\(\[\[image[[:space:]]\+\)\.\./images/\([^]]*\]\]\)@\1\2@g"	| \
 	sed "s/ \+/ /g"							| \
-	sed "s/[[:space:]]*{{NEWLINE}}[[:space:]]*/\n/g"				| \
+	sed "s/[[:space:]]*{{NEWLINE}}[[:space:]]*/\n/g"		| \
 	cat -s
 echo
+
+	#sed "s@\(\[\[image[[:space:]]\+\)\.\./images/\(.*\]\]\)@\1\2@g"	| \

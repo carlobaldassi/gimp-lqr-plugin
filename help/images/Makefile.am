@@ -9,6 +9,9 @@ helpdata_DATA = \
 	dialog3.png \
 	dialog1_it.png \
 	dialog2_it.png \
-	dialog3_it.png
+	dialog3_it.png \
+	dialog1_ru.png \
+	dialog2_ru.png \
+	dialog3_ru.png
 
 EXTRA_DIST = $(helpdata_DATA)

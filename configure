@@ -8150,7 +8150,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile gap/Makefile po/Makefile.in help/Makefile help/en/Makefile help/it/Makefile help/es_ES/Makefile help/images/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile gap/Makefile po/Makefile.in help/Makefile help/en/Makefile help/it/Makefile help/ru/Makefile help/images/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -8769,7 +8769,7 @@ do
     "help/Makefile") CONFIG_FILES="$CONFIG_FILES help/Makefile" ;;
     "help/en/Makefile") CONFIG_FILES="$CONFIG_FILES help/en/Makefile" ;;
     "help/it/Makefile") CONFIG_FILES="$CONFIG_FILES help/it/Makefile" ;;
-    "help/es_ES/Makefile") CONFIG_FILES="$CONFIG_FILES help/es_ES/Makefile" ;;
+    "help/ru/Makefile") CONFIG_FILES="$CONFIG_FILES help/ru/Makefile" ;;
     "help/images/Makefile") CONFIG_FILES="$CONFIG_FILES help/images/Makefile" ;;
     "po/stamp-it") CONFIG_COMMANDS="$CONFIG_COMMANDS po/stamp-it" ;;
 

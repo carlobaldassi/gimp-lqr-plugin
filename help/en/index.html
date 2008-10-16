@@ -36,6 +36,10 @@
 		preserved and which should be discarded.
 	</p>
 	<p>
+		See also <a href="#seam_carving">Appendix: The seam carving technique in brief</a> at the end
+		of this page for an introduction to seam carving concepts.
+	</p>
+	<p>
 		The plugin works on the active layer or floating selection. It can also operate on multiple layers
 		through the <i>"Filter all layers"</i> plugin and using the GIMP Animation Package facilities for
 		video editing.
@@ -44,7 +48,7 @@
  		The plugin only works on whole layers, if a selection is present it is saved to a channel and removed.
 		If the layer has a transparency mask, an option is given to select the behaviour (apply/discard).
 	</p>
-	
+
 	<h2>User interface description</h2>
 	<p>
 		<img title="Dialog example" alt="Dialog example" src="../images/dialog1.png">
@@ -204,11 +208,12 @@
 		<dt><b>Output the seams on a new layer</b></dt>
 		<dd>
 			Specifies whether to create a new layer with the seams map.
-			The seams colour range can be manually chosen with the two buttons on the right.
+			If this option is checked, two buttons appear on the right of it to let the user choose
+			the seams colour range.
 			The seams are computed on the original layer as far as they are needed for the new size
 			(e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining
 			areas are transparent. In order to read the result, use this option together with
-			<i>"Output on a new layer"</i>, and overlay the seam map to the original layer.
+			<i>"Output on a new layer"</i>, and overlay the seams map to the original layer.
 			If you rescale in two directions at once, you will obtain two maps, but the second
 			one will be computed over an invisible intermediate image, so this is not very useful.
 			The same applies in the case you choose to rescale back to the original size with LqR.
@@ -328,8 +333,10 @@
 		In the latter case, you will be presented the liquidrescale plugin dialog twice, once
 		for the first frame and once for the last one: these will set the extreme values for 
 		all the graded parameters (such as sizes, strengths, rigidity etc.), and
-		intermediate values will be used in the intermediate frames. However, all the
-		options (such as the resize order, the auxiliary layer names etc.)
+		intermediate values will be used in the intermediate frames (for example, if you set
+		the width to 100% for the first frame and 110% for the last one, and there are 11 frames
+		overall, intermediate frames will have widths of 101%, 102%, 103% and so on). However, all the
+		on/off options (such as the resize order, the auxiliary layer names etc.)
 		will be taken from the <u>last</u> dialog for all the intermediate frames.
 		</div>
       </p>
@@ -342,6 +349,50 @@
 		problems if using auxiliary layers as masks, since the plugin will be applied
 		to those as well.
       </p>
+      <h2>Appendix: The seam carving technique in brief</h2><a name="seam_carving"></a>
+      <p>
+	      The plugin works by finding so-called "seams" over an image, i.e. continuous, zig-zagged lines transversing
+	      the image from top to bottom ("vertical" seams), or from left to right ("horizontal" seams). When one such seam,
+	      say a vertical one, is removed from an image (the "carving" operation), the width of the image is reduced by one
+	      pixel. Removing horizontal seams reduces the height. Iterating such operations (find a seam and remove it), one
+	      can reduce the image size at will. Collecting together all the seams which were carved from an image, in their
+	      respective order, constitutes what is called a "seams map".
+      </p>
+      <p>
+	      Mirroring the carving process, by <i>inserting</i> additional seams besides the ones which are found
+	      by the algorithm, instead of removing them, image enlargement can be obtained, too. The meaning of the seam
+	      map is reversed in this case.
+      </p>
+      <p>
+	      In order to get good results form this technique, the main issue is finding which are the most suitable seams
+	      to carve or to insert. If the aim is simply to change the proportions of the image without affecting too much the
+	      content, for example, "good" seams will be those which don't cross important features of the image, and instead pass
+	      through a background landscape.
+      </p>
+      <p>
+	      By default, the plugin is tries to find the seams which cross the lowest-contrast areas 
+	      (how this happens exactly is specified by the gradient function choice in the <i>"Advanced"</i> tab).
+	      Therefore, each pixel of the image is assigned a so-called "energy value": the higher the contrast, the higher
+	      the energy, and seams are less likely to cross high-energy areas.
+      </p>
+      <p>
+	      Since in many cases this simple contrast-based method is not optimal, the energy function can be "biased" by
+	      the user, who can decide that some areas should have a higher energy (using a preservation masks) or, on the
+	      contrary, that they should have a lower energy (using a discard mask), and therefore effectivily "drive" the
+	      seams and the whole process.
+      </p>
+      <p>
+	      Rigidity masks work in a similar way, but the energy bias that they add does not only depend on the mask value
+	      over each pixel, but also on how much the seams which try to cross that pixel are straight.
+      </p>
+      <p>
+	      One intuitive picture is as such: the seams try to get from one side to the other of the image keeping on a
+	      path with an energy as low as possible; preservation masks have the effect of putting a barrier on their path,
+	      which, if high enough, deviates the seams away from it; discard mask, on the other hand, are like valleys which
+	      attract seams. Rigidity masks have the effect of putting barriers besides each seam, which tend to make
+	      it straighter.
+      </p>
+      
       </td>
     </tr>
   </table>

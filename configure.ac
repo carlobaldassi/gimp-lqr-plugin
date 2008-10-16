@@ -137,7 +137,7 @@ po/Makefile.in
 help/Makefile
 help/en/Makefile
 help/it/Makefile
-help/es_ES/Makefile
+help/ru/Makefile
 help/images/Makefile
 ])
 

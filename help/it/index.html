@@ -37,6 +37,10 @@
 	  devono essere preservate e quali ignorate (o rimosse).
 	  </p>
 	  <p>
+	  Si veda anche <a href="#seam_carving">Appendice: La tecnica del <i>seam carving</i></a> alla fine di questa
+	  pagina per un'introduzione ai concetti su cui si basa questa tecnica.
+	  </p>
+	  <p>
 	  Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo.
 	  Può anche essere applicato a più livelli di un immagine attraverso il plugin
 	  <i>"Filtra tutti i livelli"</i> o usando il GIMP Animation Package per l'editing video.
@@ -219,9 +223,9 @@
 		  <dd>
 			  Specifica se creare un nuovo livello che mostra la mappa delle linee d'azione
 			  (che sono le parti dell'immagine che vengono eliminate, se si restringe,
-			  o gonfiate, se si allarga).
-			  La gamma dei colori delle linee può essere impostata manualmente tramite i due
-			  pulsanti sulla destra.
+			  o moltiplicate, se si allarga).
+			  Se questa opzione è selezionata, alla sua destra compaiono due pulsanti che
+			  permettono di stabilire le gamma dei colori da usare per le linee.
 			  Le linee sono calcolate sull'immagine originale in base alla necessità
 			  (per es. ne saranno calcolate 100 se si sta restringendo o allargando
 			  il livello di 100 pixel); le aree rimanenti restano trasparenti.
@@ -361,7 +365,10 @@
 		  In quest'ultimo caso, la finestra di dialogo del liquid rescale plugin vi verrà
 		  presentata due volte, una per il primo frame e una per l'ultimo: queste impostano
 		  i valori estremi per tutti i parametri graduali (come le dimensioni, le intensità,
-		  la rigidità ecc.), e valori intermedî di questi verranno usati per i frames intermedî.
+		  la rigidità ecc.), e valori intermedî di questi verranno usati per i frames intermedî
+		  (per esempio, impostando a 100% la larghezza nel primo frame e 110% nell'ultimo, e
+		  supponendo che i frames in tutto siano 11, i frames intermedî avranno larghezza
+		  101%, 102%, 103% e così via..
 		  Tutte le opzioni non graduali, invece, come l'ordine di ridimensionamento, il
 		  nome dei livelli ausiliarî ecc., vengono prese dell'<u>ultima</u> finestra di dialogo
 		  per i livelli intermedî.
@@ -377,6 +384,57 @@
 		  tuttavia, incontrerete dei problemi in questo caso se usate dei livelli ausiliarî come
 		  maschere, poiché il plugin viene applicato anche a questi.
 	</p>
+
+	<h2>Appendice: La tecnica del <i>seam carving</i></h2><a name="seam_carving"></a>
+	<p>
+		Il funzionamento del plugin si basa sulla ricerca dei cosiddetti "seams", o "linee d'azione" di un'immagine,
+		ovvero delle linee continue che attraversano a zig-zag tutta l'immagine ta sopra a sotto (nel caso di linee
+		d'azione "verticali"), o da sinistra a destra (per le linee d'azione orizzontali). Se una di queste linee
+		d'azione, una di quelle verticali poniamo, viene rimossa dall'immagine (l'operazione che prende il nome di
+		"carving"), la larghezza dell'immagine si riduce di un pixel. Rimuovendo linee d'azione orizzontali si riduce
+		invece l'altezza. Iterando queste operazioni (cioè la ricerca di una linea d'azione e la sua rimozione),
+		l'immagine può essere ridotta a piacimento. L'insieme di tutte le linee d'azione, prese nell'ordine in cui
+		sono state applicate, costituisce una cosiddetta "mappa delle linee d'azione".
+	</p>
+	<p>
+		L'operazione opposta al carving, cioè l'<i>inserimento</i> di linee d'azione addizionali accanto a quelle
+		che ha trovato l'algoritmo, si possono invece allargare le immagini. In tal caso, il significato della mappa
+		delle linee d'azione è invertito.
+	</p>
+	<p>
+		Per opter ottenere buoni risultati con questa tecnica, la questione principale è di scegliere come individuare
+		le linee d'azione più adatte per l'inserimento o la rimozione. Se lo scopo del ridimensionmento è semplicemente
+		quello di modificare le proporzioni di un'immagine senza alterarne troppo i contenuti, per esempio, allora
+		le linee d'azione "buone" saranno quelle che non attraversano parti importanti dell'immagine, passando piuttosto
+		sullo sfondo.
+	</p>
+	<p>
+		Per default, il plugin cerca di trovare le linee che attraversano le aree a minore contrasto (la specificazione
+		esatta di questo puno avviene tramite la scelta della funzione gradiente nella tab <i>"Avanzate"</i>).
+		Perciò, ad ogni pixel dell'immagine viene associato un cosiddetto "valore energetico": più è elevato il
+		contrasto, più è alta l'energia, e le linee d'azione tendono ad evitare le aree con alta energia.
+	</p>
+	<p>
+		Dal momento che, in molti casi, il semplice modello basato sul solo contrasto non è ottimale, è possibile
+		aggiungere dei termini all'energia di alcune aree e specificare quali dovrebbero avere un'energia maggiore
+		del normale (usando una maschera per la preservazione) e quali una minore (usando una maschera per
+		l'eliminazione). In pratica quindi in questo modo si possono controllare le linee d'azione e quindi tutto il
+		processo di riscalatura.
+	</p>
+	<p>
+		Le maschere per la rigidità funzionano in modo simile, ma la quantità di energia aggiuntiva che introduce
+		non dipende solamente dal valore associato ad ogni pixel, ma anche de quanto sono dritte le linee d'azione che
+		dovrebbero attraversare quel pixel.
+	</p>
+	<p>
+		In conclusione, per farsi un'idea intuitiva del processo, si consideri che le linee d'azione cercano di trovare
+		la via che gli permetta di raggiungere la parte opposta attraverando le zone ad energia minore; le maschere
+		per la preservazione hanno l'effetto di introdurre delle barriere che, se abbastanza alte, possono deviare
+		le linee d'azione e respingerle, mentre le maschere per l'eliminazione sono come vallate, che al contrario
+	        attraggono le linee d'azione. Le maschere per la rigidità hanno invece l'effetto di aggiungere delle
+		barriere ai lati delle linee d'azione, in modo da renderle più dritte.
+	</p>
+	
 	</td>
       </tr>
     </table>
