@@ -1,3 +1,20 @@
+Version 0.5.0 :
+ 
+* Core
+  * Faster engine, lower memory requirements
+  * Introduced rigidity masks
+  * Added GAP support
+  * Introduced left-right/top-bottom balance
+
+* Interface
+  * Ignore discard masks when enlarging
+  * Added reset and revert to last used values
+    buttons for the size, and general reset
+  * The dialog now comes up with the last used
+    values for the size
+  * Added info icons
+  * Added russian help page
+
 Version 0.4.0 :
  
 * Core
