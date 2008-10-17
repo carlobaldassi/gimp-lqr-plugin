@@ -789,10 +789,10 @@ callback_size_changed (GtkWidget * size_entry, gpointer data)
     }
   if (new_height != unfixed_height)
     {
-      callback_set_disc_warning (NULL, data);
       gimp_size_entry_set_refval (GIMP_SIZE_ENTRY (size_entry), 1,
                                   new_height);
     }
+  callback_set_disc_warning (NULL, data);
 }
 
 static void
@@ -809,7 +809,6 @@ static void
 callback_oper_mode_changed (GtkWidget * oper_mode_combo, gpointer data)
 {
   gint mode;
-  printf("mode changed!\n"); fflush(stdout);
   PreviewData *p_data = PREVIEW_DATA (data);
   gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (oper_mode_combo), &mode);
   p_data->vals->oper_mode = mode;

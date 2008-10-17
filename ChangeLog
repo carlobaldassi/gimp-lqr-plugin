@@ -1,6 +1,8 @@
 2008-10-17 Carlo Baldassi <carlobaldassi@gmail.com>
 	* bugfix: forbid going below 50% of original size
 	  in ``LqR+LqR back'' mode
+	* bugfix: enforced limits in render.c to prevent
+	  crashes in noninteractive mode
 2008-10-14 Carlo Baldassi <carlobaldassi@gmail.com>
 	* modified : split of interface.c code, some cleanup
 2008-08-03 Carlo Baldassi <carlobaldassi@gmail.com>

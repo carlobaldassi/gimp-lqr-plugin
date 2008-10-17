@@ -174,6 +174,19 @@ render (gint32 image_ID,
   new_width = vals->new_width;
   new_height = vals->new_height;
 
+  new_width = MIN(new_width, old_width * 2 - 1);
+  new_height = MIN(new_height, old_height * 2 - 1);
+
+  switch (vals->oper_mode)
+    {
+      case OPER_MODE_LQRBACK:
+        new_width = MAX(new_width, old_width / 2 + 1);
+        new_height = MAX(new_height, old_height / 2 + 1);
+        break;
+      default:
+        break;
+    }
+
   gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
 
   bpp = gimp_drawable_bpp (drawable->drawable_id);
