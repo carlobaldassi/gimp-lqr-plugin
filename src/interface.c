@@ -60,6 +60,7 @@ static void callback_resetvalues_button (GtkWidget * button, gpointer data);
 static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
 static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
+static void callback_oper_mode_changed (GtkWidget * res_order, gpointer data);
 
 static void callback_out_seams_button (GtkWidget * button, gpointer data);
 static void callback_resize_aux_layers_button_set_sensitive (GtkWidget *
@@ -416,6 +417,11 @@ dialog (gint32 image_ID,
 			    _("LqR + LqR back"), OPER_MODE_LQRBACK, NULL);
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
 				 state->oper_mode);
+  
+  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
+			      state->oper_mode,
+			      G_CALLBACK (callback_oper_mode_changed),
+			      (gpointer) & preview_data);
 
   gtk_box_pack_start (GTK_BOX (hbox), oper_mode_combo_box, TRUE, TRUE, 0);
   gtk_widget_show (oper_mode_combo_box);
@@ -613,8 +619,10 @@ dialog (gint32 image_ID,
 	ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0));
       state->new_height =
 	ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 1));
+      /*
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
 				     &(state->oper_mode));
+                                     */
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
 				     &(state->grad_func));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
@@ -754,14 +762,36 @@ callback_set_disc_warning (GtkWidget * dummy, gpointer data)
 static void
 callback_size_changed (GtkWidget * size_entry, gpointer data)
 {
+  gint unfixed_width, unfixed_height;
   gint new_width, new_height;
   PreviewData *p_data = PREVIEW_DATA (data);
   new_width =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 0));
   new_height =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 1));
+  unfixed_width = new_width;
+  unfixed_height = new_height;
+  switch (p_data->vals->oper_mode)
+    {
+      case OPER_MODE_LQRBACK:
+        new_width = MAX(new_width, ROUND(p_data->old_width / 2) + 1);
+        new_height = MAX(new_height, ROUND(p_data->old_height / 2) + 1);
+        break;
+      default:
+        break;
+    }
   p_data->vals->new_width = new_width;
   p_data->vals->new_height = new_height;
+  if (new_width != unfixed_width)
+    {
+      gimp_size_entry_set_refval (GIMP_SIZE_ENTRY (size_entry), 0,
+                                  new_width);
+    }
+  if (new_height != unfixed_height)
+    {
+      gimp_size_entry_set_refval (GIMP_SIZE_ENTRY (size_entry), 1,
+                                  new_height);
+    }
   callback_set_disc_warning (NULL, data);
 }
 
@@ -773,6 +803,16 @@ callback_res_order_changed (GtkWidget * res_order, gpointer data)
   gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order), &order);
   p_data->vals->res_order = order;
   callback_set_disc_warning (NULL, data);
+}
+
+static void
+callback_oper_mode_changed (GtkWidget * oper_mode_combo, gpointer data)
+{
+  gint mode;
+  PreviewData *p_data = PREVIEW_DATA (data);
+  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (oper_mode_combo), &mode);
+  p_data->vals->oper_mode = mode;
+  callback_size_changed(p_data->coordinates, data);
 }
 
 static void
