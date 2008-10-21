@@ -1,60 +1,99 @@
+2008-10-21 Carlo Baldassi <carlobaldassi@gmail.com>
+
+	* modified : use expanders and scroll widgets in
+	  Advanced tab
+	* new : added enlargement step selector
+	* modified : removed size limits
+	  
+
 2008-10-17 Carlo Baldassi <carlobaldassi@gmail.com>
-	* bugfix: forbid going below 50% of original size
+
+	* bugfix : forbid going below 50% of original size
 	  in ``LqR+LqR back'' mode
-	* bugfix: enforced limits in render.c to prevent
+	* bugfix : enforced limits in render.c to prevent
 	  crashes in noninteractive mode
+
 2008-10-14 Carlo Baldassi <carlobaldassi@gmail.com>
+
 	* modified : split of interface.c code, some cleanup
+
 2008-08-03 Carlo Baldassi <carlobaldassi@gmail.com>
+
 	* new : info icons for newly created masks
+
 2008-08-01 Carlo Baldassi <carlobaldassi@gmail.com>
+
 	* new : discard mask is ignored by default when
 	  enlarging, added option + warning icon
 	* new : added overall reset button
+
 2008-07-31 Carlo Baldassi <carlobaldassi@gmail.com>
+
 	* bugfix : fixed memory leaks when reading masks
 	* bugfix : protected a memory call when writing
 	  seams
+
 2008-07-29 Carlo Baldassi <carlobaldassi@gmail.com>
+
 	* new : added GAP support for animations
+
 2008-07-28 Carlo Baldassi <carlobaldassi@gmail.com>
+
 	* new : added reset and revert buttons
 	* modified : now retains last used width and height
 	  if operating on the same layer
 	* bugfix : round width and height values
+
 2008-02-20 Carlo Baldassi <carlobaldassi@gmail.com>
+
 	* new : introduced the rigidity mask interface
+
 2008-01-14 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* bugfix : fixed configure.ac
+
 2007-12-07 Carlo Baldassi <carlobaldassi@yahoo.it>
+
         * modified : stripped the library
+
 2007-11-26 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* modified : reorganized code in order to completely separate
 	  the UI from the carving library
+
 2007-11-20 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* new : seam max step option
 	* new : auto size button for object removal
 	* new : added new operational modes (LqR back, scale back)
 	* new : added rescale order option
 	* bugfix : layer validity check is now working in GIMP 2.4
 	* bugfix : all layers are now transposed correctly
+
 2007-11-09 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* modified : global optimization of the core (removed
 	  the LqrData class, turned r->raw into an array of ints, various
 	  others)
 	* modified : added PANGO_ELLIPSIZE_START to the combo boxes
+
 2007-11-07 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* modified : call to gimp_layer_set_lock_alpha()
 	  instead of deprecated gimp_layer_set_preserve_trans()
 	* modified : added tile cache to speed up input/output
 	  operations
+
 2007-10-14 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* bugfix : pres./disc. layer are now reused when running with
 	  last values
 	* bugfix : progress_update called less often
 	* bugfix : lqr_raster_resize can be called multiple times again
 	* modified : re-organized source files
+
 2007-10-09 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* modified : faster core engine (use pointers buffer
 	  instead of just cursors)
 	* bugfix : different transparency handling in
@@ -72,17 +111,20 @@
 	* removed : update energy option (now is always used)
 
 2007-10-04 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* modfied : dialog with notepad (thanks Alexandre!)
 	* new : output to new layer option
 	* modfied : floating selection becomes a layer
 	* bugfix : lock alpha is disabled (but with deprecated syntax)
 
 2007-09-29 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* bugfix : memory leak in dialog (also faster now)
 	* bugfix : more sensible "strength" scale for features
 	* new (help): tooltips
 
 2007-09-25 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* added a proto-preview
 	* added sensitivity to interface elements
 	* hiding of advanced options
@@ -94,10 +136,12 @@
 	* added some more progress indicators
 
 2007-09-12 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* added preserve + discard features
 	* moved the plugin from "Image" to "Layer" menu
 
 2007-09-11 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* selctions are now saved as channels and then cleared
 	* floating selections are immediately applied
 	* quick masks and channels are ignored
@@ -105,15 +149,18 @@
 	* updated help page
 
 2007-09-10 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* faster update in mmap
 	* faster build_vpath
 	* now deals with masks
 	* improved interface (added some options)
 
 2007-09-07 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* improved interface
 
 2007-09-05 Carlo Baldassi <carlobaldassi@yahoo.it>
+
 	* undo group created
 	* better external_writeimage function
 	* introduced bias on energy

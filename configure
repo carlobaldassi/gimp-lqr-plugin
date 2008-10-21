@@ -5868,7 +5868,7 @@ fi
 GIMP_LIBDIR=`$PKG_CONFIG --variable=gimplibdir gimp-2.0`
 
 
-LQR_REQUIRED_VERSION=0.2.0
+LQR_REQUIRED_VERSION=0.3.0
 
 
 pkg_failed=no

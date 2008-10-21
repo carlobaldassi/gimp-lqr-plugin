@@ -61,6 +61,7 @@ static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
 static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
 static void callback_oper_mode_changed (GtkWidget * res_order, gpointer data);
+static void callback_expander_changed (GtkWidget * expander, gpointer data);
 
 static void callback_out_seams_button (GtkWidget * button, gpointer data);
 static void callback_resize_aux_layers_button_set_sensitive (GtkWidget *
@@ -311,9 +312,9 @@ dialog (gint32 image_ID,
     gimp_coordinates_new (unit, "%p", TRUE, TRUE, SPIN_BUTTON_WIDTH,
 			  GIMP_SIZE_ENTRY_UPDATE_SIZE, ui_state->chain_active,
 			  TRUE, _("Width:"), state->new_width, xres, 2,
-			  orig_width * 2 - 1, 0, orig_width,
+			  GIMP_MAX_IMAGE_SIZE, 0, orig_width,
 			  _("Height:"), state->new_height, yres, 2,
-			  orig_height * 2 - 1, 0, orig_height);
+			  GIMP_MAX_IMAGE_SIZE, 0, orig_height);
 
   if (layer_ID != ui_state->last_layer_ID)
     {
@@ -762,36 +763,14 @@ callback_set_disc_warning (GtkWidget * dummy, gpointer data)
 static void
 callback_size_changed (GtkWidget * size_entry, gpointer data)
 {
-  gint unfixed_width, unfixed_height;
   gint new_width, new_height;
   PreviewData *p_data = PREVIEW_DATA (data);
   new_width =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 0));
   new_height =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 1));
-  unfixed_width = new_width;
-  unfixed_height = new_height;
-  switch (p_data->vals->oper_mode)
-    {
-      case OPER_MODE_LQRBACK:
-        new_width = MAX(new_width, ROUND(p_data->old_width / 2) + 1);
-        new_height = MAX(new_height, ROUND(p_data->old_height / 2) + 1);
-        break;
-      default:
-        break;
-    }
   p_data->vals->new_width = new_width;
   p_data->vals->new_height = new_height;
-  if (new_width != unfixed_width)
-    {
-      gimp_size_entry_set_refval (GIMP_SIZE_ENTRY (size_entry), 0,
-                                  new_width);
-    }
-  if (new_height != unfixed_height)
-    {
-      gimp_size_entry_set_refval (GIMP_SIZE_ENTRY (size_entry), 1,
-                                  new_height);
-    }
   callback_set_disc_warning (NULL, data);
 }
 
@@ -812,7 +791,6 @@ callback_oper_mode_changed (GtkWidget * oper_mode_combo, gpointer data)
   PreviewData *p_data = PREVIEW_DATA (data);
   gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (oper_mode_combo), &mode);
   p_data->vals->oper_mode = mode;
-  callback_size_changed(p_data->coordinates, data);
 }
 
 static void
@@ -876,6 +854,13 @@ callback_resize_aux_layers_button_set_sensitive (GtkWidget * button,
       gtk_widget_set_sensitive ((GtkWidget *) (pd_status->button), FALSE);
     }
 }
+
+static void callback_expander_changed (GtkWidget * expander, gpointer data)
+{
+  gboolean * b_data = (gboolean*) data;
+  *b_data = !gtk_expander_get_expanded(GTK_EXPANDER(expander));
+}
+
 
 /* Refresh */
 
@@ -1506,6 +1491,7 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   gint num_extra_layers;
   GtkWidget *label;
   GtkWidget *thispage;
+  GtkWidget *scrollwindow;
   gchar rigmask_inactive_tip_string[MAX_STRING_SIZE];
   NewLayerData *new_rigmask_layer_data;
   GtkWidget *rigmask_frame_event_box1;
@@ -1513,13 +1499,15 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *rigmask_combo_event_box;
   GtkTooltips *rigmask_frame_tips;
   gint32 old_layer_ID;
-  GtkWidget *frame;
+  GtkWidget *seams_control_expander;
+  GtkWidget *operations_expander;
   GtkWidget *rigmask_vbox;
   GtkWidget *rigmask_vbox2;
   GtkWidget *hbox;
   GtkWidget *rigmask_button;
   GtkWidget *rigmask_new_button;
   GtkWidget *rigmask_info_image;
+  GtkWidget *operations_vbox;
   GtkWidget *no_disc_on_enlarge_button;
   GtkWidget *table;
   gint row;
@@ -1559,14 +1547,30 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
 
   thispage = gtk_vbox_new (FALSE, 12);
   gtk_container_set_border_width (GTK_CONTAINER (thispage), 12);
-  notebook_data->advanced_page = thispage;
+  //notebook_data->advanced_page = thispage;
+  gtk_widget_show (thispage);
+
+  scrollwindow = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwindow), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrollwindow), thispage);
+
+  notebook_data->advanced_page = scrollwindow;
 
 
   /*  Seams control  */
 
-  frame = gimp_frame_new (_("Seams control"));
-  gtk_box_pack_start (GTK_BOX (thispage), frame, FALSE, FALSE, 0);
-  gtk_widget_show (frame);
+  /* Please keep the <b> and </b> tags in translations */
+  seams_control_expander = gtk_expander_new (_("<b>Seams control</b>"));
+  gtk_expander_set_use_markup (GTK_EXPANDER(seams_control_expander), TRUE);
+  //gtk_expander_set_expanded (GTK_EXPANDER(seams_control_expander), ui_state->seams_control_expanded);
+  gtk_expander_set_expanded (GTK_EXPANDER(seams_control_expander), TRUE);
+  g_signal_connect (seams_control_expander, "activate",
+		    G_CALLBACK
+		    (callback_expander_changed),
+		    (gpointer) (&ui_state->seams_control_expanded));
+
+  gtk_box_pack_start (GTK_BOX (thispage), seams_control_expander, FALSE, FALSE, 0);
+  gtk_widget_show (seams_control_expander);
 
   snprintf (rigmask_inactive_tip_string, MAX_STRING_SIZE,
 	    _("Extra layers are needed to be used as rigidity masks.\n"
@@ -1578,7 +1582,7 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
 
 
   rigmask_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_add (GTK_CONTAINER (frame), rigmask_vbox);
+  gtk_container_add (GTK_CONTAINER (seams_control_expander), rigmask_vbox);
   gtk_widget_show (rigmask_vbox);
 
   table = gtk_table_new (3, 2, FALSE);
@@ -1786,7 +1790,7 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   /* Gradient */
 
   gradient_event_box = gtk_event_box_new ();
-  gtk_box_pack_start (GTK_BOX (thispage), gradient_event_box, FALSE, FALSE,
+  gtk_box_pack_start (GTK_BOX (rigmask_vbox), gradient_event_box, FALSE, FALSE,
 		      0);
   gtk_widget_show (gradient_event_box);
 
@@ -1818,10 +1822,52 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (hbox), grad_func_combo_box, TRUE, TRUE, 0);
   gtk_widget_show (grad_func_combo_box);
 
+
+  /* Operations control */
+
+  /* Please keep the <b> and </b> tags in translations */
+  operations_expander = gtk_expander_new (_("<b>Operations control</b>"));
+  gtk_expander_set_use_markup (GTK_EXPANDER(operations_expander), TRUE);
+  //gtk_expander_set_expanded (GTK_EXPANDER(operations_expander), ui_state->operations_expanded);
+  gtk_expander_set_expanded (GTK_EXPANDER(operations_expander), TRUE);
+  g_signal_connect (operations_expander, "activate",
+		    G_CALLBACK
+		    (callback_expander_changed),
+		    (gpointer) (&ui_state->operations_expanded));
+
+  gtk_box_pack_start (GTK_BOX (thispage), operations_expander, FALSE, FALSE, 0);
+  gtk_widget_show (operations_expander);
+
+  operations_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER(operations_expander), operations_vbox);
+  gtk_widget_show (operations_vbox);
+
+  /* Enlargement step */
+  
+  table = gtk_table_new (3, 1, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 4);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
+  gtk_box_pack_start (GTK_BOX (operations_vbox), table, FALSE, FALSE, 0);
+  gtk_widget_show (table);
+
+  row = 0;
+
+  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
+			      _("Max enlargement per step:"), SCALE_WIDTH,
+			      SPIN_BUTTON_WIDTH, state->enl_step, 100.1,
+			      200, 1, 10, 1, TRUE, 0, 0,
+			      _("When enlarging beyond the value set here "
+				"the rescaling will be performed in multiple steps."), NULL);
+
+  g_signal_connect (adj, "value_changed",
+		    G_CALLBACK (gimp_float_adjustment_update),
+		    &state->enl_step);
+
   /* Resize order */
 
   res_order_event_box = gtk_event_box_new ();
-  gtk_box_pack_start (GTK_BOX (thispage), res_order_event_box, FALSE, FALSE,
+  gtk_box_pack_start (GTK_BOX (operations_vbox), res_order_event_box, FALSE, FALSE,
 		      0);
   gtk_widget_show (res_order_event_box);
 
@@ -1863,7 +1909,7 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
 			    "an image enlargment (which normally is the best choice)"),
 			   NULL);
 
-  gtk_box_pack_start (GTK_BOX (thispage), no_disc_on_enlarge_button, FALSE,
+  gtk_box_pack_start (GTK_BOX (operations_vbox), no_disc_on_enlarge_button, FALSE,
 		      FALSE, 0);
   gtk_widget_show (no_disc_on_enlarge_button);
 
@@ -1879,5 +1925,6 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   callback_set_disc_warning (no_disc_on_enlarge_button,
 			     (gpointer) & preview_data);
 
-  return thispage;
+  //return thispage;
+  return scrollwindow;
 }

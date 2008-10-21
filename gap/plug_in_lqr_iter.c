@@ -95,6 +95,7 @@ gint p_plug_in_lqr_iter(GimpRunMode run_mode, gint32 total_steps, gdouble curren
     p_delta_gfloat(&buf.rigidity, buf_from.rigidity, buf_to.rigidity, total_steps, current_step);
     buf.rigmask_layer_ID = buf_to.rigmask_layer_ID;
     p_delta_gint(&buf.delta_x, buf_from.delta_x, buf_to.delta_x, total_steps, current_step);
+    p_delta_gfloat(&buf.enl_step, buf_from.enl_step, buf_to.enl_step, total_steps, current_step);
     buf.resize_aux_layers = buf_to.resize_aux_layers;
     buf.resize_canvas = buf_to.resize_canvas;
     buf.new_layer = buf_to.new_layer;

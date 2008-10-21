@@ -46,6 +46,7 @@ typedef struct
   gfloat rigidity;
   gint32 rigmask_layer_ID;
   gint delta_x;
+  gfloat enl_step;
   gboolean resize_aux_layers;
   gboolean resize_canvas;
   gboolean new_layer;

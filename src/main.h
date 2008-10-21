@@ -56,6 +56,8 @@ typedef struct
   gint last_used_width;
   gint last_used_height;
   gint32 last_layer_ID;
+  gboolean seams_control_expanded;
+  gboolean operations_expanded;
 } PlugInUIVals;
 
 #define PLUGIN_UI_VALS(data) ((PlugInUIVals*)data)

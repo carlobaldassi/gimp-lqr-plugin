@@ -58,6 +58,7 @@ const PlugInVals default_vals = {
   0,                            /* rigidity coeff */
   0,				/* rigmask layer ID */
   1,                            /* delta x */
+  150,				/* enl step */
   TRUE,                         /* resize aux layers */
   TRUE,                         /* resize canvas */
   FALSE,                        /* output on a new layer */
@@ -98,6 +99,8 @@ const PlugInUIVals default_ui_vals = {
   -1,           /* last used width */
   -1,           /* last used height */
   0,            /* last layer */
+  FALSE,	/* seams control expanded */
+  FALSE,	/* operations expanded */
 };
 
 static PlugInVals vals;
@@ -135,6 +138,7 @@ static void query (void)
     {GIMP_PDB_FLOAT, "rigidity", "Rigidity coefficient"},
     {GIMP_PDB_INT32, "rigidity_mask_layer", "Layer used as rigidity mask"},
     {GIMP_PDB_INT32, "delta_x", "max displacement of seams"},
+    {GIMP_PDB_FLOAT, "enl_step", "enlargment step (ratio)"},
     {GIMP_PDB_INT32, "resize_aux_layers",
      "Whether to resize auxiliary layers"},
     {GIMP_PDB_INT32, "resize_canvas", "Whether to resize canvas"},
@@ -261,21 +265,22 @@ run (const gchar * name,
               vals.pres_coeff = param[6].data.d_int32;
               /* vals.disc_layer_ID = param[7].data.d_int32; */
               vals.disc_coeff = param[8].data.d_int32;
-              vals.rigidity = param[9].data.d_int32;
+              vals.rigidity = param[9].data.d_float;
               /* vals.rigmask_layer_ID = param[10].data.d_int32; */
               vals.delta_x = param[11].data.d_int32;
-              vals.resize_aux_layers = param[12].data.d_int32;
-              vals.resize_canvas = param[13].data.d_int32;
-              vals.new_layer = param[14].data.d_int32;
-              vals.output_seams = param[15].data.d_int32;
-              vals.grad_func = param[16].data.d_int32;
-              vals.res_order = param[17].data.d_int32;
-              vals.mask_behavior = param[18].data.d_int32;
-              vals.oper_mode = param[19].data.d_int32;
-              vals.no_disc_on_enlarge = param[20].data.d_int32;
-              g_strlcpy(vals.pres_layer_name, param[21].data.d_string, VALS_MAX_NAME_LENGTH);
-              g_strlcpy(vals.disc_layer_name, param[22].data.d_string, VALS_MAX_NAME_LENGTH);
-              g_strlcpy(vals.rigmask_layer_name, param[23].data.d_string, VALS_MAX_NAME_LENGTH);
+              vals.enl_step = param[12].data.d_float;
+              vals.resize_aux_layers = param[13].data.d_int32;
+              vals.resize_canvas = param[14].data.d_int32;
+              vals.new_layer = param[15].data.d_int32;
+              vals.output_seams = param[16].data.d_int32;
+              vals.grad_func = param[17].data.d_int32;
+              vals.res_order = param[18].data.d_int32;
+              vals.mask_behavior = param[19].data.d_int32;
+              vals.oper_mode = param[20].data.d_int32;
+              vals.no_disc_on_enlarge = param[21].data.d_int32;
+              g_strlcpy(vals.pres_layer_name, param[22].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.disc_layer_name, param[23].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.rigmask_layer_name, param[24].data.d_string, VALS_MAX_NAME_LENGTH);
               vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
               vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
               vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
