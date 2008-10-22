@@ -145,7 +145,7 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
   gint update_step;
 
   gimp_progress_init (_("Applying changes..."));
-  update_step = MAX ((r->h - 1) / 20, 1);
+  update_step = MAX ((lqr_carver_get_height(r) - 1) / 20, 1);
 
   layer_ID = drawable->drawable_id;
 
@@ -157,7 +157,7 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
 
   while (lqr_carver_scan_line (r, &y, &out_line))
     {
-      if (!r->transposed)
+      if (lqr_carver_scan_by_row(r))
         {
           gimp_pixel_rgn_set_row (&rgn_out, out_line, 0, y, w);
         }
@@ -168,7 +168,7 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
 
       if (y % update_step == 0)
         {
-          gimp_progress_update ((gdouble) y / (r->h - 1));
+          gimp_progress_update ((gdouble) y / (lqr_carver_get_height(r) - 1));
         }
 
     }
@@ -205,10 +205,10 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
   col_start = VMAP_FUNC_ARG (data)->colour_start;
   col_end = VMAP_FUNC_ARG (data)->colour_end;
 
-  w = vmap->width;
-  h = vmap->height;
-  buffer = vmap->buffer;
-  depth = vmap->depth;
+  w = lqr_vmap_get_width(vmap);
+  h = lqr_vmap_get_height(vmap);
+  buffer = lqr_vmap_get_data(vmap);
+  depth = lqr_vmap_get_depth(vmap);
 
   gimp_progress_init (_("Drawing seam map..."));
   update_step = MAX ((h - 1) / 20, 1);
@@ -298,22 +298,15 @@ lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
   int x, y;
   //double e;
 
-  if (!r->transposed)
-    {
-      /* external_resize(r->w, r->h); */
-    }
-  else
-    {
-      /* external_resize(r->h, r->w); */
-    }
+  /* external_resize(r->w, r->h); */
 
   lqr_carver_scan_reset (r);
-  for (y = 1; y <= r->h; y++)
+  for (y = 1; y <= lqr_carver_get_height(r); y++)
     {
-      for (x = 1; x <= r->w; x++)
+      for (x = 1; x <= lqr_carver_get_width(r); x++)
         {
           //e = r->en[r->c->now];
-          if (!r->transposed)
+          if (lqr_carver_scan_by_row(r))
             {
               /* external_write(x, y, e, e, e); */
             }

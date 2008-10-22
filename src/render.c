@@ -230,9 +230,9 @@ render (gint32 image_ID,
 
   lqr_progress = lqr_progress_new ();
   MEMCHECK (lqr_progress != NULL);
-  lqr_progress->init = (LqrProgressFuncInit) gimp_progress_init;
-  lqr_progress->update = (LqrProgressFuncUpdate) gimp_progress_update;
-  lqr_progress->end = (LqrProgressFuncEnd) my_progress_end;
+  lqr_progress_set_init (lqr_progress, (LqrProgressFuncInit) gimp_progress_init);
+  lqr_progress_set_update (lqr_progress, (LqrProgressFuncUpdate) gimp_progress_update);
+  lqr_progress_set_end (lqr_progress, (LqrProgressFuncEnd) my_progress_end);
   lqr_progress_set_init_width_message (lqr_progress, _("Resizing width..."));
   lqr_progress_set_init_height_message (lqr_progress,
                                         _("Resizing height..."));
