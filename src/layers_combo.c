@@ -174,12 +174,31 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   gint32 layer_ID;
   NewLayerData *nl_data = NEW_LAYER_DATA (data);
   PreviewData *p_data = nl_data->preview_data;
+  GimpImageType image_type;
+  GimpRGB *fg_colour;
+  GimpRGB grey;
+
+
+  switch (gimp_image_base_type (p_data->image_ID))
+    {
+      case GIMP_RGB:
+        image_type = GIMP_RGBA_IMAGE;
+        fg_colour = &(nl_data->colour);
+        break;
+      case GIMP_GRAY:
+        image_type = GIMP_GRAYA_IMAGE;
+        gimp_rgb_set(&grey, 1.0 / 3, 1.0 / 3, 1.0 / 3);
+        fg_colour = &grey;
+        break;
+      default:
+        return;
+    }
 
   gimp_image_undo_group_start (p_data->image_ID);
   layer_ID =
     gimp_layer_new (p_data->image_ID, nl_data->name,
 		    p_data->old_width, p_data->old_height,
-		    GIMP_RGBA_IMAGE, 50, GIMP_NORMAL_MODE);
+		    image_type, 50, GIMP_NORMAL_MODE);
   gimp_image_add_layer (p_data->image_ID, layer_ID, -1);
   gimp_drawable_fill (layer_ID, GIMP_TRANSPARENT_FILL);
   gimp_layer_translate (layer_ID, p_data->x_off, p_data->y_off);
@@ -187,7 +206,7 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   *(nl_data->layer_ID) = layer_ID;
   *(nl_data->status) = TRUE;
   context_calls++;
-  gimp_context_set_foreground (&(nl_data->colour));
+  gimp_context_set_foreground (fg_colour);
 
   pres_info_show = FALSE;
   disc_info_show = FALSE;
