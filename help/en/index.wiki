@@ -13,7 +13,7 @@ The plugin only works on whole layers, if a selection is present it is saved to 
 
 ++ User interface description
 
-[[image dialog1.png]]
+[[image dialog1.jpg]]
 
 +++ Select new width and height
 
@@ -60,7 +60,7 @@ Note that this option is only suitable for naïve object removals, and it may fa
 
 +++ Output
 
-[[image dialog2.png]]
+[[image dialog2.jpg]]
 
 This tab has a number of options related to the output of the plugin.
 
@@ -71,7 +71,7 @@ This tab has a number of options related to the output of the plugin.
 
 +++ Advanced
 
-[[image dialog3.png]]
+[[image dialog3.jpg]]
 
 This tab has some options which can be used to tweak the plugin behavior.
 

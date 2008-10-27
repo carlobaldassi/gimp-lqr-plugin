@@ -13,7 +13,7 @@ Il plugin opera sempre su interi livelli; se una selezione è presente, è salva
 
 ++ Descrizione dell'interfaccia utente
 
-[[image dialog1_it.png]]
+[[image dialog1_it.jpg]]
 
 +++ Selezionare le nuove dimensioni
 
@@ -58,7 +58,7 @@ Si noti che questa opzione è adeguata solamente per operazioni di rimozione ele
 
 +++ Output
 
-[[image dialog2_it.png]]
+[[image dialog2_it.jpg]]
 
 Questa linguetta contiene alcune opzioni riguardo all'output del plugin.
 * **Scrivi su un nuovo livello**. Specifica se il risultato del ridimensionamento deve essere scritto su un nuovo livello. Per default è disattivata.
@@ -68,7 +68,7 @@ Questa linguetta contiene alcune opzioni riguardo all'output del plugin.
 
 +++ Avanzato
 
-[[image dialog3_it.png]]
+[[image dialog3_it.jpg]]
 
 Questa linguetta contiene alcune opzioni che permettono un controllo avanzato dell'algoritmo di ridimensionamento.
 
