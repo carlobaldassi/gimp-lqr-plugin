@@ -142,7 +142,7 @@ render (gint32 image_ID,
       gimp_image_unset_active_channel (image_ID);
     }
 
-  if (vals->output_seams)
+  if ((vals->output_seams) && (gimp_image_base_type(image_ID) != GIMP_RGB))
     {
       gimp_image_convert_rgb (image_ID);
     }

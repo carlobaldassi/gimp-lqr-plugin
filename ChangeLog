@@ -1,3 +1,7 @@
+2008-10-27 Carlo Baldassi <carlobaldassi@gmail.com>
+
+	* bugfix : only convert to RGB if needed
+
 2008-10-24 Carlo Baldassi <carlobaldassi@gmail.com>
 
 	* bugfix : fixed some problems with new masks
