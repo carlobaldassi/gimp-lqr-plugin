@@ -190,15 +190,15 @@ target_alias = @target_alias@
 helpdatadir = $(DATADIR)/help/images
 helpdata_DATA = \
 	wilber.png \
-	dialog1.png \
-	dialog2.png \
-	dialog3.png \
-	dialog1_it.png \
-	dialog2_it.png \
-	dialog3_it.png \
-	dialog1_ru.png \
-	dialog2_ru.png \
-	dialog3_ru.png
+	dialog1.jpg \
+	dialog2.jpg \
+	dialog3.jpg \
+	dialog1_it.jpg \
+	dialog2_it.jpg \
+	dialog3_it.jpg \
+	dialog1_ru.jpg \
+	dialog2_ru.jpg \
+	dialog3_ru.jpg
 
 EXTRA_DIST = $(helpdata_DATA)
 all: all-am
