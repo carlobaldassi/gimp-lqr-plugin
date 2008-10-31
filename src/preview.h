@@ -64,7 +64,6 @@ typedef struct
   gboolean rigmask_combo_awaked;
   GtkWidget *coordinates;
   GtkWidget *disc_warning_image;
-  gint guess_direction;
 } PreviewData;
 
 #define PREVIEW_DATA(data) ((PreviewData*)data)
