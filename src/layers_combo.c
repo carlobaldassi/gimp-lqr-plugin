@@ -235,7 +235,7 @@ callback_guess_button (GtkWidget * button, gpointer data)
 
   new_width = p_data->old_width;
   new_height = p_data->old_height;
-  switch (p_data->guess_direction)
+  switch (p_data->ui_vals->guess_direction)
     {
     case 0:
       new_width = guess_new_width (button, data);
@@ -259,7 +259,7 @@ callback_guess_direction (GtkWidget * combo, gpointer data)
   PreviewData *p_data = PREVIEW_DATA (data);
 
   gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (combo),
-				 &(p_data->guess_direction));
+				 &(p_data->ui_vals->guess_direction));
 }
 
 gint

@@ -613,17 +613,10 @@ dialog (gint32 image_ID,
       ui_state->chain_active =
 	gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
 				      (coordinates));
-      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX
-				     (disc_toggle_data.guess_dir_combo),
-				     &(ui_state->guess_direction));
       state->new_width =
 	ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0));
       state->new_height =
 	ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 1));
-      /*
-      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
-				     &(state->oper_mode));
-                                     */
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
 				     &(state->grad_func));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
@@ -1462,7 +1455,6 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 				 ui_state->guess_direction);
 
   disc_toggle_data.guess_dir_combo = guess_dir_combo;
-  preview_data.guess_direction = ui_state->guess_direction;
 
   gimp_help_set_help_data (guess_dir_combo,
 			   _("Resizing direction for auto size"), NULL);

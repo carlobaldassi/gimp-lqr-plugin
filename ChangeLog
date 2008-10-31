@@ -1,3 +1,8 @@
+2008-10-31 Carlo Baldassi <carlobaldassi@gmail.com>
+
+	* bugfix : refresh button discarded guess
+	  direction
+
 2008-10-27 Carlo Baldassi <carlobaldassi@gmail.com>
 
 	* bugfix : only convert to RGB if needed
