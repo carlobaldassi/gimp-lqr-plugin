@@ -2,6 +2,7 @@
 
 	* bugfix : refresh button discarded guess
 	  direction
+	* bugfix : cleanup in .po files
 
 2008-10-27 Carlo Baldassi <carlobaldassi@gmail.com>
 
