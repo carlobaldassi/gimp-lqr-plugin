@@ -1,21 +1,24 @@
+# translation of fr.po to Français
 # translation of fr.po to
 # translation of gimp22-lqr-plugin.po to
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Vincent Picavet <vpicavet@gmail.com>, 2007.
+# François Collard <francois.collard@free.fr>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-01 03:12+0100\n"
-"PO-Revision-Date: 2007-11-30 00:26+0100\n"
-"Last-Translator: Vincent Picavet <vpicavet@gmail.com>\n"
-"Language-Team:  <fr@li.org>\n"
+"POT-Creation-Date: 2008-11-20 00:55+0100\n"
+"PO-Revision-Date: 2008-11-15 00:15+0100\n"
+"Last-Translator: François Collard <francois.collard@free.fr>\n"
+"Language-Team: Français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n > 1);\n"
 
 #: ../src/interface.c:211
 msgid "GIMP LiquidRescale Plug-In"
@@ -32,25 +35,27 @@ msgstr "Sélectionner la nouvelle largeur et hauteur"
 
 #: ../src/interface.c:313
 msgid "Width:"
-msgstr "Largeur:"
+msgstr "Largeur :"
 
 #: ../src/interface.c:315
 msgid "Height:"
-msgstr "Hauteur:"
+msgstr "Hauteur :"
 
 #: ../src/interface.c:352
 msgid "Reset width and height to their original values"
-msgstr ""
+msgstr "Restaurer largeur et hauteur d'origine"
 
 #: ../src/interface.c:373
 msgid "Set width and height to the last used values"
-msgstr ""
+msgstr "Largeur et hauteur => dernières valeurs utilisées"
 
 #: ../src/interface.c:400
 msgid ""
 "Here you can choose if you want to transform back the image to its original "
 "size and how to do it"
 msgstr ""
+"Ici vous pouvez choisir de ramener l'image à sa taille originale et par "
+"quelle méthode"
 
 #: ../src/interface.c:409
 msgid "Mode:"
@@ -61,14 +66,12 @@ msgid "LqR only"
 msgstr "LqR seulement"
 
 #: ../src/interface.c:415
-#, fuzzy
 msgid "LqR + scale back"
-msgstr "LqR + redim. vers la taille originale"
+msgstr "LqR + redim."
 
 #: ../src/interface.c:417
-#, fuzzy
 msgid "LqR + LqR back"
-msgstr "LqR + LqR vers la taille d'origine"
+msgstr "LqR + redim. LqR"
 
 #. Output settings page
 #: ../src/interface.c:448
@@ -94,18 +97,16 @@ msgstr ""
 "redimensionné"
 
 #: ../src/interface.c:487
-#, fuzzy
 msgid "Resize auxiliary layers"
-msgstr "Redimensionner les calques de conservation/suppression"
+msgstr "Redimensionner les calques auxiliaires"
 
 #: ../src/interface.c:505
-#, fuzzy
 msgid ""
 "Resize the layers used as features or rigidity masks along with the active "
 "layer"
 msgstr ""
-"Redimensionner les calques utilisés comme masques en même temps que le "
-"calque actif"
+"Redimensionner les calques utilisés comme masques de formes ou de de "
+"rigidité en même temps que le calque actif"
 
 #: ../src/interface.c:512
 msgid "Output the seams"
@@ -187,7 +188,9 @@ msgid ""
 msgstr ""
 "Des calques complémentaires sont nécessaires pour activer la conservation "
 "d'éléments.\n"
-"Vous pouvez en créer un avec le bouton \"Nouveau\" et peindre dessus"
+"Vous pouvez en créer un avec le bouton \"Nouveau\" et peindre dessus, puis "
+"cliquer le bouton \"Actualiser\".\n"
+"Notez que peindre en noir n'a aucun effet"
 
 #: ../src/interface.c:1046
 msgid "Preserve features"
@@ -214,6 +217,8 @@ msgid ""
 "Paint the mask on the newly created layer, then come back to this dialog and "
 "click on the \"Refresh\" button"
 msgstr ""
+"Peindre le masque sur le nouveau calque, puis revenir à ce dialogue et "
+"cliquer sur le boutn \"Actualiser\"."
 
 #: ../src/interface.c:1124
 msgid ""
@@ -251,8 +256,8 @@ msgstr ""
 "Des calques supplémentaires sont nécessaires pour activer la suppression "
 "d'éléments.\n"
 " Vous pouvez en créer un avec le bouton \"Nouveau\" et dessiner dessus, "
-"ensuite pressez le bouton \"Rafraichir\".\n"
-" Notez que peindre en noir n'a aucun effet"
+"ensuite pressez le bouton \"Actualiser\".\n"
+"Notez que peindre en noir n'a aucun effet"
 
 #: ../src/interface.c:1250
 msgid "Discard features"
@@ -274,6 +279,10 @@ msgid ""
 "(If you know what you're doing you can override this behaviour by unchecking "
 "the corrensponding option in the \"Advanced\" tab)"
 msgstr ""
+"Attention : l'information du masque de suppression sera ignorée avec les "
+"réglages actuels.\n"
+"(Si vous savez ce que vous faites, vous pouvez passer outre en décochant "
+"l'option correspondante dans l'onglet \"Avancé\")."
 
 #: ../src/interface.c:1290
 msgid "Creates a new transparent layer ready to be used as a discard mask"
@@ -325,12 +334,12 @@ msgstr "Avancé"
 #: ../src/interface.c:1537
 #, c-format
 msgid "%s rigidity mask"
-msgstr ""
+msgstr "%s masque de rigidité"
 
 #. Seams control
 #: ../src/interface.c:1559
 msgid "Seams control"
-msgstr ""
+msgstr "Contrôle de lignes"
 
 #: ../src/interface.c:1564
 #, c-format
@@ -340,10 +349,14 @@ msgid ""
 "\"Refresh\" button.\n"
 "Note that painting in black has no effect"
 msgstr ""
+"Les masques de rigidité nécessitent des calques supplémentaires.\n"
+"Vous pouvez en créer un avec le bouton \"Nouveau\", peindre dessus, puis "
+"cliquer le bouton \"Actualiser\".\n"
+"Notez que peindre en noir n'a aucun effet."
 
 #: ../src/interface.c:1588
 msgid "Max transversal step:"
-msgstr ""
+msgstr "Pas transversal maximal"
 
 #: ../src/interface.c:1591
 msgid ""
@@ -354,9 +367,8 @@ msgstr ""
 "dépasser la limite de 45 degrés"
 
 #: ../src/interface.c:1601
-#, fuzzy
 msgid "Overall rigidity:"
-msgstr "Rigidité des lignes :"
+msgstr "Rigidité globale :"
 
 #: ../src/interface.c:1604
 msgid "Increasing this value results in straighter seams"
@@ -364,21 +376,25 @@ msgstr "Augmenter cette valeur pour des lignes plus droites"
 
 #: ../src/interface.c:1634
 msgid "Use a rigidity mask"
-msgstr ""
+msgstr "Utiliser un masque de rigidité"
 
 #: ../src/interface.c:1661
 msgid "Use an extra layer to mark areas where seams should be straighter"
 msgstr ""
+"Utiliser un calque supplémentaire pour marquer les zones où les lignes "
+"doivent être plus droites"
 
 #: ../src/interface.c:1669
 msgid "Creates a new transparent layer ready to be used as a rigidity mask"
-msgstr ""
+msgstr "Crée un nouveau calque transparent prêt à servir de masque de rigidité"
 
 #: ../src/interface.c:1721
 msgid ""
 "Layer to be used as a mask for rigidity settings.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
+"Calque à utiliser comme masque pour régler la rigidité.\n"
+"Le bouton \"Actualiser\" met à jour la liste"
 
 #: ../src/interface.c:1787
 msgid ""
@@ -431,7 +447,7 @@ msgstr "Vertical d'abord"
 
 #: ../src/interface.c:1847
 msgid "Ignore discard mask when enlarging"
-msgstr ""
+msgstr "ignorer le masque de suppression en agrandissant"
 
 #: ../src/interface.c:1853
 msgid ""
@@ -439,6 +455,9 @@ msgid ""
 "mask when the first rescale step is an image enlargment (which normally is "
 "the best choice)"
 msgstr ""
+"Même effet qu'en réglant la force à 0 dans le masque de suppression quand la "
+"première étape est un agrandissement de l'image (c'est en principe le "
+"meilleur choix)"
 
 #: ../src/main.c:164
 msgid "scaling which keeps layer features (or removes them)"
@@ -468,7 +487,7 @@ msgstr ""
 
 #: ../src/render.c:122
 msgid "Error: it seems that the rigidity mask layer is no longer valid"
-msgstr ""
+msgstr "Erreur : Le calque du masque de rigidité ne semble plus valide"
 
 #: ../src/render.c:236
 msgid "Resizing width..."
@@ -496,12 +515,3 @@ msgstr "Création de la carte de lignes..."
 #, c-format
 msgid "%s seam map"
 msgstr "Carte de lignes %s"
-
-#~ msgid "Choose mode of operation"
-#~ msgstr "Choisir le mode de fonctionnement"
-
-#~ msgid "LqR + LqR back to the original size"
-#~ msgstr "LqR + LqR vers la taille d'origine"
-
-#~ msgid "Seams max step:"
-#~ msgstr "Pas maximum des lignes"
