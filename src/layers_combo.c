@@ -152,10 +152,18 @@ callback_combo_set_sensitive (GtkWidget * button, gpointer data)
       gtk_widget_set_sensitive (GIMP_SCALE_ENTRY_SPINBUTTON
 				(t_data->scale), button_status);
     }
-  if (t_data->guess_button)
+  if (t_data->guess_label)
     {
-      gtk_widget_set_sensitive (t_data->guess_button, button_status);
-      gtk_widget_set_sensitive (t_data->guess_dir_combo, button_status);
+      gtk_widget_set_sensitive (t_data->guess_label, button_status);
+    }
+  if (t_data->guess_button_hor)
+    {
+      gtk_widget_set_sensitive (t_data->guess_button_hor, button_status);
+      //gtk_widget_set_sensitive (t_data->guess_dir_combo, button_status);
+    }
+  if (t_data->guess_button_ver)
+    {
+      gtk_widget_set_sensitive (t_data->guess_button_ver, button_status);
     }
   *(t_data->status) = button_status;
 }
@@ -228,24 +236,13 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
 
 
 void
-callback_guess_button (GtkWidget * button, gpointer data)
+callback_guess_button_hor (GtkWidget * button, gpointer data)
 {
   gint new_width, new_height;
   PreviewData *p_data = PREVIEW_DATA (data);
 
-  new_width = p_data->old_width;
+  new_width = guess_new_size (button, p_data, GUESS_DIR_HOR);
   new_height = p_data->old_height;
-  switch (p_data->ui_vals->guess_direction)
-    {
-    case 0:
-      new_width = guess_new_width (button, data);
-      break;
-    case 1:
-      new_height = guess_new_height (button, data);
-      break;
-    default:
-      g_message ("You just found a bug");
-    }
 
   gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
 			      (p_data->coordinates), 0, new_width);
@@ -254,6 +251,23 @@ callback_guess_button (GtkWidget * button, gpointer data)
 }
 
 void
+callback_guess_button_ver (GtkWidget * button, gpointer data)
+{
+  gint new_width, new_height;
+  PreviewData *p_data = PREVIEW_DATA (data);
+
+  new_width = p_data->old_width;
+  new_height = guess_new_size (button, p_data, GUESS_DIR_VERT);
+
+  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+			      (p_data->coordinates), 0, new_width);
+  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+			      (p_data->coordinates), 1, new_height);
+}
+
+
+/*
+void
 callback_guess_direction (GtkWidget * combo, gpointer data)
 {
   PreviewData *p_data = PREVIEW_DATA (data);
@@ -261,20 +275,7 @@ callback_guess_direction (GtkWidget * combo, gpointer data)
   gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (combo),
 				 &(p_data->ui_vals->guess_direction));
 }
-
-gint
-guess_new_width (GtkWidget * button, gpointer data)
-{
-  PreviewData *p_data = PREVIEW_DATA (data);
-  return guess_new_size (button, p_data, GUESS_DIR_HOR);
-}
-
-gint
-guess_new_height (GtkWidget * button, gpointer data)
-{
-  PreviewData *p_data = PREVIEW_DATA (data);
-  return guess_new_size (button, p_data, GUESS_DIR_VERT);
-}
+*/
 
 gint
 guess_new_size (GtkWidget * button, PreviewData * p_data, GuessDir direction)

@@ -95,7 +95,6 @@ const PlugInUIVals default_ui_vals = {
   FALSE,        /* pres status */
   FALSE,        /* disc status */
   FALSE,        /* rigmask status */
-  0,            /* guess direction */
   -1,           /* last used width */
   -1,           /* last used height */
   0,            /* last layer */

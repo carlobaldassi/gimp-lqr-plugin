@@ -912,6 +912,10 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *thispage;
   gchar pres_inactive_tip_string[MAX_STRING_SIZE];
   gchar disc_inactive_tip_string[MAX_STRING_SIZE];
+  gchar * disc_strength_tip_string;
+  gchar disc_strength_tip_string_[MAX_STRING_SIZE];
+  gchar * pres_strength_tip_string;
+  gchar pres_strength_tip_string_[MAX_STRING_SIZE];
   NewLayerData *new_pres_layer_data;
   NewLayerData *new_disc_layer_data;
   GtkWidget *pres_frame_event_box1;
@@ -936,8 +940,10 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *disc_new_button;
   GtkWidget *disc_info_image;
   GtkWidget *disc_warning_image;
-  GtkWidget *guess_button;
-  GtkWidget *guess_dir_combo;
+  GtkWidget *guess_label;
+  GtkWidget *guess_button_hor;
+  GtkWidget *guess_button_ver;
+  //GtkWidget *guess_dir_combo;
   GtkWidget *table;
   gint row;
   GtkWidget *combo;
@@ -1157,14 +1163,25 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (pres_vbox2), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
+  if (features_are_sensitive)
+    {
+      snprintf (pres_strength_tip_string_, MAX_STRING_SIZE,
+	        _("Overall coefficient for "
+	          "feature preservation intensity"));
+      pres_strength_tip_string = pres_strength_tip_string_;
+    }
+  else
+    {
+      pres_strength_tip_string = NULL;
+    }
+
   adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
 			      _("Strength:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
 			      state->pres_coeff, 0, MAX_COEFF, 1, 10, 0,
 			      TRUE, 0, 0,
-			      _
-			      ("Overall coefficient for "
-                               "feature preservation intensity"),
+			      pres_strength_tip_string,
 			      NULL);
+
   g_signal_connect (adj, "value_changed",
 		    G_CALLBACK (gimp_int_adjustment_update),
 		    &state->pres_coeff);
@@ -1190,8 +1207,10 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 		    G_CALLBACK (callback_pres_combo_set_sensitive_preview),
 		    (gpointer) (&preview_data));
 
-  pres_toggle_data.guess_button = NULL;
-  pres_toggle_data.guess_dir_combo = NULL;
+  pres_toggle_data.guess_label = NULL;
+  pres_toggle_data.guess_button_hor = NULL;
+  pres_toggle_data.guess_button_ver = NULL;
+  //pres_toggle_data.guess_dir_combo = NULL;
 
 
   /*  Feature discard  */
@@ -1374,13 +1393,24 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (disc_vbox2), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
+  if (features_are_sensitive)
+    {
+      snprintf (disc_strength_tip_string_, MAX_STRING_SIZE,
+	        _("Overall coefficient for "
+	          "feature discard intensity"));
+      disc_strength_tip_string = disc_strength_tip_string_;
+    }
+  else
+    {
+      disc_strength_tip_string = NULL;
+    }
+
+
   adj = gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
 			      _("Strength:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
 			      state->disc_coeff, 0, MAX_COEFF, 1, 10, 0,
 			      TRUE, 0, 0,
-			      _
-			      ("Overall coefficient for "
-                               "feature discard intensity"),
+			      disc_strength_tip_string,
 			      NULL);
 
   g_signal_connect (adj, "value_changed",
@@ -1431,21 +1461,59 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (disc_vbox2), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
-  guess_button = gtk_button_new_with_label (_("Auto size"));
-  gtk_box_pack_start (GTK_BOX (hbox), guess_button, FALSE, FALSE, 0);
-  gtk_widget_show (guess_button);
+  // Auto-size button (keep it short!)
+  guess_label = gtk_label_new (_("Auto size:"));
+  gtk_box_pack_start (GTK_BOX (hbox), guess_label, FALSE, FALSE, 0);
+  gtk_widget_show (guess_label);
 
-  disc_toggle_data.guess_button = guess_button;
+  disc_toggle_data.guess_label = guess_label;
 
-  gtk_widget_set_sensitive (guess_button,
+  gtk_widget_set_sensitive (guess_label,
 			    (ui_state->disc_status
 			     && features_are_sensitive));
 
-  gimp_help_set_help_data (guess_button,
-			   _
-			   ("Try to set the final size as needed to remove the masked areas.\n"
-			    "Only use with simple masks"), NULL);
+  // Width auto-size button (keep it short!)
+  guess_button_hor = gtk_button_new_with_label (_("Width"));
+  gtk_box_pack_start (GTK_BOX (hbox), guess_button_hor, FALSE, FALSE, 0);
+  gtk_widget_show (guess_button_hor);
 
+  disc_toggle_data.guess_button_hor = guess_button_hor;
+
+  gtk_widget_set_sensitive (guess_button_hor,
+			    (ui_state->disc_status
+			     && features_are_sensitive));
+
+  if (features_are_sensitive) {
+	  gimp_help_set_help_data (guess_button_hor,
+				   _
+				   ("Try to set the final width as needed to remove the masked areas.\n"
+				    "Only use with simple masks"), NULL);
+  }
+
+  g_signal_connect (guess_button_hor, "clicked",
+		    G_CALLBACK (callback_guess_button_hor),
+		    (gpointer) & preview_data);
+
+
+  // Height auto-size button (keep it short!)
+  guess_button_ver = gtk_button_new_with_label (_("Height"));
+  gtk_box_pack_start (GTK_BOX (hbox), guess_button_ver, FALSE, FALSE, 0);
+  gtk_widget_show (guess_button_ver);
+
+  disc_toggle_data.guess_button_ver = guess_button_ver;
+
+  gtk_widget_set_sensitive (guess_button_ver,
+			    (ui_state->disc_status
+			     && features_are_sensitive));
+
+  if (features_are_sensitive) {
+	  gimp_help_set_help_data (guess_button_ver,
+			   _
+			   ("Try to set the  final size as needed to remove the masked areas.\n"
+			    "Only use with simple masks"), NULL);
+  }
+
+  /*
   guess_dir_combo =
     gimp_int_combo_box_new (_("horizontal"), 0, _("vertical"), 1, NULL);
   gtk_box_pack_end (GTK_BOX (hbox), guess_dir_combo, TRUE, TRUE, 0);
@@ -1466,9 +1534,10 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   g_signal_connect (guess_dir_combo, "changed",
 		    G_CALLBACK (callback_guess_direction),
 		    (gpointer) & preview_data);
+		    */
 
-  g_signal_connect (guess_button, "clicked",
-		    G_CALLBACK (callback_guess_button),
+  g_signal_connect (guess_button_ver, "clicked",
+		    G_CALLBACK (callback_guess_button_ver),
 		    (gpointer) & preview_data);
 
   return thispage;
@@ -1769,8 +1838,10 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   rigmask_toggle_data.status = &(ui_state->rigmask_status);
 
   rigmask_toggle_data.scale = NULL;
-  rigmask_toggle_data.guess_button = NULL;
-  rigmask_toggle_data.guess_dir_combo = NULL;
+  rigmask_toggle_data.guess_label = NULL;
+  rigmask_toggle_data.guess_button_hor = NULL;
+  rigmask_toggle_data.guess_button_ver = NULL;
+  //rigmask_toggle_data.guess_dir_combo = NULL;
 
   g_signal_connect (G_OBJECT (rigmask_button), "toggled",
 		    G_CALLBACK (callback_combo_set_sensitive),

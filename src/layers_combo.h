@@ -40,8 +40,10 @@ typedef struct
   GtkWidget *combo_label;
   GtkObject *scale;
   gboolean *status;
-  GtkWidget *guess_button;
-  GtkWidget *guess_dir_combo;
+  GtkWidget *guess_label;
+  GtkWidget *guess_button_hor;
+  GtkWidget *guess_button_ver;
+  //GtkWidget *guess_dir_combo;
 } ToggleData;
 
 #define TOGGLE_DATA(data) ((ToggleData*)data)
@@ -78,11 +80,12 @@ void callback_combo_set_sensitive (GtkWidget * button, gpointer data);
 void callback_status_button (GtkWidget * button, gpointer data);
 void callback_new_mask_button (GtkWidget * button, gpointer data);
 
-void callback_guess_button (GtkWidget * button, gpointer data);
-void callback_guess_direction (GtkWidget * combo, gpointer data);
+void callback_guess_button_hor (GtkWidget * button, gpointer data);
+void callback_guess_button_ver (GtkWidget * button, gpointer data);
+//void callback_guess_direction (GtkWidget * combo, gpointer data);
 gint guess_new_size (GtkWidget * button, PreviewData * data, GuessDir direction);
-int guess_new_width (GtkWidget * button, gpointer data);
-int guess_new_height (GtkWidget * button, gpointer data);
+//int guess_new_width (GtkWidget * button, gpointer data);
+//int guess_new_height (GtkWidget * button, gpointer data);
 
 #endif /* __COMBO_H__ */
 

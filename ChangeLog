@@ -1,3 +1,9 @@
+2008-11-24 Carlo Baldassi <carlobaldassi@gmail.com>
+
+	* modified : split auto button in 2
+	* bugfix : hid some tooltips in unsensitive
+	  regions
+
 2008-10-31 Carlo Baldassi <carlobaldassi@gmail.com>
 
 	* bugfix : refresh button discarded guess
