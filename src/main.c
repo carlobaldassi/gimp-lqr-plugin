@@ -100,13 +100,19 @@ const PlugInUIVals default_ui_vals = {
   0,            /* last layer */
 };
 
+const PlugInDialogVals default_dialog_vals = {
+  FALSE,        /* dialog has position */
+  0,            /* dialog root position x */
+  0,            /* dialog root position y */
+};
+
 static PlugInVals vals;
 static PlugInImageVals image_vals;
 static PlugInDrawableVals drawable_vals;
 static PlugInUIVals ui_vals;
 static PlugInColVals col_vals;
+static PlugInDialogVals dialog_vals;
 static int args_num;
-
 
 GimpPlugInInfo PLUG_IN_INFO = {
   NULL,                         /* init_proc  */
@@ -240,6 +246,7 @@ run (const gchar * name,
   drawable_vals = default_drawable_vals;
   ui_vals = default_ui_vals;
   col_vals = default_col_vals;
+  dialog_vals = default_dialog_vals;
 
   image_vals.image_ID = image_ID;
   drawable_vals.layer_ID = drawable->drawable_id;
@@ -293,7 +300,7 @@ run (const gchar * name,
             {
               dialog_resp = dialog (image_ID, drawable,
                              &vals, &image_vals, &drawable_vals, &ui_vals,
-                             &col_vals);
+                             &col_vals, &dialog_vals);
               switch (dialog_resp)
                 {
                   case GTK_RESPONSE_OK:

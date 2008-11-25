@@ -50,6 +50,8 @@
 
 /***  Local functions declariations  ***/
 
+gboolean check_drawable (GimpDrawable * drawable);
+
 /* Callbacks */
 static void callback_dialog_response (GtkWidget * dialog, gint response_id,
 				      gpointer data);
@@ -84,6 +86,7 @@ gint context_calls = 0;
 
 PlugInUIVals *ui_state;
 PlugInVals *state;
+PlugInDialogVals *dialog_state;
 NotebookData *notebook_data;
 gboolean features_are_sensitive;
 PreviewData preview_data;
@@ -109,7 +112,7 @@ dialog (gint32 image_ID,
 	PlugInVals * vals,
 	PlugInImageVals * image_vals,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
-	PlugInColVals * col_vals)
+	PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
 {
   gint32 layer_ID;
   GimpRGB saved_colour;
@@ -151,8 +154,16 @@ dialog (gint32 image_ID,
   GimpUnit unit;
   gdouble xres, yres;
 
+  if (!gimp_image_is_valid (image_ID))
+    {
+      g_message (_("Error: it seems that the selected image "
+                   "is no longer valid"));
+      return FALSE;
+    }
 
   gimp_ui_init (PLUGIN_NAME, TRUE);
+
+  dialog_state = dialog_vals;
 
   gimp_context_get_foreground (&saved_colour);
 
@@ -177,7 +188,21 @@ dialog (gint32 image_ID,
       preview_data.disc_combo_awaked = TRUE;
     }
 
+  if (!drawable)
+    {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      return FALSE;
+    }
+
   layer_ID = drawable->drawable_id;
+
+  if (!gimp_drawable_is_valid (layer_ID))
+    {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      return FALSE;
+    }
 
   orig_width = gimp_drawable_width (layer_ID);
   orig_height = gimp_drawable_height (layer_ID);
@@ -217,6 +242,12 @@ dialog (gint32 image_ID,
 			 GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
   gtk_window_set_resizable (GTK_WINDOW (dlg), FALSE);
+
+  if (dialog_state->has_pos)
+    {
+      gtk_window_move (GTK_WINDOW(dlg), dialog_state->x, dialog_state->y);
+      dialog_state->has_pos = FALSE;
+    }
 
   g_signal_connect (dlg, "response", G_CALLBACK (callback_dialog_response),
 		    (gpointer) (notebook_data));
@@ -689,6 +720,22 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
   switch (response_id)
     {
     case RESPONSE_REFRESH:
+    case GTK_RESPONSE_OK:
+    case RESPONSE_FEAT_REFRESH:
+    case RESPONSE_ADV_REFRESH:
+      if (!check_drawable (n_data->drawable)) {
+        return;
+      }
+    case RESPONSE_RESET:
+      gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
+      dialog_state->has_pos = TRUE;
+      break;
+    default:
+      break;
+    }
+  switch (response_id)
+    {
+    case RESPONSE_REFRESH:
       refresh_advanced_page (n_data);
       refresh_features_page (n_data);
       break;
@@ -703,6 +750,20 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
       gtk_main_quit ();
       break;
     }
+}
+
+gboolean
+check_drawable (GimpDrawable * drawable)
+{
+  if ((!drawable) || (!gimp_drawable_is_valid(drawable->drawable_id)))
+    {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      dialog_response = RESPONSE_FATAL;
+      gtk_main_quit();
+      return FALSE;
+    }
+  return TRUE;
 }
 
 static void
@@ -927,6 +988,10 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *thispage;
   gchar pres_inactive_tip_string[MAX_STRING_SIZE];
   gchar disc_inactive_tip_string[MAX_STRING_SIZE];
+  gchar * disc_strength_tip_string;
+  gchar disc_strength_tip_string_[MAX_STRING_SIZE];
+  gchar * pres_strength_tip_string;
+  gchar pres_strength_tip_string_[MAX_STRING_SIZE];
   NewLayerData *new_pres_layer_data;
   NewLayerData *new_disc_layer_data;
   GtkWidget *pres_frame_event_box1;
@@ -1172,14 +1237,25 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (pres_vbox2), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
+  if (features_are_sensitive)
+    {
+      snprintf (pres_strength_tip_string_, MAX_STRING_SIZE,
+	        _("Overall coefficient for "
+	          "feature preservation intensity"));
+      pres_strength_tip_string = pres_strength_tip_string_;
+    }
+  else
+    {
+      pres_strength_tip_string = NULL;
+    }
+
   adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
 			      _("Strength:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
 			      state->pres_coeff, 0, MAX_COEFF, 1, 10, 0,
 			      TRUE, 0, 0,
-			      _
-			      ("Overall coefficient for "
-                               "feature preservation intensity"),
+			      pres_strength_tip_string,
 			      NULL);
+
   g_signal_connect (adj, "value_changed",
 		    G_CALLBACK (gimp_int_adjustment_update),
 		    &state->pres_coeff);
@@ -1389,13 +1465,24 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (disc_vbox2), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
+  if (features_are_sensitive)
+    {
+      snprintf (disc_strength_tip_string_, MAX_STRING_SIZE,
+	        _("Overall coefficient for "
+	          "feature discard intensity"));
+      disc_strength_tip_string = disc_strength_tip_string_;
+    }
+  else
+    {
+      disc_strength_tip_string = NULL;
+    }
+
+
   adj = gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
 			      _("Strength:"), SCALE_WIDTH, SPIN_BUTTON_WIDTH,
 			      state->disc_coeff, 0, MAX_COEFF, 1, 10, 0,
 			      TRUE, 0, 0,
-			      _
-			      ("Overall coefficient for "
-                               "feature discard intensity"),
+			      disc_strength_tip_string,
 			      NULL);
 
   g_signal_connect (adj, "value_changed",
@@ -1446,6 +1533,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   gtk_box_pack_start (GTK_BOX (disc_vbox2), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
+  // Auto-size button (keep it short!)
   guess_button = gtk_button_new_with_label (_("Auto size"));
   gtk_box_pack_start (GTK_BOX (hbox), guess_button, FALSE, FALSE, 0);
   gtk_widget_show (guess_button);
@@ -1456,10 +1544,13 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 			    (ui_state->disc_status
 			     && features_are_sensitive));
 
-  gimp_help_set_help_data (guess_button,
-			   _
-			   ("Try to set the final size as needed to remove the masked areas.\n"
-			    "Only use with simple masks"), NULL);
+  if (features_are_sensitive)
+    {
+      gimp_help_set_help_data (guess_button,
+                               _
+                               ("Try to set the final size as needed to remove the masked areas.\n"
+                                "Only use with simple masks"), NULL);
+    }
 
   guess_dir_combo =
     gimp_int_combo_box_new (_("horizontal"), 0, _("vertical"), 1, NULL);

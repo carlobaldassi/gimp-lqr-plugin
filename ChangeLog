@@ -1,3 +1,11 @@
+2008-11-25 Carlo Baldassi <carlobaldassi@gmail.com>
+
+	* bugfix : reset button keeps window position
+	* bugfix : more robustness (working on
+	  nonexistent images etc.)
+	* bugfix : layer combo tooltips visibility
+	  follows widgets sensitiviy
+
 2008-10-31 Carlo Baldassi <carlobaldassi@gmail.com>
 
 	* bugfix : refresh button discarded guess

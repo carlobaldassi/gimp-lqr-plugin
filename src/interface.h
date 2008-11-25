@@ -57,7 +57,8 @@ gint dialog (gint32 image_ID,
              PlugInVals * vals,
              PlugInImageVals * image_vals,
              PlugInDrawableVals * drawable_vals,
-             PlugInUIVals * ui_vals, PlugInColVals * col_vals);
+             PlugInUIVals * ui_vals, PlugInColVals * col_vals,
+	     PlugInDialogVals * dialog_vals);
 
 
 #endif /* __INTERFACE_H__ */

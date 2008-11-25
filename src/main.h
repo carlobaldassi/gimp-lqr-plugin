@@ -32,6 +32,7 @@
 #define RESPONSE_FEAT_REFRESH (2)
 #define RESPONSE_ADV_REFRESH (3)
 #define RESPONSE_RESET (4)
+#define RESPONSE_FATAL (5)
 
 
 /* Structs for parameters */
@@ -69,6 +70,15 @@ typedef struct
   gdouble g2;
   gdouble b2;
 } PlugInColVals;
+
+typedef struct
+{
+  gboolean has_pos;
+  gint x;
+  gint y;
+} PlugInDialogVals;
+
+#define PLUGIN_DIALOG_VALS(data) ((PlugInDialogVals*)data)
 
 
 /* Operational modes */
