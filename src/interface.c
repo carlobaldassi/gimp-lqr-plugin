@@ -50,6 +50,8 @@
 
 /***  Local functions declariations  ***/
 
+gboolean check_drawable (GimpDrawable * drawable);
+
 /* Callbacks */
 static void callback_dialog_response (GtkWidget * dialog, gint response_id,
 				      gpointer data);
@@ -85,6 +87,7 @@ gint context_calls = 0;
 
 PlugInUIVals *ui_state;
 PlugInVals *state;
+PlugInDialogVals *dialog_state;
 NotebookData *notebook_data;
 gboolean features_are_sensitive;
 PreviewData preview_data;
@@ -110,7 +113,7 @@ dialog (gint32 image_ID,
 	PlugInVals * vals,
 	PlugInImageVals * image_vals,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
-	PlugInColVals * col_vals)
+	PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
 {
   gint32 layer_ID;
   GimpRGB saved_colour;
@@ -152,8 +155,16 @@ dialog (gint32 image_ID,
   GimpUnit unit;
   gdouble xres, yres;
 
+  if (!gimp_image_is_valid (image_ID))
+    {
+      g_message (_("Error: it seems that the selected image "
+                   "is no longer valid"));
+      return FALSE;
+    }
 
   gimp_ui_init (PLUGIN_NAME, TRUE);
+
+  dialog_state = dialog_vals;
 
   gimp_context_get_foreground (&saved_colour);
 
@@ -178,7 +189,21 @@ dialog (gint32 image_ID,
       preview_data.disc_combo_awaked = TRUE;
     }
 
+  if (!drawable)
+    {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      return FALSE;
+    }
+
   layer_ID = drawable->drawable_id;
+
+  if (!gimp_drawable_is_valid (layer_ID))
+    {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      return FALSE;
+    }
 
   orig_width = gimp_drawable_width (layer_ID);
   orig_height = gimp_drawable_height (layer_ID);
@@ -212,12 +237,20 @@ dialog (gint32 image_ID,
   dlg = gimp_dialog_new (_("GIMP LiquidRescale Plug-In"), PLUGIN_NAME,
 			 NULL, 0,
 			 gimp_standard_help_func, "plug-in-lqr",
+			 "Interactive", RESPONSE_INTERACTIVE,
 			 GIMP_STOCK_RESET, RESPONSE_RESET,
 			 GTK_STOCK_REFRESH, RESPONSE_REFRESH,
 			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			 GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
   gtk_window_set_resizable (GTK_WINDOW (dlg), FALSE);
+
+  if (dialog_state->has_pos)
+    {
+      printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
+      gtk_window_move (GTK_WINDOW(dlg), dialog_state->x, dialog_state->y);
+      dialog_state->has_pos = FALSE;
+    }
 
   g_signal_connect (dlg, "response", G_CALLBACK (callback_dialog_response),
 		    (gpointer) (notebook_data));
@@ -607,8 +640,11 @@ dialog (gint32 image_ID,
   gtk_widget_show (dlg);
   gtk_main ();
 
-  if (dialog_response == GTK_RESPONSE_OK)
+  printf("RESPONSE=%i\n", dialog_response); fflush(stdout);
+
+  if ((dialog_response == GTK_RESPONSE_OK) || (dialog_response == RESPONSE_INTERACTIVE))
     {
+      printf("OK or INTERACTIVE\n"); fflush(stdout);
       /*  Save ui values  */
       ui_state->chain_active =
 	gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
@@ -663,8 +699,10 @@ dialog (gint32 image_ID,
 
     }
 
+  printf("DESTROY\n"); fflush(stdout);
   gtk_widget_destroy (dlg);
 
+  printf("UNREF\n"); fflush(stdout);
   g_object_unref (G_OBJECT (preview_data.pixbuf));
 
   if (context_calls > 0)
@@ -672,6 +710,7 @@ dialog (gint32 image_ID,
       gimp_context_set_foreground (&saved_colour);
     }
 
+  printf("DETACH\n"); fflush(stdout);
   gimp_drawable_detach (preview_data.drawable);
 
   return dialog_response;
@@ -689,6 +728,27 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
   NotebookData *n_data = NOTEBOOK_DATA (data);
   switch (response_id)
     {
+    case RESPONSE_INTERACTIVE:
+      gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
+      dialog_state->has_pos = TRUE;
+      printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
+    case RESPONSE_REFRESH:
+    case GTK_RESPONSE_OK:
+    case RESPONSE_FEAT_REFRESH:
+    case RESPONSE_ADV_REFRESH:
+      if (!check_drawable (n_data->drawable)) {
+        return;
+      }
+    case RESPONSE_RESET:
+      gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
+      dialog_state->has_pos = TRUE;
+      printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
+      break;
+    default:
+      break;
+    }
+  switch (response_id)
+    {
     case RESPONSE_REFRESH:
       refresh_advanced_page (n_data);
       refresh_features_page (n_data);
@@ -704,6 +764,20 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
       gtk_main_quit ();
       break;
     }
+}
+
+gboolean
+check_drawable (GimpDrawable * drawable)
+{
+  if ((!drawable) || (!gimp_drawable_is_valid(drawable->drawable_id)))
+    {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      dialog_response = RESPONSE_FATAL;
+      gtk_main_quit();
+      return FALSE;
+    }
+  return TRUE;
 }
 
 static void
@@ -1483,12 +1557,13 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 			    (ui_state->disc_status
 			     && features_are_sensitive));
 
-  if (features_are_sensitive) {
-	  gimp_help_set_help_data (guess_button_hor,
-				   _
-				   ("Try to set the final width as needed to remove the masked areas.\n"
-				    "Only use with simple masks"), NULL);
-  }
+  if (features_are_sensitive)
+    {
+      gimp_help_set_help_data (guess_button_hor,
+                               _
+                               ("Try to set the final width as needed to remove the masked areas.\n"
+                                "Only use with simple masks"), NULL);
+    }
 
   g_signal_connect (guess_button_hor, "clicked",
 		    G_CALLBACK (callback_guess_button_hor),
@@ -1506,12 +1581,13 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 			    (ui_state->disc_status
 			     && features_are_sensitive));
 
-  if (features_are_sensitive) {
-	  gimp_help_set_help_data (guess_button_ver,
-			   _
-			   ("Try to set the  final size as needed to remove the masked areas.\n"
-			    "Only use with simple masks"), NULL);
-  }
+  if (features_are_sensitive)
+    {
+      gimp_help_set_help_data (guess_button_ver,
+                               _
+                               ("Try to set the final height as needed to remove the masked areas.\n"
+                                "Only use with simple masks"), NULL);
+    }
 
   /*
   guess_dir_combo =

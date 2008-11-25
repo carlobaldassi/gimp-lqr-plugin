@@ -48,8 +48,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_gimp_lqr_plugin_OBJECTS = main.$(OBJEXT) interface.$(OBJEXT) \
-	preview.$(OBJEXT) layers_combo.$(OBJEXT) render.$(OBJEXT) \
-	io_functions.$(OBJEXT)
+	interface_I.$(OBJEXT) preview.$(OBJEXT) layers_combo.$(OBJEXT) \
+	render.$(OBJEXT) io_functions.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -206,6 +206,8 @@ gimp_lqr_plugin_SOURCES = \
 	main.h		\
 	interface.c	\
 	interface.h	\
+	interface_I.c	\
+	interface_I.h	\
 	preview.c       \
 	preview.h       \
 	layers_combo.c  \
@@ -291,6 +293,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface_I.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/layers_combo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@

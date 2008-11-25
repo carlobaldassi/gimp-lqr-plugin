@@ -11,6 +11,8 @@ gimp_lqr_plugin_SOURCES = \
 	main.h		\
 	interface.c	\
 	interface.h	\
+	interface_I.c	\
+	interface_I.h	\
 	preview.c       \
 	preview.h       \
 	layers_combo.c  \

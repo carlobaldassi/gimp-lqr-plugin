@@ -32,6 +32,9 @@
 #define RESPONSE_FEAT_REFRESH (2)
 #define RESPONSE_ADV_REFRESH (3)
 #define RESPONSE_RESET (4)
+#define RESPONSE_INTERACTIVE (5)
+#define RESPONSE_NONINTERACTIVE (6)
+#define RESPONSE_FATAL (7)
 
 
 /* Structs for parameters */
@@ -57,6 +60,9 @@ typedef struct
   gint32 last_layer_ID;
   gboolean seams_control_expanded;
   gboolean operations_expanded;
+  gboolean dlg_has_pos;
+  gint dlg_x;
+  gint dlg_y;
 } PlugInUIVals;
 
 #define PLUGIN_UI_VALS(data) ((PlugInUIVals*)data)
@@ -70,6 +76,15 @@ typedef struct
   gdouble g2;
   gdouble b2;
 } PlugInColVals;
+
+typedef struct
+{
+  gboolean has_pos;
+  gint x;
+  gint y;
+} PlugInDialogVals;
+
+#define PLUGIN_DIALOG_VALS(data) ((PlugInDialogVals*)data)
 
 
 /* Operational modes */

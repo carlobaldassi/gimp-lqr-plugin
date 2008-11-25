@@ -34,6 +34,7 @@
 
 #include "main.h"
 #include "interface.h"
+#include "interface_I.h"
 #include "render.h"
 
 /*  Local function prototypes  */
@@ -100,6 +101,15 @@ const PlugInUIVals default_ui_vals = {
   0,            /* last layer */
   FALSE,	/* seams control expanded */
   FALSE,	/* operations expanded */
+  FALSE,        /* dialog has position */
+  0,            /* dialog root position x */
+  0,            /* dialog root position y */
+};
+
+const PlugInDialogVals default_dialog_vals = {
+  FALSE,        /* dialog has position */
+  0,            /* dialog root position x */
+  0,            /* dialog root position y */
 };
 
 static PlugInVals vals;
@@ -107,8 +117,8 @@ static PlugInImageVals image_vals;
 static PlugInDrawableVals drawable_vals;
 static PlugInUIVals ui_vals;
 static PlugInColVals col_vals;
+static PlugInDialogVals dialog_vals;
 static int args_num;
-
 
 GimpPlugInInfo PLUG_IN_INFO = {
   NULL,                         /* init_proc  */
@@ -214,7 +224,9 @@ run (const gchar * name,
   *nreturn_vals = 1;
   *return_vals = values;
   gboolean run_dialog = TRUE;
+  gboolean run_render = TRUE;
   gint dialog_resp;
+  gint dialog_I_resp;
   gboolean render_success = FALSE;
 
   /*  Initialize i18n support  */
@@ -243,6 +255,7 @@ run (const gchar * name,
   drawable_vals = default_drawable_vals;
   ui_vals = default_ui_vals;
   col_vals = default_col_vals;
+  dialog_vals = default_dialog_vals;
 
   image_vals.image_ID = image_ID;
   drawable_vals.layer_ID = drawable->drawable_id;
@@ -297,13 +310,15 @@ run (const gchar * name,
             {
               dialog_resp = dialog (image_ID, drawable,
                              &vals, &image_vals, &drawable_vals, &ui_vals,
-                             &col_vals);
+                             &col_vals, &dialog_vals);
               switch (dialog_resp)
                 {
                   case GTK_RESPONSE_OK:
+                    printf("OK\n"); fflush(stdout);
                     run_dialog = FALSE;
                     break;
                   case RESPONSE_RESET:
+                    printf("RESET\n"); fflush(stdout);
                     vals = default_vals;
                     image_vals = default_image_vals;
                     drawable_vals = default_drawable_vals;
@@ -312,7 +327,33 @@ run (const gchar * name,
                     image_vals.image_ID = image_ID;
                     drawable_vals.layer_ID = drawable->drawable_id;
                     break;
+		  case RESPONSE_INTERACTIVE:
+                    printf("INTERACTIVE\n"); fflush(stdout);
+		    dialog_I_resp = dialog_I (image_ID, drawable_vals.layer_ID,
+                                drawable, &vals, &image_vals, &drawable_vals,
+                                &ui_vals, &dialog_vals);
+                    switch (dialog_I_resp)
+                      {
+                        case GTK_RESPONSE_CLOSE:
+                          run_dialog = FALSE;
+                          run_render = FALSE;
+                          break;
+                        case RESPONSE_NONINTERACTIVE:
+                          run_dialog = TRUE;
+                          break;
+                        default:
+                          run_dialog = FALSE;
+                          run_render = FALSE;
+                          status = GIMP_PDB_CANCEL;
+                          break;
+                      }
+                    break;
+                  case RESPONSE_FATAL:
+                    run_dialog = FALSE;
+                    status = GIMP_PDB_CALLING_ERROR;
+                    break;
                   default:
+                    printf("DEFAULT\n"); fflush(stdout);
                     run_dialog = FALSE;
                     status = GIMP_PDB_CANCEL;
                     break;
@@ -360,9 +401,15 @@ run (const gchar * name,
       ui_vals.last_used_height = vals.new_height;
       ui_vals.last_layer_ID = drawable->drawable_id;
       gimp_image_undo_group_start (image_ID);
-      render_success =
-        render (image_ID, drawable, &vals, &image_vals, &drawable_vals,
+      if (run_render)
+        {
+          render_success = render (image_ID, drawable, &vals, &image_vals, &drawable_vals,
                 &col_vals);
+        }
+      else
+        {
+          render_success = TRUE;
+        }
 
       if (run_mode != GIMP_RUN_NONINTERACTIVE)
         gimp_displays_flush ();

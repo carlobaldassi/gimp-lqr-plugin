@@ -22,43 +22,27 @@
  */
 
 
-#ifndef __INTERFACE_H__
-#define __INTERFACE_H__
+#ifndef __INTERFACE_I_H__
+#define __INTERFACE_I_H__
 
 /* Data structs for callbacks */
 
 typedef struct
 {
-  gpointer ui_vals;
-  gpointer button;
-} PresDiscStatus;
+	gint32 layer_ID;
+	GtkWidget * coordinates;
+} InterfaceIData;
 
-#define PRESDISC_STATUS(data) ((PresDiscStatus*)data)
-
-typedef struct
-{
-  GtkWidget *notebook;
-  GtkWidget *features_page;
-  GtkWidget *advanced_page;
-  gint features_page_ID;
-  gint advanced_page_ID;
-  GtkWidget *label;
-  gint32 image_ID;
-  GimpDrawable *drawable;
-} NotebookData;
-
-#define NOTEBOOK_DATA(data) ((NotebookData*)data)
-
+#define INTERFACE_I_DATA(data) ((InterfaceIData*) data)
 
 /*  Public functions  */
 
-gint dialog (gint32 image_ID,
-             GimpDrawable * drawable,
-             PlugInVals * vals,
-             PlugInImageVals * image_vals,
-             PlugInDrawableVals * drawable_vals,
-             PlugInUIVals * ui_vals, PlugInColVals * col_vals,
-	     PlugInDialogVals * dialog_vals);
+gint
+dialog_I (gint32 image_ID, gint32 layer_ID,
+	GimpDrawable * drawable,
+	PlugInVals * vals,
+	PlugInImageVals * image_vals,
+	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
+     	PlugInDialogVals * dialog_vals);
 
-
-#endif /* __INTERFACE_H__ */
+#endif /* __INTERFACE_I_H__ */

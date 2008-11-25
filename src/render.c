@@ -79,6 +79,13 @@ render (gint32 image_ID,
   double clock1, clock2, clock3, clock4;
 #endif /* __CLOCK_IT__ */
 
+  if (!gimp_image_is_valid (image_ID))
+    {
+      g_message (_("Error: it seems that the selected image "
+                   "is no longer valid"));
+      return FALSE;
+    }
+
   if (drawable_vals->layer_ID)
     {
       layer_ID = drawable_vals->layer_ID;

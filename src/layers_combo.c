@@ -186,6 +186,20 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   GimpRGB *fg_colour;
   GimpRGB grey;
 
+  if (!gimp_image_is_valid(p_data->image_ID))
+    {
+      g_message (_("Error: it seems that the selected image "
+                   "is no longer valid"));
+      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL);
+      return;
+    }
+  if (!gimp_drawable_is_valid(p_data->orig_layer_ID))
+    {
+      g_message (_("Error: it seems that the selected layer "
+                   "is no longer valid"));
+      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL);
+      return;
+    }
 
   switch (gimp_image_base_type (p_data->image_ID))
     {
