@@ -28,6 +28,8 @@
 
 #include <math.h>
 #include <string.h>
+#include <signal.h>
+#include <unistd.h>
 
 #include <lqr.h>
 
@@ -46,6 +48,7 @@
 #define MAX_RIGIDITY      (1000)
 #define MAX_DELTA_X         (10)
 #define MAX_STRING_SIZE   (2048)
+#define ALARM_DELAY          (1)
 
 
 /***  Local functions declariations  ***/
@@ -59,6 +62,8 @@ static void callback_dialog_I_response (GtkWidget * dialog, gint response_id,
 
 //static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
+static void alarm_handler (int signum);
+static void callback_alarm_triggered (GtkWidget * size_entry, gpointer data);
 //static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
 
 /***  Local variables  ***/
@@ -83,6 +88,7 @@ InterfaceIData interface_I_data;
 
 GtkWidget *dlg;
 GtkTooltips *dlg_tips;
+GtkWidget *coordinates;
 
 
 /***  Public functions  ***/
@@ -97,6 +103,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 {
   //GimpRGB saved_colour;
   //gint num_extra_layers;
+  struct sigaction alarm_action, old_alarm_action;
   gint orig_width, orig_height;
   GtkWidget *main_hbox;
   GtkWidget *vbox;
@@ -106,7 +113,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   //GtkWidget *notebook;
   //gfloat wfactor, hfactor;
   //GtkWidget *preview_area;
-  GtkWidget *coordinates;
   //GtkWidget *noninter_button;
   //GtkWidget *resetvalues_event_box;
   //GtkWidget *resetvalues_button;
@@ -240,6 +246,20 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 		    G_CALLBACK (callback_size_changed),
 		    (gpointer) & interface_I_data);
 
+  g_signal_newv("coordinates-alarm", GIMP_TYPE_SIZE_ENTRY, G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+      0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
+
+  sigaction(SIGALRM, NULL, &old_alarm_action);
+  alarm_action = old_alarm_action;
+  alarm_action.sa_handler = alarm_handler;
+  sigaction(SIGALRM, &alarm_action, NULL);
+
+  g_signal_connect (GIMP_SIZE_ENTRY (coordinates), "coordinates-alarm",
+                    G_CALLBACK (callback_alarm_triggered),
+                    (gpointer) & interface_I_data);
+
+  //signal(SIGALRM, alarm_handler);
+
   //gtk_box_pack_start (GTK_BOX (hbox), coordinates, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), coordinates, FALSE, FALSE, 0);
   gtk_widget_show (coordinates);
@@ -327,6 +347,10 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
     }
 
   gtk_widget_destroy (dlg);
+  
+  sigaction(SIGALRM, &old_alarm_action, NULL);
+  //signal(SIGALRM, SIG_DFL);
+
 
   return dialog_I_response;
 }
@@ -409,17 +433,28 @@ callback_set_disc_warning (GtkWidget * dummy, gpointer data)
 static void
 callback_size_changed (GtkWidget * size_entry, gpointer data)
 {
+  alarm(ALARM_DELAY);
+}
+
+static void
+alarm_handler (int signum)
+{
+  //printf("ALARM!\n"); fflush(stdout);
+  g_signal_emit_by_name (coordinates, "coordinates-alarm");
+}
+
+static void
+callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
+{
   gint new_width, new_height;
   //InterfaceIData *p_data = INTERFACE_I_DATA (data);
   new_width =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 0));
   new_height =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 1));
-  printf("w,h=%i,%i\n", new_width, new_height); fflush(stdout);
-  //p_data->vals->new_width = new_width;
-  //p_data->vals->new_height = new_height;
-  //callback_set_disc_warning (NULL, data);
+  printf("[w,h=%i,%i]\n", new_width, new_height); fflush(stdout);
 }
+
 
 #if 0
 static void
