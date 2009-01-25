@@ -24,16 +24,37 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
+typedef struct
+{
+  LqrCarver * carver;
+  gint32 layer_ID;
+  gboolean alpha_lock;
+  gboolean alpha_lock_pres;
+  gboolean alpha_lock_disc;
+  gboolean alpha_lock_rigmask;
+} CarverData;
+
+#define CARVER_DATA(data) ((CarverData*)data)
+
+
 /* progress functions wrappers */
 gboolean my_progress_end (const gchar * message);
 
-/*  Render function  */
+/* Functions  */
 
-gboolean render (gint32 image_ID,
-                 GimpDrawable * drawable,
-                 PlugInVals * vals,
-                 PlugInImageVals * image_vals,
-                 PlugInDrawableVals * drawable_vals,
-                 PlugInColVals * col_vals);
+CarverData *
+render_init_carver (gint32 image_ID,
+        GimpDrawable * drawable,
+        PlugInVals * vals,
+        PlugInImageVals * image_vals, PlugInDrawableVals * drawable_vals,
+        gboolean interactive);
+
+gboolean
+render_noninteractive (gint32 image_ID,
+        GimpDrawable * drawable,
+        PlugInVals * vals,
+        PlugInImageVals * image_vals, PlugInDrawableVals * drawable_vals,
+        PlugInColVals * col_vals,
+        CarverData * carver_data);
 
 #endif /* __RENDER_H__ */

@@ -403,8 +403,17 @@ run (const gchar * name,
       gimp_image_undo_group_start (image_ID);
       if (run_render)
         {
-          render_success = render (image_ID, drawable, &vals, &image_vals, &drawable_vals,
-                &col_vals);
+          CarverData * carver_data;
+          carver_data = render_init_carver (image_ID, drawable, &vals, &image_vals, &drawable_vals, FALSE);
+          if (carver_data)
+            {
+              render_success = render_noninteractive (image_ID, drawable, &vals, &image_vals, &drawable_vals,
+                &col_vals, carver_data);
+            }
+          else
+            {
+              render_success = FALSE;
+            }
         }
       else
         {

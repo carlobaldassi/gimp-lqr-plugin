@@ -38,6 +38,7 @@
 #include "interface_I.h"
 #include "preview.h"
 #include "layers_combo.h"
+#include "render.h"
 
 
 /***  Constants  ***/
@@ -133,6 +134,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   GimpUnit unit;
   gdouble xres, yres;
 
+  CarverData * carver_data;
 
   state = g_new (PlugInVals, 1);
   memcpy (state, vals, sizeof (PlugInVals));
@@ -275,6 +277,10 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   gtk_box_pack_start (GTK_BOX (vbox2), noninter_button, FALSE, FALSE, 0);
   gtk_widget_show (noninter_button);
   */
+
+  /* Initialize the carver */
+
+  carver_data = render_init_carver(image_ID, drawable, state, image_vals, drawable_vals, TRUE);
 
   /*  Show the main containers  */
 
