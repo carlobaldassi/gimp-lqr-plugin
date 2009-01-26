@@ -720,6 +720,12 @@ render_interactive (gint32 image_ID,
   fflush (stdout);
 #endif /* __CLOCK_IT__ */
 
+  carver_data->ref_w = lqr_carver_get_ref_width (carver);
+  carver_data->ref_h = lqr_carver_get_ref_height (carver);
+  carver_data->orientation = lqr_carver_get_orientation (carver);
+  carver_data->depth = lqr_carver_get_depth (carver);
+  carver_data->enl_step = lqr_carver_get_enl_step (carver);
+
   ntiles = vals->new_width / gimp_tile_width () + 1;
   gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
                          4 * 2) / 1024 + 1);

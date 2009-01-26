@@ -65,6 +65,7 @@ static void callback_dialog_I_response (GtkWidget * dialog, gint response_id,
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
 static void set_alarm (glong dseconds);
 static void alarm_handler (int signum);
+static void set_info_label_text (GtkWidget * label, gint ref_w, gint ref_h, gint orientation, gint depth, gfloat enl_step);
 static void callback_alarm_triggered (GtkWidget * size_entry, gpointer data);
 //static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
 
@@ -134,6 +135,9 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   gboolean has_mask = FALSE;
   GimpUnit unit;
   gdouble xres, yres;
+  GtkWidget * v_separator;
+  GtkWidget *info_frame;
+  GtkWidget * info_label;
 
   CarverData * carver_data;
 
@@ -266,6 +270,28 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   /* Other buttons */
 
+  v_separator = gtk_vseparator_new();
+  gtk_box_pack_start (GTK_BOX (main_hbox), v_separator, TRUE, TRUE, 0);
+  gtk_widget_show(v_separator);
+
+  vbox = gtk_vbox_new (FALSE, 12);
+  gtk_box_pack_start (GTK_BOX (main_hbox), vbox, TRUE, TRUE, 0);
+  gtk_widget_show (vbox);
+
+  info_frame = gimp_frame_new (_("Map info"));
+  gtk_box_pack_start (GTK_BOX (vbox), info_frame, TRUE, TRUE, 0);
+  gtk_widget_show (info_frame);
+
+  info_label = gtk_label_new("");
+  set_info_label_text (info_label, orig_width, orig_height, 0, 0, state->enl_step / 100);
+  gtk_label_set_selectable(GTK_LABEL(info_label), TRUE);
+  gtk_container_add (GTK_CONTAINER(info_frame), info_label);
+  //gtk_box_pack_start (GTK_BOX (vbox), info_label, TRUE, TRUE, 0);
+  gtk_label_set_justify(GTK_LABEL (info_label), GTK_JUSTIFY_LEFT);
+  gtk_widget_show (info_label);
+
+  interface_I_data.info_label = info_label;
+
   /*
   noninter_button = gtk_button_new_with_mnemonic ("_Non-interactive");
 
@@ -308,7 +334,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   lqr_carver_destroy (carver_data->carver);
 
-  if (dialog_I_response == GTK_RESPONSE_OK)
+  if ((dialog_I_response == GTK_RESPONSE_OK) || (dialog_I_response == RESPONSE_NONINTERACTIVE))
     {
       /*  Save ui values  */
       ui_state->chain_active =
@@ -483,8 +509,9 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
 {
   gint new_width, new_height;
   gboolean render_success;
-
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
+  CarverData *c_data = p_data->carver_data;
+
   new_width =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 0));
   new_height =
@@ -500,6 +527,48 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
       gtk_main_quit();
     }
   gimp_displays_flush();
+
+  set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
+
+}
+
+static void
+set_info_label_text (GtkWidget * label, gint ref_w, gint ref_h, gint orientation, gint depth, gfloat enl_step)
+{
+  gchar label_text[MAX_STRING_SIZE];
+  gchar text_refsizes[MAX_STRING_SIZE];
+  gchar text_w[MAX_STRING_SIZE];
+  gchar text_h[MAX_STRING_SIZE];
+  gchar text_orientation[MAX_STRING_SIZE];
+  gchar text_range[MAX_STRING_SIZE];
+  gchar text_enl_step[MAX_STRING_SIZE];
+  gint smin, smax;
+  gint esmax;
+
+  smin = orientation == 0 ? ref_w - depth : ref_h - depth;
+  smax = orientation == 0 ? ref_w + depth : ref_h + depth;
+  esmax = (gint) ((orientation ? ref_h : ref_w) * enl_step) - 1;
+  esmax = MAX(1, esmax);
+
+  snprintf(text_orientation, MAX_STRING_SIZE, _("Orientation"));
+  snprintf(text_refsizes, MAX_STRING_SIZE, _("Reference size"));
+  snprintf(text_w, MAX_STRING_SIZE, _("horizontal"));
+  snprintf(text_h, MAX_STRING_SIZE, _("vertical"));
+  snprintf(text_range, MAX_STRING_SIZE, _("Range"));
+  snprintf(text_enl_step, MAX_STRING_SIZE, _("Next step at"));
+
+  snprintf(label_text, MAX_STRING_SIZE, "<small>"
+      "<b>%s</b>\n  %s\n"
+      "<b>%s</b>\n  %i\n"
+      "<b>%s</b>\n  %i - %i\n"
+      "<b>%s</b>\n  %i</small>",
+          text_orientation, orientation ? text_h : text_w,
+          text_refsizes, orientation ? ref_h : ref_w,
+          text_range, smin, smax,
+          text_enl_step, esmax);
+  label_text[MAX_STRING_SIZE - 1] = '\0';
+
+  gtk_label_set_markup(GTK_LABEL(label), label_text);
 }
 
 

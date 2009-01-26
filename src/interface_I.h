@@ -30,6 +30,7 @@
 typedef struct
 {
 	GtkWidget * coordinates;
+        GtkWidget * info_label;
         gint32 image_ID;
         GimpDrawable * drawable;
         PlugInDrawableVals * drawable_vals;

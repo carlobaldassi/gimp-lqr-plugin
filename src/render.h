@@ -32,6 +32,11 @@ typedef struct
   gboolean alpha_lock_pres;
   gboolean alpha_lock_disc;
   gboolean alpha_lock_rigmask;
+  gint ref_w;
+  gint ref_h;
+  gint orientation;
+  gint depth;
+  gfloat enl_step;
 } CarverData;
 
 #define CARVER_DATA(data) ((CarverData*)data)
