@@ -247,7 +247,7 @@ dialog (gint32 image_ID,
 
   if (dialog_state->has_pos)
     {
-      printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
+      //printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       gtk_window_move (GTK_WINDOW(dlg), dialog_state->x, dialog_state->y);
       dialog_state->has_pos = FALSE;
     }

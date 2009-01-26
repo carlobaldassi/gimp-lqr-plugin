@@ -29,7 +29,7 @@
 #include <math.h>
 #include <string.h>
 #include <signal.h>
-#include <unistd.h>
+#include <sys/time.h>
 
 #include <lqr.h>
 
@@ -49,7 +49,7 @@
 #define MAX_RIGIDITY      (1000)
 #define MAX_DELTA_X         (10)
 #define MAX_STRING_SIZE   (2048)
-#define ALARM_DELAY          (1)
+#define ALARM_DELAY          (4)
 
 
 /***  Local functions declariations  ***/
@@ -63,6 +63,7 @@ static void callback_dialog_I_response (GtkWidget * dialog, gint response_id,
 
 //static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
+static void set_alarm (glong dseconds);
 static void alarm_handler (int signum);
 static void callback_alarm_triggered (GtkWidget * size_entry, gpointer data);
 //static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
@@ -296,6 +297,8 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
     }
   interface_I_data.carver_data = carver_data;
 
+  set_alarm (ALARM_DELAY);
+
   /*  Show the main containers  */
 
   gtk_widget_show (main_hbox);
@@ -452,7 +455,20 @@ callback_set_disc_warning (GtkWidget * dummy, gpointer data)
 static void
 callback_size_changed (GtkWidget * size_entry, gpointer data)
 {
-  alarm(ALARM_DELAY);
+  set_alarm(ALARM_DELAY);
+}
+
+static void
+set_alarm (glong dseconds)
+{
+  struct itimerval old, new;
+  long int seconds = (dseconds * 100000) / 1000000;
+  long int useconds = (dseconds * 100000) % 1000000;
+  new.it_interval.tv_usec = 0;
+  new.it_interval.tv_sec = 0;
+  new.it_value.tv_usec = useconds;
+  new.it_value.tv_sec = seconds;
+  setitimer (ITIMER_REAL, &new, &old);
 }
 
 static void
