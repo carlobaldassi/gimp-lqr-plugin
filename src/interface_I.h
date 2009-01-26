@@ -29,8 +29,11 @@
 
 typedef struct
 {
-	gint32 layer_ID;
 	GtkWidget * coordinates;
+        gint32 image_ID;
+        GimpDrawable * drawable;
+        PlugInDrawableVals * drawable_vals;
+        CarverData * carver_data;
 } InterfaceIData;
 
 #define INTERFACE_I_DATA(data) ((InterfaceIData*) data)

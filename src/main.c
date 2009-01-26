@@ -34,8 +34,8 @@
 
 #include "main.h"
 #include "interface.h"
-#include "interface_I.h"
 #include "render.h"
+#include "interface_I.h"
 
 /*  Local function prototypes  */
 
@@ -305,6 +305,10 @@ run (const gchar * name,
           gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
           gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
 
+          /* Install a new signal needed by interface_I */
+          g_signal_newv("coordinates-alarm", GIMP_TYPE_SIZE_ENTRY, G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+              0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
+
           /* gimp_context_push(); */
           while (run_dialog == TRUE)
             {
@@ -314,11 +318,11 @@ run (const gchar * name,
               switch (dialog_resp)
                 {
                   case GTK_RESPONSE_OK:
-                    printf("OK\n"); fflush(stdout);
+                    //printf("OK\n"); fflush(stdout);
                     run_dialog = FALSE;
                     break;
                   case RESPONSE_RESET:
-                    printf("RESET\n"); fflush(stdout);
+                    //printf("RESET\n"); fflush(stdout);
                     vals = default_vals;
                     image_vals = default_image_vals;
                     drawable_vals = default_drawable_vals;
@@ -328,7 +332,7 @@ run (const gchar * name,
                     drawable_vals.layer_ID = drawable->drawable_id;
                     break;
 		  case RESPONSE_INTERACTIVE:
-                    printf("INTERACTIVE\n"); fflush(stdout);
+                    //printf("INTERACTIVE\n"); fflush(stdout);
 		    dialog_I_resp = dialog_I (image_ID, drawable_vals.layer_ID,
                                 drawable, &vals, &image_vals, &drawable_vals,
                                 &ui_vals, &dialog_vals);
@@ -353,7 +357,7 @@ run (const gchar * name,
                     status = GIMP_PDB_CALLING_ERROR;
                     break;
                   default:
-                    printf("DEFAULT\n"); fflush(stdout);
+                    //printf("DEFAULT\n"); fflush(stdout);
                     run_dialog = FALSE;
                     status = GIMP_PDB_CANCEL;
                     break;
@@ -404,10 +408,10 @@ run (const gchar * name,
       if (run_render)
         {
           CarverData * carver_data;
-          carver_data = render_init_carver (image_ID, drawable, &vals, &image_vals, &drawable_vals, FALSE);
+          carver_data = render_init_carver (image_ID, drawable, &vals, &drawable_vals, FALSE);
           if (carver_data)
             {
-              render_success = render_noninteractive (image_ID, drawable, &vals, &image_vals, &drawable_vals,
+              render_success = render_noninteractive (image_ID, drawable, &vals, &drawable_vals,
                 &col_vals, carver_data);
             }
           else

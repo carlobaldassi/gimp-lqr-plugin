@@ -67,6 +67,8 @@ rgb_buffer_from_layer (gint32 layer_ID)
 
   gimp_drawable_detach (drawable);
 
+  gimp_progress_end();
+
   return buffer;
 }
 
@@ -176,6 +178,8 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
   gimp_drawable_flush (drawable);
   gimp_drawable_merge_shadow (layer_ID, TRUE);
   gimp_drawable_update (layer_ID, 0, 0, w, h);
+
+  gimp_progress_end();
 
   return LQR_OK;
 }

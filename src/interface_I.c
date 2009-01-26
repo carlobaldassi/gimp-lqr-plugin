@@ -35,10 +35,10 @@
 
 #include "plugin-intl.h"
 #include "main.h"
+#include "render.h"
 #include "interface_I.h"
 #include "preview.h"
 #include "layers_combo.h"
-#include "render.h"
 
 
 /***  Constants  ***/
@@ -151,7 +151,9 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   drawable_vals->layer_ID = layer_ID;
   //preview_data.orig_layer_ID = layer_ID;
-  interface_I_data.layer_ID = layer_ID;
+  interface_I_data.image_ID = image_ID;
+  interface_I_data.drawable = drawable;
+  interface_I_data.drawable_vals = drawable_vals;
 
   if (gimp_layer_get_mask (layer_ID) != -1)
     {
@@ -191,7 +193,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   if (dialog_state->has_pos)
     {
-      printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
+      //printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       gtk_window_move (GTK_WINDOW(dlg), dialog_state->x, dialog_state->y);
       dialog_state->has_pos = FALSE;
     }
@@ -248,9 +250,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 		    G_CALLBACK (callback_size_changed),
 		    (gpointer) & interface_I_data);
 
-  g_signal_newv("coordinates-alarm", GIMP_TYPE_SIZE_ENTRY, G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-      0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
-
   sigaction(SIGALRM, NULL, &old_alarm_action);
   alarm_action = old_alarm_action;
   alarm_action.sa_handler = alarm_handler;
@@ -259,8 +258,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   g_signal_connect (GIMP_SIZE_ENTRY (coordinates), "coordinates-alarm",
                     G_CALLBACK (callback_alarm_triggered),
                     (gpointer) & interface_I_data);
-
-  //signal(SIGALRM, alarm_handler);
 
   //gtk_box_pack_start (GTK_BOX (hbox), coordinates, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), coordinates, FALSE, FALSE, 0);
@@ -280,7 +277,24 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   /* Initialize the carver */
 
-  carver_data = render_init_carver(image_ID, drawable, state, image_vals, drawable_vals, TRUE);
+  if ((state->pres_layer_ID == -1) || (ui_state->pres_status == FALSE))
+    {
+      state->pres_layer_ID = 0;
+    }
+  if ((state->disc_layer_ID == -1) || (ui_state->disc_status == FALSE))
+    {
+      state->disc_layer_ID = 0;
+    }
+  if ((state->rigmask_layer_ID == -1) || (ui_state->rigmask_status == FALSE))
+    {
+      state->rigmask_layer_ID = 0;
+    }
+  carver_data = render_init_carver(image_ID, drawable, state, drawable_vals, TRUE);
+  if (carver_data == NULL)
+    {
+      return RESPONSE_FATAL;
+    }
+  interface_I_data.carver_data = carver_data;
 
   /*  Show the main containers  */
 
@@ -288,17 +302,21 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   gtk_widget_show (dlg);
   gtk_main ();
 
+
+  lqr_carver_destroy (carver_data->carver);
+
   if (dialog_I_response == GTK_RESPONSE_OK)
     {
       /*  Save ui values  */
       ui_state->chain_active =
 	gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
 				      (coordinates));
+      /*
       state->new_width =
 	ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0));
       state->new_height =
 	ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 1));
-      /*
+
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
 				     &(state->grad_func));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
@@ -345,18 +363,13 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 	*/
 
       /* save all */
-      /*
       memcpy (vals, state, sizeof (PlugInVals));
       memcpy (ui_vals, ui_state, sizeof (PlugInUIVals));
-      */
-
     }
 
   gtk_widget_destroy (dlg);
   
   sigaction(SIGALRM, &old_alarm_action, NULL);
-  //signal(SIGALRM, SIG_DFL);
-
 
   return dialog_I_response;
 }
@@ -379,7 +392,7 @@ callback_dialog_I_response (GtkWidget * dialog, gint response_id, gpointer data)
       case RESPONSE_NONINTERACTIVE:
         gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
         dialog_state->has_pos = TRUE;
-        printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
+        //printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       default:
         dialog_I_response = response_id;
         gtk_main_quit ();
@@ -453,12 +466,24 @@ static void
 callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
 {
   gint new_width, new_height;
-  //InterfaceIData *p_data = INTERFACE_I_DATA (data);
+  gboolean render_success;
+
+  InterfaceIData *p_data = INTERFACE_I_DATA (data);
   new_width =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 0));
   new_height =
     ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 1));
-  printf("[w,h=%i,%i]\n", new_width, new_height); fflush(stdout);
+  state->new_width = new_width;
+  state->new_height = new_height;
+  //printf("[w,h=%i,%i]\n", new_width, new_height); fflush(stdout);
+  p_data->drawable = gimp_drawable_get(p_data->drawable_vals->layer_ID);
+  render_success = render_interactive (p_data->image_ID, p_data->drawable, state, p_data->drawable_vals, p_data->carver_data);
+  if (!render_success)
+    {
+      dialog_I_response = RESPONSE_FATAL;
+      gtk_main_quit();
+    }
+  gimp_displays_flush();
 }
 
 

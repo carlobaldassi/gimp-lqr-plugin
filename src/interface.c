@@ -640,11 +640,11 @@ dialog (gint32 image_ID,
   gtk_widget_show (dlg);
   gtk_main ();
 
-  printf("RESPONSE=%i\n", dialog_response); fflush(stdout);
+  //printf("RESPONSE=%i\n", dialog_response); fflush(stdout);
 
   if ((dialog_response == GTK_RESPONSE_OK) || (dialog_response == RESPONSE_INTERACTIVE))
     {
-      printf("OK or INTERACTIVE\n"); fflush(stdout);
+      //printf("OK or INTERACTIVE\n"); fflush(stdout);
       /*  Save ui values  */
       ui_state->chain_active =
 	gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
@@ -699,10 +699,10 @@ dialog (gint32 image_ID,
 
     }
 
-  printf("DESTROY\n"); fflush(stdout);
+  //printf("DESTROY\n"); fflush(stdout);
   gtk_widget_destroy (dlg);
 
-  printf("UNREF\n"); fflush(stdout);
+  //printf("UNREF\n"); fflush(stdout);
   g_object_unref (G_OBJECT (preview_data.pixbuf));
 
   if (context_calls > 0)
@@ -710,7 +710,7 @@ dialog (gint32 image_ID,
       gimp_context_set_foreground (&saved_colour);
     }
 
-  printf("DETACH\n"); fflush(stdout);
+  //printf("DETACH\n"); fflush(stdout);
   gimp_drawable_detach (preview_data.drawable);
 
   return dialog_response;
@@ -731,7 +731,7 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
     case RESPONSE_INTERACTIVE:
       gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
       dialog_state->has_pos = TRUE;
-      printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
+      //printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
     case RESPONSE_REFRESH:
     case GTK_RESPONSE_OK:
     case RESPONSE_FEAT_REFRESH:
@@ -742,7 +742,7 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
     case RESPONSE_RESET:
       gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
       dialog_state->has_pos = TRUE;
-      printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
+      //printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       break;
     default:
       break;
