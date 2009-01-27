@@ -29,6 +29,7 @@
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 #include <lqr.h>
+#include "altsizeentry.h"
 
 #include "plugin-intl.h"
 
@@ -306,7 +307,7 @@ run (const gchar * name,
           gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
 
           /* Install a new signal needed by interface_I */
-          g_signal_newv("coordinates-alarm", GIMP_TYPE_SIZE_ENTRY, G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+          g_signal_newv("coordinates-alarm", ALT_TYPE_SIZE_ENTRY, G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
               0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
 
           /* gimp_context_push(); */

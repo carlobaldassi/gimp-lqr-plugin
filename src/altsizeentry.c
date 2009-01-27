@@ -234,9 +234,16 @@ alt_size_entry_new (gint                       number_of_fields,
   gse->show_refval      = show_refval;
   gse->update_policy    = update_policy;
 
+  /** CUSTOMIZATION BEGIN **/
+  /*
   gtk_table_resize (GTK_TABLE (gse),
                     1 + gse->show_refval + 2,
                     number_of_fields + 1 + 3);
+                    */
+  gtk_table_resize (GTK_TABLE (gse),
+                    1 + gse->show_refval + 3,
+                    number_of_fields + 1 + 2);
+  /** CUSTOMIZATION END **/
 
   /*  show the 'pixels' menu entry only if we are a 'size' sizeentry and
    *  don't have the reference value spinbutton
@@ -336,10 +343,20 @@ alt_size_entry_new (gint                       number_of_fields,
   gse->unitmenu = gimp_unit_menu_new (unit_format, unit,
                                       gse->menu_show_pixels,
                                       gse->menu_show_percent, TRUE);
+
+  /** CUSTOMIZATION BEGIN **/
+  /*
   gtk_table_attach (GTK_TABLE (gse), gse->unitmenu,
                     i+2, i+3,
                     gse->show_refval+1, gse->show_refval+2,
                     GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+                    */
+  gtk_table_attach (GTK_TABLE (gse), gse->unitmenu,
+                    0, 2,
+                    gse->show_refval+2, gse->show_refval+3,
+                    GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+  /** CUSTOMIZATION END **/
+
   g_signal_connect (gse->unitmenu, "unit-changed",
                     G_CALLBACK (alt_size_entry_unit_callback),
                     gse);
@@ -370,7 +387,7 @@ alt_size_entry_add_field  (AltSizeEntry *gse,
   AltSizeEntryField *gsef;
   gint                digits;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail (GTK_IS_SPIN_BUTTON (value_spinbutton));
 
   if (gse->show_refval)
@@ -450,7 +467,7 @@ alt_size_entry_attach_label (AltSizeEntry *gse,
 {
   GtkWidget *label;
 
-  g_return_val_if_fail (GIMP_IS_SIZE_ENTRY (gse), NULL);
+  g_return_val_if_fail (ALT_IS_SIZE_ENTRY (gse), NULL);
   g_return_val_if_fail (text != NULL, NULL);
 
   label = gtk_label_new_with_mnemonic (text);
@@ -508,7 +525,7 @@ alt_size_entry_set_resolution (AltSizeEntry *gse,
   AltSizeEntryField *gsef;
   gfloat              val;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail ((field >= 0) && (field < gse->number_of_fields));
 
   resolution = CLAMP (resolution, GIMP_MIN_RESOLUTION, GIMP_MAX_RESOLUTION);
@@ -552,7 +569,7 @@ alt_size_entry_set_size (AltSizeEntry *gse,
 {
   AltSizeEntryField *gsef;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail ((field >= 0) && (field < gse->number_of_fields));
   g_return_if_fail (lower <= upper);
 
@@ -591,7 +608,7 @@ alt_size_entry_set_value_boundaries (AltSizeEntry *gse,
 {
   AltSizeEntryField *gsef;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail ((field >= 0) && (field < gse->number_of_fields));
   g_return_if_fail (lower <= upper);
 
@@ -679,7 +696,7 @@ alt_size_entry_get_value (AltSizeEntry *gse,
 {
   AltSizeEntryField *gsef;
 
-  g_return_val_if_fail (GIMP_IS_SIZE_ENTRY (gse), 0);
+  g_return_val_if_fail (ALT_IS_SIZE_ENTRY (gse), 0);
   g_return_val_if_fail ((field >= 0) && (field < gse->number_of_fields), 0);
 
   gsef = (AltSizeEntryField *) g_slist_nth_data (gse->fields, field);
@@ -762,7 +779,7 @@ alt_size_entry_set_value (AltSizeEntry *gse,
 {
   AltSizeEntryField *gsef;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail ((field >= 0) && (field < gse->number_of_fields));
 
   gsef = (AltSizeEntryField *) g_slist_nth_data (gse->fields, field);
@@ -812,7 +829,7 @@ alt_size_entry_set_refval_boundaries (AltSizeEntry *gse,
 {
   AltSizeEntryField *gsef;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail ((field >= 0) && (field < gse->number_of_fields));
   g_return_if_fail (lower <= upper);
 
@@ -901,7 +918,7 @@ alt_size_entry_set_refval_digits (AltSizeEntry *gse,
 {
   AltSizeEntryField *gsef;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail ((field >= 0) && (field < gse->number_of_fields));
   g_return_if_fail ((digits >= 0) && (digits <= 6));
 
@@ -939,7 +956,7 @@ alt_size_entry_get_refval (AltSizeEntry *gse,
   AltSizeEntryField *gsef;
 
   /*  return 1.0 to avoid division by zero  */
-  g_return_val_if_fail (GIMP_IS_SIZE_ENTRY (gse), 1.0);
+  g_return_val_if_fail (ALT_IS_SIZE_ENTRY (gse), 1.0);
   g_return_val_if_fail ((field >= 0) && (field < gse->number_of_fields), 1.0);
 
   gsef = (AltSizeEntryField*) g_slist_nth_data (gse->fields, field);
@@ -1016,7 +1033,7 @@ alt_size_entry_set_refval (AltSizeEntry *gse,
 {
   AltSizeEntryField *gsef;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail ((field >= 0) && (field < gse->number_of_fields));
 
   gsef = (AltSizeEntryField *) g_slist_nth_data (gse->fields, field);
@@ -1058,7 +1075,7 @@ alt_size_entry_refval_callback (GtkWidget *widget,
 GimpUnit
 alt_size_entry_get_unit (AltSizeEntry *gse)
 {
-  g_return_val_if_fail (GIMP_IS_SIZE_ENTRY (gse), GIMP_UNIT_INCH);
+  g_return_val_if_fail (ALT_IS_SIZE_ENTRY (gse), GIMP_UNIT_INCH);
 
   return gse->unit;
 }
@@ -1124,7 +1141,7 @@ void
 alt_size_entry_set_unit (AltSizeEntry *gse,
                           GimpUnit       unit)
 {
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
   g_return_if_fail (gse->menu_show_pixels || (unit != GIMP_UNIT_PIXEL));
   g_return_if_fail (gse->menu_show_percent || (unit != GIMP_UNIT_PERCENT));
 
@@ -1158,7 +1175,7 @@ void
 alt_size_entry_show_unit_menu (AltSizeEntry *gse,
                                 gboolean       show)
 {
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
 
   if (show)
     gtk_widget_show (gse->unitmenu);
@@ -1181,7 +1198,7 @@ alt_size_entry_set_pixel_digits (AltSizeEntry *gse,
 {
   GimpUnitMenu *menu;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
 
   menu = GIMP_UNIT_MENU (gse->unitmenu);
 
@@ -1202,7 +1219,7 @@ alt_size_entry_grab_focus (AltSizeEntry *gse)
 {
   AltSizeEntryField *gsef;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
 
   gsef = gse->fields->data;
   if (gsef)
@@ -1226,7 +1243,7 @@ alt_size_entry_set_activates_default (AltSizeEntry *gse,
 {
   GSList *list;
 
-  g_return_if_fail (GIMP_IS_SIZE_ENTRY (gse));
+  g_return_if_fail (ALT_IS_SIZE_ENTRY (gse));
 
   for (list = gse->fields; list; list = g_slist_next (list))
     {
@@ -1259,7 +1276,7 @@ alt_size_entry_get_help_widget (AltSizeEntry *gse,
 {
   AltSizeEntryField *gsef;
 
-  g_return_val_if_fail (GIMP_IS_SIZE_ENTRY (gse), NULL);
+  g_return_val_if_fail (ALT_IS_SIZE_ENTRY (gse), NULL);
   g_return_val_if_fail ((field >= 0) && (field < gse->number_of_fields), NULL);
 
   gsef = g_slist_nth_data (gse->fields, field);
