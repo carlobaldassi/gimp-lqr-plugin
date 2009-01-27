@@ -69,4 +69,11 @@ render_interactive (gint32 image_ID,
         PlugInDrawableVals * drawable_vals,
         CarverData * carver_data);
 
+gboolean
+render_flatten (gint32 image_ID,
+        GimpDrawable * drawable,
+        PlugInVals * vals,
+        PlugInDrawableVals * drawable_vals,
+        CarverData * carver_data);
+
 #endif /* __RENDER_H__ */
