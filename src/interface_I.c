@@ -693,6 +693,7 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   //printf("[w,h=%i,%i]\n", new_width, new_height); fflush(stdout);
   p_data->drawable = gimp_drawable_get(p_data->drawable_vals->layer_ID);
   render_success = render_interactive (p_data->image_ID, p_data->drawable, state, p_data->drawable_vals, p_data->carver_data);
+  p_data->drawable_vals->layer_ID = c_data->layer_ID;
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;

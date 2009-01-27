@@ -149,7 +149,7 @@ render_init_carver (gint32 image_ID,
       gimp_image_convert_rgb (image_ID);
     }
 
-  if ((!interactive) && (vals->new_layer == TRUE))
+  if (vals->new_layer == TRUE)
     {
       snprintf (new_layer_name, LQR_MAX_NAME_LENGTH, "%s LqR", layer_name);
       layer_ID = gimp_layer_copy (drawable->drawable_id);
@@ -732,8 +732,15 @@ render_interactive (gint32 image_ID,
 
   MEMCHECK1 (lqr_carver_resize (carver, new_width, new_height));
 
-  gimp_image_resize (image_ID, new_width, new_height, -x_off, -y_off);
-  gimp_layer_resize_to_image_size (layer_ID);
+  if (vals->resize_canvas == TRUE)
+    {
+      gimp_image_resize (image_ID, new_width, new_height, -x_off, -y_off);
+      gimp_layer_resize_to_image_size (layer_ID);
+    }
+  else
+    {
+      gimp_layer_resize (layer_ID, new_width, new_height, 0, 0);
+    }
   gimp_drawable_detach (drawable);
   drawable = gimp_drawable_get (layer_ID);
 

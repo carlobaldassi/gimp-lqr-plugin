@@ -617,7 +617,8 @@ dialog (gint32 image_ID,
 			   _("Creates an extra output layer with the seams, "
 			     "for visual inspection of what the plugin did. "
 			     "Use it together with \"Output on a new layer\", "
-			     "and resize in one direction at a time"), NULL);
+			     "and resize in one direction at a time.\n"
+			     "Note that this option is ignored in interactive mode"), NULL);
 
   colour_start = g_new (GimpRGB, 1);
   colour_end = g_new (GimpRGB, 1);
@@ -2114,7 +2115,8 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
 			   _
 			   ("This will have the same effect as setting the strenght "
 			    "to 0 in the discard mask when the first rescale step is "
-			    "an image enlargment (which normally is the best choice)"),
+			    "an image enlargment (which normally is the best choice).\n"
+			    "Note that this option is ignored in interactive mode"),
 			   NULL);
 
   gtk_box_pack_start (GTK_BOX (operations_vbox), no_disc_on_enlarge_button, FALSE,
