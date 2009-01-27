@@ -487,15 +487,19 @@ dialog (gint32 image_ID,
 			   _
 			   ("Here you can choose if you want to transform back the "
 			    "image to its original size after LqR has been performed, "
-			    "and how to do it.\n"
+			    "and whether to do it with LqR again or with standard scaling.\n"
+			    "You can also choose to use standard scaling to reach the previous width "
+			    "or height and preserve the aspect ratio.\n"
 			    "Note that this setting is ignored in interactive mode"),
 			   NULL);
 
   oper_mode_combo_box =
     gimp_int_combo_box_new (_("No"), OPER_MODE_NORMAL,
-			    _("Standard scale"),
-			    OPER_MODE_SCALEBACK,
-			    _("With LqR"), OPER_MODE_LQRBACK, NULL);
+			    _("With LqR"), OPER_MODE_LQRBACK,
+			    _("Standard"), OPER_MODE_SCALEBACK,
+			    _("Width (Std)"), OPER_MODE_SCALEBACKW,
+			    _("Height (Std)"), OPER_MODE_SCALEBACKH,
+			    NULL);
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
 				 state->oper_mode);
   

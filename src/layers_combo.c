@@ -25,6 +25,7 @@
 
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
+#include "altsizeentry.h"
 
 #include <lqr.h>
 
@@ -258,9 +259,9 @@ callback_guess_button_hor (GtkWidget * button, gpointer data)
   new_width = guess_new_size (button, p_data, GUESS_DIR_HOR);
   new_height = p_data->old_height;
 
-  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+  alt_size_entry_set_refval (ALT_SIZE_ENTRY
 			      (p_data->coordinates), 0, new_width);
-  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+  alt_size_entry_set_refval (ALT_SIZE_ENTRY
 			      (p_data->coordinates), 1, new_height);
 }
 
@@ -273,9 +274,9 @@ callback_guess_button_ver (GtkWidget * button, gpointer data)
   new_width = p_data->old_width;
   new_height = guess_new_size (button, p_data, GUESS_DIR_VERT);
 
-  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+  alt_size_entry_set_refval (ALT_SIZE_ENTRY
 			      (p_data->coordinates), 0, new_width);
-  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY
+  alt_size_entry_set_refval (ALT_SIZE_ENTRY
 			      (p_data->coordinates), 1, new_height);
 }
 

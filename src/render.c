@@ -350,6 +350,7 @@ render_noninteractive (gint32 image_ID,
   gint ntiles;
   gint old_width, old_height;
   gint new_width, new_height;
+  gint sb_width, sb_height;
   gint x_off, y_off;
   gint bpp;
   GimpDrawable *drawable_pres, *drawable_disc, *drawable_rigmask;
@@ -428,6 +429,8 @@ render_noninteractive (gint32 image_ID,
       MEMCHECK1 (lqr_carver_resize (carver, new_width, new_height));
       break;
     case OPER_MODE_SCALEBACK:
+    case OPER_MODE_SCALEBACKW:
+    case OPER_MODE_SCALEBACKH:
       break;
     default:
       g_message ("error: unknown mode");
@@ -508,15 +511,35 @@ render_noninteractive (gint32 image_ID,
     case OPER_MODE_LQRBACK:
       break;
     case OPER_MODE_SCALEBACK:
+    case OPER_MODE_SCALEBACKW:
+    case OPER_MODE_SCALEBACKH:
+      switch (vals->oper_mode)
+        {
+          case OPER_MODE_SCALEBACK:
+            sb_width = old_width;
+            sb_height = old_height;
+            break;
+          case OPER_MODE_SCALEBACKW:
+            sb_width = old_width;
+            sb_height = (int) ((double) new_height * old_width / new_width);
+            break;
+          case OPER_MODE_SCALEBACKH:
+            sb_width = (int) ((double) new_width * old_height / new_height);
+            sb_height = old_height;
+            break;
+          default:
+            return FALSE;
+        }
+
       if (vals->resize_canvas == TRUE)
         {
-          gimp_image_resize (image_ID, old_width, old_height, 0, 0);
-          gimp_layer_scale (layer_ID, old_width, old_height, FALSE);
+          gimp_image_resize (image_ID, sb_width, sb_height, 0, 0);
+          gimp_layer_scale (layer_ID, sb_width, sb_height, FALSE);
         }
       else
         {
           gimp_layer_translate (layer_ID, -x_off, -y_off);
-          gimp_layer_scale (layer_ID, old_width, old_height, FALSE);
+          gimp_layer_scale (layer_ID, sb_width, sb_height, FALSE);
           gimp_layer_translate (layer_ID, x_off, y_off);
         }
       gimp_drawable_detach (drawable);
@@ -526,22 +549,22 @@ render_noninteractive (gint32 image_ID,
           if (vals->pres_layer_ID != 0)
             {
               gimp_layer_translate (vals->pres_layer_ID, -x_off, -y_off);
-              gimp_layer_scale (vals->pres_layer_ID, old_width,
-                                old_height, FALSE);
+              gimp_layer_scale (vals->pres_layer_ID, sb_width,
+                                sb_height, FALSE);
               gimp_layer_translate (vals->pres_layer_ID, x_off, y_off);
             }
           if (vals->disc_layer_ID != 0)
             {
               gimp_layer_translate (vals->disc_layer_ID, -x_off, -y_off);
-              gimp_layer_scale (vals->disc_layer_ID, old_width,
-                                old_height, FALSE);
+              gimp_layer_scale (vals->disc_layer_ID, sb_width,
+                                sb_height, FALSE);
               gimp_layer_translate (vals->disc_layer_ID, x_off, y_off);
             }
           if (vals->rigmask_layer_ID != 0)
             {
               gimp_layer_translate (vals->rigmask_layer_ID, -x_off, -y_off);
-              gimp_layer_scale (vals->rigmask_layer_ID, old_width,
-                                old_height, FALSE);
+              gimp_layer_scale (vals->rigmask_layer_ID, sb_width,
+                                sb_height, FALSE);
               gimp_layer_translate (vals->rigmask_layer_ID, x_off, y_off);
             }
         }
