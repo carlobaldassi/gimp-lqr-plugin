@@ -49,7 +49,8 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_gimp_lqr_plugin_OBJECTS = main.$(OBJEXT) interface.$(OBJEXT) \
 	interface_I.$(OBJEXT) preview.$(OBJEXT) layers_combo.$(OBJEXT) \
-	render.$(OBJEXT) io_functions.$(OBJEXT)
+	render.$(OBJEXT) io_functions.$(OBJEXT) \
+	altcoordinates.$(OBJEXT) altsizeentry.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -200,22 +201,26 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 gimp_lqr_plugin_SOURCES = \
-	plugin-intl.h	\
-	main_common.h	\
-	main.c		\
-	main.h		\
-	interface.c	\
-	interface.h	\
-	interface_I.c	\
-	interface_I.h	\
-	preview.c       \
-	preview.h       \
-	layers_combo.c  \
-	layers_combo.h  \
-	render.c	\
-	render.h	\
-	io_functions.c  \
-	io_functions.h
+	plugin-intl.h    \
+	main_common.h    \
+	main.c	         \
+	main.h	         \
+	interface.c      \
+	interface.h      \
+	interface_I.c    \
+	interface_I.h    \
+	preview.c        \
+	preview.h        \
+	layers_combo.c   \
+	layers_combo.h   \
+	render.c         \
+	render.h         \
+	io_functions.c   \
+	io_functions.h   \
+	altcoordinates.c \
+	altcoordinates.h \
+	altsizeentry.c   \
+	altsizeentry.h
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
@@ -292,6 +297,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/altcoordinates.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/altsizeentry.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface_I.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_functions.Po@am__quote@

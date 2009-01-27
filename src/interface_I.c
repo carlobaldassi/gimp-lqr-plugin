@@ -39,6 +39,8 @@
 #include "interface_I.h"
 #include "preview.h"
 #include "layers_combo.h"
+#include "altsizeentry.h"
+#include "altcoordinates.h"
 
 
 /***  Constants  ***/
@@ -263,8 +265,8 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   gimp_image_get_resolution (image_ID, &xres, &yres);
 
   coordinates =
-    gimp_coordinates_new (unit, "%p", TRUE, TRUE, SPIN_BUTTON_WIDTH,
-			  GIMP_SIZE_ENTRY_UPDATE_SIZE, ui_state->chain_active,
+    alt_coordinates_new (unit, "%p", TRUE, TRUE, SPIN_BUTTON_WIDTH,
+			  ALT_SIZE_ENTRY_UPDATE_SIZE, ui_state->chain_active,
 			  TRUE, _("Width:"), state->new_width, xres, 2,
 			  GIMP_MAX_IMAGE_SIZE, 0, orig_width,
 			  _("Height:"), state->new_height, yres, 2,
@@ -272,11 +274,11 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   interface_I_data.coordinates = (gpointer) coordinates; // USELESS
 
-  g_signal_connect (GIMP_SIZE_ENTRY (coordinates), "value-changed",
+  g_signal_connect (ALT_SIZE_ENTRY (coordinates), "value-changed",
 		    G_CALLBACK (callback_size_changed),
 		    (gpointer) & interface_I_data);
 
-  g_signal_connect (GIMP_SIZE_ENTRY (coordinates), "refval-changed",
+  g_signal_connect (ALT_SIZE_ENTRY (coordinates), "refval-changed",
 		    G_CALLBACK (callback_size_changed),
 		    (gpointer) & interface_I_data);
 
@@ -285,7 +287,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   alarm_action.sa_handler = alarm_handler;
   sigaction(SIGALRM, &alarm_action, NULL);
 
-  g_signal_connect (GIMP_SIZE_ENTRY (coordinates), "coordinates-alarm",
+  g_signal_connect (ALT_SIZE_ENTRY (coordinates), "coordinates-alarm",
                     G_CALLBACK (callback_alarm_triggered),
                     (gpointer) & interface_I_data);
 
@@ -512,9 +514,9 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 				      (coordinates));
       /*
       state->new_width =
-	ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 0));
+	ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (coordinates), 0));
       state->new_height =
-	ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (coordinates), 1));
+	ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (coordinates), 1));
 
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
 				     &(state->grad_func));
@@ -683,9 +685,9 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   CarverData *c_data = p_data->carver_data;
 
   new_width =
-    ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 0));
+    ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (size_entry), 0));
   new_height =
-    ROUND (gimp_size_entry_get_refval (GIMP_SIZE_ENTRY (size_entry), 1));
+    ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (size_entry), 1));
   state->new_width = new_width;
   state->new_height = new_height;
   //printf("[w,h=%i,%i]\n", new_width, new_height); fflush(stdout);
@@ -750,9 +752,9 @@ callback_resetvalues_button (GtkWidget * button, gpointer data)
 {
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
 
-  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY (p_data->coordinates), 0,
+  alt_size_entry_set_refval (ALT_SIZE_ENTRY (p_data->coordinates), 0,
 			      p_data->orig_width);
-  gimp_size_entry_set_refval (GIMP_SIZE_ENTRY (p_data->coordinates), 1,
+  alt_size_entry_set_refval (ALT_SIZE_ENTRY (p_data->coordinates), 1,
 			      p_data->orig_height);
 }
 
