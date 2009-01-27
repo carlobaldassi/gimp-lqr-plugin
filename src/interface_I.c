@@ -413,7 +413,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   show_info_button = gtk_toggle_button_new ();
   show_info_icon =
-    gtk_image_new_from_stock (GIMP_STOCK_INFO, GTK_ICON_SIZE_MENU);
+    gtk_image_new_from_stock (GTK_STOCK_INFO, GTK_ICON_SIZE_MENU);
   gtk_container_add (GTK_CONTAINER (show_info_button), show_info_icon);
   gtk_widget_show (show_info_icon);
   gtk_container_add (GTK_CONTAINER (show_info_event_box),
