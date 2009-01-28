@@ -3,7 +3,7 @@ Il plugin Liquid Rescale è un'implementazione dell'algoritmo "content-aware res
 
 Il suo scopo è di ridimensionare non uniformemente le immagini pur mantenendo le caratteristiche più salienti dell'immagine, evitando possibilmente di distorcerle. Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale".
 
-Funziona sia rimpicciolentdo che ingrandendo, ma in quest'ultimo caso è preferibile procedere in più passi. È possibile specificare manualmente quali zone dell'immagine devono essere preservate e quali ignorate (o rimosse).
+Funziona sia rimpicciolentdo che ingrandendo, ed è possibile specificare manualmente quali zone dell'immagine devono essere preservate e quali ignorate (o rimosse).
 
 Si veda anche [#seam_carving Appendice: La tecnica del //seam carving//] alla fine di questa pagina per un'introduzione ai concetti su cui si basa questa tecnica.
 
@@ -11,17 +11,16 @@ Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo
 
 Il plugin opera sempre su interi livelli; se una selezione è presente, è salvata come canale e rimossa. Se il livello ha una maschera per la trasparenza, viene mostrata un'opzione per stabilire se applicarla o rimuoverla prima di procedere.
 
-++ Descrizione dell'interfaccia utente
+++ Descrizione dell'interfaccia utente (modalità non-interattiva)
 
 [[image dialog1_it.jpg]]
 
 +++ Selezionare le nuove dimensioni
 
 In questa sezione è possibile impostare le dimensioni finali dell'immagine. È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin agisce prima nel senso della larghezza, e poi in altezza. Questo compurtamento può essere modificato attrverso un'opzione nella linguetta //Avanzato//.
+I tre piccoli pulsanti sulla destra possono essere utilizzati per riportare le dimensioni ai valori originali dell'immagine (sopra) o agli ultimi valori usati (in mezzo), o per passare alla modalità interattiva (sotto - vedi la [#interactive sezione corrispondente] per maggiori dettagli).
 
-I due piccoli pulsanti sulla destra possono essere utilizzati per riportare le dimensioni ai valori originali dell'immagine (sopra) o agli ultimi valori usati (sotto).
-
-La modalità predefinita è di ridimensionare "liquidamente" l'immagine fino alle dimensioni specificate. Le altre opzioni possono essere usate per riportare l'immagine alle dimensioni iniziali una volta terminato, riutilizzando il LiquidRescale oppure il ridimensionamento standard.
+Nota che le dimensioni finali possono essere impostate automaticamente quando si rimuovono contenuti, vedi più sotto.
 
 +++ Maschere per i contenuti
 
@@ -34,11 +33,11 @@ Il sistema più semplice per selezionare manualmente le zone dell'immagine che s
 * Tornate alla finestra del plugin e cliccate sul pulsante //"Aggiorna"// per vedere le modifiche
 * Ripetete il tutto per i contenuti da eliminare
 
-Volendo eliminare porzioni di immagine, un metodo rapido per impostare le dimensioni finali è, dopo aver impostato una maschera per l'eliminazione, di selezionare una direzione di ridimensionamento (orizzontale/verticale) e cliccare sul pulsante //"Auto dimensionamento"//. (Questo metodo tuttavia funziona solo con maschere molto semplici).
+Volendo eliminare porzioni di immagine, un metodo rapido per impostare le dimensioni finali è, dopo aver impostato una maschera per l'eliminazione, di cliccare su uno dei pulsanti a fianco dell'etichetta //"Auto dimensionamento"//. (Questo metodo tuttavia funziona solo con maschere molto semplici).
 
 **Nota #1:** l'eliminazione di parti dell'immaagine è possibile solamente quando la si restringe. Per default, la maschera per la preservazione dei contenuti viene ignorata quando si allarga l'immagine, perché in quel caso le aree contrassegnate verrebbero gonfiate anziché rimosse. Se volete davvero ottenere questo effetto, dovete disattivare l'opzione corrispondente nella linguetta //"Avanzato"//.
 
-**Nota #2:** la preservazione dei contenuti non è possibile se si cerca di ingrandire troppo l'immagine, poiché il processo di allargamento è l'inverso del processo di restringimento, quindi la massima quantità di pixel che è possibile aggiungere a un layer corrisponde al numero di pixel che non sono protetti. Per esempio, se avete un'immagine larga 1000 pixel e averte contrassegnato una porzione da preservare larga 800 pixel, la larghezza finale dovrebbe essere inferiore ai 1200 pixel. Per ingrandire di più, procedete in passi successivi.
+**Nota #2:** la preservazione dei contenuti non è possibile se si cerca di ingrandire troppo l'immagine, poiché il processo di allargamento è l'inverso del processo di restringimento, quindi la massima quantità di pixel che è possibile aggiungere a un layer corrisponde al numero di pixel che non sono protetti. Per esempio, se avete un'immagine larga 1000 pixel e averte contrassegnato una porzione da preservare larga 800 pixel, la larghezza finale dovrebbe essere inferiore ai 1200 pixel. Per ingrandire di più, procedete in passi successivi, oppure impostate adeguatamente il valore del //"Max ingrandimento per passo"//.
 
 ++++ Descrizione completa
 
@@ -50,7 +49,7 @@ Le dimensioni e la posizione dei layer selezionati può essere arbitraria, il pl
 
 La sezione **Selezione dei contenuti da eliminare** è identica alla precedente, ma l'effetto è invertito, e il colore impostato dal pulsante //"Nuovo"// è il rosso anziché il verde.
 
-In più, rispetto alla sezione precedente, c'è un ulteriore pulsante, //"Auto dimensionamento"//, che può essere usato per effettuare l'eliminazione "rapida" di aree dell'immagine. Se si preme questo pulsante, il plug-in cerca di calcolare l'ammontare di riscalatura necessaria per rimuovere gli oggetti marcati dall'attuale maschera per l'eliminazione, e imposta corrispondentemente le dimensioni finali (nella sezione **"Selezionare le nuove dimensioni"**). Il risultato è sempre un riscalamento in una singola direzione, o in orizzontale (nel qual caso la larghezza viene cambiata e l'altezza viene impostata al valore originario), oppure in verticale (nel qual caso è l'altezza ad essere modificata, mentre la larghezza viene impostata al suo valore originario); questa direzione va specificata attraverso il menu accanto al pulsante //"Auto dimensionamento"//, prima di premerlo.
+In più, rispetto alla sezione precedente, ci sono due altri pulsanti, accanto all'etichetta //"Auto dimensionamento"//, che possono essere usati per effettuare l'eliminazione "rapida" di aree dell'immagine. Se si preme uno di questi pulsanti, il plug-in cerca di calcolare l'ammontare di riscalatura necessaria per rimuovere gli oggetti marcati dall'attuale maschera per l'eliminazione, e imposta corrispondentemente le dimensioni finali (nella sezione **"Selezionare le nuove dimensioni"**). Questi pulsanti producono sempre un riscalamento in una singola direzione: il tasto //"Larghezza"// modifica la larghezza e reimposta l'altezza al valore originario, il tasto //"Altezza"// fa l'opposto.
 
 Si noti che questa opzione è adeguata solamente per operazioni di rimozione elementari, poiché questo metodo può facilmente sbagliare se la maschera è troppo complicata.
 
@@ -65,6 +64,7 @@ Questa linguetta contiene alcune opzioni riguardo all'output del plugin.
 * **Ridimensiona la tela**. Specifica se la tela deve essere ridimensionata in modo da adattarsi alle nuove dimensioni del livello attivo. Se quest'opzione è attivata (è il default), il livello attivo verrà anche riposizionato in modo da essere completamente visibile.
 * **Ridimensiona i livelli ausiliarî**. Specifica se i livelli che sono stati impostati per la selezione manuale dei contenuti e per specificare una maschera per la rigidità verranno ridimensionati assieme al livello attivo. Se quest'opzione è attivata (è il default), le parti dei livelli in questione che escono dal livello attivo verranno tagliate, dopodichè i livelli ausiliarî subiranno lo stesso processo di eliminazione/inserimento di linee del layer attivo.
 * **Mostra le linee d'azione**. Specifica se creare un nuovo livello che mostra la mappa delle linee d'azione (che sono le parti dell'immagine che vengono eliminate, se si restringe, o moltiplicate, se si allarga). Se questa opzione è selezionata, alla sua destra compaiono due pulsanti che permettono di stabilire le gamma dei colori da usare per le linee. Le linee sono calcolate sull'immagine originale in base alla necessità (per es. ne saranno calcolate 100 se si sta restringendo o allargando il livello di 100 pixel); le aree rimanenti restano trasparenti. Per interpretare il risultato, usate questa opzione assieme a //"Scrivi su un nuovo livello"//, e sovrapponete il livello con le linee d'azione a quello originale. Se riscalate in due direzioni contemporaneamente, otterete due mappe, ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi non è molto utile. Lo stesso vale se si esegue un doppio ridimensionamento liquido (modalità //"Lqr+Lqr alle dimensioni originali"//).
+* **Riporta alle dimensioni originali**. Specifica se riscalare all'indietro dopo la trasformazione con liquid rescale. Questo può essere utile ad esempio per la rimozione di oggetti o per fare uno "zoom dei contenuti". Se questa opzione è attivata, un menu compare al di sotto per scegliere la modalità delle operazioni: è possibile scegliere di ritornare alle dimensioni originali usando LqR o il ridimensionamento standard, oppure di ridimensionare uniformemente l'immagine fino a raggiungere o la larghezza o l'altezza originali, mantenendo però le proporzioni.
 
 +++ Avanzato
 
@@ -76,9 +76,11 @@ Questa linguetta contiene alcune opzioni che permettono un controllo avanzato de
  * //Massimo passo trasverso.// Questa opzione permette di impostare il massimo passo trasvero ammesso tra due pixel successivi delle linee d'azione. L'algoritmo standard usa un passo = 1, che significa che ogni pixel di una linea può essere spostato al massimo di un pixel rispetto ai suoi vicini. Questo comporta che le linee d'azione possono formare un angolo massimo di 45 gradi rispetto alla loro base. Aumentare il valore del passo massimo è l'unico modo di superare questo limite, tuttavia può portare all'introduzione di errori visibili. Per bilanciare questo effetto è consigliabile agire sul parametro di rigidità.
  * //Rigidità globale.// Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte. Può risultare utile per ridurre le distorsioni in certi casi, o per evitare di introdurre gli errori derivanti da un valore troppo alto del passo (è consigliabile usare valori bassi in questo caso). Questo valore viene utilizzato su tutta l'immagine se non è specificata una maschera per la rigidità. //[Dettagli tecnici: la penalizzazione è proporzionale alla somma delle differenze di coordinate trasversali (passo) per ogni coppia di punti successivi della linea, elevate alla potenza di 1,5.]//
  * //Usa una maschera per la rigidità.// È possibile specificare diversi valori di rigidità per le diverse aree dell'immagine, usando un livello ausiliario, e seguendo la stessa procedura usata per specificar le maschere per i contenuti (il colore di default in questo caso è il blu). Quando si imposta una maschera per la rigidità, il valore in ogni pixel (calcolato allo stesso modo che per le maschere per i contenuti) viene utilizzato come coefficiente di rigidità e moltiplicato al valore globale. **Nota #1:** le aree trasparenti (o nere) di una maschera per la rigidità corrispondono sempre a un valore di rigidità 0, indipendentemente dal valore globale. **Nota #2:** le aree più rigide hanno un leggero effetto repulsivo rispetto alle linee d'azione, simile a quello di una maschera per la preservazione. Questo effetto può essere compensato tramite una maschera per l'eliminazione.
-* **Funzione gradiente**. È possibile scegliere quale funzione deve essere utilizzata per calcolare la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e quali sono irrileventi e possono essere scartati. Usando la funzione //Zero//, unitamente alla preservazione manuale dei contenuti, è possibile soppiantare completamento il riconoscimento automatico dei contenuti; l'utente può così generare la propria mappa dell' energia (per es. con un altro plugin).
-* **Ordine del ridimensionamento**. Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere se procedere prima in orizzontale e poi in verticale, o viceversa.
-* **Non eliminare i contenuti quando si allarga**. L'effetto di una maschera per l'eliminazione dei contenuti è invertito quanto il plugin viene utilizzato per allargare un'immagine; dal momento che ciò non è normalmente l'effetto voluto, la maschera è ignorata per default quando si allarga lungo la prima direzione di ridimensionamento (in tali casi, una piccola icona di avvertimento compare nella sezione //"Maschera per i contenuti da eliminare"//). Disattivate questa opzione per disabilitare questa verifica.
+ *//Funzione gradiente.// È possibile scegliere quale funzione deve essere utilizzata per calcolare la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e quali sono irrileventi e possono essere scartati. Usando la funzione //Zero//, unitamente alla preservazione manuale dei contenuti, è possibile soppiantare completamento il riconoscimento automatico dei contenuti; l'utente può così generare la propria mappa dell' energia (per es. con un altro plugin).
+* **Controllo delle operazioni**.
+ * //Max ingrandimento per passo.// Questa opzione imposta il massimo ingrandimento (in percentuale) che può essere effettuato in una sola volta. Se le dimensioni finali superano questa soglia, il plug-in si arresterà e ripartirà automaticamente tutte le volte necessarie. È possibile che dobbiate ridurre questo valore se avete delle maschere per la preservazione dei contenuti molto grandi.
+ * //Ordine del ridimensionamento.// Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere se procedere prima in orizzontale e poi in verticale, o viceversa.
+ * //Non eliminare i contenuti quando si allarga.// L'effetto di una maschera per l'eliminazione dei contenuti è invertito quanto il plugin viene utilizzato per allargare un'immagine; dal momento che ciò non è normalmente l'effetto voluto, la maschera è ignorata per default quando si allarga lungo la prima direzione di ridimensionamento (in tali casi, una piccola icona di avvertimento compare nella sezione //"Maschera per i contenuti da eliminare"//). Disattivate questa opzione per disabilitare questa verifica. Nota che questa opzione viene ignorata in modalità interattiva.
 
 +++ Utilizzo del plugin per l'editing di video e animazioni
 
@@ -94,6 +96,25 @@ In quest'ultimo caso, la finestra di dialogo del liquid rescale plugin vi verrà
 ++++ Applicare il plugin su tutti i livelli (ad es. per le animazioni)
 
 È anche possibile applicare il plugin a tutti i livelli di una data immagine (per esempio quando si lavora su un'animazione), usando l'opzione //"Filtra tutti i livelli..."// dal menu //"Filtri"// e scegliendo //"plug-in-lqr"// nella finestra di dialogo che compare. Le regole usate sono le stesse descritte nella sezione per l'utilizzo di GAP; tuttavia, incontrerete dei problemi in questo caso se usate dei livelli ausiliarî come maschere, poiché il plugin viene applicato anche a questi.
+
+++ Descrizione dell'interfaccia utente (modalità interattiva)
+[[# interactive ]]
+La modalità interattiva viene attivata premendo il pulsante corrispondente nella finestra di dialogo principale: le impostazioni correnti (incluse quelle sulle dimensioni) vengono applicate, e viene mostrata una nuova finestra di dialogo ridotta. In questa modalità è possibile modificare solamente le dimensioni (e le modifiche vengono immediatamente applicate); inoltre alcune opzioni vengono ignorate:
+* Mostra le linee d'azione
+* Riporta alle dimensioni originali
+* Non eliminare i contenuti quando si allarga
+
+Il pulsante //"Indietro"// riporta alla finestra di dialogo principale.
+
++++ Selezionare le dimensioni
+
+Questa sezione contiene i controlli per le dimensioni del livello. L'applicazione delle modifiche è quasi, immediata, ma solo dopo che i pulsanti sono stati rilasciati: questo significa che, se avete attivato il pulsante a catena per preservare le proporzioni del livello, il risultato sarà diverso a seconda che il ridimansionamento avvenga in diversi piccoli passi o tutto in una volta. Il pulsante di reset sulla destra riporta le dimensioni al valore iniziale: se la mappa non è mai stata reimpostata, il risultato è uguale all'immagine di partenza, altrimenti sarà diversa (vedi anche la sezione sulla mappa qui sotto).
+
++++ Map
+
+La sezione addizionale //"Mappa"// nella finestra di dialogo interattiva riguarda la mappa delle linee d'azione che il plugin usa internamente. Le mappe hanno un'orientamento (che dipende dalla dimensione del ridimensionamento), un valore di riferimento (quello di inizializzazione della mappa) e un intervallo d'azione. Le mappe permettono di ridimensionare quasi in tempo reale lungo la loro direzione e all'interno del loro intervallo d'azione; quando si oltrepassano i limiti dell'intervallo le mappe vengono aggiornate. Le mappe contengono tutta l'informazione relativa al proprio intervallo d'azione: dunque, se si ritorna al valore di riferimento di una mappa, si riottiene l'immagine originale. Tuttavia, ogni volta che la direzione di ridimensionamento cambia, o quando si supera il massimo ingrandimento per passo, la mappa viene automaticamente reinizializzata; quando ciò accade, tutte le informazioni precedenti sono perdute. Ci sono due pulsanti in questa sezione:
+* //Pulsante info.// mostra o nasconde le informazioni sulla mappa interna
+* //Pulsante reset.// Reimposta la mappa manualmente. Per esempio, se premete questo pulsante dopo aver modificato le dimensioni, e poi premete il pulsante reset nella sezione per le dimensioni, otterrete un risultato equivalente a quello che otterreste usando l'opzione //"Riporta alle dimensioni originali"// (impostata su //"liquid rescale"//) in modalità non-interattiva.
 
 ++ Appendice: La tecnica del //seam carving//
 [[# seam_carving ]]

@@ -54,7 +54,8 @@ typedef struct
   gint grad_func;
   gint res_order;
   gint mask_behavior;
-  gint oper_mode;
+  gboolean scaleback;
+  gint scaleback_mode;
   gboolean no_disc_on_enlarge;
   gchar pres_layer_name[VALS_MAX_NAME_LENGTH];
   gchar disc_layer_name[VALS_MAX_NAME_LENGTH];

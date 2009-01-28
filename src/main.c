@@ -68,7 +68,8 @@ const PlugInVals default_vals = {
   LQR_GF_XABS,                  /* grad func */
   LQR_RES_ORDER_HOR,            /* resize order */
   GIMP_MASK_APPLY,              /* mask behavior */
-  OPER_MODE_NORMAL,             /* operational mode */
+  FALSE,                        /* scaleback */
+  SCALEBACK_MODE_LQRBACK,       /* scaleback mode */
   TRUE,                         /* no disc upon enlarging */
   "",	                        /* pres_layer_name */
   "",                           /* disc_layer_name */
@@ -157,7 +158,8 @@ static void query (void)
     {GIMP_PDB_INT32, "grad_func", "Gradient function to use"},
     {GIMP_PDB_INT32, "res_order", "Resize order"},
     {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
-    {GIMP_PDB_INT32, "oper_mode", "Operational mode"},
+    {GIMP_PDB_INT32, "scaleback", "Whether to scale back when done"},
+    {GIMP_PDB_INT32, "scaleback_mode", "Scale back mode"},
     {GIMP_PDB_INT32, "no_disc_on_enlarge", "Ignore discard layer upon enlargement"},
     {GIMP_PDB_STRING, "pres_layer_name", "Preservation layer name (for noninteractive mode only)"},
     {GIMP_PDB_STRING, "disc_layer_name", "Discard layer name (for noninteractive mode only)"},
@@ -289,11 +291,12 @@ run (const gchar * name,
               vals.grad_func = param[17].data.d_int32;
               vals.res_order = param[18].data.d_int32;
               vals.mask_behavior = param[19].data.d_int32;
-              vals.oper_mode = param[20].data.d_int32;
-              vals.no_disc_on_enlarge = param[21].data.d_int32;
-              g_strlcpy(vals.pres_layer_name, param[22].data.d_string, VALS_MAX_NAME_LENGTH);
-              g_strlcpy(vals.disc_layer_name, param[23].data.d_string, VALS_MAX_NAME_LENGTH);
-              g_strlcpy(vals.rigmask_layer_name, param[24].data.d_string, VALS_MAX_NAME_LENGTH);
+              vals.scaleback = param[20].data.d_int32;
+              vals.scaleback_mode = param[21].data.d_int32;
+              vals.no_disc_on_enlarge = param[22].data.d_int32;
+              g_strlcpy(vals.pres_layer_name, param[23].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.disc_layer_name, param[24].data.d_string, VALS_MAX_NAME_LENGTH);
+              g_strlcpy(vals.rigmask_layer_name, param[25].data.d_string, VALS_MAX_NAME_LENGTH);
               vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
               vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
               vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);

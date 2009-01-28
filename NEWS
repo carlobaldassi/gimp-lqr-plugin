@@ -1,3 +1,13 @@
+Version 0.6.0 :
+ 
+* Core
+  * Scaling beyond 200% is now possible
+
+* Interface
+  * Added interactive mode
+  * Moved "Mode" to the output tab and renamed
+  * Added 2 new scale-back modes
+
 Version 0.5.0 :
  
 * Core

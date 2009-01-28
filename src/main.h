@@ -87,18 +87,17 @@ typedef struct
 #define PLUGIN_DIALOG_VALS(data) ((PlugInDialogVals*)data)
 
 
-/* Operational modes */
+/* Scaleback modes */
 
-enum _OperMode
+enum _ScalebackMode
 {
-  OPER_MODE_NORMAL,
-  OPER_MODE_LQRBACK,
-  OPER_MODE_SCALEBACK,
-  OPER_MODE_SCALEBACKW,
-  OPER_MODE_SCALEBACKH
+  SCALEBACK_MODE_LQRBACK,
+  SCALEBACK_MODE_STD,
+  SCALEBACK_MODE_STDW,
+  SCALEBACK_MODE_STDH
 };
 
-typedef enum _OperMode OperMode;
+typedef enum _ScalebackMode ScalebackMode;
 
 
 /*  Default values  */

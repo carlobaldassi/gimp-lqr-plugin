@@ -32,9 +32,8 @@
 	  Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale".
 	  </p>
 	  <p>
-	  Funziona sia rimpicciolentdo che ingrandendo, ma in quest'ultimo caso è preferibile
-	  procedere in più passi. È possibile specificare manualmente quali zone dell'immagine
-	  devono essere preservate e quali ignorate (o rimosse).
+	  Funziona sia rimpicciolentdo che ingrandendo, ed è possibile specificare manualmente
+	  quali zone dell'immagine devono essere preservate e quali ignorate (o rimosse).
 	  </p>
 	  <p>
 	  Si veda anche <a href="#seam_carving">Appendice: La tecnica del <i>seam carving</i></a> alla fine di questa
@@ -52,7 +51,7 @@
 	  per stabilire se applicarla o rimuoverla prima di procedere.
 	  </p>
 
-	  <h2>Descrizione dell'interfaccia utente</h2>
+	  <h2>Descrizione dell'interfaccia utente (modalità non-interattiva)</h2>
 	  <p>
 	  <img title="Esempio finestra di dialogo" alt="Esempio finestra di dialogo" src="../images/dialog1_it.jpg">
 	  </p>
@@ -67,17 +66,15 @@
 			  può essere modificato attrverso un'opzione nella linguetta <i>Avanzato</i>.
 		  </div>
 		  <div>
-			  I due piccoli pulsanti sulla destra possono essere utilizzati per riportare
+			  I tre piccoli pulsanti sulla destra possono essere utilizzati per riportare
 			  le dimensioni ai valori originali dell'immagine (sopra) o agli ultimi valori
-			  usati (sotto).
+			  usati (in mezzo), o per passare alla modalità interattiva (sotto - vedi la 
+			  <a href="#interactive">sezione corrispondente</a> per maggiori dettagli).
 		  </div>
-		  <div>
-			  La modalità predefinita è di ridimensionare "liquidamente" l'immagine fino
-			  alle dimensioni specificate. Le altre opzioni possono essere usate per
-			  riportare l'immagine alle dimensioni iniziali una volta terminato,
-			  riutilizzando il LiquidRescale oppure il ridimensionamento standard.
-		  </div>
-
+	  </p>
+	  <p>
+	  	Nota che le dimensioni finali possono essere impostate automaticamente quando si rimuovono
+		contenuti, vedi più sotto.
 	  </p>
 
 	  <h3>Maschere per i contenuti</h3>
@@ -103,8 +100,8 @@
 	  </p>
 	  <p>
 		Volendo eliminare porzioni di immagine, un metodo rapido per impostare le dimensioni
-		finali è, dopo aver impostato una maschera per l'eliminazione, di selezionare una direzione
-		di ridimensionamento (orizzontale/verticale) e cliccare sul pulsante <i>"Auto dimensionamento"</i>.
+		finali è, dopo aver impostato una maschera per l'eliminazione, di cliccare su uno
+	       	dei pulsanti a fianco dell'etichetta <i>"Auto dimensionamento"</i>.
 		(Questo metodo tuttavia funziona solo con maschere molto semplici).
 	  </p>
 	  <p>
@@ -121,7 +118,8 @@
 		corrisponde al numero di pixel che non sono protetti.
 		Per esempio, se avete un'immagine larga 1000 pixel e averte contrassegnato una porzione
 		da preservare larga 800 pixel, la larghezza finale dovrebbe essere inferiore ai 1200
-		pixel. Per ingrandire di più, procedete in passi successivi.
+		pixel. Per ingrandire di più, procedete in passi successivi, oppure impostate adeguatamente
+		il valore del <i>"Max ingrandimento per passo"</i>.
 	  </p>
 
 	  <h4>Descrizione completa</h4>
@@ -168,16 +166,15 @@
 			è il rosso anziché il verde.
 		</div>
 		<div>
-			In più, rispetto alla sezione precedente, c'è un ulteriore pulsante, <i>"Auto dimensionamento"</i>,
-			che può essere usato per effettuare l'eliminazione "rapida" di aree dell'immagine.
-			Se si preme questo pulsante, il plug-in cerca di calcolare l'ammontare di riscalatura necessaria per
+			In più, rispetto alla sezione precedente, ci sono due altri pulsanti, accanto all'etichetta
+			<i>"Auto dimensionamento"</i>, che possono essere usati per effettuare l'eliminazione "rapida" di
+			aree dell'immagine.
+			Se si preme uno di questi pulsanti, il plug-in cerca di calcolare l'ammontare di riscalatura necessaria per
 			rimuovere gli oggetti marcati dall'attuale maschera per l'eliminazione, e imposta corrispondentemente 
 			le dimensioni finali (nella sezione <b>"Selezionare le nuove dimensioni"</b>).
-			Il risultato è sempre un riscalamento in una singola direzione, o in orizzontale (nel qual caso
-			la larghezza viene cambiata e l'altezza viene impostata al valore originario), oppure in
-			verticale (nel qual caso è l'altezza ad essere modificata, mentre la larghezza viene impostata
-			al suo valore originario); questa direzione va specificata attraverso il menu accanto al pulsante
-			<i>"Auto dimensionamento"</i>, prima di premerlo.
+			Questi pulsanti producono sempre un riscalamento in una singola direzione: il tasto <i>"Larghezza"</i>
+			modifica la larghezza e reimposta l'altezza al valore originario, il tasto <i>"Altezza"</i> fa
+			l'opposto.
 		</div>
 		<div>
 			Si noti che questa opzione è adeguata solamente per operazioni di rimozione elementari,
@@ -236,6 +233,17 @@
 			  ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi
 			  non è molto utile. Lo stesso vale se si esegue un doppio ridimensionamento
 			  liquido (modalità <i>"Lqr+Lqr alle dimensioni originali"</i>).
+		  </dd>
+		  <dt><b>Riporta alle dimensioni originali</b></dt>
+		  <dd>
+			  Specifica se riscalare all'indietro dopo la trasformazione con liquid rescale.
+			  Questo può essere utile ad esempio per la rimozione di oggetti o per fare uno
+			  "zoom dei contenuti".
+			  Se questa opzione è attivata, un menu compare al di sotto per scegliere la modalità
+			  delle operazioni: è possibile scegliere di ritornare alle dimensioni originali
+			  usando LqR o il ridimensionamento standard, oppure di ridimensionare uniformemente
+			  l'immagine fino a raggiungere o la larghezza o l'altezza originali, mantenendo però
+			  le proporzioni.
 		  </dd>
 		  </dl>
 	  </p>
@@ -303,36 +311,50 @@
 				tramite una maschera per l'eliminazione.
 				</div>
 			</dd>
+			<dt>Funzione gradiente</dt>
+			<dd>
+				È possibile scegliere quale funzione deve essere utilizzata per calcolare
+				la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti
+				orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro
+				primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina
+				quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e
+				quali sono irrileventi e possono essere scartati.
+				Usando la funzione <i>Zero</i>, unitamente alla preservazione manuale dei
+				contenuti, è possibile soppiantare completamento il riconoscimento
+				automatico dei contenuti; l'utente può così generare la propria mappa dell'
+				energia (per es. con un altro plugin).
+			</dd>
 			</dl>
 		</dd>
-		<dt><b>Funzione gradiente</b></dt>
+		<dt><b>Controllo delle operazioni</b></dt>
 		<dd>
-			È possibile scegliere quale funzione deve essere utilizzata per calcolare
-			la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti
-			orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro
-			primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina
-			quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e
-			quali sono irrileventi e possono essere scartati.
-			Usando la funzione <i>Zero</i>, unitamente alla preservazione manuale dei
-			contenuti, è possibile soppiantare completamento il riconoscimento
-			automatico dei contenuti; l'utente può così generare la propria mappa dell'
-			energia (per es. con un altro plugin).
+			<dl>
+			<dt>Max ingrandimento per passo</dt>
+			<dd>
+				Questa opzione imposta il massimo ingrandimento (in percentuale) che può essere
+				effettuato in una sola volta. Se le dimensioni finali superano questa soglia,
+				il plug-in si arresterà e ripartirà automaticamente tutte le volte necessarie.
+				È possibile che dobbiate ridurre questo valore se avete delle maschere per la
+				preservazione dei contenuti molto grandi.
+			</dd>
+			<dt>Ordine del ridimensionamento</dt>
+			<dd>
+				Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere
+				se procedere prima in orizzontale e poi in verticale, o viceversa.
+			</dd>
+			<dt>Non eliminare i contenuti quando si allarga</dt>
+			<dd>
+				L'effetto di una maschera per l'eliminazione dei contenuti è invertito quanto
+				il plugin viene utilizzato per allargare un'immagine; dal momento che ciò
+				non è normalmente l'effetto voluto, la maschera è ignorata per default
+				quando si allarga lungo la prima direzione di ridimensionamento (in tali casi,
+				una piccola icona di avvertimento compare nella sezione <i>"Maschera per
+				i contenuti da eliminare"</i>).
+				Disattivate questa opzione per disabilitare questa verifica.
+				Nota che questa opzione viene ignorata in modalità interattiva.
+			</dd>
+			</dl>
 		</dd>
-		<dt><b>Ordine del ridimensionamento</b></dt>
-		<dd>
-			Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere
-			se procedere prima in orizzontale e poi in verticale, o viceversa.
-		</dd>
-		<dt><b>Non eliminare i contenuti quando si allarga</b></dt>
-		<dd>
-			L'effetto di una maschera per l'eliminazione dei contenuti è invertito quanto
-			il plugin viene utilizzato per allargare un'immagine; dal momento che ciò
-			non è normalmente l'effetto voluto, la maschera è ignorata per default
-			quando si allarga lungo la prima direzione di ridimensionamento (in tali casi,
-			una piccola icona di avvertimento compare nella sezione <i>"Maschera per
-			i contenuti da eliminare"</i>).
-			Disattivate questa opzione per disabilitare questa verifica.
-		</dl>
 		</dl>
 	</p>
 	<h3>Utilizzo del plugin per l'editing di video e animazioni</h3>
@@ -384,6 +406,59 @@
 		  tuttavia, incontrerete dei problemi in questo caso se usate dei livelli ausiliarî come
 		  maschere, poiché il plugin viene applicato anche a questi.
 	</p>
+
+      <h2>Descrizione dell'interfaccia utente (modalità interattiva)</h2><a name="interactive"></a>
+      <p>
+      		La modalità interattiva viene attivata premendo il pulsante corrispondente nella finestra di
+		dialogo principale: le impostazioni correnti (incluse quelle sulle dimensioni) vengono
+		applicate, e viene mostrata una nuova finestra di dialogo ridotta.
+		In questa modalità è possibile modificare solamente le dimensioni (e le modifiche vengono
+		immediatamente applicate); inoltre alcune opzioni vengono ignorate:
+		<ul>
+			<li>Mostra le linee d'azione</li>
+			<li>Riporta alle dimensioni originali</li>
+			<li>Non eliminare i contenuti quando si allarga</li>
+		</ul>
+		Il pulsante <i>"Indietro"</i> riporta alla finestra di dialogo principale.
+      </p>
+      <h3>Selezionare le dimensioni</h3>
+      <p>
+      		Questa sezione contiene i controlli per le dimensioni del livello. L'applicazione delle modifiche è quasi,
+		immediata, ma solo dopo che i pulsanti sono stati rilasciati: questo significa che, se avete attivato
+		il pulsante a catena per preservare le proporzioni del livello, il risultato sarà diverso a seconda che
+		il ridimansionamento avvenga in diversi piccoli passi o tutto in una volta.
+		Il pulsante di reset sulla destra riporta le dimensioni al valore iniziale: se la mappa non è mai stata
+		reimpostata, il risultato è uguale all'immagine di partenza, altrimenti sarà diversa (vedi anche la sezione
+		sulla mappa qui sotto).
+      </p>
+      <h3>Map</h3>
+      <p>
+      		La sezione addizionale <i>"Mappa"</i> nella finestra di dialogo interattiva riguarda la mappa delle
+		linee d'azione che il plugin usa internamente. Le mappe hanno un'orientamento (che dipende dalla
+		dimensione del ridimensionamento), un valore di riferimento (quello di inizializzazione della mappa)
+		e un intervallo d'azione. Le mappe permettono di ridimensionare quasi in tempo reale lungo la loro direzione
+		e all'interno del loro intervallo d'azione; quando si oltrepassano i limiti dell'intervallo le mappe
+		vengono aggiornate.
+		Le mappe contengono tutta l'informazione relativa al proprio intervallo d'azione: dunque, se si ritorna
+		al valore di riferimento di una mappa, si riottiene l'immagine originale. Tuttavia, ogni volta che
+		la direzione di ridimensionamento cambia, o quando si supera il massimo ingrandimento per passo, la mappa
+		viene automaticamente reinizializzata; quando ciò accade, tutte le informazioni precedenti sono perdute.
+		Ci sono due pulsanti in questa sezione:
+		<dl>
+			<dt>Pulsante info</dt>
+			<dd>
+			Mostra o nasconde le informazioni sulla mappa interna
+			</dd>
+			<dt>Pulsante reset</dt>
+			<dd>
+			Reimposta la mappa manualmente. Per esempio, se premete questo pulsante dopo aver modificato le
+			dimensioni, e poi premete il pulsante reset nella sezione per le dimensioni, otterrete un risultato
+			equivalente a quello che otterreste usando l'opzione <i>"Riporta alle dimensioni originali"</i>
+			(impostata su <i>"liquid rescale"</i>) in modalità non-interattiva.
+			</dd>
+		</dl>
+      </p>
+
 
 	<h2>Appendice: La tecnica del <i>seam carving</i></h2><a name="seam_carving"></a>
 	<p>

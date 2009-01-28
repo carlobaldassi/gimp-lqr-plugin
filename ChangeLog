@@ -1,6 +1,7 @@
 2009-01-27 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new : interactive interface
 	* new : with and height (std) scaleback modes
+	* modified: mode combo box moved to output tab
 
 2008-11-24 Carlo Baldassi <carlobaldassi@gmail.com>
 

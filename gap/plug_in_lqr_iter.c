@@ -103,7 +103,8 @@ gint p_plug_in_lqr_iter(GimpRunMode run_mode, gint32 total_steps, gdouble curren
     buf.grad_func = buf_to.grad_func;
     buf.res_order = buf_to.res_order;
     buf.mask_behavior = buf_to.mask_behavior;
-    buf.oper_mode = buf_to.oper_mode;
+    buf.scaleback = buf_to.scaleback;
+    buf.scaleback_mode = buf_to.scaleback_mode;
     buf.no_disc_on_enlarge = buf_to.no_disc_on_enlarge;
     g_strlcpy(buf.pres_layer_name, buf_to.pres_layer_name, VALS_MAX_NAME_LENGTH);
     g_strlcpy(buf.disc_layer_name, buf_to.disc_layer_name, VALS_MAX_NAME_LENGTH);

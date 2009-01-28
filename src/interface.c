@@ -45,6 +45,7 @@
 
 #define SCALE_WIDTH         (80)
 #define SPIN_BUTTON_WIDTH   (75)
+#define BOX_INDENT          (20)
 #define MAX_COEFF	  (3000)
 #define MAX_RIGIDITY      (1000)
 #define MAX_DELTA_X         (10)
@@ -66,10 +67,11 @@ static void callback_interactive_button (GtkWidget * button, gpointer data);
 static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
 static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
-static void callback_oper_mode_changed (GtkWidget * res_order, gpointer data);
+static void callback_scaleback_mode_changed (GtkWidget * res_order, gpointer data);
 static void callback_expander_changed (GtkWidget * expander, gpointer data);
 
 static void callback_out_seams_button (GtkWidget * button, gpointer data);
+static void callback_scaleback_button (GtkWidget * button, gpointer data);
 static void callback_resize_aux_layers_button_set_sensitive (GtkWidget *
 							     button,
 							     gpointer data);
@@ -128,7 +130,7 @@ dialog (gint32 image_ID,
   GtkWidget *vbox2;
   GtkWidget *vbox3;
   GtkWidget *hbox;
-  GtkWidget *hbox2;
+  //GtkWidget *hbox2;
   GtkWidget *frame;
   GtkWidget *notebook;
   gfloat wfactor, hfactor;
@@ -142,13 +144,16 @@ dialog (gint32 image_ID,
   GtkWidget *lastvalues_icon;
   GtkWidget *interactive_event_box;
   GtkWidget *interactive_button;
-  GtkWidget *interactive_hbox;
+  //GtkWidget *interactive_hbox;
   GtkWidget *interactive_icon;
-  GtkWidget *interactive_label;
-  GtkWidget *v_separator;
-  GtkWidget *h_separator;
-  GtkWidget *mode_event_box;
-  GtkWidget *oper_mode_combo_box;
+  //GtkWidget *interactive_label;
+  //GtkWidget *v_separator;
+  //GtkWidget *h_separator;
+  GtkWidget *scaleback_mode_alignment;
+  GtkWidget *scaleback_mode_event_box;
+  GtkWidget *scaleback_mode_label;
+  GtkWidget *scaleback_mode_hbox;
+  GtkWidget *scaleback_mode_combo_box;
   GtkWidget *features_page;
   GtkWidget *advanced_page;
   GtkWidget *thispage;
@@ -162,6 +167,9 @@ dialog (gint32 image_ID,
   GimpRGB *colour_end;
   GtkWidget *out_seams_col_button1;
   GtkWidget *out_seams_col_button2;
+  GtkWidget *scaleback_button;
+  GtkWidget *scaleback_vbox;
+  GtkWidget *scaleback_label;
   GtkWidget *mask_behavior_combo_box = NULL;
   gboolean has_mask = FALSE;
   GimpUnit unit;
@@ -435,17 +443,6 @@ dialog (gint32 image_ID,
 			     && (ui_state->last_used_height !=
 				 -1)) ? TRUE : FALSE);
 
-  /* Operational mode combo box */
-
-  v_separator = gtk_vseparator_new();
-  gtk_box_pack_start (GTK_BOX (hbox), v_separator, TRUE, TRUE, 0);
-  gtk_widget_show(v_separator);
-
-  vbox3 = gtk_vbox_new (FALSE, 4);
-  //gtk_container_add (GTK_CONTAINER (mode_event_box), vbox3);
-  gtk_box_pack_end (GTK_BOX (hbox), vbox3, FALSE, FALSE, 0);
-  gtk_widget_show (vbox3);
-
   interactive_event_box = gtk_event_box_new ();
   gtk_box_pack_start (GTK_BOX (vbox3), interactive_event_box, FALSE, FALSE,
 		      0);
@@ -457,16 +454,17 @@ dialog (gint32 image_ID,
 			   NULL);
 
   interactive_button = gtk_button_new ();
-  interactive_hbox = gtk_hbox_new (FALSE, 4);
-  gtk_container_add (GTK_CONTAINER (interactive_button), interactive_hbox);
-  gtk_widget_show (interactive_hbox);
+  //interactive_hbox = gtk_hbox_new (FALSE, 4);
+  //gtk_container_add (GTK_CONTAINER (interactive_button), interactive_hbox);
+  //gtk_widget_show (interactive_hbox);
   interactive_icon =
-    gtk_image_new_from_stock (GTK_STOCK_EXECUTE, GTK_ICON_SIZE_BUTTON);
-  gtk_box_pack_start (GTK_BOX(interactive_hbox), interactive_icon, TRUE, FALSE, 0);
+    gtk_image_new_from_stock (GTK_STOCK_EXECUTE, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER (interactive_button), interactive_icon);
+  //gtk_box_pack_start (GTK_BOX(interactive_hbox), interactive_icon, TRUE, FALSE, 0);
   gtk_widget_show (interactive_icon);
-  interactive_label = gtk_label_new_with_mnemonic (_("_Interactive"));
-  gtk_box_pack_start (GTK_BOX (interactive_hbox), interactive_label, TRUE, FALSE, 0);
-  gtk_widget_show (interactive_label);
+  //interactive_label = gtk_label_new_with_mnemonic (_("_Interactive"));
+  //gtk_box_pack_start (GTK_BOX (interactive_hbox), interactive_label, TRUE, FALSE, 0);
+  //gtk_widget_show (interactive_label);
   gtk_container_add (GTK_CONTAINER (interactive_event_box),
 		     interactive_button);
   gtk_widget_show (interactive_button);
@@ -474,6 +472,19 @@ dialog (gint32 image_ID,
   g_signal_connect (interactive_button, "clicked",
 		    G_CALLBACK (callback_interactive_button),
 		    (gpointer) dlg);
+
+
+  /* Operational mode combo box */
+
+  /*
+  v_separator = gtk_vseparator_new();
+  gtk_box_pack_start (GTK_BOX (hbox), v_separator, TRUE, TRUE, 0);
+  gtk_widget_show(v_separator);
+
+  vbox3 = gtk_vbox_new (FALSE, 4);
+  //gtk_container_add (GTK_CONTAINER (mode_event_box), vbox3);
+  gtk_box_pack_end (GTK_BOX (hbox), vbox3, FALSE, FALSE, 0);
+  gtk_widget_show (vbox3);
 
   h_separator = gtk_hseparator_new();
   gtk_box_pack_start (GTK_BOX (vbox3), h_separator, TRUE, TRUE, 0);
@@ -493,24 +504,24 @@ dialog (gint32 image_ID,
 			    "Note that this setting is ignored in interactive mode"),
 			   NULL);
 
-  oper_mode_combo_box =
-    gimp_int_combo_box_new (_("No"), OPER_MODE_NORMAL,
-			    _("With LqR"), OPER_MODE_LQRBACK,
-			    _("Standard"), OPER_MODE_SCALEBACK,
-			    _("Width (Std)"), OPER_MODE_SCALEBACKW,
-			    _("Height (Std)"), OPER_MODE_SCALEBACKH,
+  scaleback_mode_combo_box =
+    gimp_int_combo_box_new (_("No"), SCALEBACK_MODE_NORMAL,
+			    _("With LqR"), SCALEBACK_MODE_LQRBACK,
+			    _("Standard"), SCALEBACK_MODE_STD,
+			    _("Width (Std)"), SCALEBACK_MODE_STDW,
+			    _("Height (Std)"), SCALEBACK_MODE_STDH,
 			    NULL);
-  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
-				 state->oper_mode);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (scaleback_mode_combo_box),
+				 state->scaleback_mode);
   
-  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (oper_mode_combo_box),
-			      state->oper_mode,
-			      G_CALLBACK (callback_oper_mode_changed),
+  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (scaleback_mode_combo_box),
+			      state->scaleback_mode,
+			      G_CALLBACK (callback_scaleback_mode_changed),
 			      (gpointer) & preview_data);
 
-  gtk_container_add (GTK_CONTAINER (mode_event_box), oper_mode_combo_box);
-  //gtk_box_pack_start (GTK_BOX (vbox3), oper_mode_combo_box, FALSE, FALSE, 0);
-  gtk_widget_show (oper_mode_combo_box);
+  gtk_container_add (GTK_CONTAINER (mode_event_box), scaleback_mode_combo_box);
+  //gtk_box_pack_start (GTK_BOX (vbox3), scaleback_mode_combo_box, FALSE, FALSE, 0);
+  gtk_widget_show (scaleback_mode_combo_box);
 
   hbox2 = gtk_hbox_new (FALSE, 4);
   gtk_box_pack_end (GTK_BOX (vbox3), hbox2, FALSE, FALSE, 0);
@@ -520,6 +531,8 @@ dialog (gint32 image_ID,
   //gtk_label_set_text(GTK_LABEL(label), _("When done:"));
   gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
+
+  */
 
 
   /* Notebook */
@@ -659,6 +672,82 @@ dialog (gint32 image_ID,
 
   gimp_help_set_help_data (out_seams_col_button1,
 			   _("Colour to use for the first seams"), NULL);
+
+  scaleback_button =
+    gtk_check_button_new ();
+    //gtk_check_button_new_with_label (_("Scale back to the original size"));
+  scaleback_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER(scaleback_button), scaleback_vbox);
+  gtk_widget_show (scaleback_vbox);
+
+  scaleback_label = gtk_label_new(_("Scale back to the original size"));
+  gtk_box_pack_start (GTK_BOX(scaleback_vbox), scaleback_label, FALSE, FALSE, 0);
+  gtk_widget_show (scaleback_label);
+
+  gtk_box_pack_start (GTK_BOX (vbox), scaleback_button, FALSE, FALSE,
+		      0);
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaleback_button),
+				state->scaleback);
+
+  gtk_widget_show (scaleback_button);
+
+  gimp_help_set_help_data (scaleback_button,
+			   _
+			   ("Select this if you want to transform back the "
+			    "layer after LqR has been performed.\n"
+			    "Note that this option is ignored in interactive mode"),
+			   NULL);
+
+  scaleback_mode_alignment = gtk_alignment_new(0, 0, 1, 1);
+  gtk_alignment_set_padding (GTK_ALIGNMENT (scaleback_mode_alignment), 0, 0, BOX_INDENT, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scaleback_mode_alignment, FALSE, FALSE, 0);
+  gtk_widget_show (scaleback_mode_alignment);
+
+  scaleback_mode_event_box = gtk_event_box_new ();
+  gtk_container_add (GTK_CONTAINER (scaleback_mode_alignment), scaleback_mode_event_box);
+  gtk_widget_show (scaleback_mode_event_box);
+
+  gimp_help_set_help_data (scaleback_mode_event_box,
+			   _
+			   ("You can choose to rescale back to the original size with LqR or "
+			    "standard scaling, or to use standard scaling to reach the previous width "
+			    "or height while preserving the aspect ratio"),
+			   NULL);
+
+  scaleback_mode_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER (scaleback_mode_event_box), scaleback_mode_hbox);
+  gtk_widget_show (scaleback_mode_hbox);
+
+  scaleback_mode_label = gtk_label_new(_("Mode:"));
+  gtk_box_pack_start (GTK_BOX(scaleback_mode_hbox), scaleback_mode_label, FALSE, FALSE, 0);
+  gtk_widget_show (scaleback_mode_label);
+
+  scaleback_mode_combo_box =
+    gimp_int_combo_box_new (_("liquid rescale"), SCALEBACK_MODE_LQRBACK,
+			    _("standard scaling"), SCALEBACK_MODE_STD,
+			    _("width only (uniform scaling)"), SCALEBACK_MODE_STDW,
+			    _("height only (uniform scaling)"), SCALEBACK_MODE_STDH,
+			    NULL);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (scaleback_mode_combo_box),
+				 state->scaleback_mode);
+  
+  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (scaleback_mode_combo_box),
+			      state->scaleback_mode,
+			      G_CALLBACK (callback_scaleback_mode_changed),
+			      (gpointer) & preview_data);
+
+  //gtk_container_add (GTK_CONTAINER (scaleback_mode_alignment), scaleback_mode_combo_box);
+  gtk_box_pack_start (GTK_BOX (scaleback_mode_hbox), scaleback_mode_combo_box, FALSE, FALSE, 0);
+  gtk_widget_show (scaleback_mode_combo_box);
+
+  g_signal_connect (scaleback_button, "toggled",
+		    G_CALLBACK (callback_scaleback_button),
+		    (gpointer) (scaleback_mode_alignment));
+
+  callback_scaleback_button (scaleback_button, (gpointer) scaleback_mode_alignment);
+
+
 
   /* Advanced settings page */
 
@@ -914,13 +1003,31 @@ callback_res_order_changed (GtkWidget * res_order, gpointer data)
   callback_set_disc_warning (NULL, data);
 }
 
+
 static void
-callback_oper_mode_changed (GtkWidget * oper_mode_combo, gpointer data)
+callback_scaleback_button (GtkWidget * button, gpointer data)
+{
+  gboolean button_status =
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button));
+  state->scaleback = button_status;
+  if (button_status)
+    {
+      gtk_widget_show (GTK_WIDGET (data));
+    }
+  else
+    {
+      gtk_widget_hide (GTK_WIDGET (data));
+    }
+}
+
+
+static void
+callback_scaleback_mode_changed (GtkWidget * scaleback_mode_combo, gpointer data)
 {
   gint mode;
   PreviewData *p_data = PREVIEW_DATA (data);
-  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (oper_mode_combo), &mode);
-  p_data->vals->oper_mode = mode;
+  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (scaleback_mode_combo), &mode);
+  p_data->vals->scaleback_mode = mode;
 }
 
 static void
