@@ -82,16 +82,7 @@ PlugInVals *state;
 PlugInDialogVals *dialog_state;
 gboolean features_are_sensitive;
 InterfaceIData interface_I_data;
-//PreviewData preview_data;
-//PresDiscStatus presdisc_status;
-//ToggleData pres_toggle_data;
-//ToggleData disc_toggle_data;
-//ToggleData rigmask_toggle_data;
-//GtkWidget *grad_func_combo_box;
-//GtkWidget *res_order_combo_box;
-//gboolean pres_info_show = FALSE;
-//gboolean disc_info_show = FALSE;
-//gboolean rigmask_info_show = FALSE;
+//volatile sig_atomic_t interface_locked = 0;
 
 GtkWidget *dlg;
 GtkTooltips *dlg_tips;
@@ -108,8 +99,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
         PlugInDialogVals * dialog_vals)
 {
-  //GimpRGB saved_colour;
-  //gint num_extra_layers;
   struct sigaction alarm_action, old_alarm_action;
   gint orig_width, orig_height;
   GtkWidget *main_hbox;
@@ -124,15 +113,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   GtkWidget *resetvalues_button;
   GtkWidget *resetvalues_icon;
 
-#if 0
-  GtkWidget * h_separator;
-  GtkWidget *vbox4;
-  GtkWidget *advanced_expander;
-  GtkWidget *table;
-  GtkObject *adj;
-  gint row;
-#endif
-
   GtkWidget *flatten_event_box;
   GtkWidget *flatten_button;
   GtkWidget *flatten_icon;
@@ -142,20 +122,10 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   //GtkWidget *lastvalues_event_box;
   //GtkWidget *lastvalues_button;
   //GtkWidget *lastvalues_icon;
-  //GtkWidget *mode_event_box;
-  //GtkWidget *oper_mode_combo_box;
-  //GtkWidget *features_page;
-  //GtkWidget *advanced_page;
-  //GtkWidget *thispage;
-  //GtkWidget *label;
-  //GtkWidget *new_layer_button;
-  //GtkWidget *resize_canvas_button;
-  //GtkWidget *resize_aux_layers_button;
   gboolean has_mask = FALSE;
   GimpUnit unit;
   gdouble xres, yres;
   GtkWidget * v_separator;
-  //GtkWidget *info_frame;
   GtkWidget *info_title_label;
   GtkWidget * info_label;
 
@@ -175,7 +145,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   g_assert (gimp_drawable_is_layer (layer_ID) == TRUE);
 
   drawable_vals->layer_ID = layer_ID;
-  //preview_data.orig_layer_ID = layer_ID;
   interface_I_data.image_ID = image_ID;
   interface_I_data.drawable = drawable;
   interface_I_data.drawable_vals = drawable_vals;
@@ -187,28 +156,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
     {
       has_mask = TRUE;
     }
-
-  //num_extra_layers = count_extra_layers (image_ID, drawable);
-  //features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
-  /*
-  if (!features_are_sensitive)
-    {
-      ui_state->pres_status = FALSE;
-      ui_state->disc_status = FALSE;
-      preview_data.pres_combo_awaked = FALSE;
-      preview_data.disc_combo_awaked = FALSE;
-    }
-    */
-
-  /*
-  dlg = gimp_dialog_new (_("GIMP LiquidRescale Plug-In"), PLUGIN_NAME "-I",
-			 NULL, 0,
-			 gimp_standard_help_func, "plug-in-lqr",
-			 //GIMP_STOCK_RESET, RESPONSE_RESET,
-			 //GTK_STOCK_REFRESH, RESPONSE_REFRESH,
-			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			 GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
-			 */
 
   dlg = gtk_dialog_new_with_buttons (_("GIMP LiquidRescale Plug-In"), 
 			 NULL, 0,
@@ -245,21 +192,15 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
   gtk_widget_show (frame);
 
+  //interface_I_data.size_frame = frame;
+
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_container_add (GTK_CONTAINER (frame), hbox);
   gtk_widget_show (hbox);
 
-  /*
-  hbox = gtk_hbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
-  gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
-  gtk_widget_show (hbox);
-  */
-
   vbox3 = gtk_vbox_new (FALSE, 4);
   gtk_box_pack_start (GTK_BOX (hbox), vbox3, FALSE, FALSE, 0);
   gtk_widget_show (vbox3);
-
 
   unit = gimp_image_get_unit (image_ID);
   gimp_image_get_resolution (image_ID, &xres, &yres);
@@ -272,7 +213,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 			  _("Height:"), state->new_height, yres, 2,
 			  GIMP_MAX_IMAGE_SIZE, 0, orig_height);
 
-  interface_I_data.coordinates = (gpointer) coordinates; // USELESS
+  interface_I_data.coordinates = coordinates;
 
   g_signal_connect (ALT_SIZE_ENTRY (coordinates), "value-changed",
 		    G_CALLBACK (callback_size_changed),
@@ -291,11 +232,10 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
                     G_CALLBACK (callback_alarm_triggered),
                     (gpointer) & interface_I_data);
 
-  //gtk_box_pack_start (GTK_BOX (hbox), coordinates, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox3), coordinates, FALSE, FALSE, 0);
   gtk_widget_show (coordinates);
 
-  /* Other buttons */
+  /* Reset size button */
 
   vbox2 = gtk_vbox_new (FALSE, 4);
   gtk_box_pack_end (GTK_BOX (hbox), vbox2, FALSE, FALSE, 0);
@@ -324,55 +264,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 		    G_CALLBACK (callback_resetvalues_button),
 		    (gpointer) & interface_I_data);
 
-#if 0
-  /* Advanced settings */
-
-  h_separator = gtk_hseparator_new();
-  gtk_box_pack_start (GTK_BOX (vbox), h_separator, TRUE, TRUE, 0);
-  gtk_widget_show(h_separator);
-
-  /* Please keep the <b> and </b> tags in translations */
-  advanced_expander = gtk_expander_new (_("<b>Advanced settings</b>"));
-  gtk_expander_set_use_markup (GTK_EXPANDER(advanced_expander), TRUE);
-  //gtk_expander_set_expanded (GTK_EXPANDER(advanced_expander), ui_state->advanced_expanded);
-  //gtk_expander_set_expanded (GTK_EXPANDER(advanced_expander), FALSE);
-  /*
-  g_signal_connect (advanced_expander, "activate",
-		    G_CALLBACK
-		    (callback_expander_changed),
-		    (gpointer) (&ui_state->advanced_expanded));
-                    */
-
-  gtk_box_pack_start (GTK_BOX (vbox), advanced_expander, FALSE, FALSE, 0);
-  gtk_widget_show (advanced_expander);
-
-  vbox4 = gtk_vbox_new (FALSE, 4);
-  gtk_container_add (GTK_CONTAINER (advanced_expander), vbox4);
-  gtk_widget_show (vbox4);
-
-  table = gtk_table_new (3, 1, FALSE);
-  gtk_container_set_border_width (GTK_CONTAINER (table), 4);
-  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-  gtk_box_pack_start (GTK_BOX (vbox4), table, FALSE, FALSE, 0);
-  gtk_widget_show (table);
-
-  row = 0;
-
-  adj = gimp_scale_entry_new (GTK_TABLE (table), 0, row++,
-			      _("Max enlargement per step:"), SCALE_WIDTH,
-			      SPIN_BUTTON_WIDTH, state->enl_step, 100.1,
-			      200, 1, 10, 1, TRUE, 0, 0,
-			      _("When enlarging beyond the value set here "
-				"the rescaling will be performed in multiple steps."), NULL);
-
-  /*
-  g_signal_connect (adj, "value_changed",
-		    G_CALLBACK (gimp_float_adjustment_update),
-		    &state->enl_step);
-                    */
-#endif
-
+  //interface_I_data.resetvalues_button = resetvalues_button;
 
   /* Map info */
 
@@ -462,8 +354,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   callback_show_info_button(show_info_button, (gpointer) &interface_I_data);
 
 
-
-
   /*
   noninter_button = gtk_button_new_with_mnemonic ("_Non-interactive");
 
@@ -496,6 +386,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   interface_I_data.carver_data = carver_data;
 
   set_alarm (ALARM_DELAY);
+  //callback_alarm_triggered (coordinates, (gpointer) & interface_I_data);
 
   /*  Show the main containers  */
 
@@ -517,51 +408,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 	ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (coordinates), 0));
       state->new_height =
 	ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (coordinates), 1));
-
-      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
-				     &(state->grad_func));
-      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
-				     &(state->res_order));
-      state->new_layer =
-	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (new_layer_button));
-      state->resize_canvas =
-	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
-				      (resize_canvas_button));
-      state->resize_aux_layers =
-	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
-				      (resize_aux_layers_button));
-      state->output_seams =
-	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (out_seams_button));
-	*/
-
-      /* save vsmap colours */
-      /*
-      if (state->output_seams)
-	{
-	  gimp_color_button_get_color (GIMP_COLOR_BUTTON
-				       (out_seams_col_button1), colour_start);
-	  gimp_color_button_get_color (GIMP_COLOR_BUTTON
-				       (out_seams_col_button2), colour_end);
-
-	  col_vals->r1 = colour_start->r;
-	  col_vals->g1 = colour_start->g;
-	  col_vals->b1 = colour_start->b;
-
-	  col_vals->r2 = colour_end->r;
-	  col_vals->g2 = colour_end->g;
-	  col_vals->b2 = colour_end->b;
-	}
-	*/
-
-      /* save mask behaviour */
-      /*
-      if (has_mask == TRUE)
-	{
-	  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX
-					 (mask_behavior_combo_box),
-					 &(state->mask_behavior));
-	}
-	*/
+        */
 
       /* save all */
       memcpy (vals, state, sizeof (PlugInVals));
@@ -601,55 +448,6 @@ callback_dialog_I_response (GtkWidget * dialog, gint response_id, gpointer data)
     }
 }
 
-#if 0
-static void
-callback_set_disc_warning (GtkWidget * dummy, gpointer data)
-{
-  PreviewData *p_data = PREVIEW_DATA (data);
-  gboolean issue_warn;
-  gint old_w, old_h;
-  gint new_w, new_h;
-
-  if ((p_data->vals->no_disc_on_enlarge == FALSE) ||
-      (p_data->ui_vals->disc_status == FALSE) ||
-      (p_data->vals->disc_coeff == 0))
-    {
-      gtk_widget_hide (GTK_WIDGET (p_data->disc_warning_image));
-    }
-  else
-    {
-      old_w = p_data->old_width;
-      old_h = p_data->old_height;
-      new_w = p_data->vals->new_width;
-      new_h = p_data->vals->new_height;
-      issue_warn = FALSE;
-      switch (p_data->vals->res_order)
-	{
-	case LQR_RES_ORDER_HOR:
-	  if ((new_w > old_w) || ((new_w == old_w) && (new_h > old_h)))
-	    {
-	      issue_warn = TRUE;
-	    }
-	  break;
-	case LQR_RES_ORDER_VERT:
-	  if ((new_h > old_h) || ((new_h == old_h) && (new_w > old_w)))
-	    {
-	      issue_warn = TRUE;
-	    }
-	  break;
-	}
-      if (issue_warn == TRUE)
-	{
-	  gtk_widget_show (GTK_WIDGET (p_data->disc_warning_image));
-	}
-      else
-	{
-	  gtk_widget_hide (GTK_WIDGET (p_data->disc_warning_image));
-	}
-    }
-}
-#endif
-
 static void
 callback_size_changed (GtkWidget * size_entry, gpointer data)
 {
@@ -683,6 +481,7 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   gboolean render_success;
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
   CarverData *c_data = p_data->carver_data;
+  //gtk_widget_set_sensitive (p_data->size_frame, FALSE);
 
   new_width =
     ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (size_entry), 0));
@@ -702,6 +501,7 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   gimp_displays_flush();
 
   set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
+  //gtk_widget_set_sensitive (p_data->size_frame, TRUE);
 
 }
 
@@ -804,14 +604,11 @@ callback_res_order_changed (GtkWidget * res_order, gpointer data)
   p_data->vals->res_order = order;
   callback_set_disc_warning (NULL, data);
 }
-#endif
 
-
-/*
 static void
 callback_noninter_button (GtkWidget * button, gpointer data)
 {
   gtk_dialog_response (GTK_DIALOG (data), RESPONSE_NONINTERACTIVE);
 }
-*/
+#endif
 

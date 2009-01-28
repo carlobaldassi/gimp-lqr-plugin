@@ -45,7 +45,7 @@
 
 #define SCALE_WIDTH         (80)
 #define SPIN_BUTTON_WIDTH   (75)
-#define BOX_INDENT          (20)
+#define BOX_INDENT          (22)
 #define MAX_COEFF	  (3000)
 #define MAX_RIGIDITY      (1000)
 #define MAX_DELTA_X         (10)
@@ -1182,6 +1182,9 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *pres_vbox;
   GtkWidget *pres_vbox2;
   GtkWidget *hbox;
+  //GtkWidget *new_hbox;
+  GtkWidget *new_icon;
+  //GtkWidget *new_label;
   GtkWidget *pres_button;
   GtkWidget *pres_new_button;
   GtkWidget *pres_info_image;
@@ -1304,9 +1307,22 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 			   _("Use an extra layer to preserve "
 			     "selected areas from distortion"), NULL);
 
-  pres_new_button = gtk_button_new_with_label (_("New"));
+  //pres_new_button = gtk_button_new_with_label (_("New"));
+  pres_new_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), pres_new_button, FALSE, FALSE, 0);
   gtk_widget_show (pres_new_button);
+
+  //new_hbox = gtk_hbox_new (FALSE, 4);
+  //gtk_container_add (GTK_CONTAINER(pres_new_button), new_hbox);
+  //gtk_widget_show (new_hbox);
+
+  new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER(pres_new_button), new_icon);
+  //gtk_box_pack_start (GTK_BOX(new_hbox), new_icon, TRUE, TRUE, 0);
+  gtk_widget_show (new_icon);
+  //new_label = gtk_label_new (_("New"));
+  //gtk_box_pack_end (GTK_BOX(new_hbox), new_label, TRUE, TRUE, 0);
+  //gtk_widget_show (new_label);
 
   gimp_help_set_help_data (pres_new_button,
 			   _("Creates a new transparent layer "
@@ -1537,9 +1553,14 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   preview_data.disc_warning_image = disc_warning_image;
   callback_set_disc_warning (NULL, (gpointer) & preview_data);
 
-  disc_new_button = gtk_button_new_with_label (_("New"));
+  //disc_new_button = gtk_button_new_with_label (_("New"));
+  disc_new_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), disc_new_button, FALSE, FALSE, 0);
   gtk_widget_show (disc_new_button);
+
+  new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER(disc_new_button), new_icon);
+  gtk_widget_show (new_icon);
 
   gimp_help_set_help_data (disc_new_button,
 			   _("Creates a new transparent layer "
@@ -1818,6 +1839,7 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *rigmask_vbox;
   GtkWidget *rigmask_vbox2;
   GtkWidget *hbox;
+  GtkWidget *new_icon;
   GtkWidget *rigmask_button;
   GtkWidget *rigmask_new_button;
   GtkWidget *rigmask_info_image;
@@ -1987,9 +2009,14 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
 			   ("Use an extra layer to mark areas where seams should be straighter"),
 			   NULL);
 
-  rigmask_new_button = gtk_button_new_with_label (_("New"));
+  //rigmask_new_button = gtk_button_new_with_label (_("New"));
+  rigmask_new_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), rigmask_new_button, FALSE, FALSE, 0);
   gtk_widget_show (rigmask_new_button);
+
+  new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER(rigmask_new_button), new_icon);
+  gtk_widget_show (new_icon);
 
   gimp_help_set_help_data (rigmask_new_button,
 			   _("Creates a new transparent layer "
