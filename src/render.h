@@ -28,6 +28,7 @@ typedef struct
 {
   LqrCarver * carver;
   gint32 layer_ID;
+  GimpImageBaseType base_type;
   gboolean alpha_lock;
   gboolean alpha_lock_pres;
   gboolean alpha_lock_disc;
@@ -41,9 +42,6 @@ typedef struct
 
 #define CARVER_DATA(data) ((CarverData*)data)
 
-
-/* progress functions wrappers */
-gboolean my_progress_end (const gchar * message);
 
 /* Functions  */
 
@@ -74,6 +72,14 @@ render_flatten (gint32 image_ID,
         GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
+        CarverData * carver_data);
+
+gboolean
+render_dump_vmap (gint32 image_ID,
+        GimpDrawable * drawable,
+        PlugInVals * vals,
+        PlugInDrawableVals * drawable_vals,
+        PlugInColVals * col_vals,
         CarverData * carver_data);
 
 #endif /* __RENDER_H__ */

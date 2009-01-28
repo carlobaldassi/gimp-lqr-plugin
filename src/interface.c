@@ -71,6 +71,8 @@ static void callback_scaleback_mode_changed (GtkWidget * res_order, gpointer dat
 static void callback_expander_changed (GtkWidget * expander, gpointer data);
 
 static void callback_out_seams_button (GtkWidget * button, gpointer data);
+static void callback_out_seams_col_button1 (GtkWidget * button, gpointer data);
+static void callback_out_seams_col_button2 (GtkWidget * button, gpointer data);
 static void callback_scaleback_button (GtkWidget * button, gpointer data);
 static void callback_resize_aux_layers_button_set_sensitive (GtkWidget *
 							     button,
@@ -163,8 +165,7 @@ dialog (gint32 image_ID,
   GtkWidget *resize_aux_layers_button;
   GtkWidget *out_seams_hbox;
   GtkWidget *out_seams_button;
-  GimpRGB *colour_start;
-  GimpRGB *colour_end;
+  GimpRGB *colour;
   GtkWidget *out_seams_col_button1;
   GtkWidget *out_seams_col_button2;
   GtkWidget *scaleback_button;
@@ -633,45 +634,59 @@ dialog (gint32 image_ID,
 			     "and resize in one direction at a time.\n"
 			     "Note that this option is ignored in interactive mode"), NULL);
 
-  colour_start = g_new (GimpRGB, 1);
-  colour_end = g_new (GimpRGB, 1);
+  colour = g_new (GimpRGB, 1);
 
-  gimp_rgba_set (colour_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
-  gimp_rgba_set (colour_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
+  gimp_rgba_set (colour, col_vals->r2, col_vals->g2, col_vals->b2, 1);
 
   out_seams_col_button2 =
-    gimp_color_button_new (_("Last seams colour"), 14, 14, colour_end,
+    gimp_color_button_new (_("Last seams colour"), 14, 14, colour,
 			   GIMP_COLOR_AREA_FLAT);
   gtk_box_pack_end (GTK_BOX (out_seams_hbox), out_seams_col_button2, FALSE,
 		    FALSE, 0);
   gtk_widget_show (out_seams_col_button2);
 
+  g_signal_connect (out_seams_col_button2, "color-changed",
+		    G_CALLBACK (callback_out_seams_col_button2),
+		    (gpointer) (col_vals));
+
+  /*
   g_signal_connect (out_seams_button, "toggled",
 		    G_CALLBACK (callback_out_seams_button),
 		    (gpointer) (out_seams_col_button2));
 
   callback_out_seams_button (out_seams_button,
 			     (gpointer) out_seams_col_button2);
+			     */
 
   gimp_help_set_help_data (out_seams_col_button2,
 			   _("Colour to use for the last seams"), NULL);
 
+  gimp_rgba_set (colour, col_vals->r1, col_vals->g1, col_vals->b1, 1);
+
   out_seams_col_button1 =
-    gimp_color_button_new (_("First seams colour"), 14, 14, colour_start,
+    gimp_color_button_new (_("First seams colour"), 14, 14, colour,
 			   GIMP_COLOR_AREA_FLAT);
   gtk_box_pack_end (GTK_BOX (out_seams_hbox), out_seams_col_button1, FALSE,
 		    FALSE, 0);
   gtk_widget_show (out_seams_col_button1);
 
+  g_signal_connect (out_seams_col_button1, "color-changed",
+		    G_CALLBACK (callback_out_seams_col_button1),
+		    (gpointer) (col_vals));
+
+  /*
   g_signal_connect (out_seams_button, "toggled",
 		    G_CALLBACK (callback_out_seams_button),
 		    (gpointer) (out_seams_col_button1));
 
   callback_out_seams_button (out_seams_button,
 			     (gpointer) out_seams_col_button1);
+			     */
 
   gimp_help_set_help_data (out_seams_col_button1,
 			   _("Colour to use for the first seams"), NULL);
+
+  g_free(colour);
 
   scaleback_button =
     gtk_check_button_new ();
@@ -821,6 +836,7 @@ dialog (gint32 image_ID,
 	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (out_seams_button));
 
       /* save vsmap colours */
+      /*
       if (state->output_seams)
 	{
 	  gimp_color_button_get_color (GIMP_COLOR_BUTTON
@@ -836,6 +852,7 @@ dialog (gint32 image_ID,
 	  col_vals->g2 = colour_end->g;
 	  col_vals->b2 = colour_end->b;
 	}
+	*/
 
       /* save mask behaviour */
       if (has_mask == TRUE)
@@ -1081,6 +1098,35 @@ callback_out_seams_button (GtkWidget * button, gpointer data)
     }
 }
 
+static void
+callback_out_seams_col_button1 (GtkWidget * button, gpointer data)
+{
+  GimpRGB *colour;
+  PlugInColVals * col_data = (PlugInColVals *) data;
+
+  colour = g_new (GimpRGB, 1);
+  gimp_color_button_get_color (GIMP_COLOR_BUTTON
+			       (button), colour);
+
+  col_data->r1 = colour->r;
+  col_data->g1 = colour->g;
+  col_data->b1 = colour->b;
+}
+
+static void
+callback_out_seams_col_button2 (GtkWidget * button, gpointer data)
+{
+  GimpRGB *colour;
+  PlugInColVals * col_data = (PlugInColVals *) data;
+
+  colour = g_new (GimpRGB, 1);
+  gimp_color_button_get_color (GIMP_COLOR_BUTTON
+			       (button), colour);
+
+  col_data->r2 = colour->r;
+  col_data->g2 = colour->g;
+  col_data->b2 = colour->b;
+}
 
 static void
 callback_resize_aux_layers_button_set_sensitive (GtkWidget * button,

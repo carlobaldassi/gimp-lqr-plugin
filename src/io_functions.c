@@ -266,7 +266,9 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
   gimp_drawable_flush (drawable);
   gimp_drawable_merge_shadow (seam_layer_ID, TRUE);
   gimp_drawable_update (seam_layer_ID, 0, 0, w, h);
-  gimp_drawable_set_visible (seam_layer_ID, FALSE);
+  gimp_drawable_set_visible (seam_layer_ID, TRUE);
+
+  gimp_progress_end();
 
   return LQR_OK;
 }
@@ -281,6 +283,7 @@ write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name,
   /* The name of the layer with the seams map */
   /* (here "%s" represents the selected layer's name) */
   snprintf (name, LQR_MAX_NAME_LENGTH, _("%s seam map"), orig_name);
+
 
   data.image_ID = image_ID;
   data.name = name;

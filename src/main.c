@@ -339,7 +339,7 @@ run (const gchar * name,
                     //printf("INTERACTIVE\n"); fflush(stdout);
 		    dialog_I_resp = dialog_I (image_ID, drawable_vals.layer_ID,
                                 drawable, &vals, &image_vals, &drawable_vals,
-                                &ui_vals, &dialog_vals);
+                                &ui_vals, &col_vals, &dialog_vals);
                     switch (dialog_I_resp)
                       {
                         case GTK_RESPONSE_CLOSE:

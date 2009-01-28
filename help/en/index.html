@@ -203,17 +203,18 @@
 		</dd>
 		<dt><b>Output the seams on a new layer</b></dt>
 		<dd>
-			Specifies whether to create a new layer with the seams map.
-			If this option is checked, two buttons appear on the right of it to let the user choose
-			the seams colour range.
+			Specifies whether to create a new layer with the seams map in interactive mode.
+			The two buttons on the right of it let the user choose the seams colour range.
 			The seams are computed on the original layer as far as they are needed for the new size
 			(e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining
 			areas are transparent. In order to read the result, use this option together with
 			<i>"Output on a new layer"</i>, and overlay the seams map to the original layer.
 			If you rescale in two directions at once, you will obtain two maps, but the second
 			one will be computed over an invisible intermediate image, so this is not very useful.
-			The same applies in the case you choose to rescale back to the original size with LqR.
-			Note that this option is ignored in interactive mode.
+			The same applies in the case you choose to rescale back to the original size with LqR,
+			or when the resizing goes beyond the limit set with <i>"Max enlargment per step"</i>.
+			Note that this option is ignored in interactive mode, except for the colours you choose,
+			which are used when dumping the seam maps manually.
 		</dd>
 		<dt><b>Scale back to the original size</b></dt>
 		<dd>
@@ -380,7 +381,7 @@
 		applies the current settings, including the current size settings. In interactive mode only the size
 		can be modified (and modifications will be applied immidiately), and some options are ignored:
 		<ul>
-			<li>Output the seams</li>
+			<li>Output the seams (you have to do it manually, see below)</li>
 			<li>Scale back to the original size</li>
 			<li>Ignore discard mask when enlarging</li>
 		</ul>
@@ -404,16 +405,26 @@
 		value will reproduce the initial image. However, a new map is generated automatically any time the direction
 		of the scaling is changed, or when the size exceeds the max enlargment per step; when this happens, all
 		previous information is lost.
-		There are two buttons in this section:
+		There are three buttons in this section:
 		<dl>
 			<dt>Info button</dt>
 			<dd>displays or hides information about the internal seam map</dd>
 			<dt>Reset button</dt>
 			<dd>
-			Force the map reset. For example, if you change the size, then press this
+			Force the map reset. This is like restarting the plugin from the current situation.
+			For example, if you change the size, then press this
 			button, then press the reset button in the size section, you will have the same result as using
 			the <i>"Scale back to the original size"</i> option (with the <i>"liquid rescale"</i> setting) in
 			non-interactive mode.
+			</dd>
+			<dt>Dump seam map button</dt>
+			<dd>
+			This button can be used to view the current seam map. Its effect is the same as that of
+			the <i>"Output the seams"</i> option in noninteractive mode, only you need to do it manually, and
+			it prints out one map at a time.
+			In order to make sense of the result, you have to bring the layer to its reference size after the
+			dump, and superimpose the map to the layer.
+			This button is only active for RGB images.
 			</dd>
 		</dl>
       </p>

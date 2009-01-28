@@ -63,13 +63,14 @@ static void callback_dialog_I_response (GtkWidget * dialog, gint response_id,
 
 static void callback_resetvalues_button (GtkWidget * button, gpointer data);
 static void callback_flatten_button (GtkWidget * button, gpointer data);
+static void callback_dump_button (GtkWidget * button, gpointer data);
 static void callback_show_info_button (GtkWidget * button, gpointer data);
 
 //static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
 static void set_alarm (glong dseconds);
 static void alarm_handler (int signum);
-static void set_info_label_text (GtkWidget * label, gint ref_w, gint ref_h, gint orientation, gint depth, gfloat enl_step);
+static void set_info_label_text (InterfaceIData * p_data);
 static void callback_alarm_triggered (GtkWidget * size_entry, gpointer data);
 //static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
 
@@ -97,7 +98,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 	PlugInVals * vals,
 	PlugInImageVals * image_vals,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
-        PlugInDialogVals * dialog_vals)
+        PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
 {
   struct sigaction alarm_action, old_alarm_action;
   gint orig_width, orig_height;
@@ -119,6 +120,9 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   GtkWidget *show_info_event_box;
   GtkWidget *show_info_button;
   GtkWidget *show_info_icon;
+  GtkWidget *dump_event_box;
+  GtkWidget *dump_button;
+  GtkWidget *dump_icon;
   //GtkWidget *lastvalues_event_box;
   //GtkWidget *lastvalues_button;
   //GtkWidget *lastvalues_icon;
@@ -150,6 +154,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   interface_I_data.drawable_vals = drawable_vals;
   interface_I_data.orig_width = orig_width;
   interface_I_data.orig_height = orig_height;
+  interface_I_data.col_vals = col_vals;
 
 
   if (gimp_layer_get_mask (layer_ID) != -1)
@@ -340,8 +345,34 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 		    G_CALLBACK (callback_flatten_button),
 		    (gpointer) & interface_I_data);
 
+  dump_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (vbox2), dump_event_box, FALSE, FALSE,
+		      0);
+  gtk_widget_show (dump_event_box);
+
+  gimp_help_set_help_data (dump_event_box,
+			   _
+			   ("Dump the internal map on a new layer (RGB images only)"),
+			   NULL);
+
+  dump_button = gtk_button_new ();
+  dump_icon =
+    gtk_image_new_from_stock (GIMP_STOCK_VISIBLE, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER (dump_button), dump_icon);
+  gtk_widget_show (dump_icon);
+  gtk_container_add (GTK_CONTAINER (dump_event_box),
+		     dump_button);
+  gtk_widget_show (dump_button);
+
+  g_signal_connect (dump_button, "clicked",
+		    G_CALLBACK (callback_dump_button),
+		    (gpointer) & interface_I_data);
+
+  gtk_widget_set_sensitive(dump_button, FALSE);
+  interface_I_data.dump_button = dump_button;
+
   info_label = gtk_label_new("");
-  set_info_label_text (info_label, orig_width, orig_height, 0, 0, state->enl_step / 100);
+  //set_info_label_text (info_label, orig_width, orig_height, 0, 0, state->enl_step / 100);
   gtk_label_set_selectable(GTK_LABEL(info_label), TRUE);
   //gtk_container_add (GTK_CONTAINER (info_frame), info_label);
   gtk_box_pack_start (GTK_BOX (hbox), info_label, TRUE, TRUE, 0);
@@ -384,6 +415,8 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
       return RESPONSE_FATAL;
     }
   interface_I_data.carver_data = carver_data;
+
+  set_info_label_text (&interface_I_data);
 
   set_alarm (ALARM_DELAY);
   //callback_alarm_triggered (coordinates, (gpointer) & interface_I_data);
@@ -500,13 +533,16 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
     }
   gimp_displays_flush();
 
-  set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
+  set_info_label_text (p_data);
+  //set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
+  //gtk_widget_set_sensitive (p_data->dump_button, (c_data->depth != 0));
   //gtk_widget_set_sensitive (p_data->size_frame, TRUE);
 
 }
 
 static void
-set_info_label_text (GtkWidget * label, gint ref_w, gint ref_h, gint orientation, gint depth, gfloat enl_step)
+//set_info_label_text (GtkWidget * label, gint ref_w, gint ref_h, gint orientation, gint depth, gfloat enl_step)
+set_info_label_text (InterfaceIData * p_data)
 {
   gchar label_text[MAX_STRING_SIZE];
   gchar text_refsizes[MAX_STRING_SIZE];
@@ -517,10 +553,11 @@ set_info_label_text (GtkWidget * label, gint ref_w, gint ref_h, gint orientation
   gchar text_enl_step[MAX_STRING_SIZE];
   gint smin, smax;
   gint esmax;
+  CarverData * c_data = p_data->carver_data;
 
-  smin = orientation == 0 ? ref_w - depth : ref_h - depth;
-  smax = orientation == 0 ? ref_w + depth : ref_h + depth;
-  esmax = (gint) ((orientation ? ref_h : ref_w) * enl_step) - 1;
+  smin = c_data->orientation == 0 ? c_data->ref_w - c_data->depth : c_data->ref_h - c_data->depth;
+  smax = c_data->orientation == 0 ? c_data->ref_w + c_data->depth : c_data->ref_h + c_data->depth;
+  esmax = (gint) ((c_data->orientation ? c_data->ref_h : c_data->ref_w) * c_data->enl_step) - 1;
   esmax = MAX(1, esmax);
 
   snprintf(text_orientation, MAX_STRING_SIZE, _("Orientation"));
@@ -539,13 +576,15 @@ set_info_label_text (GtkWidget * label, gint ref_w, gint ref_h, gint orientation
       "<b>%s</b>\n  %i"
       "</small>"
       "</small>",
-          text_orientation, orientation ? text_h : text_w,
-          text_refsizes, orientation ? ref_h : ref_w,
+          text_orientation, c_data->orientation ? text_h : text_w,
+          text_refsizes, c_data->orientation ? c_data->ref_h : c_data->ref_w,
           text_range, smin, smax,
           text_enl_step, esmax);
   label_text[MAX_STRING_SIZE - 1] = '\0';
 
-  gtk_label_set_markup(GTK_LABEL(label), label_text);
+  gtk_label_set_markup(GTK_LABEL(p_data->info_label), label_text);
+  gtk_widget_set_sensitive (p_data->dump_button, (c_data->depth != 0) && (c_data->base_type == GIMP_RGB));
+
 }
 
 static void
@@ -579,7 +618,7 @@ callback_flatten_button (GtkWidget * button, gpointer data)
 {
   gboolean render_success;
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
-  CarverData * c_data = p_data->carver_data;
+  //CarverData * c_data = p_data->carver_data;
 
   p_data->drawable = gimp_drawable_get(p_data->drawable_vals->layer_ID);
   render_success = render_flatten (p_data->image_ID, p_data->drawable, state, p_data->drawable_vals, p_data->carver_data);
@@ -590,7 +629,28 @@ callback_flatten_button (GtkWidget * button, gpointer data)
     }
   gimp_displays_flush();
 
-  set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
+  set_info_label_text (p_data);
+  //set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
+}
+
+
+static void
+callback_dump_button (GtkWidget * button, gpointer data)
+{
+  gboolean render_success;
+  InterfaceIData *p_data = INTERFACE_I_DATA (data);
+  //CarverData * c_data = p_data->carver_data;
+
+  p_data->drawable = gimp_drawable_get(p_data->drawable_vals->layer_ID);
+  render_success = render_dump_vmap (p_data->image_ID, p_data->drawable, state, p_data->drawable_vals, p_data->col_vals, p_data->carver_data);
+  if (!render_success)
+    {
+      dialog_I_response = RESPONSE_FATAL;
+      gtk_main_quit();
+    }
+  gimp_displays_flush();
+
+  //set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
 
 }
 

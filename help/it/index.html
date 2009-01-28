@@ -221,9 +221,8 @@
 			  Specifica se creare un nuovo livello che mostra la mappa delle linee d'azione
 			  (che sono le parti dell'immagine che vengono eliminate, se si restringe,
 			  o moltiplicate, se si allarga).
-			  Se questa opzione è selezionata, alla sua destra compaiono due pulsanti che
-			  permettono di stabilire le gamma dei colori da usare per le linee.
-			  Le linee sono calcolate sull'immagine originale in base alla necessità
+			  I due pulsanti sulla destra permettono di stabilire le gamma dei colori da usare
+			  per le linee. Le linee sono calcolate sull'immagine originale in base alla necessità
 			  (per es. ne saranno calcolate 100 se si sta restringendo o allargando
 			  il livello di 100 pixel); le aree rimanenti restano trasparenti.
 			  Per interpretare il risultato, usate questa opzione assieme a
@@ -232,7 +231,11 @@
 			  Se riscalate in due direzioni contemporaneamente, otterete due mappe,
 			  ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi
 			  non è molto utile. Lo stesso vale se si esegue un doppio ridimensionamento
-			  liquido (modalità <i>"Lqr+Lqr alle dimensioni originali"</i>).
+			  liquido (attivendo l'opzione <i>"Riporta alle dimensioni originalo"</i> in
+			  modalità <i>"liquid rescale"</i>), o se il ridimensionamento
+			  avviene in più passi perché si è superato il valore del <i>"Max ingrandimento per passo"</i>.
+			  Nota che questa opzione è ignorata in modalità interattiva, ma i colori selezionati
+			  vengono usati quando si visualizza la mappa manualmente con l'apposito pulsante.
 		  </dd>
 		  <dt><b>Riporta alle dimensioni originali</b></dt>
 		  <dd>
@@ -415,7 +418,7 @@
 		In questa modalità è possibile modificare solamente le dimensioni (e le modifiche vengono
 		immediatamente applicate); inoltre alcune opzioni vengono ignorate:
 		<ul>
-			<li>Mostra le linee d'azione</li>
+			<li>Mostra le linee d'azione (bisogna farlo manualmente, vedi sotto)</li>
 			<li>Riporta alle dimensioni originali</li>
 			<li>Non eliminare i contenuti quando si allarga</li>
 		</ul>
@@ -443,7 +446,7 @@
 		al valore di riferimento di una mappa, si riottiene l'immagine originale. Tuttavia, ogni volta che
 		la direzione di ridimensionamento cambia, o quando si supera il massimo ingrandimento per passo, la mappa
 		viene automaticamente reinizializzata; quando ciò accade, tutte le informazioni precedenti sono perdute.
-		Ci sono due pulsanti in questa sezione:
+		Ci sono tre pulsanti in questa sezione:
 		<dl>
 			<dt>Pulsante info</dt>
 			<dd>
@@ -451,10 +454,19 @@
 			</dd>
 			<dt>Pulsante reset</dt>
 			<dd>
-			Reimposta la mappa manualmente. Per esempio, se premete questo pulsante dopo aver modificato le
+			Reimposta la mappa manualmente. Questo è equivalente a far ripartire il plugin dalla situazione attuale.
+			Per esempio, se premete questo pulsante dopo aver modificato le
 			dimensioni, e poi premete il pulsante reset nella sezione per le dimensioni, otterrete un risultato
 			equivalente a quello che otterreste usando l'opzione <i>"Riporta alle dimensioni originali"</i>
 			(impostata su <i>"liquid rescale"</i>) in modalità non-interattiva.
+			</dd>
+			<dt>Pulsante visualizza</dt>
+			<dd>
+			Mostra la mappa attualmente in uso. Funziona allo stesso modo dell'opzione <i>"Mostra le linee d'azione"</i>
+			della modalità interattiva, solo che si fa manualmente e quindi mostra una sola mappa alla volta.
+			Per leggere il risultato bisogna riportare il livello alle dimensioni di referimento, e sovrapporvi
+			la mappa.
+			Questo pulsante è utilizzabile solo con immagini di tipo RGB.
 			</dd>
 		</dl>
       </p>
