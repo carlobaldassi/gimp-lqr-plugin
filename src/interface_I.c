@@ -508,7 +508,9 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   state->new_width = new_width;
   state->new_height = new_height;
   //printf("[w,h=%i,%i]\n", new_width, new_height); fflush(stdout);
+  gimp_image_undo_group_start (p_data->image_ID);
   render_success = render_interactive (p_data->image_ID, state, p_data->drawable_vals, p_data->carver_data);
+  gimp_image_undo_group_end (p_data->image_ID);
   p_data->drawable_vals->layer_ID = c_data->layer_ID;
   if (!render_success)
     {
@@ -604,7 +606,9 @@ callback_flatten_button (GtkWidget * button, gpointer data)
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
   //CarverData * c_data = p_data->carver_data;
 
+  gimp_image_undo_group_start (p_data->image_ID);
   render_success = render_flatten (p_data->image_ID, state, p_data->drawable_vals, p_data->carver_data);
+  gimp_image_undo_group_end (p_data->image_ID);
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;
@@ -624,7 +628,9 @@ callback_dump_button (GtkWidget * button, gpointer data)
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
   //CarverData * c_data = p_data->carver_data;
 
+  gimp_image_undo_group_start (p_data->image_ID);
   render_success = render_dump_vmap (p_data->image_ID, state, p_data->drawable_vals, p_data->col_vals, p_data->carver_data);
+  gimp_image_undo_group_end (p_data->image_ID);
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;

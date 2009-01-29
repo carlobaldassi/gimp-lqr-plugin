@@ -488,7 +488,6 @@ render_interactive (gint32 image_ID,
 
   gimp_layer_set_lock_alpha (layer_ID, FALSE);
 
-  // TODO: useless except for lock_alpha ?
   if (vals->resize_aux_layers == TRUE)
     {
       resize_unlock_aux_layer (vals->pres_layer_ID, old_width, old_height, x_off, y_off);
