@@ -1,11 +1,6 @@
-/* GIMP LiquidRescaling Plug-in
- * Copyright (C) 2007 Carlo Baldassi (the "Author") <carlobaldassi@yahoo.it>.
+/* GIMP LiquidRescale Plug-in
+ * Copyright (C) 2007-2009 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
  * All Rights Reserved.
- *
- * This plugin implements the algorithm described in the paper
- * "Seam Carving for Content-Aware Image Resizing"
- * by Shai Avidan and Ariel Shamir
- * which can be found at http://www.faculty.idc.ac.il/arik/imret.pdf
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,18 +36,92 @@
 #define __CLOCK_IT__
 #endif
 
-/* convenience check macros and functions */
+/* convenience macros for checking and gneral cleanup */
 
 #define MEMCHECK_N(x) if ((x) == NULL) { g_message(_("Not enough memory")); return NULL; }
 #define MEMCHECK1_N(x) if ((x) == LQR_NOMEM) { g_message(_("Not enough memory")); return NULL; }
 #define MEMCHECK(x) if ((x) == NULL) { g_message(_("Not enough memory")); return FALSE; }
 #define MEMCHECK1(x) if ((x) == LQR_NOMEM) { g_message(_("Not enough memory")); return FALSE; }
-#define COLCHECK(id, carver) if (check_channels(id, carver) == FALSE) { g_message(_("Error: number of colour channels changed")); return FALSE; }
-#define BASETYPECHECK(id, base_type) if (gimp_image_base_type(id) != base_type) { g_message(_("Error: image type changed")); return FALSE; }
-static gboolean check_channels (gint32 layer_ID, LqrCarver * carver);
+#define MEMCHECK2(x) if ((x) == FALSE) { g_message(_("Not enough memory")); return FALSE; }
 
-/* progress functions wrappers */
+#define COLCHECK(layer_ID, carver) G_STMT_START { \
+  if (gimp_drawable_bpp(layer_ID) != lqr_carver_get_channels(carver)) \
+    { \
+      g_message(_("Error: number of colour channels changed")); \
+      return FALSE; \
+    } \
+  } G_STMT_END
+
+#define BASETYPECHECK(image_ID, base_type) G_STMT_START { \
+  if (gimp_image_base_type(image_ID) != base_type) \
+    { \
+      g_message(_("Error: image type changed")); \
+      return FALSE; \
+    } \
+  } G_STMT_END
+
+#define IMAGECHECK(image_ID, ret_val) G_STMT_START { \
+  if (!gimp_image_is_valid (image_ID)) \
+    { \
+      g_message (_("Error: invalid image")); \
+      return ret_val; \
+    } \
+  } G_STMT_END
+
+#define LAYERCHECK(layer_ID, ret_val) G_STMT_START { \
+  if (!gimp_drawable_is_valid (layer_ID)) \
+    { \
+      g_message (_("Error: invalid layer")); \
+      return ret_val; \
+    } \
+  } G_STMT_END
+
+#define LAYERCHECK0(layer_ID, ret_val) G_STMT_START { \
+  if (layer_ID) \
+    { \
+      LAYERCHECK (layer_ID, ret_val); \
+    } \
+  } G_STMT_END
+
+#define UNFLOAT(layer_ID) G_STMT_START { \
+  if (gimp_layer_is_floating_sel (layer_ID)) \
+    { \
+      gimp_floating_sel_to_layer (layer_ID); \
+    } \
+  } G_STMT_END
+
+#define UNMASK(layer_ID) G_STMT_START { \
+  gint32 mask_ID = gimp_layer_get_mask (layer_ID); \
+  if (mask_ID != -1) \
+    { \
+      gimp_layer_remove_mask (layer_ID, vals->mask_behavior); \
+    } \
+  } G_STMT_END
+
+#define SELECTIONSAVE(image_ID) G_STMT_START { \
+  if (gimp_selection_is_empty (image_ID) == FALSE) \
+    { \
+      gimp_selection_save (image_ID); \
+      gimp_selection_none (image_ID); \
+      gimp_image_unset_active_channel (image_ID); \
+    } \
+  } G_STMT_END
+
+
+/* static functions declarations */
+
 static gboolean my_progress_end (const gchar * message);
+static LqrProgress * progress_init ();
+static gfloat rigidity_init (PlugInVals * vals);
+static gboolean compute_ignore_disc_mask (PlugInVals * vals, gint old_width, gint old_height, gint new_width, gint new_height);
+static void set_tiles (gint width);
+static gboolean check_aux_layer_bpp (LqrCarverList ** carver_list_p, gint32 layer_ID);
+static gboolean resize_unlock_aux_layer (gint32 layer_ID, gint width, gint height, gint x_off, gint y_off);
+static LqrCarver* attach_aux_carver (LqrCarver * carver, gint32 layer_ID, gint width, gint height);
+static gboolean write_aux_carver (LqrCarverList ** carver_list_p, gint32 layer_ID, gint width, gint height);
+static void scale_layer_translated (gint32 layer_ID, gint width, gint height, gint x_off, gint y_off);
+
+/* render functions */
 
 CarverData *
 render_init_carver (gint32 image_ID,
@@ -62,32 +131,25 @@ render_init_carver (gint32 image_ID,
         gboolean interactive)
 {
   CarverData *carver_data;
-  LqrCarver *carver, *aux_carver;
-  gint32 mask_ID;
+  LqrCarver *carver;
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
   gchar new_layer_name[LQR_MAX_NAME_LENGTH];
   guchar *rgb_buffer;
   gboolean alpha_lock;
   gboolean alpha_lock_pres = FALSE, alpha_lock_disc = FALSE, alpha_lock_rigmask = FALSE;
-  gint ntiles;
   gfloat rigidity;
   gint old_width, old_height;
   gint new_width, new_height;
-  gint bpp, bpp_aux;
-  gint x_off, y_off, aux_x_off, aux_y_off;
+  gint bpp;
+  gint x_off, y_off;
   gboolean ignore_disc_mask = FALSE;
-  LqrProgress *lqr_progress;
+  LqrProgress *progress;
 #ifdef __CLOCK_IT__
   double clock1, clock2;
 #endif /* __CLOCK_IT__ */
 
-  if (!gimp_image_is_valid (image_ID))
-    {
-      g_message (_("Error: it seems that the selected image "
-                   "is no longer valid"));
-      return NULL;
-    }
+  IMAGECHECK (image_ID, NULL);
 
   if (drawable_vals->layer_ID)
     {
@@ -98,63 +160,42 @@ render_init_carver (gint32 image_ID,
       layer_ID = gimp_image_get_active_layer (image_ID);
     }
 
-  if (!gimp_drawable_is_valid (layer_ID))
-    {
-      g_message (_("Error: it seems that the selected layer "
-                   "is no longer valid"));
-      return NULL;
-    }
+  LAYERCHECK (layer_ID, NULL);
+  LAYERCHECK0 (vals->pres_layer_ID, NULL);
+  LAYERCHECK0 (vals->disc_layer_ID, NULL);
+  LAYERCHECK0 (vals->rigmask_layer_ID, NULL);
 
-  if ((vals->pres_layer_ID != 0) && 
-      (!gimp_drawable_is_valid (vals->pres_layer_ID)))
-    {
-      g_message (_("Error: it seems that the preservation "
-                   "features layer is no longer valid"));
-      return NULL;
-    }
+  UNFLOAT (layer_ID);
+  SELECTIONSAVE (image_ID);
+  UNMASK (layer_ID);
 
-  if ((vals->disc_layer_ID != 0) &&
-      (!gimp_drawable_is_valid (vals->disc_layer_ID)))
-    {
-      g_message (_("Error: it seems that the discard features "
-                   "layer is no longer valid"));
-      return NULL;
-    }
+  snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
+            gimp_drawable_get_name (layer_ID));
 
-  if ((vals->rigmask_layer_ID != 0) &&
-      (!gimp_drawable_is_valid (vals->rigmask_layer_ID)))
-    {
-      g_message (_("Error: it seems that the rigidity mask "
-                   "layer is no longer valid"));
-      return NULL;
-    }
+  old_width = gimp_drawable_width (layer_ID);
+  old_height = gimp_drawable_height (layer_ID);
+  gimp_drawable_offsets (layer_ID, &x_off, &y_off);
+  bpp = gimp_drawable_bpp (layer_ID);
 
-  if (gimp_layer_is_floating_sel (layer_ID))
+  new_width = vals->new_width;
+  new_height = vals->new_height;
+  rigidity = rigidity_init(vals);
+
+  if (!interactive)
     {
-      gimp_floating_sel_to_layer (layer_ID);
+      ignore_disc_mask = compute_ignore_disc_mask (vals, old_width, old_height, new_width, new_height);
+      if ((vals->output_seams) && (gimp_image_base_type(image_ID) != GIMP_RGB))
+        {
+          gimp_image_convert_rgb (image_ID);
+        }
     }
 
   drawable = gimp_drawable_get (layer_ID);
 
-  snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
-            gimp_drawable_get_name (drawable->drawable_id));
-
-  if (gimp_selection_is_empty (image_ID) == FALSE)
-    {
-      gimp_selection_save (image_ID);
-      gimp_selection_none (image_ID);
-      gimp_image_unset_active_channel (image_ID);
-    }
-
-  if ((!interactive) && ((vals->output_seams) && (gimp_image_base_type(image_ID) != GIMP_RGB)))
-    {
-      gimp_image_convert_rgb (image_ID);
-    }
-
-  if (vals->new_layer == TRUE)
+  if (vals->new_layer)
     {
       snprintf (new_layer_name, LQR_MAX_NAME_LENGTH, "%s LqR", layer_name);
-      layer_ID = gimp_layer_copy (drawable->drawable_id);
+      layer_ID = gimp_layer_copy (layer_ID);
       gimp_image_add_layer (image_ID, layer_ID, -1);
       gimp_drawable_detach (drawable);
       drawable = gimp_drawable_get (layer_ID);
@@ -162,98 +203,21 @@ render_init_carver (gint32 image_ID,
       gimp_drawable_set_visible (layer_ID, FALSE);
     }
 
-  mask_ID = gimp_layer_get_mask (drawable->drawable_id);
-  if (mask_ID != -1)
-    {
-      gimp_layer_remove_mask (drawable->drawable_id, vals->mask_behavior);
-    }
-
   /* unset lock alpha */
-  alpha_lock = gimp_layer_get_lock_alpha (drawable->drawable_id);
-  gimp_layer_set_lock_alpha (drawable->drawable_id, FALSE);
-
-  old_width = gimp_drawable_width (drawable->drawable_id);
-  old_height = gimp_drawable_height (drawable->drawable_id);
-  new_width = vals->new_width;
-  new_height = vals->new_height;
-
-  gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
-
-  bpp = gimp_drawable_bpp (drawable->drawable_id);
+  alpha_lock = gimp_layer_get_lock_alpha (layer_ID);
+  gimp_layer_set_lock_alpha (layer_ID, FALSE);
 
   if (vals->resize_aux_layers == TRUE)
     {
-      if (vals->pres_layer_ID != 0)
-        {
-          alpha_lock_pres = gimp_layer_get_lock_alpha (vals->pres_layer_ID);
-          gimp_layer_set_lock_alpha (vals->pres_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->pres_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->pres_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          alpha_lock_disc = gimp_layer_get_lock_alpha (vals->disc_layer_ID);
-          gimp_layer_set_lock_alpha (vals->disc_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->disc_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->disc_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          alpha_lock_rigmask = gimp_layer_get_lock_alpha (vals->rigmask_layer_ID);
-          gimp_layer_set_lock_alpha (vals->rigmask_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->rigmask_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->rigmask_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
+      alpha_lock_pres = resize_unlock_aux_layer (vals->pres_layer_ID, old_width, old_height, x_off, y_off);
+      alpha_lock_disc = resize_unlock_aux_layer (vals->disc_layer_ID, old_width, old_height, x_off, y_off);
+      alpha_lock_rigmask = resize_unlock_aux_layer (vals->rigmask_layer_ID, old_width, old_height, x_off, y_off);
     }
 
+  set_tiles (old_width);
 
-  ntiles = old_width / gimp_tile_width () + 1;
-  gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
-                         4 * 2) / 1024 + 1);
-
-  lqr_progress = lqr_progress_new ();
-  MEMCHECK_N (lqr_progress);
-  lqr_progress_set_init (lqr_progress, (LqrProgressFuncInit) gimp_progress_init);
-  lqr_progress_set_update (lqr_progress, (LqrProgressFuncUpdate) gimp_progress_update);
-  lqr_progress_set_end (lqr_progress, (LqrProgressFuncEnd) my_progress_end);
-  lqr_progress_set_init_width_message (lqr_progress, _("Resizing width..."));
-  lqr_progress_set_init_height_message (lqr_progress,
-                                        _("Resizing height..."));
-
-  if (vals->rigmask_layer_ID != 0)
-    {
-      rigidity = 3 * vals->rigidity;
-    }
-  else
-    {
-      rigidity = vals->rigidity;
-    }
-
-  if ((!interactive) && (vals->no_disc_on_enlarge == TRUE))
-    {
-      switch (vals->res_order)
-        {
-          case LQR_RES_ORDER_HOR:
-            if ((new_width > old_width) || ((new_width == old_width) && (new_height > old_height)))
-              {
-                ignore_disc_mask = TRUE;
-              }
-            break;
-          case LQR_RES_ORDER_VERT:
-            if ((new_height > old_height) || ((new_height == old_height) && (new_width > old_width)))
-              {
-                ignore_disc_mask = TRUE;
-              }
-            break;
-          default:
-            g_message ("Error: unknown resize order index");
-            return NULL;
-        }
-    }
-
+  progress = progress_init();
+  MEMCHECK_N (progress);
 
 #ifdef __CLOCK_IT__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
@@ -268,7 +232,7 @@ render_init_carver (gint32 image_ID,
   MEMCHECK1_N (lqr_carver_init (carver, vals->delta_x, rigidity));
   MEMCHECK1_N (update_bias
                (carver, vals->pres_layer_ID, vals->pres_coeff, x_off, y_off));
-  if (ignore_disc_mask == FALSE)
+  if (!ignore_disc_mask)
     {
       MEMCHECK1_N (update_bias
                  (carver, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
@@ -277,7 +241,7 @@ render_init_carver (gint32 image_ID,
                (carver, vals->rigmask_layer_ID, x_off, y_off));
   lqr_carver_set_gradient_function (carver, vals->grad_func);
   lqr_carver_set_resize_order (carver, vals->res_order);
-  lqr_carver_set_progress (carver, lqr_progress);
+  lqr_carver_set_progress (carver, progress);
   lqr_carver_set_side_switch_frequency (carver, 2);
   lqr_carver_set_enl_step (carver, vals->enl_step / 100);
   if ((!interactive) && (vals->output_seams))
@@ -286,37 +250,9 @@ render_init_carver (gint32 image_ID,
     }
   if (vals->resize_aux_layers)
     {
-      if (vals->pres_layer_ID)
-        {
-          rgb_buffer = rgb_buffer_from_layer (vals->pres_layer_ID);
-          MEMCHECK_N (rgb_buffer);
-          bpp_aux = gimp_drawable_bpp (vals->pres_layer_ID);
-          aux_carver =
-            lqr_carver_new (rgb_buffer, old_width, old_height, bpp_aux);
-                            
-          MEMCHECK_N (aux_carver);
-          MEMCHECK1_N (lqr_carver_attach (carver, aux_carver));
-        }
-      if (vals->disc_layer_ID)
-        {
-          rgb_buffer = rgb_buffer_from_layer (vals->disc_layer_ID);
-          MEMCHECK_N (rgb_buffer);
-          bpp_aux = gimp_drawable_bpp (vals->disc_layer_ID);
-          aux_carver =
-            lqr_carver_new (rgb_buffer, old_width, old_height, bpp_aux);
-          MEMCHECK_N (aux_carver);
-          MEMCHECK1_N (lqr_carver_attach (carver, aux_carver));
-        }
-      if (vals->rigmask_layer_ID)
-        {
-          rgb_buffer = rgb_buffer_from_layer (vals->rigmask_layer_ID);
-          MEMCHECK_N (rgb_buffer);
-          bpp_aux = gimp_drawable_bpp (vals->rigmask_layer_ID);
-          aux_carver =
-            lqr_carver_new (rgb_buffer, old_width, old_height, bpp_aux);
-          MEMCHECK_N (aux_carver);
-          MEMCHECK1_N (lqr_carver_attach (carver, aux_carver));
-        }
+      attach_aux_carver (carver, vals->pres_layer_ID, old_width, old_height);
+      attach_aux_carver (carver, vals->disc_layer_ID, old_width, old_height);
+      attach_aux_carver (carver, vals->rigmask_layer_ID, old_width, old_height);
     }
 
 #ifdef __CLOCK_IT__
@@ -345,28 +281,20 @@ render_noninteractive (gint32 image_ID,
         PlugInColVals * col_vals,
         CarverData * carver_data)
 {
-  LqrCarver *carver, *aux_carver;
+  LqrCarver *carver;
   LqrCarverList *carver_list;
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
   gboolean alpha_lock;
   gboolean alpha_lock_pres = FALSE, alpha_lock_disc = FALSE, alpha_lock_rigmask = FALSE;
-  gint ntiles;
   gint old_width, old_height;
   gint new_width, new_height;
   gint sb_width, sb_height;
   gint x_off, y_off;
-  GimpDrawable *drawable_pres, *drawable_disc, *drawable_rigmask;
   GimpRGB colour_start, colour_end;
 #ifdef __CLOCK_IT__
   double clock1, clock2, clock3;
 #endif /* __CLOCK_IT__ */
-
-  old_width = gimp_drawable_width (drawable->drawable_id);
-  old_height = gimp_drawable_height (drawable->drawable_id);
-  new_width = vals->new_width;
-  new_height = vals->new_height;
-  gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
 
   carver = carver_data->carver;
   layer_ID = carver_data->layer_ID;
@@ -376,7 +304,14 @@ render_noninteractive (gint32 image_ID,
   alpha_lock_rigmask = carver_data->alpha_lock_rigmask;
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
-            gimp_drawable_get_name (drawable->drawable_id));
+            gimp_drawable_get_name (layer_ID));
+
+  old_width = gimp_drawable_width (layer_ID);
+  old_height = gimp_drawable_height (layer_ID);
+  gimp_drawable_offsets (layer_ID, &x_off, &y_off);
+
+  new_width = vals->new_width;
+  new_height = vals->new_height;
 
 #ifdef __CLOCK_IT__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
@@ -390,47 +325,8 @@ render_noninteractive (gint32 image_ID,
         {
         case SCALEBACK_MODE_LQRBACK:
           MEMCHECK1 (lqr_carver_flatten (carver));
-#if 0
-          if (vals->resize_aux_layers == TRUE)
-            {
-              carver_list = lqr_carver_list_start (carver);
-              if (vals->pres_layer_ID != 0)
-                {
-                  carver_list = lqr_carver_list_next (carver_list);
-                }
-              if (vals->disc_layer_ID != 0)
-                {
-                  if (ignore_disc_mask == FALSE)
-                    {
-                      MEMCHECK1 (update_bias
-                                   (carver, vals->disc_layer_ID, 2 * vals->disc_coeff,
-                                  x_off, y_off));
-                    }
-                  carver_list = lqr_carver_list_next (carver_list);
-                }
-              if (vals->rigmask_layer_ID != 0)
-                {
-                  MEMCHECK1 (update_bias
-                             (carver, vals->rigmask_layer_ID, 2 * vals->rigmask_coeff,
-                              x_off, y_off));
-                  carver_list = lqr_carver_list_next (carver_list);
-                }
-            }
-#endif
           new_width = old_width;
           new_height = old_height;
-
-#if 0
-          switch (vals->res_order)
-            {
-            case LQR_RES_ORDER_HOR:
-              carver->resize_order = LQR_RES_ORDER_VERT;
-              break;
-            case LQR_RES_ORDER_VERT:
-              carver->resize_order = LQR_RES_ORDER_HOR;
-              break;
-            }
-#endif
           MEMCHECK1 (lqr_carver_resize (carver, new_width, new_height));
           break;
         case SCALEBACK_MODE_STD:
@@ -451,7 +347,7 @@ render_noninteractive (gint32 image_ID,
                      y_off, colour_start, colour_end));
   }
 
-  if (vals->resize_canvas == TRUE)
+  if (vals->resize_canvas)
     {
       gimp_image_resize (image_ID, new_width, new_height, -x_off, -y_off);
       gimp_layer_resize_to_image_size (layer_ID);
@@ -469,48 +365,20 @@ render_noninteractive (gint32 image_ID,
   fflush (stdout);
 #endif /* __CLOCK_IT__ */
 
-  ntiles = vals->new_width / gimp_tile_width () + 1;
-  gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
-                         4 * 2) / 1024 + 1);
+  set_tiles (new_width);
 
   MEMCHECK1 (write_carver_to_layer (carver, drawable));
 
-  if (vals->resize_aux_layers == TRUE)
+  if (vals->resize_aux_layers)
     {
       carver_list = lqr_carver_list_start (carver);
-      if (vals->pres_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->pres_layer_ID, new_width, new_height, 0,
-                             0);
-          drawable_pres = gimp_drawable_get (vals->pres_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_pres));
-          gimp_drawable_detach (drawable_pres);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->disc_layer_ID, new_width, new_height, 0,
-                             0);
-          drawable_disc = gimp_drawable_get (vals->disc_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_disc));
-          gimp_drawable_detach (drawable_disc);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->rigmask_layer_ID, new_width, new_height, 0,
-                             0);
-          drawable_rigmask = gimp_drawable_get (vals->rigmask_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_rigmask));
-          gimp_drawable_detach (drawable_rigmask);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, new_width, new_height));
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, new_width, new_height));
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, new_width, new_height));
     }
 
   lqr_carver_destroy (carver);
+
   if (vals->scaleback)
     {
       switch (vals->scaleback_mode)
@@ -545,9 +413,7 @@ render_noninteractive (gint32 image_ID,
             }
           else
             {
-              gimp_layer_translate (layer_ID, -x_off, -y_off);
-              gimp_layer_scale (layer_ID, sb_width, sb_height, FALSE);
-              gimp_layer_translate (layer_ID, x_off, y_off);
+              scale_layer_translated (layer_ID, sb_width, sb_height, x_off, y_off);
             }
           gimp_drawable_detach (drawable);
           drawable = gimp_drawable_get (layer_ID);
@@ -555,24 +421,15 @@ render_noninteractive (gint32 image_ID,
             {
               if (vals->pres_layer_ID != 0)
                 {
-                  gimp_layer_translate (vals->pres_layer_ID, -x_off, -y_off);
-                  gimp_layer_scale (vals->pres_layer_ID, sb_width,
-                                    sb_height, FALSE);
-                  gimp_layer_translate (vals->pres_layer_ID, x_off, y_off);
+                  scale_layer_translated (vals->pres_layer_ID, sb_width, sb_height, x_off, y_off);
                 }
               if (vals->disc_layer_ID != 0)
                 {
-                  gimp_layer_translate (vals->disc_layer_ID, -x_off, -y_off);
-                  gimp_layer_scale (vals->disc_layer_ID, sb_width,
-                                    sb_height, FALSE);
-                  gimp_layer_translate (vals->disc_layer_ID, x_off, y_off);
+                  scale_layer_translated (vals->disc_layer_ID, sb_width, sb_height, x_off, y_off);
                 }
               if (vals->rigmask_layer_ID != 0)
                 {
-                  gimp_layer_translate (vals->rigmask_layer_ID, -x_off, -y_off);
-                  gimp_layer_scale (vals->rigmask_layer_ID, sb_width,
-                                    sb_height, FALSE);
-                  gimp_layer_translate (vals->rigmask_layer_ID, x_off, y_off);
+                  scale_layer_translated (vals->rigmask_layer_ID, sb_width, sb_height, x_off, y_off);
                 }
             }
           break;
@@ -591,7 +448,7 @@ render_noninteractive (gint32 image_ID,
   gimp_drawable_set_visible (layer_ID, TRUE);
   gimp_image_set_active_layer (image_ID, layer_ID);
 
-  gimp_layer_set_lock_alpha (drawable->drawable_id, alpha_lock);
+  gimp_layer_set_lock_alpha (layer_ID, alpha_lock);
   if (vals->resize_aux_layers == TRUE)
     {
       if (vals->pres_layer_ID != 0)
@@ -618,16 +475,13 @@ render_interactive (gint32 image_ID,
         PlugInDrawableVals * drawable_vals,
         CarverData * carver_data)
 {
-  LqrCarver *carver, *aux_carver;
+  LqrCarver *carver;
   LqrCarverList *carver_list;
   gint32 layer_ID;
-  gint32 mask_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
-  gint ntiles;
   gint old_width, old_height;
   gint new_width, new_height;
-  gint x_off, y_off, aux_x_off, aux_y_off;
-  GimpDrawable *drawable_pres, *drawable_disc, *drawable_rigmask;
+  gint x_off, y_off;
 #ifdef __CLOCK_IT__
   double clock1, clock2, clock3;
 #endif /* __CLOCK_IT__ */
@@ -635,124 +489,47 @@ render_interactive (gint32 image_ID,
   carver = carver_data->carver;
   layer_ID = carver_data->layer_ID;
 
-  if (!gimp_image_is_valid (image_ID))
+  IMAGECHECK (image_ID, FALSE);
+
+  LAYERCHECK (layer_ID, FALSE);
+  LAYERCHECK0 (vals->pres_layer_ID, FALSE);
+  LAYERCHECK0 (vals->disc_layer_ID, FALSE);
+  LAYERCHECK0 (vals->rigmask_layer_ID, FALSE);
+
+  BASETYPECHECK (image_ID, carver_data->base_type);
+  COLCHECK (layer_ID, carver);
+  if (vals->resize_aux_layers == TRUE)
     {
-      g_message (_("Error: it seems that the selected image "
-                   "is no longer valid"));
-      return FALSE;
+      carver_list = lqr_carver_list_start (carver);
+      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->pres_layer_ID));
+      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->disc_layer_ID));
+      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->rigmask_layer_ID));
     }
 
-  if (!gimp_drawable_is_valid (layer_ID))
-    {
-      g_message (_("Error: it seems that the selected layer "
-                   "is no longer valid"));
-      return FALSE;
-    }
-
-  if ((vals->pres_layer_ID != 0) && 
-      (!gimp_drawable_is_valid (vals->pres_layer_ID)))
-    {
-      g_message (_("Error: it seems that the preservation "
-                   "features layer is no longer valid"));
-      return FALSE;
-    }
-
-  if ((vals->disc_layer_ID != 0) &&
-      (!gimp_drawable_is_valid (vals->disc_layer_ID)))
-    {
-      g_message (_("Error: it seems that the discard features "
-                   "layer is no longer valid"));
-      return FALSE;
-    }
-
-  if ((vals->rigmask_layer_ID != 0) &&
-      (!gimp_drawable_is_valid (vals->rigmask_layer_ID)))
-    {
-      g_message (_("Error: it seems that the rigidity mask "
-                   "layer is no longer valid"));
-      return FALSE;
-    }
-
-  if (gimp_layer_is_floating_sel (layer_ID))
-    {
-      gimp_floating_sel_to_layer (layer_ID);
-    }
+  UNFLOAT (layer_ID);
+  SELECTIONSAVE (image_ID);
+  UNMASK (layer_ID);
 
   drawable = gimp_drawable_get (layer_ID);
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
-            gimp_drawable_get_name (drawable->drawable_id));
+            gimp_drawable_get_name (layer_ID));
 
-  if (gimp_selection_is_empty (image_ID) == FALSE)
-    {
-      gimp_selection_save (image_ID);
-      gimp_selection_none (image_ID);
-      gimp_image_unset_active_channel (image_ID);
-    }
+  old_width = gimp_drawable_width (layer_ID);
+  old_height = gimp_drawable_height (layer_ID);
+  gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
-  mask_ID = gimp_layer_get_mask (drawable->drawable_id);
-  if (mask_ID != -1)
-    {
-      gimp_layer_remove_mask (drawable->drawable_id, vals->mask_behavior);
-    }
-
-  gimp_layer_set_lock_alpha (drawable->drawable_id, FALSE);
-
-  old_width = gimp_drawable_width (drawable->drawable_id);
-  old_height = gimp_drawable_height (drawable->drawable_id);
   new_width = vals->new_width;
   new_height = vals->new_height;
 
-  gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
-
-  BASETYPECHECK (image_ID, carver_data->base_type);
-
-  COLCHECK (drawable->drawable_id, carver);
-
-  if (vals->resize_aux_layers == TRUE)
-    {
-      carver_list = lqr_carver_list_start (carver);
-      if (vals->pres_layer_ID != 0)
-        {
-          aux_carver = lqr_carver_list_current (carver_list);
-          COLCHECK (vals->pres_layer_ID, aux_carver);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          aux_carver = lqr_carver_list_current (carver_list);
-          COLCHECK (vals->disc_layer_ID, aux_carver);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          aux_carver = lqr_carver_list_current (carver_list);
-          COLCHECK (vals->rigmask_layer_ID, aux_carver);
-        }
-    }
+  gimp_layer_set_lock_alpha (layer_ID, FALSE);
 
   // TODO: useless except for lock_alpha ?
   if (vals->resize_aux_layers == TRUE)
     {
-      if (vals->pres_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->pres_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->pres_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->pres_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->disc_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->disc_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->disc_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->rigmask_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->rigmask_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->rigmask_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
+      resize_unlock_aux_layer (vals->pres_layer_ID, old_width, old_height, x_off, y_off);
+      resize_unlock_aux_layer (vals->disc_layer_ID, old_width, old_height, x_off, y_off);
+      resize_unlock_aux_layer (vals->rigmask_layer_ID, old_width, old_height, x_off, y_off);
     }
 
 #ifdef __CLOCK_IT__
@@ -785,45 +562,16 @@ render_interactive (gint32 image_ID,
   carver_data->depth = lqr_carver_get_depth (carver);
   carver_data->enl_step = lqr_carver_get_enl_step (carver);
 
-  ntiles = vals->new_width / gimp_tile_width () + 1;
-  gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
-                         4 * 2) / 1024 + 1);
+  set_tiles (new_width);
 
   MEMCHECK1 (write_carver_to_layer (carver, drawable));
 
-  if (vals->resize_aux_layers == TRUE)
+  if (vals->resize_aux_layers)
     {
       carver_list = lqr_carver_list_start (carver);
-      if (vals->pres_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->pres_layer_ID, new_width, new_height, 0,
-                             0);
-          drawable_pres = gimp_drawable_get (vals->pres_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_pres));
-          gimp_drawable_detach (drawable_pres);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->disc_layer_ID, new_width, new_height, 0,
-                             0);
-          drawable_disc = gimp_drawable_get (vals->disc_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_disc));
-          gimp_drawable_detach (drawable_disc);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->rigmask_layer_ID, new_width, new_height, 0,
-                             0);
-          drawable_rigmask = gimp_drawable_get (vals->rigmask_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_rigmask));
-          gimp_drawable_detach (drawable_rigmask);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, new_width, new_height));
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, new_width, new_height));
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, new_width, new_height));
     }
 
 #ifdef __CLOCK_IT__
@@ -833,7 +581,6 @@ render_interactive (gint32 image_ID,
 
   gimp_drawable_set_visible (layer_ID, TRUE);
   gimp_image_set_active_layer (image_ID, layer_ID);
-
 
   return TRUE;
 }
@@ -845,15 +592,12 @@ render_flatten (gint32 image_ID,
         PlugInDrawableVals * drawable_vals,
         CarverData * carver_data)
 {
-  LqrCarver *carver, *aux_carver;
+  LqrCarver *carver;
   LqrCarverList *carver_list;
   gint32 layer_ID;
-  gint32 mask_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
-  gint ntiles;
   gint old_width, old_height;
-  gint x_off, y_off, aux_x_off, aux_y_off;
-  GimpDrawable *drawable_pres, *drawable_disc, *drawable_rigmask;
+  gint x_off, y_off;
 #ifdef __CLOCK_IT__
   double clock1, clock2, clock3;
 #endif /* __CLOCK_IT__ */
@@ -861,121 +605,43 @@ render_flatten (gint32 image_ID,
   carver = carver_data->carver;
   layer_ID = carver_data->layer_ID;
 
-  if (!gimp_image_is_valid (image_ID))
+  IMAGECHECK (image_ID, FALSE);
+
+  LAYERCHECK (layer_ID, FALSE);
+  LAYERCHECK0 (vals->pres_layer_ID, FALSE);
+  LAYERCHECK0 (vals->disc_layer_ID, FALSE);
+  LAYERCHECK0 (vals->rigmask_layer_ID, FALSE);
+
+  BASETYPECHECK (image_ID, carver_data->base_type);
+  COLCHECK (layer_ID, carver);
+  if (vals->resize_aux_layers == TRUE)
     {
-      g_message (_("Error: it seems that the selected image "
-                   "is no longer valid"));
-      return FALSE;
+      carver_list = lqr_carver_list_start (carver);
+      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->pres_layer_ID));
+      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->disc_layer_ID));
+      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->rigmask_layer_ID));
     }
 
-  if (!gimp_drawable_is_valid (layer_ID))
-    {
-      g_message (_("Error: it seems that the selected layer "
-                   "is no longer valid"));
-      return FALSE;
-    }
-
-  if ((vals->pres_layer_ID != 0) && 
-      (!gimp_drawable_is_valid (vals->pres_layer_ID)))
-    {
-      g_message (_("Error: it seems that the preservation "
-                   "features layer is no longer valid"));
-      return FALSE;
-    }
-
-  if ((vals->disc_layer_ID != 0) &&
-      (!gimp_drawable_is_valid (vals->disc_layer_ID)))
-    {
-      g_message (_("Error: it seems that the discard features "
-                   "layer is no longer valid"));
-      return FALSE;
-    }
-
-  if ((vals->rigmask_layer_ID != 0) &&
-      (!gimp_drawable_is_valid (vals->rigmask_layer_ID)))
-    {
-      g_message (_("Error: it seems that the rigidity mask "
-                   "layer is no longer valid"));
-      return FALSE;
-    }
-
-  if (gimp_layer_is_floating_sel (layer_ID))
-    {
-      gimp_floating_sel_to_layer (layer_ID);
-    }
+  UNFLOAT (layer_ID);
+  SELECTIONSAVE (image_ID);
+  UNMASK (layer_ID);
 
   drawable = gimp_drawable_get (layer_ID);
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
-            gimp_drawable_get_name (drawable->drawable_id));
+            gimp_drawable_get_name (layer_ID));
 
-  if (gimp_selection_is_empty (image_ID) == FALSE)
-    {
-      gimp_selection_save (image_ID);
-      gimp_selection_none (image_ID);
-      gimp_image_unset_active_channel (image_ID);
-    }
+  old_width = gimp_drawable_width (layer_ID);
+  old_height = gimp_drawable_height (layer_ID);
+  gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
-  mask_ID = gimp_layer_get_mask (drawable->drawable_id);
-  if (mask_ID != -1)
-    {
-      gimp_layer_remove_mask (drawable->drawable_id, vals->mask_behavior);
-    }
-
-  gimp_layer_set_lock_alpha (drawable->drawable_id, FALSE);
-
-  old_width = gimp_drawable_width (drawable->drawable_id);
-  old_height = gimp_drawable_height (drawable->drawable_id);
-
-  gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
-
-  BASETYPECHECK (image_ID, carver_data->base_type);
-
-  COLCHECK (drawable->drawable_id, carver);
+  gimp_layer_set_lock_alpha (layer_ID, FALSE);
 
   if (vals->resize_aux_layers == TRUE)
     {
-      carver_list = lqr_carver_list_start (carver);
-      if (vals->pres_layer_ID != 0)
-        {
-          aux_carver = lqr_carver_list_current (carver_list);
-          COLCHECK (vals->pres_layer_ID, aux_carver);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          aux_carver = lqr_carver_list_current (carver_list);
-          COLCHECK (vals->disc_layer_ID, aux_carver);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          aux_carver = lqr_carver_list_current (carver_list);
-          COLCHECK (vals->rigmask_layer_ID, aux_carver);
-        }
-    }
-
-  if (vals->resize_aux_layers == TRUE)
-    {
-      if (vals->pres_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->pres_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->pres_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->pres_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->disc_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->disc_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->disc_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->rigmask_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->rigmask_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->rigmask_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
+      resize_unlock_aux_layer (vals->pres_layer_ID, old_width, old_height, x_off, y_off);
+      resize_unlock_aux_layer (vals->disc_layer_ID, old_width, old_height, x_off, y_off);
+      resize_unlock_aux_layer (vals->rigmask_layer_ID, old_width, old_height, x_off, y_off);
     }
 
 #ifdef __CLOCK_IT__
@@ -1008,45 +674,16 @@ render_flatten (gint32 image_ID,
   carver_data->depth = lqr_carver_get_depth (carver);
   carver_data->enl_step = lqr_carver_get_enl_step (carver);
 
-  ntiles = vals->new_width / gimp_tile_width () + 1;
-  gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
-                         4 * 2) / 1024 + 1);
+  set_tiles (old_width);
 
   MEMCHECK1 (write_carver_to_layer (carver, drawable));
 
-  if (vals->resize_aux_layers == TRUE)
+  if (vals->resize_aux_layers)
     {
       carver_list = lqr_carver_list_start (carver);
-      if (vals->pres_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->pres_layer_ID, old_width, old_height, 0,
-                             0);
-          drawable_pres = gimp_drawable_get (vals->pres_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_pres));
-          gimp_drawable_detach (drawable_pres);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->disc_layer_ID, old_width, old_height, 0,
-                             0);
-          drawable_disc = gimp_drawable_get (vals->disc_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_disc));
-          gimp_drawable_detach (drawable_disc);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          gimp_layer_resize (vals->rigmask_layer_ID, old_width, old_height, 0,
-                             0);
-          drawable_rigmask = gimp_drawable_get (vals->rigmask_layer_ID);
-          aux_carver = lqr_carver_list_current (carver_list);
-          MEMCHECK1 (write_carver_to_layer (aux_carver, drawable_rigmask));
-          gimp_drawable_detach (drawable_rigmask);
-          carver_list = lqr_carver_list_next (carver_list);
-        }
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, old_width, old_height));
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, old_width, old_height));
+      MEMCHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, old_width, old_height));
     }
 
 #ifdef __CLOCK_IT__
@@ -1056,7 +693,6 @@ render_flatten (gint32 image_ID,
 
   gimp_drawable_set_visible (layer_ID, TRUE);
   gimp_image_set_active_layer (image_ID, layer_ID);
-
 
   return TRUE;
 }
@@ -1073,12 +709,10 @@ render_dump_vmap (gint32 image_ID,
   LqrVMap *vmap;
   VMapFuncArg vmap_data;
   gint32 layer_ID;
-  gint32 mask_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
   gchar vmap_name[LQR_MAX_NAME_LENGTH];
-  gint ntiles;
   gint old_width, old_height;
-  gint x_off, y_off, aux_x_off, aux_y_off;
+  gint x_off, y_off;
   GimpRGB colour_start, colour_end;
 #ifdef __CLOCK_IT__
   double clock1, clock2, clock3;
@@ -1087,83 +721,30 @@ render_dump_vmap (gint32 image_ID,
   carver = carver_data->carver;
   layer_ID = carver_data->layer_ID;
 
-  if (!gimp_image_is_valid (image_ID))
-    {
-      g_message (_("Error: it seems that the selected image "
-                   "is no longer valid"));
-      return FALSE;
-    }
+  IMAGECHECK (image_ID, FALSE);
 
-  if (!gimp_drawable_is_valid (layer_ID))
-    {
-      g_message (_("Error: it seems that the selected layer "
-                   "is no longer valid"));
-      return FALSE;
-    }
+  LAYERCHECK (layer_ID, FALSE);
 
-  if (gimp_layer_is_floating_sel (layer_ID))
-    {
-      gimp_floating_sel_to_layer (layer_ID);
-    }
+  BASETYPECHECK (image_ID, carver_data->base_type);
+
+  UNFLOAT (layer_ID);
+  SELECTIONSAVE (image_ID);
+  UNMASK (layer_ID);
 
   drawable = gimp_drawable_get (layer_ID);
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
-            gimp_drawable_get_name (drawable->drawable_id));
+            gimp_drawable_get_name (layer_ID));
 
-  if (gimp_selection_is_empty (image_ID) == FALSE)
-    {
-      gimp_selection_save (image_ID);
-      gimp_selection_none (image_ID);
-      gimp_image_unset_active_channel (image_ID);
-    }
+  old_width = gimp_drawable_width (layer_ID);
+  old_height = gimp_drawable_height (layer_ID);
 
-  mask_ID = gimp_layer_get_mask (drawable->drawable_id);
-  if (mask_ID != -1)
-    {
-      gimp_layer_remove_mask (drawable->drawable_id, vals->mask_behavior);
-    }
-
-  //gimp_layer_set_lock_alpha (drawable->drawable_id, FALSE);
-
-  old_width = gimp_drawable_width (drawable->drawable_id);
-  old_height = gimp_drawable_height (drawable->drawable_id);
-
-  gimp_drawable_offsets (drawable->drawable_id, &x_off, &y_off);
-
-  BASETYPECHECK (image_ID, carver_data->base_type);
-
-  // TODO: useless except for lock_alpha ?
-  if (vals->resize_aux_layers == TRUE)
-    {
-      if (vals->pres_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->pres_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->pres_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->pres_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-      if (vals->disc_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->disc_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->disc_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->disc_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-      if (vals->rigmask_layer_ID != 0)
-        {
-          gimp_layer_set_lock_alpha (vals->rigmask_layer_ID, FALSE);
-          gimp_drawable_offsets (vals->rigmask_layer_ID, &aux_x_off, &aux_y_off);
-          gimp_layer_resize (vals->rigmask_layer_ID, old_width, old_height,
-                             aux_x_off - x_off, aux_y_off - y_off);
-        }
-    }
+  gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
 #ifdef __CLOCK_IT__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
 #endif /* __CLOCK_IT__ */
 
-  //MEMCHECK1 (lqr_carver_flatten (carver));
   vmap = lqr_vmap_dump (carver);
   MEMCHECK (vmap);
 
@@ -1185,9 +766,7 @@ render_dump_vmap (gint32 image_ID,
   vmap_data.colour_start = colour_start;
   vmap_data.colour_end = colour_end;
 
-  ntiles = old_width / gimp_tile_width () + 1;
-  gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
-                         4 * 2) / 1024 + 1);
+  set_tiles (lqr_vmap_get_width(vmap));
 
   MEMCHECK1 (write_vmap_to_layer (vmap, (gpointer) (&vmap_data)));
 
@@ -1199,7 +778,6 @@ render_dump_vmap (gint32 image_ID,
   //gimp_drawable_set_visible (layer_ID, TRUE);
   gimp_image_set_active_layer (image_ID, layer_ID);
 
-
   return TRUE;
 }
 
@@ -1209,8 +787,145 @@ my_progress_end (const gchar * message)
   return gimp_progress_end ();
 }
 
-static gboolean
-check_channels (gint32 layer_ID, LqrCarver * carver)
+static LqrProgress*
+progress_init ()
 {
-  return (gimp_drawable_bpp (layer_ID) == lqr_carver_get_channels (carver));
+  LqrProgress * progress = lqr_progress_new ();
+  MEMCHECK_N (progress);
+  lqr_progress_set_init (progress, (LqrProgressFuncInit) gimp_progress_init);
+  lqr_progress_set_update (progress, (LqrProgressFuncUpdate) gimp_progress_update);
+  lqr_progress_set_end (progress, (LqrProgressFuncEnd) my_progress_end);
+  lqr_progress_set_init_width_message (progress, _("Resizing width..."));
+  lqr_progress_set_init_height_message (progress,
+                                        _("Resizing height..."));
+  return progress;
+}
+
+static gfloat
+rigidity_init (PlugInVals * vals)
+{
+  if (vals->rigmask_layer_ID != 0)
+    {
+      return 3 * vals->rigidity;
+    }
+  else
+    {
+      return vals->rigidity;
+    }
+}
+
+static gboolean
+compute_ignore_disc_mask (PlugInVals * vals, gint old_width, gint old_height, gint new_width, gint new_height)
+{
+  if (!vals->no_disc_on_enlarge)
+    {
+      return FALSE;
+    }
+
+  switch (vals->res_order)
+    {
+      case LQR_RES_ORDER_HOR:
+        if ((new_width > old_width) || ((new_width == old_width) && (new_height > old_height)))
+          {
+            return TRUE;
+          }
+        break;
+      case LQR_RES_ORDER_VERT:
+        if ((new_height > old_height) || ((new_height == old_height) && (new_width > old_width)))
+          {
+            return TRUE;
+          }
+        break;
+      default:
+        g_message ("Error: unknown resize order index");
+        abort();
+    }
+  return FALSE;
+}
+
+static void
+set_tiles (gint width)
+{
+  gint ntiles = width / gimp_tile_width () + 1;
+  gimp_tile_cache_size ((gimp_tile_width () * gimp_tile_height () * ntiles *
+                         4 * 2) / 1024 + 1);
+}
+
+static gboolean
+check_aux_layer_bpp (LqrCarverList ** carver_list_p, gint32 layer_ID)
+{
+  LqrCarver * aux_carver;
+  if (!layer_ID)
+    {
+      return TRUE;
+    }
+  aux_carver = lqr_carver_list_current (*carver_list_p);
+  COLCHECK (layer_ID, aux_carver);
+  *carver_list_p = lqr_carver_list_next (*carver_list_p);
+  return TRUE;
+}
+
+static gboolean
+resize_unlock_aux_layer (gint32 layer_ID, gint width, gint height, gint x_off, gint y_off)
+{
+  gboolean alpha_lock = FALSE;
+  gint aux_x_off, aux_y_off;
+  if (layer_ID)
+    {
+      alpha_lock = gimp_layer_get_lock_alpha (layer_ID);
+      gimp_layer_set_lock_alpha (layer_ID, FALSE);
+      gimp_drawable_offsets (layer_ID, &aux_x_off, &aux_y_off);
+      gimp_layer_resize (layer_ID, width, height,
+                         aux_x_off - x_off, aux_y_off - y_off);
+    }
+  return alpha_lock;
+}
+
+static LqrCarver*
+attach_aux_carver (LqrCarver * carver, gint32 layer_ID, gint width, gint height)
+{
+  guchar *rgb_buffer;
+  LqrCarver * aux_carver;
+  gint bpp;
+
+  if (layer_ID)
+    {
+      rgb_buffer = rgb_buffer_from_layer (layer_ID);
+      MEMCHECK_N (rgb_buffer);
+      bpp = gimp_drawable_bpp (layer_ID);
+      aux_carver =
+        lqr_carver_new (rgb_buffer, width, height, bpp);
+                        
+      MEMCHECK_N (aux_carver);
+      MEMCHECK1_N (lqr_carver_attach (carver, aux_carver));
+    }
+  return carver;
+}
+
+static gboolean
+write_aux_carver (LqrCarverList ** carver_list_p, gint32 layer_ID, gint width, gint height)
+{
+  GimpDrawable * drawable;
+  LqrCarver * aux_carver;
+  LqrCarverList * carver_list = *carver_list_p;
+  if (!layer_ID)
+    {
+      return TRUE;
+    }
+  gimp_layer_resize (layer_ID, width, height, 0, 0);
+  drawable = gimp_drawable_get (layer_ID);
+  aux_carver = lqr_carver_list_current (carver_list);
+  MEMCHECK1 (write_carver_to_layer (aux_carver, drawable));
+  gimp_drawable_detach (drawable);
+  *carver_list_p = lqr_carver_list_next (carver_list);
+  return TRUE;
+}
+
+
+static void
+scale_layer_translated (gint32 layer_ID, gint width, gint height, gint x_off, gint y_off)
+{
+  gimp_layer_translate (layer_ID, -x_off, -y_off);
+  gimp_layer_scale (layer_ID, width, height, FALSE);
+  gimp_layer_translate (layer_ID, x_off, y_off);
 }

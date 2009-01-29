@@ -1,11 +1,6 @@
-/* GIMP LiquidRescaling Plug-in
- * Copyright (C) 2007 Carlo Baldassi (the "Author") <carlobaldassi@yahoo.it>.
+/* GIMP LiquidRescale Plug-in
+ * Copyright (C) 2007-2009 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
  * All Rights Reserved.
- *
- * This plugin implements the algorithm described in the paper
- * "Seam Carving for Content-Aware Image Resizing"
- * by Shai Avidan and Ariel Shamir
- * which can be found at http://www.faculty.idc.ac.il/arik/imret.pdf
  *
  * The code in this file is taken from gimpwidgets.c
  * Copyright (C) 2000 Michael Natterer <mitch@gimp.org>
