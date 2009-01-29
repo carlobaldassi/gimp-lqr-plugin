@@ -279,6 +279,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   gtk_widget_show (hbox2);
 
   info_title_label = gtk_label_new ("");
+  /* Please keep the <b> and </b> tags in translations */
   gtk_label_set_markup(GTK_LABEL(info_title_label), _("<b>Map</b>"));
   gtk_box_pack_start (GTK_BOX (hbox2), info_title_label, FALSE, FALSE, 0);
   gtk_widget_show (info_title_label);
@@ -390,18 +391,9 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   /* Initialize the carver */
 
-  if ((state->pres_layer_ID == -1) || (ui_state->pres_status == FALSE))
-    {
-      state->pres_layer_ID = 0;
-    }
-  if ((state->disc_layer_ID == -1) || (ui_state->disc_status == FALSE))
-    {
-      state->disc_layer_ID = 0;
-    }
-  if ((state->rigmask_layer_ID == -1) || (ui_state->rigmask_status == FALSE))
-    {
-      state->rigmask_layer_ID = 0;
-    }
+  AUX_LAYER_STATUS(state->pres_layer_ID, ui_state->pres_status);
+  AUX_LAYER_STATUS(state->disc_layer_ID, ui_state->disc_status);
+  AUX_LAYER_STATUS(state->rigmask_layer_ID, ui_state->rigmask_status);
   carver_data = render_init_carver(image_ID, state, drawable_vals, TRUE);
   if (carver_data == NULL)
     {

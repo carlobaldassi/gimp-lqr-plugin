@@ -161,14 +161,12 @@ dialog (gint32 image_ID,
   GtkWidget *out_seams_col_button1;
   GtkWidget *out_seams_col_button2;
   GtkWidget *scaleback_button;
-  GtkWidget *scaleback_vbox;
-  GtkWidget *scaleback_label;
   GtkWidget *mask_behavior_combo_box = NULL;
   gboolean has_mask = FALSE;
   GimpUnit unit;
   gdouble xres, yres;
 
-  IMAGECHECK (image_ID, FALSE);
+  IMAGE_CHECK (image_ID, FALSE);
 
   gimp_ui_init (PLUGIN_NAME, TRUE);
 
@@ -611,6 +609,11 @@ dialog (gint32 image_ID,
 			     "and resize in one direction at a time.\n"
 			     "Note that this option is ignored in interactive mode"), NULL);
 
+  g_signal_connect (out_seams_button, "toggled",
+		    G_CALLBACK (callback_out_seams_button),
+		    (gpointer) &(state->output_seams));
+
+
   colour = g_new (GimpRGB, 1);
 
   gimp_rgba_set (colour, col_vals->r2, col_vals->g2, col_vals->b2, 1);
@@ -625,15 +628,6 @@ dialog (gint32 image_ID,
   g_signal_connect (out_seams_col_button2, "color-changed",
 		    G_CALLBACK (callback_out_seams_col_button2),
 		    (gpointer) (col_vals));
-
-  /*
-  g_signal_connect (out_seams_button, "toggled",
-		    G_CALLBACK (callback_out_seams_button),
-		    (gpointer) (out_seams_col_button2));
-
-  callback_out_seams_button (out_seams_button,
-			     (gpointer) out_seams_col_button2);
-			     */
 
   gimp_help_set_help_data (out_seams_col_button2,
 			   _("Colour to use for the last seams"), NULL);
@@ -651,33 +645,14 @@ dialog (gint32 image_ID,
 		    G_CALLBACK (callback_out_seams_col_button1),
 		    (gpointer) (col_vals));
 
-  /*
-  g_signal_connect (out_seams_button, "toggled",
-		    G_CALLBACK (callback_out_seams_button),
-		    (gpointer) (out_seams_col_button1));
-
-  callback_out_seams_button (out_seams_button,
-			     (gpointer) out_seams_col_button1);
-			     */
-
   gimp_help_set_help_data (out_seams_col_button1,
 			   _("Colour to use for the first seams"), NULL);
 
   g_free(colour);
 
   scaleback_button =
-    gtk_check_button_new ();
-    //gtk_check_button_new_with_label (_("Scale back to the original size"));
-  scaleback_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_add (GTK_CONTAINER(scaleback_button), scaleback_vbox);
-  gtk_widget_show (scaleback_vbox);
-
-  scaleback_label = gtk_label_new(_("Scale back to the original size"));
-  gtk_box_pack_start (GTK_BOX(scaleback_vbox), scaleback_label, FALSE, FALSE, 0);
-  gtk_widget_show (scaleback_label);
-
-  gtk_box_pack_start (GTK_BOX (vbox), scaleback_button, FALSE, FALSE,
-		      0);
+    gtk_check_button_new_with_label (_("Scale back to the original size"));
+  gtk_box_pack_start (GTK_BOX (vbox), scaleback_button, FALSE, FALSE, 0);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaleback_button),
 				state->scaleback);
@@ -809,8 +784,10 @@ dialog (gint32 image_ID,
       state->resize_aux_layers =
 	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
 				      (resize_aux_layers_button));
+      /*
       state->output_seams =
 	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (out_seams_button));
+	*/
 
       /* save vsmap colours */
       /*
@@ -882,9 +859,7 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
     case GTK_RESPONSE_OK:
     case RESPONSE_FEAT_REFRESH:
     case RESPONSE_ADV_REFRESH:
-      if (!check_drawable (n_data->layer_ID)) {
-        return;
-      }
+      LAYER_CHECK_ACTION (n_data->layer_ID, gtk_dialog_response (GTK_DIALOG(dialog), RESPONSE_FATAL), );
     case RESPONSE_RESET:
       gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
       dialog_state->has_pos = TRUE;
@@ -915,13 +890,7 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
 gboolean
 check_drawable (gint32 layer_ID)
 {
-  if (!gimp_drawable_is_valid (layer_ID))
-    {
-      g_message (_("Error: invalid layer"));
-      dialog_response = RESPONSE_FATAL;
-      gtk_main_quit();
-      return FALSE;
-    }
+  LAYER_CHECK_ACTION (layer_ID, gtk_dialog_response (GTK_DIALOG(dlg), RESPONSE_FATAL), FALSE);
   return TRUE;
 }
 
@@ -1062,16 +1031,8 @@ callback_interactive_button (GtkWidget * button, gpointer data)
 static void
 callback_out_seams_button (GtkWidget * button, gpointer data)
 {
-  gboolean button_status =
+  *((gboolean*) data) =
     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button));
-  if (button_status)
-    {
-      gtk_widget_show (GTK_WIDGET (data));
-    }
-  else
-    {
-      gtk_widget_hide (GTK_WIDGET (data));
-    }
 }
 
 static void
@@ -1496,7 +1457,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   pres_toggle_data.guess_label = NULL;
   pres_toggle_data.guess_button_hor = NULL;
   pres_toggle_data.guess_button_ver = NULL;
-  //pres_toggle_data.guess_dir_combo = NULL;
 
 
   /*  Feature discard  */
@@ -1752,7 +1712,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_box_pack_start (GTK_BOX (disc_vbox2), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
-  // Auto-size button (keep it short!)
+  // Auto-size buttons
   guess_label = gtk_label_new (_("Auto size:"));
   gtk_box_pack_start (GTK_BOX (hbox), guess_label, FALSE, FALSE, 0);
   gtk_widget_show (guess_label);
@@ -1763,7 +1723,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			    (ui_state->disc_status
 			     && features_are_sensitive));
 
-  // Width auto-size button (keep it short!)
+  // Width auto-size button
   guess_button_hor = gtk_button_new_with_label (_("Width"));
   gtk_box_pack_start (GTK_BOX (hbox), guess_button_hor, FALSE, FALSE, 0);
   gtk_widget_show (guess_button_hor);
@@ -1787,7 +1747,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 		    (gpointer) & preview_data);
 
 
-  // Height auto-size button (keep it short!)
+  // Height auto-size button
   guess_button_ver = gtk_button_new_with_label (_("Height"));
   gtk_box_pack_start (GTK_BOX (hbox), guess_button_ver, FALSE, FALSE, 0);
   gtk_widget_show (guess_button_ver);

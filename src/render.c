@@ -36,15 +36,16 @@
 #define __CLOCK_IT__
 #endif
 
-/* Convenience macros for checking and gneral cleanup */
+/* Convenience macros for checking and general cleanup */
+;
 
-#define MEMCHECK_N(x) if ((x) == NULL) { g_message(_("Not enough memory")); return NULL; }
-#define MEMCHECK1_N(x) if ((x) == LQR_NOMEM) { g_message(_("Not enough memory")); return NULL; }
-#define MEMCHECK(x) if ((x) == NULL) { g_message(_("Not enough memory")); return FALSE; }
-#define MEMCHECK1(x) if ((x) == LQR_NOMEM) { g_message(_("Not enough memory")); return FALSE; }
-#define MEMCHECK2(x) if ((x) == FALSE) { g_message(_("Not enough memory")); return FALSE; }
+#define MEM_CHECK_N(x) if ((x) == NULL) { g_message(_("Not enough memory")); return NULL; }
+#define MEM_CHECK1_N(x) if ((x) == LQR_NOMEM) { g_message(_("Not enough memory")); return NULL; }
+#define MEM_CHECK(x) if ((x) == NULL) { g_message(_("Not enough memory")); return FALSE; }
+#define MEM_CHECK1(x) if ((x) == LQR_NOMEM) { g_message(_("Not enough memory")); return FALSE; }
+#define MEM_CHECK2(x) if ((x) == FALSE) { g_message(_("Not enough memory")); return FALSE; }
 
-#define COLCHECK(layer_ID, carver) G_STMT_START { \
+#define BPP_CHECK(layer_ID, carver) G_STMT_START { \
   if (gimp_drawable_bpp(layer_ID) != lqr_carver_get_channels(carver)) \
     { \
       g_message(_("Error: number of colour channels changed")); \
@@ -52,7 +53,7 @@
     } \
   } G_STMT_END
 
-#define BASETYPECHECK(image_ID, base_type) G_STMT_START { \
+#define IMAGE_TYPE_CHECK(image_ID, base_type) G_STMT_START { \
   if (gimp_image_base_type(image_ID) != base_type) \
     { \
       g_message(_("Error: image type changed")); \
@@ -68,14 +69,13 @@
   } G_STMT_END
 
 #define UNMASK(layer_ID) G_STMT_START { \
-  gint32 mask_ID = gimp_layer_get_mask (layer_ID); \
-  if (mask_ID != -1) \
+  if (gimp_layer_get_mask (layer_ID) != -1) \
     { \
       gimp_layer_remove_mask (layer_ID, vals->mask_behavior); \
     } \
   } G_STMT_END
 
-#define SELECTIONSAVE(image_ID) G_STMT_START { \
+#define SELECTION_SAVE(image_ID) G_STMT_START { \
   if (!gimp_selection_is_empty (image_ID)) \
     { \
       gimp_selection_save (image_ID); \
@@ -125,7 +125,7 @@ render_init_carver (gint32 image_ID,
   double clock1, clock2;
 #endif /* __CLOCK_IT__ */
 
-  IMAGECHECK (image_ID, NULL);
+  IMAGE_CHECK (image_ID, NULL);
 
   if (drawable_vals->layer_ID)
     {
@@ -136,13 +136,13 @@ render_init_carver (gint32 image_ID,
       layer_ID = gimp_image_get_active_layer (image_ID);
     }
 
-  LAYERCHECK (layer_ID, NULL);
-  LAYERCHECK0 (vals->pres_layer_ID, NULL);
-  LAYERCHECK0 (vals->disc_layer_ID, NULL);
-  LAYERCHECK0 (vals->rigmask_layer_ID, NULL);
+  LAYER_CHECK (layer_ID, NULL);
+  LAYER_CHECK0 (vals->pres_layer_ID, NULL);
+  LAYER_CHECK0 (vals->disc_layer_ID, NULL);
+  LAYER_CHECK0 (vals->rigmask_layer_ID, NULL);
 
   UNFLOAT (layer_ID);
-  SELECTIONSAVE (image_ID);
+  SELECTION_SAVE (image_ID);
   UNMASK (layer_ID);
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
@@ -189,7 +189,7 @@ render_init_carver (gint32 image_ID,
   set_tiles (old_width);
 
   progress = progress_init();
-  MEMCHECK_N (progress);
+  MEM_CHECK_N (progress);
 
 #ifdef __CLOCK_IT__
   clock1 = (double) clock () / CLOCKS_PER_SEC;
@@ -198,18 +198,18 @@ render_init_carver (gint32 image_ID,
 
   /* lqr carver initialization */
   rgb_buffer = rgb_buffer_from_layer (layer_ID);
-  MEMCHECK_N (rgb_buffer);
+  MEM_CHECK_N (rgb_buffer);
   carver = lqr_carver_new (rgb_buffer, old_width, old_height, bpp);
-  MEMCHECK_N (carver);
-  MEMCHECK1_N (lqr_carver_init (carver, vals->delta_x, rigidity));
-  MEMCHECK1_N (update_bias
+  MEM_CHECK_N (carver);
+  MEM_CHECK1_N (lqr_carver_init (carver, vals->delta_x, rigidity));
+  MEM_CHECK1_N (update_bias
                (carver, vals->pres_layer_ID, vals->pres_coeff, x_off, y_off));
   if (!ignore_disc_mask)
     {
-      MEMCHECK1_N (update_bias
+      MEM_CHECK1_N (update_bias
                  (carver, vals->disc_layer_ID, -vals->disc_coeff, x_off, y_off));
     }
-  MEMCHECK1_N (set_rigmask
+  MEM_CHECK1_N (set_rigmask
                (carver, vals->rigmask_layer_ID, x_off, y_off));
   lqr_carver_set_gradient_function (carver, vals->grad_func);
   lqr_carver_set_resize_order (carver, vals->res_order);
@@ -232,7 +232,7 @@ render_init_carver (gint32 image_ID,
   printf ("[ read: %g ]\n", clock2 - clock1);
 #endif /* __CLOCK_IT__ */
 
-  MEMCHECK_N(carver_data = calloc(1, sizeof(CarverData)));
+  MEM_CHECK_N(carver_data = calloc(1, sizeof(CarverData)));
 
   carver_data->carver = carver;
   carver_data->layer_ID = layer_ID;
@@ -288,17 +288,17 @@ render_noninteractive (gint32 image_ID,
   clock1 = (double) clock () / CLOCKS_PER_SEC;
 #endif /* __CLOCK_IT__ */
 
-  MEMCHECK1 (lqr_carver_resize (carver, new_width, new_height));
+  MEM_CHECK1 (lqr_carver_resize (carver, new_width, new_height));
 
   if (vals->scaleback)
     {
       switch (vals->scaleback_mode)
         {
         case SCALEBACK_MODE_LQRBACK:
-          MEMCHECK1 (lqr_carver_flatten (carver));
+          MEM_CHECK1 (lqr_carver_flatten (carver));
           new_width = old_width;
           new_height = old_height;
-          MEMCHECK1 (lqr_carver_resize (carver, new_width, new_height));
+          MEM_CHECK1 (lqr_carver_resize (carver, new_width, new_height));
           break;
         case SCALEBACK_MODE_STD:
         case SCALEBACK_MODE_STDW:
@@ -314,7 +314,7 @@ render_noninteractive (gint32 image_ID,
     gimp_rgba_set (&colour_start, col_vals->r1, col_vals->g1, col_vals->b1, 1);
     gimp_rgba_set (&colour_end, col_vals->r2, col_vals->g2, col_vals->b2, 1);
 
-    MEMCHECK1 (write_all_vmaps (lqr_vmap_list_start (carver), image_ID, layer_name, x_off,
+    MEM_CHECK1 (write_all_vmaps (lqr_vmap_list_start (carver), image_ID, layer_name, x_off,
                      y_off, colour_start, colour_end));
   }
 
@@ -336,14 +336,14 @@ render_noninteractive (gint32 image_ID,
 
   set_tiles (new_width);
 
-  MEMCHECK1 (write_carver_to_layer (carver, layer_ID));
+  MEM_CHECK1 (write_carver_to_layer (carver, layer_ID));
 
   if (vals->resize_aux_layers)
     {
       carver_list = lqr_carver_list_start (carver);
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, new_width, new_height));
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, new_width, new_height));
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, new_width, new_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, new_width, new_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, new_width, new_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, new_width, new_height));
     }
 
   lqr_carver_destroy (carver);
@@ -455,25 +455,25 @@ render_interactive (gint32 image_ID,
   carver = carver_data->carver;
   layer_ID = carver_data->layer_ID;
 
-  IMAGECHECK (image_ID, FALSE);
+  IMAGE_CHECK (image_ID, FALSE);
 
-  LAYERCHECK (layer_ID, FALSE);
-  LAYERCHECK0 (vals->pres_layer_ID, FALSE);
-  LAYERCHECK0 (vals->disc_layer_ID, FALSE);
-  LAYERCHECK0 (vals->rigmask_layer_ID, FALSE);
+  LAYER_CHECK (layer_ID, FALSE);
+  LAYER_CHECK0 (vals->pres_layer_ID, FALSE);
+  LAYER_CHECK0 (vals->disc_layer_ID, FALSE);
+  LAYER_CHECK0 (vals->rigmask_layer_ID, FALSE);
 
-  BASETYPECHECK (image_ID, carver_data->base_type);
-  COLCHECK (layer_ID, carver);
+  IMAGE_TYPE_CHECK (image_ID, carver_data->base_type);
+  BPP_CHECK (layer_ID, carver);
   if (vals->resize_aux_layers == TRUE)
     {
       carver_list = lqr_carver_list_start (carver);
-      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->pres_layer_ID));
-      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->disc_layer_ID));
-      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->rigmask_layer_ID));
+      MEM_CHECK2 (check_aux_layer_bpp (&carver_list, vals->pres_layer_ID));
+      MEM_CHECK2 (check_aux_layer_bpp (&carver_list, vals->disc_layer_ID));
+      MEM_CHECK2 (check_aux_layer_bpp (&carver_list, vals->rigmask_layer_ID));
     }
 
   UNFLOAT (layer_ID);
-  SELECTIONSAVE (image_ID);
+  SELECTION_SAVE (image_ID);
   UNMASK (layer_ID);
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
@@ -500,7 +500,7 @@ render_interactive (gint32 image_ID,
   clock1 = (double) clock () / CLOCKS_PER_SEC;
 #endif /* __CLOCK_IT__ */
 
-  MEMCHECK1 (lqr_carver_resize (carver, new_width, new_height));
+  MEM_CHECK1 (lqr_carver_resize (carver, new_width, new_height));
 
   if (vals->resize_canvas == TRUE)
     {
@@ -526,14 +526,14 @@ render_interactive (gint32 image_ID,
 
   set_tiles (new_width);
 
-  MEMCHECK1 (write_carver_to_layer (carver, layer_ID));
+  MEM_CHECK1 (write_carver_to_layer (carver, layer_ID));
 
   if (vals->resize_aux_layers)
     {
       carver_list = lqr_carver_list_start (carver);
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, new_width, new_height));
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, new_width, new_height));
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, new_width, new_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, new_width, new_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, new_width, new_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, new_width, new_height));
     }
 
 #ifdef __CLOCK_IT__
@@ -566,25 +566,25 @@ render_flatten (gint32 image_ID,
   carver = carver_data->carver;
   layer_ID = carver_data->layer_ID;
 
-  IMAGECHECK (image_ID, FALSE);
+  IMAGE_CHECK (image_ID, FALSE);
 
-  LAYERCHECK (layer_ID, FALSE);
-  LAYERCHECK0 (vals->pres_layer_ID, FALSE);
-  LAYERCHECK0 (vals->disc_layer_ID, FALSE);
-  LAYERCHECK0 (vals->rigmask_layer_ID, FALSE);
+  LAYER_CHECK (layer_ID, FALSE);
+  LAYER_CHECK0 (vals->pres_layer_ID, FALSE);
+  LAYER_CHECK0 (vals->disc_layer_ID, FALSE);
+  LAYER_CHECK0 (vals->rigmask_layer_ID, FALSE);
 
-  BASETYPECHECK (image_ID, carver_data->base_type);
-  COLCHECK (layer_ID, carver);
+  IMAGE_TYPE_CHECK (image_ID, carver_data->base_type);
+  BPP_CHECK (layer_ID, carver);
   if (vals->resize_aux_layers == TRUE)
     {
       carver_list = lqr_carver_list_start (carver);
-      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->pres_layer_ID));
-      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->disc_layer_ID));
-      MEMCHECK2 (check_aux_layer_bpp (&carver_list, vals->rigmask_layer_ID));
+      MEM_CHECK2 (check_aux_layer_bpp (&carver_list, vals->pres_layer_ID));
+      MEM_CHECK2 (check_aux_layer_bpp (&carver_list, vals->disc_layer_ID));
+      MEM_CHECK2 (check_aux_layer_bpp (&carver_list, vals->rigmask_layer_ID));
     }
 
   UNFLOAT (layer_ID);
-  SELECTIONSAVE (image_ID);
+  SELECTION_SAVE (image_ID);
   UNMASK (layer_ID);
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
@@ -607,7 +607,7 @@ render_flatten (gint32 image_ID,
   clock1 = (double) clock () / CLOCKS_PER_SEC;
 #endif /* __CLOCK_IT__ */
 
-  MEMCHECK1 (lqr_carver_flatten (carver));
+  MEM_CHECK1 (lqr_carver_flatten (carver));
 
   if (vals->resize_canvas == TRUE)
     {
@@ -633,14 +633,14 @@ render_flatten (gint32 image_ID,
 
   set_tiles (old_width);
 
-  MEMCHECK1 (write_carver_to_layer (carver, layer_ID));
+  MEM_CHECK1 (write_carver_to_layer (carver, layer_ID));
 
   if (vals->resize_aux_layers)
     {
       carver_list = lqr_carver_list_start (carver);
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, old_width, old_height));
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, old_width, old_height));
-      MEMCHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, old_width, old_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->pres_layer_ID, old_width, old_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->disc_layer_ID, old_width, old_height));
+      MEM_CHECK2 (write_aux_carver (&carver_list, vals->rigmask_layer_ID, old_width, old_height));
     }
 
 #ifdef __CLOCK_IT__
@@ -677,14 +677,14 @@ render_dump_vmap (gint32 image_ID,
   carver = carver_data->carver;
   layer_ID = carver_data->layer_ID;
 
-  IMAGECHECK (image_ID, FALSE);
+  IMAGE_CHECK (image_ID, FALSE);
 
-  LAYERCHECK (layer_ID, FALSE);
+  LAYER_CHECK (layer_ID, FALSE);
 
-  BASETYPECHECK (image_ID, carver_data->base_type);
+  IMAGE_TYPE_CHECK (image_ID, carver_data->base_type);
 
   UNFLOAT (layer_ID);
-  SELECTIONSAVE (image_ID);
+  SELECTION_SAVE (image_ID);
   UNMASK (layer_ID);
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
@@ -700,7 +700,7 @@ render_dump_vmap (gint32 image_ID,
 #endif /* __CLOCK_IT__ */
 
   vmap = lqr_vmap_dump (carver);
-  MEMCHECK (vmap);
+  MEM_CHECK (vmap);
 
   snprintf (vmap_name, LQR_MAX_NAME_LENGTH, _("%s seam map"), layer_name);
 
@@ -722,7 +722,7 @@ render_dump_vmap (gint32 image_ID,
 
   set_tiles (lqr_vmap_get_width(vmap));
 
-  MEMCHECK1 (write_vmap_to_layer (vmap, (gpointer) (&vmap_data)));
+  MEM_CHECK1 (write_vmap_to_layer (vmap, (gpointer) (&vmap_data)));
 
 #ifdef __CLOCK_IT__
   clock3 = (double) clock () / CLOCKS_PER_SEC;
@@ -745,7 +745,7 @@ static LqrProgress*
 progress_init ()
 {
   LqrProgress * progress = lqr_progress_new ();
-  MEMCHECK_N (progress);
+  MEM_CHECK_N (progress);
   lqr_progress_set_init (progress, (LqrProgressFuncInit) gimp_progress_init);
   lqr_progress_set_update (progress, (LqrProgressFuncUpdate) gimp_progress_update);
   lqr_progress_set_end (progress, (LqrProgressFuncEnd) my_progress_end);
@@ -814,7 +814,7 @@ check_aux_layer_bpp (LqrCarverList ** carver_list_p, gint32 layer_ID)
       return TRUE;
     }
   aux_carver = lqr_carver_list_current (*carver_list_p);
-  COLCHECK (layer_ID, aux_carver);
+  BPP_CHECK (layer_ID, aux_carver);
   *carver_list_p = lqr_carver_list_next (*carver_list_p);
   return TRUE;
 }
@@ -845,13 +845,13 @@ attach_aux_carver (LqrCarver * carver, gint32 layer_ID, gint width, gint height)
   if (layer_ID)
     {
       rgb_buffer = rgb_buffer_from_layer (layer_ID);
-      MEMCHECK_N (rgb_buffer);
+      MEM_CHECK_N (rgb_buffer);
       bpp = gimp_drawable_bpp (layer_ID);
       aux_carver =
         lqr_carver_new (rgb_buffer, width, height, bpp);
                         
-      MEMCHECK_N (aux_carver);
-      MEMCHECK1_N (lqr_carver_attach (carver, aux_carver));
+      MEM_CHECK_N (aux_carver);
+      MEM_CHECK1_N (lqr_carver_attach (carver, aux_carver));
     }
   return carver;
 }
@@ -867,7 +867,7 @@ write_aux_carver (LqrCarverList ** carver_list_p, gint32 layer_ID, gint width, g
     }
   gimp_layer_resize (layer_ID, width, height, 0, 0);
   aux_carver = lqr_carver_list_current (carver_list);
-  MEMCHECK1 (write_carver_to_layer (aux_carver, layer_ID));
+  MEM_CHECK1 (write_carver_to_layer (aux_carver, layer_ID));
   *carver_list_p = lqr_carver_list_next (carver_list);
   return TRUE;
 }

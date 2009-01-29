@@ -182,20 +182,8 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   GimpRGB *fg_colour;
   GimpRGB grey;
 
-  if (!gimp_image_is_valid(p_data->image_ID))
-    {
-      g_message (_("Error: it seems that the selected image "
-                   "is no longer valid"));
-      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL);
-      return;
-    }
-  if (!gimp_drawable_is_valid(p_data->orig_layer_ID))
-    {
-      g_message (_("Error: it seems that the selected layer "
-                   "is no longer valid"));
-      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL);
-      return;
-    }
+  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
+  LAYER_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
 
   switch (gimp_image_base_type (p_data->image_ID))
     {
@@ -321,12 +309,7 @@ guess_new_size (GtkWidget * button, PreviewData * p_data, GuessDir direction)
         return 0;
     }
 
-  if (!gimp_drawable_is_valid (disc_layer_ID))
-    {
-      g_message (_("Error: it seems that the selected layer "
-		   "is no longer valid"));
-      return old_size;	/* Should refresh here */
-    }
+  LAYER_CHECK (disc_layer_ID, old_size); /* Should refresh at failure */
 
   width = gimp_drawable_width (disc_layer_ID);
   height = gimp_drawable_height (disc_layer_ID);

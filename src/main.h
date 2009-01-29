@@ -104,27 +104,36 @@ extern const PlugInUIVals default_ui_vals;
 extern const PlugInColVals default_col_vals;
 
 /* Convenience macros for checking */
+;
 
-#define IMAGECHECK(image_ID, ret_val) G_STMT_START { \
+#define IMAGE_CHECK_ACTION(image_ID, action, ret_val) G_STMT_START { \
   if (!gimp_image_is_valid (image_ID)) \
     { \
       g_message (_("Error: invalid image")); \
+      action; \
       return ret_val; \
     } \
   } G_STMT_END
 
-#define LAYERCHECK(layer_ID, ret_val) G_STMT_START { \
+#define IMAGE_CHECK(image_ID, ret_val) IMAGE_CHECK_ACTION (image_ID, , ret_val)
+
+#define LAYER_CHECK_ACTION(layer_ID, action, ret_val) G_STMT_START { \
   if (!gimp_drawable_is_valid (layer_ID)) \
     { \
       g_message (_("Error: invalid layer")); \
+      action; \
       return ret_val; \
     } \
   } G_STMT_END
 
-#define LAYERCHECK0(layer_ID, ret_val) G_STMT_START { \
-  if (layer_ID) \
+#define LAYER_CHECK(layer_ID, ret_val) LAYER_CHECK_ACTION (layer_ID, , ret_val)
+
+#define LAYER_CHECK0(layer_ID, ret_val) if (layer_ID) LAYER_CHECK (layer_ID, ret_val)
+
+#define AUX_LAYER_STATUS(layer_ID, status) G_STMT_START { \
+  if ((layer_ID == -1) || (status == FALSE)) \
     { \
-      LAYERCHECK (layer_ID, ret_val); \
+      layer_ID = 0; \
     } \
   } G_STMT_END
 

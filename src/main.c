@@ -35,7 +35,8 @@
 
 /*  Local function prototypes  */
 
-gint32 layer_from_name(gint32 image_ID, gchar * name);
+static gint32 layer_from_name(gint32 image_ID, gchar * name);
+static void set_aux_layer_name(gint layer_ID, gboolean status, gchar * name);
 static void query (void);
 static void run (const gchar * name,
                  gint nparams,
@@ -181,29 +182,6 @@ static void query (void)
 
   gimp_plugin_menu_register (PLUG_IN_NAME, "<Image>/Layer/");
 }
-
-gint32
-layer_from_name(gint32 image_ID, gchar * name)
-{
-  gint i;
-  gint num_layers;
-  gint * layer_list;
-
-  if ((name == NULL) || (strncmp(name, "", VALS_MAX_NAME_LENGTH) == 0))
-    {
-      return 0;
-    }
-
-  layer_list = gimp_image_get_layers(image_ID, &num_layers);
-  for (i = 0; i < num_layers; i++) {
-    if (strncmp(name, gimp_drawable_get_name(layer_list[i]), VALS_MAX_NAME_LENGTH) == 0)
-      {
-        return layer_list[i];
-      }
-  }
-  return 0;
-}
-
 
 
 static void
@@ -387,39 +365,25 @@ run (const gchar * name,
 
   if (status == GIMP_PDB_SUCCESS)
     {
-      if ((vals.pres_layer_ID == -1) || (ui_vals.pres_status == FALSE))
-        {
-          vals.pres_layer_ID = 0;
-        }
-      if ((vals.disc_layer_ID == -1) || (ui_vals.disc_status == FALSE))
-        {
-          vals.disc_layer_ID = 0;
-        }
-      if ((vals.rigmask_layer_ID == -1) || (ui_vals.rigmask_status == FALSE))
-        {
-          vals.rigmask_layer_ID = 0;
-        }
+      AUX_LAYER_STATUS(vals.pres_layer_ID, ui_vals.pres_status);
+      AUX_LAYER_STATUS(vals.disc_layer_ID, ui_vals.disc_status);
+      AUX_LAYER_STATUS(vals.rigmask_layer_ID, ui_vals.rigmask_status);
       ui_vals.last_used_width = vals.new_width;
       ui_vals.last_used_height = vals.new_height;
       ui_vals.last_layer_ID = layer_ID;
       gimp_image_undo_group_start (image_ID);
+      render_success = TRUE;
       if (run_render)
         {
           CarverData * carver_data;
+
+          render_success = FALSE;
           carver_data = render_init_carver (image_ID, &vals, &drawable_vals, FALSE);
           if (carver_data)
             {
               render_success = render_noninteractive (image_ID, &vals, &drawable_vals,
                 &col_vals, carver_data);
             }
-          else
-            {
-              render_success = FALSE;
-            }
-        }
-      else
-        {
-          render_success = TRUE;
         }
 
       if (run_mode != GIMP_RUN_NONINTERACTIVE)
@@ -427,30 +391,9 @@ run (const gchar * name,
 
       if ((run_mode == GIMP_RUN_INTERACTIVE) && render_success)
         {
-          if ((vals.pres_layer_ID == -1) || (ui_vals.pres_status == FALSE))
-            {
-              vals.pres_layer_name[0] = '\0';
-            }
-          else
-            {
-              g_strlcpy(vals.pres_layer_name, gimp_drawable_get_name(vals.pres_layer_ID), VALS_MAX_NAME_LENGTH);
-            }
-          if ((vals.disc_layer_ID == -1) || (ui_vals.disc_status == FALSE))
-            {
-              vals.disc_layer_name[0] = '\0';
-            }
-          else
-            {
-              g_strlcpy(vals.disc_layer_name, gimp_drawable_get_name(vals.disc_layer_ID), VALS_MAX_NAME_LENGTH);
-            }
-          if ((vals.rigmask_layer_ID == -1) || (ui_vals.rigmask_status == FALSE))
-            {
-              vals.rigmask_layer_name[0] = '\0';
-            }
-          else
-            {
-              g_strlcpy(vals.rigmask_layer_name, gimp_drawable_get_name(vals.rigmask_layer_ID), VALS_MAX_NAME_LENGTH);
-            }
+          set_aux_layer_name (vals.pres_layer_ID, ui_vals.pres_status, vals.pres_layer_name);
+          set_aux_layer_name (vals.disc_layer_ID, ui_vals.disc_status, vals.disc_layer_name);
+          set_aux_layer_name (vals.rigmask_layer_ID, ui_vals.rigmask_status, vals.rigmask_layer_name);
           gimp_set_data (DATA_KEY_VALS, &vals, sizeof (vals));
           gimp_set_data (DATA_KEY_UI_VALS, &ui_vals, sizeof (ui_vals));
           gimp_set_data (DATA_KEY_COL_VALS, &col_vals, sizeof (col_vals));
@@ -462,4 +405,39 @@ run (const gchar * name,
   values[0].type = GIMP_PDB_STATUS;
   values[0].data.d_status = status;
 
+}
+
+static gint32
+layer_from_name(gint32 image_ID, gchar * name)
+{
+  gint i;
+  gint num_layers;
+  gint * layer_list;
+
+  if ((name == NULL) || (strncmp(name, "", VALS_MAX_NAME_LENGTH) == 0))
+    {
+      return 0;
+    }
+
+  layer_list = gimp_image_get_layers(image_ID, &num_layers);
+  for (i = 0; i < num_layers; i++) {
+    if (strncmp(name, gimp_drawable_get_name(layer_list[i]), VALS_MAX_NAME_LENGTH) == 0)
+      {
+        return layer_list[i];
+      }
+  }
+  return 0;
+}
+
+static void
+set_aux_layer_name(gint layer_ID, gboolean status, gchar * name)
+{
+  if ((layer_ID == -1) || (status == FALSE))
+    {
+      name[0] = '\0';
+    }
+  else
+    {
+      g_strlcpy(name, gimp_drawable_get_name(layer_ID), VALS_MAX_NAME_LENGTH);
+    }
 }

@@ -298,7 +298,7 @@ write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name,
 /* plot the energy (at current size / visibility) to a file
  * (greyscale) */
 LqrRetVal
-lqr_external_write_energy (LqrCarver * r /*, pngwriter& output */ )
+write_energy (LqrCarver * r /*, pngwriter& output */ )
 {
   int x, y;
   //double e;
