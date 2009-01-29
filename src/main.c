@@ -212,8 +212,8 @@ run (const gchar * name,
      const GimpParam * param, gint * nreturn_vals, GimpParam ** return_vals)
 {
   static GimpParam values[1];
-  GimpDrawable *drawable;
-  gint32 active_channel_ID;
+  gint32 layer_ID;
+  //gint32 active_channel_ID;
 
   gint32 image_ID;
   GimpRunMode run_mode;
@@ -236,15 +236,14 @@ run (const gchar * name,
 
   run_mode = param[0].data.d_int32;
   image_ID = param[1].data.d_int32;
-  drawable = gimp_drawable_get (param[2].data.d_drawable);
-  if (gimp_drawable_is_channel (drawable->drawable_id))
+  layer_ID = param[2].data.d_drawable;
+  if (gimp_drawable_is_channel (layer_ID))
     {
-      active_channel_ID = gimp_image_get_active_channel (image_ID);
       gimp_image_unset_active_channel (image_ID);
     }
-  if (!gimp_drawable_is_layer (drawable->drawable_id))
+  if (!gimp_drawable_is_layer (layer_ID))
     {
-      drawable = gimp_drawable_get (gimp_image_get_active_layer (image_ID));
+      layer_ID = gimp_image_get_active_layer (image_ID);
     }
 
   /*  Initialize with default values  */
@@ -256,7 +255,7 @@ run (const gchar * name,
   dialog_vals = default_dialog_vals;
 
   image_vals.image_ID = image_ID;
-  drawable_vals.layer_ID = drawable->drawable_id;
+  drawable_vals.layer_ID = layer_ID;
 
   if (strcmp (name, PLUG_IN_NAME) == 0)
     {
@@ -311,7 +310,7 @@ run (const gchar * name,
           /* gimp_context_push(); */
           while (run_dialog == TRUE)
             {
-              dialog_resp = dialog (image_ID, drawable,
+              dialog_resp = dialog (image_ID, layer_ID,
                              &vals, &image_vals, &drawable_vals, &ui_vals,
                              &col_vals, &dialog_vals);
               switch (dialog_resp)
@@ -328,16 +327,16 @@ run (const gchar * name,
                     ui_vals = default_ui_vals;
                     col_vals = default_col_vals;
                     image_vals.image_ID = image_ID;
-                    drawable_vals.layer_ID = drawable->drawable_id;
+                    drawable_vals.layer_ID = layer_ID;
                     break;
 		  case RESPONSE_INTERACTIVE:
                     //printf("INTERACTIVE\n"); fflush(stdout);
 		    dialog_I_resp = dialog_I (image_ID, drawable_vals.layer_ID,
-                                drawable, &vals, &image_vals, &drawable_vals,
+                                &vals, &image_vals, &drawable_vals,
                                 &ui_vals, &col_vals, &dialog_vals);
                     switch (dialog_I_resp)
                       {
-                        case GTK_RESPONSE_CLOSE:
+                        case GTK_RESPONSE_OK:
                           run_dialog = FALSE;
                           run_render = FALSE;
                           break;
@@ -402,15 +401,15 @@ run (const gchar * name,
         }
       ui_vals.last_used_width = vals.new_width;
       ui_vals.last_used_height = vals.new_height;
-      ui_vals.last_layer_ID = drawable->drawable_id;
+      ui_vals.last_layer_ID = layer_ID;
       gimp_image_undo_group_start (image_ID);
       if (run_render)
         {
           CarverData * carver_data;
-          carver_data = render_init_carver (image_ID, drawable, &vals, &drawable_vals, FALSE);
+          carver_data = render_init_carver (image_ID, &vals, &drawable_vals, FALSE);
           if (carver_data)
             {
-              render_success = render_noninteractive (image_ID, drawable, &vals, &drawable_vals,
+              render_success = render_noninteractive (image_ID, &vals, &drawable_vals,
                 &col_vals, carver_data);
             }
           else
@@ -456,10 +455,6 @@ run (const gchar * name,
           gimp_set_data (DATA_KEY_UI_VALS, &ui_vals, sizeof (ui_vals));
           gimp_set_data (DATA_KEY_COL_VALS, &col_vals, sizeof (col_vals));
         }
-
-      drawable =
-        gimp_drawable_get (gimp_image_get_active_drawable (image_ID));
-      gimp_drawable_detach (drawable);
 
       gimp_image_undo_group_end (image_ID);
     }

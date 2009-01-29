@@ -37,7 +37,7 @@ extern GtkWidget * dlg;
 
 
 gint
-count_extra_layers (gint32 image_ID, GimpDrawable * drawable)
+count_extra_layers (gint32 image_ID)
 {
   gint32 *layer_array;
   gint num_layers;
@@ -47,15 +47,15 @@ count_extra_layers (gint32 image_ID, GimpDrawable * drawable)
 }
 
 gboolean
-dialog_layer_constraint_func (gint32 image_id, gint32 layer_id, gpointer data)
+dialog_layer_constraint_func (gint32 image_ID, gint32 layer_ID, gpointer data)
 {
-  GimpDrawable * gdrawable = (GimpDrawable *) data;
-  if (image_id !=
-      gimp_drawable_get_image (gdrawable->drawable_id))
+  //GimpDrawable * gdrawable = (GimpDrawable *) data;
+  gint32 ref_layer_ID = *((gint32*) data);
+  if (image_ID != gimp_drawable_get_image (ref_layer_ID))
     {
       return FALSE;
     }
-  if (layer_id == gdrawable->drawable_id)
+  if (layer_ID == ref_layer_ID)
     {
       return FALSE;
     }

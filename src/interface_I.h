@@ -29,7 +29,6 @@ typedef struct
         GtkWidget * info_label;
         GtkWidget * dump_button;
         gint32 image_ID;
-        GimpDrawable * drawable;
         PlugInDrawableVals * drawable_vals;
         PlugInColVals * col_vals;
         CarverData * carver_data;
@@ -43,7 +42,6 @@ typedef struct
 
 gint
 dialog_I (gint32 image_ID, gint32 layer_ID,
-	GimpDrawable * drawable,
 	PlugInVals * vals,
 	PlugInImageVals * image_vals,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,

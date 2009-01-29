@@ -49,7 +49,7 @@
 
 /***  Local functions declariations  ***/
 
-gboolean check_drawable (GimpDrawable * drawable);
+gboolean check_drawable (gint32 layer_ID);
 
 /* Callbacks */
 static void callback_dialog_response (GtkWidget * dialog, gint response_id,
@@ -74,10 +74,8 @@ static void callback_resize_aux_layers_button_set_sensitive (GtkWidget *
 							     gpointer data);
 
 /* Feature and advanced pages */
-static GtkWidget *features_page_new (gint32 image_ID,
-				     GimpDrawable * drawable);
-static GtkWidget *advanced_page_new (gint32 image_ID,
-				     GimpDrawable * drawable);
+static GtkWidget *features_page_new (gint32 image_ID, gint32 layer_ID);
+static GtkWidget *advanced_page_new (gint32 image_ID, gint32 layer_ID);
 static void refresh_features_page (NotebookData * data);
 static void refresh_advanced_page (NotebookData * data);
 
@@ -112,13 +110,12 @@ GtkTooltips *dlg_tips;
 
 gint
 dialog (gint32 image_ID,
-	GimpDrawable * drawable,
+	gint32 layer_ID,
 	PlugInVals * vals,
 	PlugInImageVals * image_vals,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
 	PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
 {
-  gint32 layer_ID;
   GimpRGB saved_colour;
   gint num_extra_layers;
   gint orig_width, orig_height;
@@ -171,12 +168,7 @@ dialog (gint32 image_ID,
   GimpUnit unit;
   gdouble xres, yres;
 
-  if (!gimp_image_is_valid (image_ID))
-    {
-      g_message (_("Error: it seems that the selected image "
-                   "is no longer valid"));
-      return FALSE;
-    }
+  IMAGECHECK (image_ID, FALSE);
 
   gimp_ui_init (PLUGIN_NAME, TRUE);
 
@@ -205,20 +197,9 @@ dialog (gint32 image_ID,
       preview_data.disc_combo_awaked = TRUE;
     }
 
-  if (!drawable)
+  if (!gimp_drawable_is_valid(layer_ID))
     {
-      g_message (_("Error: it seems that the selected layer "
-                   "is no longer valid"));
-      return FALSE;
-    }
-
-  layer_ID = drawable->drawable_id;
-
-  if (!gimp_drawable_is_valid (layer_ID))
-    {
-      g_message (_("Error: it seems that the selected layer "
-                   "is no longer valid"));
-      return FALSE;
+      layer_ID = gimp_image_get_active_layer (image_ID);
     }
 
   orig_width = gimp_drawable_width (layer_ID);
@@ -240,7 +221,7 @@ dialog (gint32 image_ID,
       has_mask = TRUE;
     }
 
-  num_extra_layers = count_extra_layers (image_ID, drawable);
+  num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
   if (!features_are_sensitive)
     {
@@ -313,7 +294,7 @@ dialog (gint32 image_ID,
   gimp_layer_scale (preview_data.layer_ID, preview_data.width,
 		    preview_data.height, TRUE);
   gimp_layer_add_alpha (preview_data.layer_ID);
-  preview_data.drawable = gimp_drawable_get (preview_data.layer_ID);
+  //preview_data.drawable = gimp_drawable_get (preview_data.layer_ID);
 
   preview_init_mem (&preview_data);
   g_free (preview_data.buffer);
@@ -538,11 +519,12 @@ dialog (gint32 image_ID,
   gtk_widget_show (notebook);
   notebook_data->notebook = notebook;
   notebook_data->image_ID = image_ID;
-  notebook_data->drawable = drawable;
+  notebook_data->layer_ID = layer_ID;
+  //notebook_data->drawable = drawable;
 
   /* Fature masks page */
 
-  features_page = features_page_new (image_ID, drawable);
+  features_page = features_page_new (image_ID, layer_ID);
   gtk_widget_show (features_page);
   notebook_data->features_page_ID =
     gtk_notebook_prepend_page_menu (GTK_NOTEBOOK (notebook), features_page,
@@ -761,7 +743,7 @@ dialog (gint32 image_ID,
 
   /* Advanced settings page */
 
-  advanced_page = advanced_page_new (image_ID, drawable);
+  advanced_page = advanced_page_new (image_ID, layer_ID);
   gtk_widget_show (advanced_page);
   notebook_data->advanced_page_ID =
     gtk_notebook_append_page_menu (GTK_NOTEBOOK (notebook), advanced_page,
@@ -875,7 +857,7 @@ dialog (gint32 image_ID,
     }
 
   //printf("DETACH\n"); fflush(stdout);
-  gimp_drawable_detach (preview_data.drawable);
+  //gimp_drawable_detach (preview_data.drawable);
 
   return dialog_response;
 }
@@ -900,7 +882,7 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
     case GTK_RESPONSE_OK:
     case RESPONSE_FEAT_REFRESH:
     case RESPONSE_ADV_REFRESH:
-      if (!check_drawable (n_data->drawable)) {
+      if (!check_drawable (n_data->layer_ID)) {
         return;
       }
     case RESPONSE_RESET:
@@ -931,12 +913,11 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
 }
 
 gboolean
-check_drawable (GimpDrawable * drawable)
+check_drawable (gint32 layer_ID)
 {
-  if ((!drawable) || (!gimp_drawable_is_valid(drawable->drawable_id)))
+  if (!gimp_drawable_is_valid (layer_ID))
     {
-      g_message (_("Error: it seems that the selected layer "
-                   "is no longer valid"));
+      g_message (_("Error: invalid layer"));
       dialog_response = RESPONSE_FATAL;
       gtk_main_quit();
       return FALSE;
@@ -1159,7 +1140,7 @@ refresh_features_page (NotebookData * data)
     gtk_notebook_get_current_page (GTK_NOTEBOOK (data->notebook));
   gtk_notebook_remove_page (GTK_NOTEBOOK (data->notebook),
 			    data->features_page_ID);
-  new_page = features_page_new (data->image_ID, data->drawable);
+  new_page = features_page_new (data->image_ID, data->layer_ID);
   gtk_widget_show (new_page);
   data->features_page_ID =
     gtk_notebook_prepend_page_menu (GTK_NOTEBOOK (data->notebook), new_page,
@@ -1181,7 +1162,7 @@ refresh_advanced_page (NotebookData * data)
     gtk_notebook_get_current_page (GTK_NOTEBOOK (data->notebook));
   gtk_notebook_remove_page (GTK_NOTEBOOK (data->notebook),
 			    data->advanced_page_ID);
-  new_page = advanced_page_new (data->image_ID, data->drawable);
+  new_page = advanced_page_new (data->image_ID, data->layer_ID);
   gtk_widget_show (new_page);
   data->advanced_page_ID =
     gtk_notebook_append_page_menu (GTK_NOTEBOOK (data->notebook), new_page,
@@ -1196,9 +1177,8 @@ refresh_advanced_page (NotebookData * data)
 /* Generate features page */
 
 GtkWidget *
-features_page_new (gint32 image_ID, GimpDrawable * drawable)
+features_page_new (gint32 image_ID, gint32 layer_ID)
 {
-  gint32 layer_ID;
   gint num_extra_layers;
   GtkWidget *label;
   GtkWidget *thispage;
@@ -1244,8 +1224,6 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *combo;
   GtkObject *adj;
 
-  layer_ID = drawable->drawable_id;
-
   label = gtk_label_new (_("Feature masks"));
   notebook_data->label = label;
 
@@ -1274,7 +1252,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
   new_disc_layer_data->presdisc = TRUE;
   new_disc_layer_data->info_show = &disc_info_show;
 
-  num_extra_layers = count_extra_layers (image_ID, drawable);
+  num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
   if (!features_are_sensitive)
     {
@@ -1437,7 +1415,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 
   combo =
     gimp_layer_combo_box_new (dialog_layer_constraint_func,
-			      (gpointer *) drawable);
+			      (gpointer *) (&layer_ID));
 
   g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
 
@@ -1673,7 +1651,7 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 
   combo =
     gimp_layer_combo_box_new (dialog_layer_constraint_func,
-			      (gpointer *) drawable);
+			      (gpointer *) (&layer_ID));
 
   g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
 
@@ -1861,9 +1839,8 @@ features_page_new (gint32 image_ID, GimpDrawable * drawable)
 /* Generate advanced options page */
 
 GtkWidget *
-advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
+advanced_page_new (gint32 image_ID, gint32 layer_ID)
 {
-  gint32 layer_ID;
   gint num_extra_layers;
   GtkWidget *label;
   GtkWidget *thispage;
@@ -1894,8 +1871,6 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   GtkWidget *gradient_event_box;
   GtkWidget *res_order_event_box;
 
-  layer_ID = drawable->drawable_id;
-
   label = gtk_label_new (_("Advanced"));
   notebook_data->label = label;
 
@@ -1913,7 +1888,7 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
   new_rigmask_layer_data->presdisc = FALSE;
   new_rigmask_layer_data->info_show = &rigmask_info_show;
 
-  num_extra_layers = count_extra_layers (image_ID, drawable);
+  num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
   preview_data.rigmask_combo_awaked = FALSE;
   if (!features_are_sensitive)
@@ -2129,7 +2104,7 @@ advanced_page_new (gint32 image_ID, GimpDrawable * drawable)
 
   combo =
     gimp_layer_combo_box_new (dialog_layer_constraint_func,
-			      (gpointer *) drawable);
+			      (gpointer *) (&layer_ID));
 
   g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
 

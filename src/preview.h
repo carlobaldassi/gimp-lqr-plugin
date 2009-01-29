@@ -33,7 +33,6 @@ typedef struct
   gint32 image_ID;
   gint32 orig_layer_ID;
   gint32 layer_ID;
-  GimpDrawable *drawable;
   GimpImageType type;
   gint width;
   gint height;

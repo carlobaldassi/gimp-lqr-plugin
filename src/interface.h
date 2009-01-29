@@ -39,7 +39,7 @@ typedef struct
   gint advanced_page_ID;
   GtkWidget *label;
   gint32 image_ID;
-  GimpDrawable *drawable;
+  gint32 layer_ID;
 } NotebookData;
 
 #define NOTEBOOK_DATA(data) ((NotebookData*)data)
@@ -48,7 +48,7 @@ typedef struct
 /*  Public functions  */
 
 gint dialog (gint32 image_ID,
-             GimpDrawable * drawable,
+             gint32 layer_ID,
              PlugInVals * vals,
              PlugInImageVals * image_vals,
              PlugInDrawableVals * drawable_vals,

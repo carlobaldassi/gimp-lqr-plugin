@@ -71,7 +71,7 @@ static void callback_alarm_triggered (GtkWidget * size_entry, gpointer data);
 
 /***  Local variables  ***/
 
-gint dialog_I_response = GTK_RESPONSE_CLOSE;
+gint dialog_I_response = GTK_RESPONSE_OK;
 
 PlugInUIVals *ui_state;
 PlugInVals *state;
@@ -89,7 +89,6 @@ GtkWidget *coordinates;
 
 gint
 dialog_I (gint32 image_ID, gint32 layer_ID,
-	GimpDrawable * drawable,
 	PlugInVals * vals,
 	PlugInImageVals * image_vals,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
@@ -145,7 +144,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   drawable_vals->layer_ID = layer_ID;
   interface_I_data.image_ID = image_ID;
-  interface_I_data.drawable = drawable;
   interface_I_data.drawable_vals = drawable_vals;
   interface_I_data.orig_width = orig_width;
   interface_I_data.orig_height = orig_height;
@@ -404,7 +402,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
     {
       state->rigmask_layer_ID = 0;
     }
-  carver_data = render_init_carver(image_ID, drawable, state, drawable_vals, TRUE);
+  carver_data = render_init_carver(image_ID, state, drawable_vals, TRUE);
   if (carver_data == NULL)
     {
       return RESPONSE_FATAL;
@@ -518,8 +516,7 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   state->new_width = new_width;
   state->new_height = new_height;
   //printf("[w,h=%i,%i]\n", new_width, new_height); fflush(stdout);
-  p_data->drawable = gimp_drawable_get(p_data->drawable_vals->layer_ID);
-  render_success = render_interactive (p_data->image_ID, p_data->drawable, state, p_data->drawable_vals, p_data->carver_data);
+  render_success = render_interactive (p_data->image_ID, state, p_data->drawable_vals, p_data->carver_data);
   p_data->drawable_vals->layer_ID = c_data->layer_ID;
   if (!render_success)
     {
@@ -615,8 +612,7 @@ callback_flatten_button (GtkWidget * button, gpointer data)
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
   //CarverData * c_data = p_data->carver_data;
 
-  p_data->drawable = gimp_drawable_get(p_data->drawable_vals->layer_ID);
-  render_success = render_flatten (p_data->image_ID, p_data->drawable, state, p_data->drawable_vals, p_data->carver_data);
+  render_success = render_flatten (p_data->image_ID, state, p_data->drawable_vals, p_data->carver_data);
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;
@@ -636,8 +632,7 @@ callback_dump_button (GtkWidget * button, gpointer data)
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
   //CarverData * c_data = p_data->carver_data;
 
-  p_data->drawable = gimp_drawable_get(p_data->drawable_vals->layer_ID);
-  render_success = render_dump_vmap (p_data->image_ID, p_data->drawable, state, p_data->drawable_vals, p_data->col_vals, p_data->carver_data);
+  render_success = render_dump_vmap (p_data->image_ID, state, p_data->drawable_vals, p_data->col_vals, p_data->carver_data);
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;

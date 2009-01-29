@@ -36,7 +36,7 @@
 #define __CLOCK_IT__
 #endif
 
-/* convenience macros for checking and gneral cleanup */
+/* Convenience macros for checking and gneral cleanup */
 
 #define MEMCHECK_N(x) if ((x) == NULL) { g_message(_("Not enough memory")); return NULL; }
 #define MEMCHECK1_N(x) if ((x) == LQR_NOMEM) { g_message(_("Not enough memory")); return NULL; }
@@ -60,29 +60,6 @@
     } \
   } G_STMT_END
 
-#define IMAGECHECK(image_ID, ret_val) G_STMT_START { \
-  if (!gimp_image_is_valid (image_ID)) \
-    { \
-      g_message (_("Error: invalid image")); \
-      return ret_val; \
-    } \
-  } G_STMT_END
-
-#define LAYERCHECK(layer_ID, ret_val) G_STMT_START { \
-  if (!gimp_drawable_is_valid (layer_ID)) \
-    { \
-      g_message (_("Error: invalid layer")); \
-      return ret_val; \
-    } \
-  } G_STMT_END
-
-#define LAYERCHECK0(layer_ID, ret_val) G_STMT_START { \
-  if (layer_ID) \
-    { \
-      LAYERCHECK (layer_ID, ret_val); \
-    } \
-  } G_STMT_END
-
 #define UNFLOAT(layer_ID) G_STMT_START { \
   if (gimp_layer_is_floating_sel (layer_ID)) \
     { \
@@ -99,7 +76,7 @@
   } G_STMT_END
 
 #define SELECTIONSAVE(image_ID) G_STMT_START { \
-  if (gimp_selection_is_empty (image_ID) == FALSE) \
+  if (!gimp_selection_is_empty (image_ID)) \
     { \
       gimp_selection_save (image_ID); \
       gimp_selection_none (image_ID); \
@@ -125,7 +102,6 @@ static void scale_layer_translated (gint32 layer_ID, gint width, gint height, gi
 
 CarverData *
 render_init_carver (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         gboolean interactive)
@@ -190,15 +166,11 @@ render_init_carver (gint32 image_ID,
         }
     }
 
-  drawable = gimp_drawable_get (layer_ID);
-
   if (vals->new_layer)
     {
       snprintf (new_layer_name, LQR_MAX_NAME_LENGTH, "%s LqR", layer_name);
       layer_ID = gimp_layer_copy (layer_ID);
       gimp_image_add_layer (image_ID, layer_ID, -1);
-      gimp_drawable_detach (drawable);
-      drawable = gimp_drawable_get (layer_ID);
       gimp_drawable_set_name (layer_ID, new_layer_name);
       gimp_drawable_set_visible (layer_ID, FALSE);
     }
@@ -275,7 +247,6 @@ render_init_carver (gint32 image_ID,
 
 gboolean
 render_noninteractive (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         PlugInColVals * col_vals,
@@ -356,8 +327,6 @@ render_noninteractive (gint32 image_ID,
     {
       gimp_layer_resize (layer_ID, new_width, new_height, 0, 0);
     }
-  gimp_drawable_detach (drawable);
-  drawable = gimp_drawable_get (layer_ID);
 
 #ifdef __CLOCK_IT__
   clock2 = (double) clock () / CLOCKS_PER_SEC;
@@ -367,7 +336,7 @@ render_noninteractive (gint32 image_ID,
 
   set_tiles (new_width);
 
-  MEMCHECK1 (write_carver_to_layer (carver, drawable));
+  MEMCHECK1 (write_carver_to_layer (carver, layer_ID));
 
   if (vals->resize_aux_layers)
     {
@@ -415,8 +384,6 @@ render_noninteractive (gint32 image_ID,
             {
               scale_layer_translated (layer_ID, sb_width, sb_height, x_off, y_off);
             }
-          gimp_drawable_detach (drawable);
-          drawable = gimp_drawable_get (layer_ID);
           if (vals->resize_aux_layers == TRUE)
             {
               if (vals->pres_layer_ID != 0)
@@ -470,7 +437,6 @@ render_noninteractive (gint32 image_ID,
 
 gboolean
 render_interactive (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         CarverData * carver_data)
@@ -510,8 +476,6 @@ render_interactive (gint32 image_ID,
   SELECTIONSAVE (image_ID);
   UNMASK (layer_ID);
 
-  drawable = gimp_drawable_get (layer_ID);
-
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
             gimp_drawable_get_name (layer_ID));
 
@@ -547,8 +511,6 @@ render_interactive (gint32 image_ID,
     {
       gimp_layer_resize (layer_ID, new_width, new_height, 0, 0);
     }
-  gimp_drawable_detach (drawable);
-  drawable = gimp_drawable_get (layer_ID);
 
 #ifdef __CLOCK_IT__
   clock2 = (double) clock () / CLOCKS_PER_SEC;
@@ -564,7 +526,7 @@ render_interactive (gint32 image_ID,
 
   set_tiles (new_width);
 
-  MEMCHECK1 (write_carver_to_layer (carver, drawable));
+  MEMCHECK1 (write_carver_to_layer (carver, layer_ID));
 
   if (vals->resize_aux_layers)
     {
@@ -587,7 +549,6 @@ render_interactive (gint32 image_ID,
 
 gboolean
 render_flatten (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         CarverData * carver_data)
@@ -626,8 +587,6 @@ render_flatten (gint32 image_ID,
   SELECTIONSAVE (image_ID);
   UNMASK (layer_ID);
 
-  drawable = gimp_drawable_get (layer_ID);
-
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
             gimp_drawable_get_name (layer_ID));
 
@@ -659,8 +618,6 @@ render_flatten (gint32 image_ID,
     {
       gimp_layer_resize (layer_ID, old_width, old_height, 0, 0);
     }
-  gimp_drawable_detach (drawable);
-  drawable = gimp_drawable_get (layer_ID);
 
 #ifdef __CLOCK_IT__
   clock2 = (double) clock () / CLOCKS_PER_SEC;
@@ -676,7 +633,7 @@ render_flatten (gint32 image_ID,
 
   set_tiles (old_width);
 
-  MEMCHECK1 (write_carver_to_layer (carver, drawable));
+  MEMCHECK1 (write_carver_to_layer (carver, layer_ID));
 
   if (vals->resize_aux_layers)
     {
@@ -699,7 +656,6 @@ render_flatten (gint32 image_ID,
 
 gboolean
 render_dump_vmap (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         PlugInColVals * col_vals,
@@ -730,8 +686,6 @@ render_dump_vmap (gint32 image_ID,
   UNFLOAT (layer_ID);
   SELECTIONSAVE (image_ID);
   UNMASK (layer_ID);
-
-  drawable = gimp_drawable_get (layer_ID);
 
   snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
             gimp_drawable_get_name (layer_ID));
@@ -905,7 +859,6 @@ attach_aux_carver (LqrCarver * carver, gint32 layer_ID, gint width, gint height)
 static gboolean
 write_aux_carver (LqrCarverList ** carver_list_p, gint32 layer_ID, gint width, gint height)
 {
-  GimpDrawable * drawable;
   LqrCarver * aux_carver;
   LqrCarverList * carver_list = *carver_list_p;
   if (!layer_ID)
@@ -913,10 +866,8 @@ write_aux_carver (LqrCarverList ** carver_list_p, gint32 layer_ID, gint width, g
       return TRUE;
     }
   gimp_layer_resize (layer_ID, width, height, 0, 0);
-  drawable = gimp_drawable_get (layer_ID);
   aux_carver = lqr_carver_list_current (carver_list);
-  MEMCHECK1 (write_carver_to_layer (aux_carver, drawable));
-  gimp_drawable_detach (drawable);
+  MEMCHECK1 (write_carver_to_layer (aux_carver, layer_ID));
   *carver_list_p = lqr_carver_list_next (carver_list);
   return TRUE;
 }

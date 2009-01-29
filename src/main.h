@@ -103,5 +103,29 @@ extern const PlugInDrawableVals default_drawable_vals;
 extern const PlugInUIVals default_ui_vals;
 extern const PlugInColVals default_col_vals;
 
+/* Convenience macros for checking */
+
+#define IMAGECHECK(image_ID, ret_val) G_STMT_START { \
+  if (!gimp_image_is_valid (image_ID)) \
+    { \
+      g_message (_("Error: invalid image")); \
+      return ret_val; \
+    } \
+  } G_STMT_END
+
+#define LAYERCHECK(layer_ID, ret_val) G_STMT_START { \
+  if (!gimp_drawable_is_valid (layer_ID)) \
+    { \
+      g_message (_("Error: invalid layer")); \
+      return ret_val; \
+    } \
+  } G_STMT_END
+
+#define LAYERCHECK0(layer_ID, ret_val) G_STMT_START { \
+  if (layer_ID) \
+    { \
+      LAYERCHECK (layer_ID, ret_val); \
+    } \
+  } G_STMT_END
 
 #endif /* __MAIN_H__ */

@@ -59,9 +59,9 @@ typedef struct
 
 /* Functions */
 
-gint count_extra_layers (gint32 image_ID, GimpDrawable * drawable);
-gboolean dialog_layer_constraint_func (gint32 image_id,
-					      gint32 layer_id, gpointer data);
+gint count_extra_layers (gint32 image_ID);
+gboolean dialog_layer_constraint_func (gint32 image_ID,
+					      gint32 layer_ID, gpointer data);
 
 void combo_get_active (GtkWidget * combo, PreviewData * data,
 			      gint32 * layer_ID_add, gboolean status,

@@ -42,14 +42,12 @@ typedef struct
 
 CarverData *
 render_init_carver (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         gboolean interactive);
 
 gboolean
 render_noninteractive (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         PlugInColVals * col_vals,
@@ -57,21 +55,18 @@ render_noninteractive (gint32 image_ID,
 
 gboolean
 render_interactive (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         CarverData * carver_data);
 
 gboolean
 render_flatten (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         CarverData * carver_data);
 
 gboolean
 render_dump_vmap (gint32 image_ID,
-        GimpDrawable * drawable,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         PlugInColVals * col_vals,

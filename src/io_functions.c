@@ -132,9 +132,9 @@ set_rigmask (LqrCarver * r, gint32 layer_ID, gint base_x_off, gint base_y_off)
 
 
 LqrRetVal
-write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
+write_carver_to_layer (LqrCarver * r, gint32 layer_ID)
 {
-  gint32 layer_ID;
+  GimpDrawable * drawable;
   gint y;
   gint w, h;
   GimpPixelRgn rgn_out;
@@ -144,7 +144,7 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
   gimp_progress_init (_("Applying changes..."));
   update_step = MAX ((lqr_carver_get_height(r) - 1) / 20, 1);
 
-  layer_ID = drawable->drawable_id;
+  drawable = gimp_drawable_get (layer_ID);
 
   w = gimp_drawable_width (layer_ID);
   h = gimp_drawable_height (layer_ID);
@@ -173,6 +173,8 @@ write_carver_to_layer (LqrCarver * r, GimpDrawable * drawable)
   gimp_drawable_flush (drawable);
   gimp_drawable_merge_shadow (layer_ID, TRUE);
   gimp_drawable_update (layer_ID, 0, 0, w, h);
+
+  gimp_drawable_detach (drawable);
 
   gimp_progress_end();
 
@@ -262,6 +264,7 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
   gimp_drawable_merge_shadow (seam_layer_ID, TRUE);
   gimp_drawable_update (seam_layer_ID, 0, 0, w, h);
   gimp_drawable_set_visible (seam_layer_ID, TRUE);
+  gimp_drawable_detach (drawable);
 
   gimp_progress_end();
 
