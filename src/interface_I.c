@@ -148,6 +148,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   interface_I_data.orig_width = orig_width;
   interface_I_data.orig_height = orig_height;
   interface_I_data.col_vals = col_vals;
+  interface_I_data.vmap_layer_ID = -1;
 
 
   if (gimp_layer_get_mask (layer_ID) != -1)
@@ -629,7 +630,7 @@ callback_dump_button (GtkWidget * button, gpointer data)
   //CarverData * c_data = p_data->carver_data;
 
   gimp_image_undo_group_start (p_data->image_ID);
-  render_success = render_dump_vmap (p_data->image_ID, state, p_data->drawable_vals, p_data->col_vals, p_data->carver_data);
+  render_success = render_dump_vmap (p_data->image_ID, state, p_data->drawable_vals, p_data->col_vals, p_data->carver_data, &(p_data->vmap_layer_ID));
   gimp_image_undo_group_end (p_data->image_ID);
   if (!render_success)
     {

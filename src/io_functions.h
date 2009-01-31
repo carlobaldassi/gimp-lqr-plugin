@@ -35,6 +35,7 @@ struct _VMapFuncArg
   gint y_off;
   GimpRGB colour_start;
   GimpRGB colour_end;
+  gint32 * vmap_layer_ID_p;
 };
 
 #define VMAP_FUNC_ARG(data) ((VMapFuncArg*)(data))

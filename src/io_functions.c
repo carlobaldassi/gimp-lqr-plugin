@@ -188,6 +188,7 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
   gint depth;
   gint *buffer;
   gint32 seam_layer_ID;
+  gint32 * seam_layer_p;
   gint32 image_ID;
   GimpDrawable *drawable;
   gint x_off, y_off;
@@ -205,6 +206,12 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
   name = VMAP_FUNC_ARG (data)->name;
   col_start = VMAP_FUNC_ARG (data)->colour_start;
   col_end = VMAP_FUNC_ARG (data)->colour_end;
+  seam_layer_ID = -1;
+  seam_layer_p = VMAP_FUNC_ARG (data)->vmap_layer_ID_p;
+  if (seam_layer_p)
+    {
+      seam_layer_ID = *seam_layer_p;
+    }
 
   w = lqr_vmap_get_width(vmap);
   h = lqr_vmap_get_height(vmap);
@@ -214,12 +221,23 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
   gimp_progress_init (_("Drawing seam map..."));
   update_step = MAX ((h - 1) / 20, 1);
 
-  seam_layer_ID =
-    gimp_layer_new (image_ID, name, w, h, GIMP_RGBA_IMAGE, 100,
-                    GIMP_NORMAL_MODE);
-  gimp_drawable_fill (seam_layer_ID, GIMP_TRANSPARENT_FILL);
-  gimp_image_add_layer (image_ID, seam_layer_ID, -1);
-  gimp_layer_translate (seam_layer_ID, x_off, y_off);
+  if (!gimp_drawable_is_valid (seam_layer_ID))
+    {
+      seam_layer_ID =
+        gimp_layer_new (image_ID, name, w, h, GIMP_RGBA_IMAGE, 100,
+                        GIMP_NORMAL_MODE);
+      gimp_drawable_fill (seam_layer_ID, GIMP_TRANSPARENT_FILL);
+      gimp_image_add_layer (image_ID, seam_layer_ID, -1);
+      gimp_layer_translate (seam_layer_ID, x_off, y_off);
+      if (seam_layer_p)
+        {
+          *seam_layer_p = seam_layer_ID;
+        }
+    }
+  else
+    {
+      gimp_layer_resize  (seam_layer_ID, w, h, 0, 0);
+    }
   drawable = gimp_drawable_get (seam_layer_ID);
 
   bpp = 4;
@@ -289,6 +307,7 @@ write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name,
   data.y_off = y_off;
   data.colour_start = col_start;
   data.colour_end = col_end;
+  data.vmap_layer_ID_p = NULL;
 
   return lqr_vmap_list_foreach (list, write_vmap_to_layer,
                                 (gpointer) (&data));

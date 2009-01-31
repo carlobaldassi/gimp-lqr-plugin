@@ -70,6 +70,7 @@ render_dump_vmap (gint32 image_ID,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         PlugInColVals * col_vals,
-        CarverData * carver_data);
+        CarverData * carver_data,
+        gint32 * vmap_layer_ID_p);
 
 #endif /* __RENDER_H__ */

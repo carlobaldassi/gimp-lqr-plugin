@@ -658,7 +658,8 @@ render_dump_vmap (gint32 image_ID,
         PlugInVals * vals,
         PlugInDrawableVals * drawable_vals,
         PlugInColVals * col_vals,
-        CarverData * carver_data)
+        CarverData * carver_data,
+        gint32 * vmap_layer_ID_p)
 {
   LqrCarver *carver;
   LqrVMap *vmap;
@@ -718,6 +719,7 @@ render_dump_vmap (gint32 image_ID,
   vmap_data.y_off = y_off;
   vmap_data.colour_start = colour_start;
   vmap_data.colour_end = colour_end;
+  vmap_data.vmap_layer_ID_p = vmap_layer_ID_p;
 
   set_tiles (lqr_vmap_get_width(vmap));
 

@@ -34,6 +34,7 @@ typedef struct
         CarverData * carver_data;
         gint orig_width;
         gint orig_height;
+        gint32 vmap_layer_ID;
 } InterfaceIData;
 
 #define INTERFACE_I_DATA(data) ((InterfaceIData*) data)
