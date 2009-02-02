@@ -183,7 +183,6 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   GimpRGB grey;
 
   IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
-  LAYER_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
 
   switch (gimp_image_base_type (p_data->image_ID))
     {

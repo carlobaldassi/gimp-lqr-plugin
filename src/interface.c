@@ -49,8 +49,6 @@
 
 /***  Local functions declariations  ***/
 
-gboolean check_drawable (gint32 layer_ID);
-
 /* Callbacks */
 static void callback_dialog_response (GtkWidget * dialog, gint response_id,
 				      gpointer data);
@@ -885,13 +883,6 @@ callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
       gtk_main_quit ();
       break;
     }
-}
-
-gboolean
-check_drawable (gint32 layer_ID)
-{
-  LAYER_CHECK_ACTION (layer_ID, gtk_dialog_response (GTK_DIALOG(dlg), RESPONSE_FATAL), FALSE);
-  return TRUE;
 }
 
 static void
