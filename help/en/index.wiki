@@ -1,4 +1,6 @@
-﻿
+
++ Help Page for gimp-lqr-plugin
+[[image wilber.png]] Liquid Rescale help page
 The Liquid Rescale plugin is an implementation of the content-aware resizing by seam carving algorithm by Shai Avidan and Ariel Shamir.
 
 It aims at resizing pictures non uniformly while preserving the features of the picture, i.e. avoiding distortion of the important parts of the picture. It can also be used to remove portions of the picture in a consistent way.
@@ -18,6 +20,7 @@ The plugin only works on whole layers, if a selection is present it is saved to 
 +++ Select new width and height
 
 In this section it is possible to choose the final size. It is advisable to rescale always in one direction at a time. If both the width and the height are changed, rescaling is performed by default on the width first, then on the height. This can be changed in the //"Advanced"// tab.
+
 The three small buttons on the right can be used to reset the size parameters to the image size (top) or set them to the last used values (middle), or to switch to the interactive mode (bottom - see the [#interactive corresponding section] for more details).
 
 Note that the final size can be set automatically when removing objects, see below.
@@ -64,7 +67,7 @@ This tab has a number of options related to the output of the plugin.
 * **Output on a new layer**. Specifies if the resized image should be written on a new layer. By default, it is off.
 * **Resize image canvas**. Specifies whether the image canvas should be resized to meet the new size of the active layer. By default, it is on.
 * **Resize auxiliary layers**. Specifies whether the layers used to manually select the features of the image or to specify a rigidity mask will be resized along with the active layer. If this option is checked, those layers will be first cropped to the active layer's size, then they will undergo the same seam carving and inserting process as the active layer. By default, it is on, but it is only active when some layers are selected in the //"Feature masks"// tab or if a rigidity mask is being used (see below).
-* **Output the seams on a new layer**. Specifies whether to create a new layer with the seams map. If this option is checked, two buttons appear on the right of it to let the user choose the seams colour range. The seams are computed on the original layer as far as they are needed for the new size (e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining areas are transparent. In order to read the result, use this option together with //"Output on a new layer"//, and overlay the seams map to the original layer. If you rescale in two directions at once, you will obtain two maps, but the second one will be computed over an invisible intermediate image, so this is not very useful. The same applies in the case you choose to rescale back to the original size with LqR. Note that this option is ignored in interactive mode.
+* **Output the seams on a new layer**. Specifies whether to create a new layer with the seams map in interactive mode. The two buttons on the right of it let the user choose the seams colour range. The seams are computed on the original layer as far as they are needed for the new size (e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining areas are transparent. In order to read the result, use this option together with //"Output on a new layer"//, and overlay the seams map to the original layer. If you rescale in two directions at once, you will obtain two maps, but the second one will be computed over an invisible intermediate image, so this is not very useful. The same applies in the case you choose to rescale back to the original size with LqR, or when the resizing goes beyond the limit set with //"Max enlargment per step"//. Note that this option is ignored in interactive mode, except for the colours you choose, which are used when dumping the seam maps manually.
 * **Scale back to the original size**. Specifies whether to perform a scale back operation after the liquid rescale operation has been performed. This can be useful for example for object removal and content enhancement. If this option is checked, a menu appears below it to let the user choose the details of the operations: it is possible to revert to the opriginal width and height using either liquid rescale or the standard scaling algorithm, or it is possible to perform a uniform scaling with the standard algorithm and reach back only the original width, or only the original height. Note that this option is ignored in interactive mode.
 
 +++ Advanced
@@ -92,7 +95,7 @@ The plugin can take advantage of the GIMP Animation Package (GAP) for video edit
 Note however that the GAP facilities only allow to select the working layer, but the liquid rescale plugin needs auxiliary layers as well to work at its full potential. In order to work around this problem, auxiliary layers are set according to their names: therefore, if you want to use a preservation mask in each frame, for example, you should take care that all the layers which you intend to use as such have the same name in all of the frames. The same applies to discard masks and rigidity masks.
 
 In order to use liquid rescale on all frames, you need select //"Frame Modify"// in the //"Video"// menu; this will open a dialog: in the //"Function"// section select //"Apply filter on layer(s)"//, then set appropriate rules for layer selection and frame range and click OK. Another dialog will appear, asking you to choose a filter: select //plug-in-lqr//, then choose either //"Apply constant"// or //"Apply varying"//.
-In the latter case, you will be presented the liquidrescale plugin dialog twice, once for the first frame and once for the last one: these will set the extreme values for all the graded parameters (such as sizes, strengths, rigidity etc.), and intermediate values will be used in the intermediate frames (for example, if you set the width to 100% for the first frame and 110% for the last one, and there are 11 frames overall, intermediate frames will have widths of 101%, 102%, 103% and so on). However, all the on/off options (such as the resize order, the auxiliary layer names etc.) will be taken from the <u>last</u> dialog for all the intermediate frames.
+In the latter case, you will be presented the liquidrescale plugin dialog twice, once for the first frame and once for the last one: these will set the extreme values for all the graded parameters (such as sizes, strengths, rigidity etc.), and intermediate values will be used in the intermediate frames (for example, if you set the width to 100% for the first frame and 110% for the last one, and there are 11 frames overall, intermediate frames will have widths of 101%, 102%, 103% and so on). However, all the on/off options (such as the resize order, the auxiliary layer names etc.) will be taken from the __last__ dialog for all the intermediate frames.
 
 ++++ Applying the plugin to all layers (e.g. for animations)
 
@@ -101,7 +104,7 @@ It is also possible to apply the plugin to all the layers in a given image (for 
 ++ User interface description (interactive mode)
 [[# interactive ]]
 Pressing the interactive button in the main plugin dialog switches the plugin to interactive mode, and applies the current settings, including the current size settings. In interactive mode only the size can be modified (and modifications will be applied immidiately), and some options are ignored:
-* Output the seams
+* Output the seams (you have to do it manually, see below)
 * Scale back to the original size
 * Ignore discard mask when enlarging
 
@@ -113,9 +116,10 @@ This section includes the controls for the layer size. The application of the ch
 
 +++ Map
 
-The additional //"Map"// section in the dialog is about the internal seam map which the plugin uses for its computations. Any map has an orientation (depending on the scaling direction), a reference value (the one it was initialized with) and a range. The map allows to rescale almost in real-time within its given range and along its direction; going beyond the current range will produce the updating of the map. The maps store all the scaling information about the specified range: therefore, going back to the reference value will reproduce the initial image. However, a new map is generated automatically any time the direction of the scaling is changed, or when the size exceeds the max enlargment per step; when this happens, all previous information is lost. There are two buttons in this section:
+The additional //"Map"// section in the dialog is about the internal seam map which the plugin uses for its computations. Any map has an orientation (depending on the scaling direction), a reference value (the one it was initialized with) and a range. The map allows to rescale almost in real-time within its given range and along its direction; going beyond the current range will produce the updating of the map. The maps store all the scaling information about the specified range: therefore, going back to the reference value will reproduce the initial image. However, a new map is generated automatically any time the direction of the scaling is changed, or when the size exceeds the max enlargment per step; when this happens, all previous information is lost. There are three buttons in this section:
 * //Info button.// Displays or hides information about the internal seam map
-* //Reset button.// Force the map reset. For example, if you change the size, then press this button, then press the reset button in the size section, you will have the same result as using the //"Scale back to the original size"// option (with the //"liquid rescale"// setting) in non-interactive mode.
+* //Reset button.// Force the map reset. This is like restarting the plugin from the current situation. For example, if you change the size, then press this button, then press the reset button in the size section, you will have the same result as using the //"Scale back to the original size"// option (with the //"liquid rescale"// setting) in non-interactive mode.
+* //Dump seam map button.// This button can be used to view the current seam map. Its effect is the same as that of the //"Output the seams"// option in noninteractive mode, only you need to do it manually, and it prints out one map at a time. The first time you press this button in a session, a new layer will be crated to hold the map, but if you press it again the new map will take the place of the old one. In order to make sense of the result, you have to bring the layer you're working on to its reference size after the dump, and overlay the map on it. This button is only active for RGB images.
 
 ++ Appendix: The seam carving technique in brief
 [[# seam_carving ]]

@@ -3,17 +3,246 @@
 # this is really greedy...
 #
 
-function rmtags() {
+
+#function anti_open {
+#	local ind
+#	local STR="${1}>"
+#	local N=$(echo -n "$STR" | wc -c)
+#	local OUTSTR="[^<]"
+#	local T="<"
+#	local C
+#	for ind in $(seq 1 $N)
+#	do
+#		C="$(echo "$STR" | cut -c${ind})"
+#		OUTSTR="${OUTSTR}\|${T}[^$C]"
+#		T="${T}${C}"
+#	done
+#
+#	echo "$OUTSTR"
+#}
+
+#function anti_close {
+#	echo "$(anti_open "/$1")"
+#}
+#
+#function anti_both {
+#	local ind
+#	local STR1="${1}>"
+#	local STR2="/${1}>"
+#	local N=$(echo -n "$STR2" | wc -c)
+#	local C1 C2
+#	C1="$(echo "$STR1" | cut -c1)"
+#	local OUTSTR="[^<]\|<[^${C1}/]"
+#	local T1="<${C1}"
+#	local T2="</"
+#	for ind in $(seq 2 $((N - 1)) )
+#	do
+#		C1="$(echo "$STR1" | cut -c${ind})"
+#		C2="$(echo "$STR2" | cut -c${ind})"
+#		OUTSTR="${OUTSTR}\|${T1}[^${C1}]\|${T2}[^${C2}]"
+#		T1="${T1}${C1}"
+#		T2="${T2}${C2}"
+#	done
+#	C2="$(echo "$STR2" | cut -c${N})"
+#	OUTSTR="${OUTSTR}\|${T2}[^${C2}]"
+#
+#	echo "$OUTSTR"
+#}
+
+function anti_multi {
+	local id ind brid chbrid
+	local STR S
+	local OUTSTR
+	local C T
+	local BRANCHES NEWBRANCHES
+	local BR OLDBR
+	local CHBR CC
+	local go c0 found chbrN
+	local L="${#@}"
+	#echo "L=$L"
+	for id in $(seq 1 $L)
+	do
+		S="$(eval "echo \"\$${id}\"")"
+		STR[$id]="$S"
+		N[$id]=$(echo -n "$S" | wc -c)
+		BR[$id]=1
+		OLDBR[$id]=1
+	done
+	BRANCHES=1
+	T[1]=""
+	#echo "STR=${STR[@]}"
+	#echo "N=${N[@]}"
+	OUTSTR=""
+	ind=1
+	go=1
+	while [ $go -eq 1 ]
+	do
+		go=0
+		for id in $(seq 1 $L)
+		do
+			[ $ind -le ${N[$id]} ] || continue;
+			go=1
+			C[$id]="$(echo "${STR[$id]}" | cut -c${ind})"
+			OLDBR[$id]=${BR[$id]}
+		done
+		[ $go -eq 0 ] && continue;
+		NEWBRANCHES=$BRANCHES
+		#echo "ind=$ind BRANCHES=$BRANCHES"
+		for brid in $(seq 1 $BRANCHES)
+		do
+			#echo "  brid=$brid"
+			local CHBR=( )
+			local chbrN=0
+			for id in $(seq 1 $L)
+			do
+				[ $ind -le ${N[$id]} ] || continue;
+				[ ${OLDBR[$id]} -eq $brid ] || continue;
+				c0="${C[$id]}"
+				#echo "    QUI c0=$c0"
+				if [ $chbrN -eq 0 ]
+				then
+					CHBR[1]="$brid"
+					CC[1]="$c0"
+					let chbrN++
+				else
+					found=0
+					for chbrid in $(seq 1 $chbrN )
+					do
+						if [ "$c0" == "${CC[$chbrid]}" ]
+						then
+							found=1;
+							break;
+						fi
+					done
+					if [ $found -eq 0 ]
+					then
+						let NEWBRANCHES++
+						let chbrN++
+						CHBR[$chbrN]="$NEWBRANCHES"
+						CC[$chbrN]="$c0"
+						BR[$id]=$NEWBRANCHES
+						T[$NEWBRANCHES]=${T[$brid]}
+					fi
+				fi
+			done
+			[ $chbrN -eq 0 ] && continue;
+			#echo "   childs=${CHBR[@]}"
+			#echo "   T=${T[$brid]}"
+			[ -n "$OUTSTR" ] && OUTSTR="${OUTSTR}\|"
+			OUTSTR="${OUTSTR}${T[$brid]}[^"
+			for chbrid in $(seq 1 $chbrN )
+			do
+				#echo "    el=${CC[$chbrid]}"
+				OUTSTR="${OUTSTR}${CC[$chbrid]}"
+				T[${CHBR[$chbrid]}]="${T[${CHBR[$chbrid]}]}${CC[$chbrid]}"
+				#echo "    NEWT=${T[${CHBR[$chbrid]}]}"
+			done
+			OUTSTR="${OUTSTR}]"
+			#echo "   OUTSTR=$OUTSTR"
+		done
+
+		BRANCHES=$NEWBRANCHES
+		let ind++
+	done
+	echo "$OUTSTR"
+}
+
+function anti_open {
+	anti_multi "<$1>"
+}
+
+function anti_close {
+	anti_multi "</$1>"
+}
+
+function anti_both {
+	anti_multi "<$1>" "</$1>"
+}
+
+function skipper {
+	echo "\(\(<$1>\($(anti_both "$1")\)*</$1>\)\|\($(anti_open "$1")\)\)"
+}
+
+
+function rmtags {
 	sed "s@</\?$1\>[^>]*>@@g";
 }
 
-function rmtagsbody() {
+function rmtagsbody {
 	sed "s@<$1\>[^>]*>[^<]*</$1>@@g";
 }
 
-function subtags() {
+function subtags_old {
 	sed "s@<$1>\([^<]*\)</$1>@$2\1$3@g"
 }
+
+function subtags {
+	local BODY_EL="\($(anti_close "$1")\)"
+	sed "s@<$1>\(${BODY_EL}*\)</$1>@$2\1$3@g"
+}
+
+function subdesclist {
+	subtags "dt" '* ' '.'	     	| \
+	subtags "dd" '' '{{NEWLINE}}'	| \
+	subtags "dl" '{{NEWLINE}}' ''
+}
+
+function worknest {
+	local BODY_EL="\($(anti_both "$1")\)"
+	sed "s@<$1>\(${BODY_EL}*\)</$1>@<$1{{$2}}>\1</$1{{$2}}>@g"
+}
+
+function subtags_upperlev {
+	local BODY_EL="$(skipper "$1")"
+	sed "s@<$1>\(${BODY_EL}*\)</$1>@$2\1$3>@g"
+}
+
+function subtags_skip {
+	local BODY_EL="\(\(<$1>\($(anti_both "$1")\)*</$1>\)\|\($(anti_multi "<$1>" "<$2>")\)\)"
+	#local BODY_EL="\($(skipper "$1")\|$(skipper "$2")\)"
+	sed "s@<$2>\(${BODY_EL}*\)</$2>@$3\1$4@g"
+}
+
+function subtags_without {
+	local BODY_EL="\($(anti_multi "<$1>" "</$1>" "<$2>" "</$2>")\)"
+	sed "s@<$1>\(${BODY_EL}*\)</$1>@$3\1$4@g"
+}
+
+function subtags_within {
+	#local BODY_EL1="$(skipper "$1")"
+	#local BODY_EL2="$(skipper "$1")"
+	local BODY_EL1="\($(anti_multi "<$1>" "</$1>")\)"
+	local BODY_EL2="\($(anti_multi "<$2>" "</$2>")\)"
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
+	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g"
+}
+
+function subdesclist0 {
+	subtags_within "dl" "dt" '{{DTB0}}' '{{DTE0}}'	     	| \
+	subtags_within "dl" "dd" '{{DDB0}}' '{{DDE0}}'	| \
+	subtags_upperlev "dl" '{{DLB0}}' '{{DLE0}}'
+}
+
+function subdesclist0_ {
+	subtags_skip "dl" "dt" '* ' '.'	     	| \
+	subtags_skip "dl" "dd" '' '{{NEWLINE}}'	| \
+	subtags_upperlev "dl" '{{NEWLINE}}' ''
+}
+
+function subdesclist1 {
+	subtags_skip "dl" "dt" ' * //' '//.'	     	| \
+	subtags_skip "dl" "dd" '' '{{NEWLINE}}'		| \
+	subtags_upperlev "dl" '{{NEWLINE}}' ''
+}
+
 
 
 cat | \
@@ -30,11 +259,11 @@ cat | \
 	rmtags "td"							| \
 	rmtags "center"							| \
 	rmtags "font"							| \
-	rmtags "dl"							| \
 	subtags "b" '**{{{' '}}}**'					| \
 	sed "s/{{{\([^}]*\)[[:space:]]\+}}}/\1/g"			| \
 	sed "s/{{{\([^}]*\)}}}/\1/g"					| \
 	subtags "i" '//' '//'						| \
+	subtags "u" '__' '__'						| \
 	subtags "li" '* ' '{{NEWLINE}}'					| \
 	subtags "title" '{{NEWLINE}}+ ' '{{NEWLINE}}'			| \
 	subtags "h1" '{{NEWLINE}}+ ' '{{NEWLINE}}'			| \
@@ -43,15 +272,17 @@ cat | \
 	subtags "h4" '{{NEWLINE}}++++ ' '{{NEWLINE}}'			| \
 	sed "s/<img\>[^>]*src=\"\([^>]*\)\"[^>]*>/[[image \1]]/g"	| \
 	subtags "div" '{{NEWLINE}}' '{{NEWLINE}}'			| \
-	subtags "dt" '* ' '.'						| \
-	subtags "dd" '' '{{NEWLINE}}'					| \
-	subtags "dd" '' '{{NEWLINE}}'					| \
+	subdesclist							| \
+	subdesclist							| \
+	subdesclist							| \
+	subdesclist							| \
 	sed "s@<a href=\"\(#[^\"]*\)\">\([^<]*\)</a>@[\1 \2]@g"		| \
 	sed "s@<a name=\"\([^\"]*\)\">\([^<]*\)</a>@[[# \1 \2]]@g"	| \
 	sed "s@</\?p>@{{NEWLINE}}@g"					| \
 	sed "s@</\?ul>@{{NEWLINE}}@g"					| \
 	sed "s/^[[:space:]]*//"						| \
 	sed "s@\(\[\[image[[:space:]]\+\)\.\./images/\([^]]*\]\]\)@\1\2@g"	| \
+	subtags "div" '{{NEWLINE}}' '{{NEWLINE}}'			| \
 	sed "s/ \+/ /g"							| \
 	sed "s/[[:space:]]*{{NEWLINE}}[[:space:]]*/\n/g"		| \
 	cat -s

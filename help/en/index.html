@@ -354,7 +354,8 @@
 		on layer(s)"</i>, then set appropriate rules for layer selection and frame range and
 		click OK. Another dialog will appear, asking you to choose a filter: select
 		<i>plug-in-lqr</i>, then choose either <i>"Apply constant"</i> or <i>"Apply varying"</i>.
-		</div><div>
+		</div>
+		<div>
 		In the latter case, you will be presented the liquidrescale plugin dialog twice, once
 		for the first frame and once for the last one: these will set the extreme values for 
 		all the graded parameters (such as sizes, strengths, rigidity etc.), and
@@ -408,7 +409,7 @@
 		There are three buttons in this section:
 		<dl>
 			<dt>Info button</dt>
-			<dd>displays or hides information about the internal seam map</dd>
+			<dd>Displays or hides information about the internal seam map</dd>
 			<dt>Reset button</dt>
 			<dd>
 			Force the map reset. This is like restarting the plugin from the current situation.
@@ -421,9 +422,10 @@
 			<dd>
 			This button can be used to view the current seam map. Its effect is the same as that of
 			the <i>"Output the seams"</i> option in noninteractive mode, only you need to do it manually, and
-			it prints out one map at a time.
-			In order to make sense of the result, you have to bring the layer to its reference size after the
-			dump, and superimpose the map to the layer.
+			it prints out one map at a time. The first time you press this button in a session, a new layer will
+			be crated to hold the map, but if you press it again the new map will take the place of the old one.
+			In order to make sense of the result, you have to bring the layer you're working on to its reference
+			size after the dump, and overlay the map on it.
 			This button is only active for RGB images.
 			</dd>
 		</dl>
