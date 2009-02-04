@@ -1,55 +1,54 @@
 #!/bin/bash
 #
-# this is really greedy...
+# html to wiki script
+# Copyright (C) 2007-2009 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
+# All Rights Reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the Licence, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see <http://www.gnu.org.licences/>.
 #
 
+### DECLARATIONS ###
+#{{{
 
-#function anti_open {
-#	local ind
-#	local STR="${1}>"
-#	local N=$(echo -n "$STR" | wc -c)
-#	local OUTSTR="[^<]"
-#	local T="<"
-#	local C
-#	for ind in $(seq 1 $N)
-#	do
-#		C="$(echo "$STR" | cut -c${ind})"
-#		OUTSTR="${OUTSTR}\|${T}[^$C]"
-#		T="${T}${C}"
-#	done
-#
-#	echo "$OUTSTR"
-#}
+# CONSTANTS AND SUBSTITUTION TABLES
+#{{{
 
-#function anti_close {
-#	echo "$(anti_open "/$1")"
-#}
-#
-#function anti_both {
-#	local ind
-#	local STR1="${1}>"
-#	local STR2="/${1}>"
-#	local N=$(echo -n "$STR2" | wc -c)
-#	local C1 C2
-#	C1="$(echo "$STR1" | cut -c1)"
-#	local OUTSTR="[^<]\|<[^${C1}/]"
-#	local T1="<${C1}"
-#	local T2="</"
-#	for ind in $(seq 2 $((N - 1)) )
-#	do
-#		C1="$(echo "$STR1" | cut -c${ind})"
-#		C2="$(echo "$STR2" | cut -c${ind})"
-#		OUTSTR="${OUTSTR}\|${T1}[^${C1}]\|${T2}[^${C2}]"
-#		T1="${T1}${C1}"
-#		T2="${T2}${C2}"
-#	done
-#	C2="$(echo "$STR2" | cut -c${N})"
-#	OUTSTR="${OUTSTR}\|${T2}[^${C2}]"
-#
-#	echo "$OUTSTR"
-#}
+MAXLEV=4
 
-function anti_multi {
+DARRAY_DT_B=( '* //' '<<SP>>* //' '<<SP2>>* //' '<<SP3>>* //' '<<SP4>>* //' '<<SP5>>* //' '<<SP6>>* //' '<<SP7>>* //' '<<SP8>>* //' '<<SP9>>* //' )
+DARRAY_DT_E=( './/' './/' './/' './/' './/' './/' './/' './/' './/' )
+
+DARRAY_DD_B=( '' '' '' '' '' '' '' '' '' )
+DARRAY_DD_E=( '<<NL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' )
+
+DARRAY_LI_B=( '* ' '<<SP>>* ' '<<SP2>>* ' '<<SP3>>* ' '<<SP4>>* ' '<<SP5>>* ' '<<SP6>>* ' '<<SP7>>* ' '<<SP8>>* ' '<<SP9>>* ' ) 
+DARRAY_LI_E=( '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' )
+
+DARRAY_DIV_B=( '' '' '' '' '' '' '' '' '' )
+DARRAY_DIV_E=( ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' )
+
+DARRAY_P_B=( '' '' '' '' '' '' '' '' '' )
+DARRAY_P_E=( ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' )
+
+#}}}
+
+# REGEX RELATED FUNCTIONS
+#{{{
+
+# anti-regex
+function anti
+{ #{{{
 	local id ind brid chbrid
 	local STR S
 	local OUTSTR
@@ -70,8 +69,6 @@ function anti_multi {
 	done
 	BRANCHES=1
 	T[1]=""
-	#echo "STR=${STR[@]}"
-	#echo "N=${N[@]}"
 	OUTSTR=""
 	ind=1
 	go=1
@@ -87,10 +84,8 @@ function anti_multi {
 		done
 		[ $go -eq 0 ] && continue;
 		NEWBRANCHES=$BRANCHES
-		#echo "ind=$ind BRANCHES=$BRANCHES"
 		for brid in $(seq 1 $BRANCHES)
 		do
-			#echo "  brid=$brid"
 			local CHBR=( )
 			local chbrN=0
 			for id in $(seq 1 $L)
@@ -98,7 +93,6 @@ function anti_multi {
 				[ $ind -le ${N[$id]} ] || continue;
 				[ ${OLDBR[$id]} -eq $brid ] || continue;
 				c0="${C[$id]}"
-				#echo "    QUI c0=$c0"
 				if [ $chbrN -eq 0 ]
 				then
 					CHBR[1]="$brid"
@@ -126,166 +120,442 @@ function anti_multi {
 				fi
 			done
 			[ $chbrN -eq 0 ] && continue;
-			#echo "   childs=${CHBR[@]}"
-			#echo "   T=${T[$brid]}"
-			[ -n "$OUTSTR" ] && OUTSTR="${OUTSTR}\|"
+			[ -n "$OUTSTR" ] && OUTSTR="${OUTSTR}|"
 			OUTSTR="${OUTSTR}${T[$brid]}[^"
 			for chbrid in $(seq 1 $chbrN )
 			do
-				#echo "    el=${CC[$chbrid]}"
 				OUTSTR="${OUTSTR}${CC[$chbrid]}"
 				T[${CHBR[$chbrid]}]="${T[${CHBR[$chbrid]}]}${CC[$chbrid]}"
-				#echo "    NEWT=${T[${CHBR[$chbrid]}]}"
 			done
 			OUTSTR="${OUTSTR}]"
-			#echo "   OUTSTR=$OUTSTR"
 		done
 
 		BRANCHES=$NEWBRANCHES
 		let ind++
 	done
 	echo "$OUTSTR"
-}
+} #}}}
 
-function anti_open {
-	anti_multi "<$1>"
-}
+# anti-opentag regex
+function anti_open
+{ #{{{
+	anti "<$1>"
+} #}}}
 
-function anti_close {
-	anti_multi "</$1>"
-}
+# anti-closetag regex
+function anti_close
+{ #{{{
+	anti "</$1>"
+} #}}}
 
-function anti_both {
-	anti_multi "<$1>" "</$1>"
-}
+# anti-tag regex
+function anti_both
+{ #{{{
+	anti "<$1>" "</$1>"
+} #}}}
 
-function skipper {
-	echo "\(\(<$1>\($(anti_both "$1")\)*</$1>\)\|\($(anti_open "$1")\)\)"
-}
+# skip whole tag-delimited parts
+function skipper
+{ #{{{
+	local id
+	local L="${#@}"
+	local S
+	local OUTSTR=""
+	for id in $(seq 1 $L)
+	do
+		S="$(eval "echo \"\$${id}\"")"
+		OUTSTR="${OUTSTR}<$S>($(anti_both "$S"))*</$S>|"
+	done
+	local TL=""
+	for id in $(seq 1 $L)
+	do
+		S="$(eval "echo \"\$${id}\"")"
+		TL="${TL} <$S>"
+	done
+	OUTSTR="${OUTSTR}$(anti $TL)"
+	echo $OUTSTR
+} #}}}
 
+#}}}
 
-function rmtags {
-	sed "s@</\?$1\>[^>]*>@@g";
-}
+# SUBSTITUTION FUNCTIONS (FLAT)
+#{{{
 
-function rmtagsbody {
-	sed "s@<$1\>[^>]*>[^<]*</$1>@@g";
-}
+# grredy remove
+function rmtags
+{ #{{{
+	sed -r "s@</?$1\>[^>]*>@@g";
+} #}}}
 
-function subtags_old {
-	sed "s@<$1>\([^<]*\)</$1>@$2\1$3@g"
-}
+# substitute tags delimiters
+function subtags
+{ #{{{
+	local BODY_EL="($(skipper "$1"))"
+	sed -r "s@<$1>(${BODY_EL}*)</$1>@$2\1$3@g"
+} #}}}
 
-function subtags {
-	local BODY_EL="\($(anti_close "$1")\)"
-	sed "s@<$1>\(${BODY_EL}*\)</$1>@$2\1$3@g"
-}
+# images
+function subimgs
+{ #{{{
+	sed -r "s/<img\>[^>]*src=\"([^>]*)\"[^>]*>/[[image \1]]/g"
+} #}}}
 
-function subdesclist {
-	subtags "dt" '* ' '.'	     	| \
-	subtags "dd" '' '{{NEWLINE}}'	| \
-	subtags "dl" '{{NEWLINE}}' ''
-}
+# links (external and internal)
+function sublinks
+{ #{{{
+	sed -r "s@<a href=\"(#[^\"]*)\">(($(anti_both "a"))*)</a>@[\1 \2]@g"	| \
+	sed -r "s@<a name=\"([^\"]*)\">(($(anti_both "a"))*)</a>@[[# \1 \2]]@g"
+} #}}}
 
-function worknest {
-	local BODY_EL="\($(anti_both "$1")\)"
-	sed "s@<$1>\(${BODY_EL}*\)</$1>@<$1{{$2}}>\1</$1{{$2}}>@g"
-}
+#}}}
 
-function subtags_upperlev {
-	local BODY_EL="$(skipper "$1")"
-	sed "s@<$1>\(${BODY_EL}*\)</$1>@$2\1$3>@g"
-}
+# SUBSTITUTION FUNCTIONS (NESTED)
+#{{{
 
-function subtags_skip {
-	local BODY_EL="\(\(<$1>\($(anti_both "$1")\)*</$1>\)\|\($(anti_multi "<$1>" "<$2>")\)\)"
-	#local BODY_EL="\($(skipper "$1")\|$(skipper "$2")\)"
-	sed "s@<$2>\(${BODY_EL}*\)</$2>@$3\1$4@g"
-}
+# associate a depth to the given tags
+function indent
+{ #{{{
+	local LEV="$1"
+	shift
+	local BODY_EL="($(skipper "$@"))"
+	local TAG="("
+	local id
+	local L="${#@}"
+	for id in $(seq 1 $L)
+	do
+		S="$(eval "echo \"\$${id}\"")"
+		[ $id -gt 1 ] && TAG="${TAG}|"
+		TAG="${TAG}${S}"
+	done
+	TAG="${TAG})"
+	sed -r "s@<${TAG}>(${BODY_EL}*)</\1>@<<I $LEV \1>>\2<</I $LEV \1>>@g"
+} #}}}
 
-function subtags_without {
-	local BODY_EL="\($(anti_multi "<$1>" "</$1>" "<$2>" "</$2>")\)"
-	sed "s@<$1>\(${BODY_EL}*\)</$1>@$3\1$4@g"
-}
+# invoke indent for all levels
+# up to the given one (in increasing order)
+function indent_alllevels
+{ #{{{
+	local LEV="$1"
+	shift
+	local LMAX="$LEV"
+	[[ "$1" =~ ^@@[[:digit:]]+$ ]] && { LMAX=${1#@@}; shift; }
+	if [ $LEV -gt 0 ]
+	then
+		indent $((LMAX - LEV + 1)) "$@" |\
+		indent_alllevels $((LEV - 1)) "@@${LMAX}" "$@"
+	else
+		cat
+	fi
+} #}}}
 
-function subtags_within {
-	#local BODY_EL1="$(skipper "$1")"
-	#local BODY_EL2="$(skipper "$1")"
-	local BODY_EL1="\($(anti_multi "<$1>" "</$1>")\)"
-	local BODY_EL2="\($(anti_multi "<$2>" "</$2>")\)"
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g" | \
-	sed "s@<$1>\(${BODY_EL1}*\)<$2>\(${BODY_EL2}*\)</$2>\(${BODY_EL1}*\)</$1>@<$1>\1$3\3$4\5</$1>@g"
-}
+# substitute tags delimiters
+# at a specified level
+function subtags_atlevel
+{ #{{{
+	local LEV="$1"
+	shift
+	local BODY_EL1="($(anti "<</I $LEV "))"
+	#local BODY_EL1="(<<I [[:digit:]]+ [[:alpha:]]+>>($(anti "<<I " "<</I "))*<</I [[:digit:]]+ [[:alpha:]]+>>|$(anti "<</I $LEV "))"
+	local BODY_EL2="($(skipper "$1"))"
+	sed -r "s@<<I $LEV ([[:alpha:]]+)>>(${BODY_EL1}*)<</I $LEV \1>>@<<I $LEV \1>>\n<<MARKED>>\2\n<</I $LEV \1>>@g" | \
+	sed -r "/^<<MARKED>>/s@<$1>(${BODY_EL2}*)</$1>@$2\1$3@g" | \
+	sed -r "s@^<<MARKED>>@@" | \
+	tr '\n' ' '
+} #}}}
 
-function subdesclist0 {
-	subtags_within "dl" "dt" '{{DTB0}}' '{{DTE0}}'	     	| \
-	subtags_within "dl" "dd" '{{DDB0}}' '{{DDE0}}'	| \
-	subtags_upperlev "dl" '{{DLB0}}' '{{DLE0}}'
-}
+# invoke subtags_atlevel for all levels
+# up to the given one (in decreasing order)
+# (delimiters are passed through array names)
+function subtags_multilevel
+{ #{{{
+	local L="$1"
+	local TAG="$2"
+	local ARRAY_B="$3"
+	local ARRAY_E="$4"
 
-function subdesclist0_ {
-	subtags_skip "dl" "dt" '* ' '.'	     	| \
-	subtags_skip "dl" "dd" '' '{{NEWLINE}}'	| \
-	subtags_upperlev "dl" '{{NEWLINE}}' ''
-}
+	if [ "$L" -gt 0 ]
+	then
+		local BS="$(eval echo \"\${${ARRAY_B}[L - 1]}\")"
+		local ES="$(eval echo \"\${${ARRAY_E}[L - 1]}\")"
+		subtags_atlevel $L "$TAG" "$BS" "$ES"				| \
+		subtags_multilevel $((L - 1)) "$TAG" "$ARRAY_B" "$ARRAY_E"
+	else
+		cat
+	fi
+} #}}}
 
-function subdesclist1 {
-	subtags_skip "dl" "dt" ' * //' '//.'	     	| \
-	subtags_skip "dl" "dd" '' '{{NEWLINE}}'		| \
-	subtags_upperlev "dl" '{{NEWLINE}}' ''
-}
+# substitute indented tags
+function subindent
+{ #{{{
+	local LEV="$1"
+	shift;
+	local BODY_EL="($(anti "<</I $LEV $1>>"))"
+	sed -r "s@<<I $LEV $1>>(${BODY_EL}*)<</I $LEV $1>>@$2\1$3@g"
+} #}}}
 
+# invoke subindent for all levels
+# up to the given one (in increasing order)
+function subindent_alllevels
+{ #{{{
+	local LEV="$1"
+	shift
+	local LMAX="$LEV"
+	[[ "$1" =~ ^@@[[:digit:]]+$ ]] && { LMAX=${1#@@}; shift; }
+	if [ $LEV -gt 0 ]
+	then
+		subindent $((LMAX - LEV + 1)) "$@" |\
+		subindent_alllevels $((LEV - 1)) "@@${LMAX}" "$@"
+	else
+		cat
+	fi
+} #}}}
 
+#}}}
+
+# FORMAT AND CLEANUP FUNCTIONS
+#{{{
+
+# remove unnecessary spaces
+function rmspace
+{ #{{{
+	sed -r "s/[[:space:]]+/ /g"
+} #}}}
+
+# remove spaces at the beginning
+# of the lines
+function rmspace_start
+{ #{{{
+	sed -r "s/^[[:space:]]*//"
+} #}}}
+
+# collapse newlines marked as weak
+# if next to non-weak newlines
+function rmweaknewlines
+{ #{{{
+	sed -r "s/(<<WNL>>[[:space:]]*)+<<NL>>/<<NL>>/g" | \
+	sed -r "s/<<WNL>>/<<NL>>/g"
+} #}}}
+
+# apply space formattings
+function subspace
+{ #{{{
+	sed -r "s/[[:space:]]*<<NL>>[[:space:]]*/\n/g"		| \
+	sed -r "s/<<SP9>>/         /g"				| \
+	sed -r "s/<<SP8>>/        /g"				| \
+	sed -r "s/<<SP7>>/       /g"				| \
+	sed -r "s/<<SP6>>/      /g"				| \
+	sed -r "s/<<SP5>>/     /g"				| \
+	sed -r "s/<<SP4>>/    /g"				| \
+	sed -r "s/<<SP3>>/   /g"				| \
+	sed -r "s/<<SP2>>/  /g"					| \
+	sed -r "s/<<SP>>/ /g"
+} #}}}
+
+#}}}
+
+# CUSTOM FUNCTIONS
+#{{{
+
+function custom_hooks
+{ #{{{
+	sed -r "s@(\[\[image[[:space:]]+)\.\./images/([^]]*\]\])@\1\2@g"
+} #}}}
+
+#}}}
+
+#}}}
+
+### MAIN FILTER ###
+#{{{
 
 cat | \
-	tr -d "\n"							| \
-	tr "\t" " "							| \
-	sed "s/ \+/ /g"							| \
-	rmtags "!doctype"						| \
-	rmtags "html"							| \
-	rmtags "META"							| \
-	rmtags "head"							| \
-	rmtags "body"							| \
-	rmtags "table"							| \
-	rmtags "tr"							| \
-	rmtags "td"							| \
-	rmtags "center"							| \
-	rmtags "font"							| \
-	subtags "b" '**{{{' '}}}**'					| \
-	sed "s/{{{\([^}]*\)[[:space:]]\+}}}/\1/g"			| \
-	sed "s/{{{\([^}]*\)}}}/\1/g"					| \
-	subtags "i" '//' '//'						| \
-	subtags "u" '__' '__'						| \
-	subtags "li" '* ' '{{NEWLINE}}'					| \
-	subtags "title" '{{NEWLINE}}+ ' '{{NEWLINE}}'			| \
-	subtags "h1" '{{NEWLINE}}+ ' '{{NEWLINE}}'			| \
-	subtags "h2" '{{NEWLINE}}++ ' '{{NEWLINE}}'			| \
-	subtags "h3" '{{NEWLINE}}+++ ' '{{NEWLINE}}'			| \
-	subtags "h4" '{{NEWLINE}}++++ ' '{{NEWLINE}}'			| \
-	sed "s/<img\>[^>]*src=\"\([^>]*\)\"[^>]*>/[[image \1]]/g"	| \
-	subtags "div" '{{NEWLINE}}' '{{NEWLINE}}'			| \
-	subdesclist							| \
-	subdesclist							| \
-	subdesclist							| \
-	subdesclist							| \
-	sed "s@<a href=\"\(#[^\"]*\)\">\([^<]*\)</a>@[\1 \2]@g"		| \
-	sed "s@<a name=\"\([^\"]*\)\">\([^<]*\)</a>@[[# \1 \2]]@g"	| \
-	sed "s@</\?p>@{{NEWLINE}}@g"					| \
-	sed "s@</\?ul>@{{NEWLINE}}@g"					| \
-	sed "s/^[[:space:]]*//"						| \
-	sed "s@\(\[\[image[[:space:]]\+\)\.\./images/\([^]]*\]\]\)@\1\2@g"	| \
-	subtags "div" '{{NEWLINE}}' '{{NEWLINE}}'			| \
-	sed "s/ \+/ /g"							| \
-	sed "s/[[:space:]]*{{NEWLINE}}[[:space:]]*/\n/g"		| \
+	tr "\n" " "								| \
+	tr "\t" " "								| \
+	rmspace									| \
+	rmtags "!doctype"							| \
+	rmtags "html"								| \
+	rmtags "META"								| \
+	rmtags "head"								| \
+	rmtags "body"								| \
+	rmtags "table"								| \
+	rmtags "tr"								| \
+	rmtags "td"								| \
+	rmtags "center"								| \
+	rmtags "font"								| \
+	subimgs									| \
+	sublinks								| \
+	subtags "title" '<<NL>>+ ' '<<NL>>'					| \
+	subtags "h1" '<<NL>>+ ' '<<NL>>'					| \
+	subtags "h2" '<<NL>>++ ' '<<NL>>'					| \
+	subtags "h3" '<<NL>>+++ ' '<<NL>>'					| \
+	subtags "h4" '<<NL>>++++ ' '<<NL>>'					| \
+	subtags "b" '**' '**'							| \
+	subtags "i" '//' '//'							| \
+	subtags "u" '__' '__'							| \
+	indent_alllevels $MAXLEV "dl" "ul"					| \
+	subtags_multilevel $MAXLEV "dt" DARRAY_DT_B DARRAY_DT_E			| \
+	subtags_multilevel $MAXLEV "dd" DARRAY_DD_B DARRAY_DD_E			| \
+	subtags_multilevel $MAXLEV "li" DARRAY_LI_B DARRAY_LI_E			| \
+	subtags_multilevel $MAXLEV "div" DARRAY_DIV_B DARRAY_DIV_E		| \
+	subtags_multilevel $MAXLEV "p" DARRAY_P_B DARRAY_P_E			| \
+	subtags "div" '<<NL>>' '<<NL>>'						| \
+	subtags "p" '<<NL>>' '<<NL>>'						| \
+	subindent_alllevels $MAXLEV "dl" '<<NL>>' ''				| \
+	subindent_alllevels $MAXLEV "ul" '<<NL>>' '<<NL>>'			| \
+	rmspace_start								| \
+	rmspace									| \
+	rmweaknewlines								| \
+	custom_hooks								| \
+	subspace								| \
 	cat -s
 echo
 
-	#sed "s@\(\[\[image[[:space:]]\+\)\.\./images/\(.*\]\]\)@\1\2@g"	| \
+#}}}
+
+### END ###
+
+# OBSOLETE / NONWORKING STUFF
+#{{{
+
+#function anti_open
+#{#{{{
+#	local ind
+#	local STR="${1}>"
+#	local N=$(echo -n "$STR" | wc -c)
+#	local OUTSTR="[^<]"
+#	local T="<"
+#	local C
+#	for ind in $(seq 1 $N)
+#	do
+#		C="$(echo "$STR" | cut -c${ind})"
+#		OUTSTR="${OUTSTR}|${T}[^$C]"
+#		T="${T}${C}"
+#	done
+#
+#	echo "$OUTSTR"
+#}#}}}
+
+#function anti_close
+#{#{{{
+#	echo "$(anti_open "/$1")"
+#}#}}}
+
+#function anti_both
+#{#{{{
+#	local ind
+#	local STR1="${1}>"
+#	local STR2="/${1}>"
+#	local N=$(echo -n "$STR2" | wc -c)
+#	local C1 C2
+#	C1="$(echo "$STR1" | cut -c1)"
+#	local OUTSTR="[^<]|<[^${C1}/]"
+#	local T1="<${C1}"
+#	local T2="</"
+#	for ind in $(seq 2 $((N - 1)) )
+#	do
+#		C1="$(echo "$STR1" | cut -c${ind})"
+#		C2="$(echo "$STR2" | cut -c${ind})"
+#		OUTSTR="${OUTSTR}|${T1}[^${C1}]|${T2}[^${C2}]"
+#		T1="${T1}${C1}"
+#		T2="${T2}${C2}"
+#	done
+#	C2="$(echo "$STR2" | cut -c${N})"
+#	OUTSTR="${OUTSTR}|${T2}[^${C2}]"
+#
+#	echo "$OUTSTR"
+#}#}}}
+
+#function skipper
+#{#{{{
+#	echo "<$1>($(anti_both "$1"))*</$1>|$(anti_open "$1")"
+#}#}}}
+
+#function rmtagsbody
+#{#{{{
+#	sed -r "s@<$1\>[^>]*>[^<]*</$1>@@g";
+#}#}}}
+
+#function subdesclist
+#{#{{{
+#	subtags "dt" '* ' '.'	     	| \
+#	subtags "dd" '' '<<NL>>'	| \
+#	subtags "dl" '<<NL>>' ''
+#}#}}}
+
+#function worknest
+#{#{{{
+#	local BODY_EL="($(anti_both "$1"))"
+#	sed -r "s@<$1>(${BODY_EL}*)</$1>@<$1{{$2}}>\1</$1{{$2}}>@g"
+#}#}}}
+
+#function subtags_upperlev
+#{#{{{
+#	local BODY_EL="($(skipper "$1"))"
+#	sed -r "s@<$1>(${BODY_EL}*)</$1>@$2\1$3>@g"
+#}#}}}
+
+#function subtags_skip
+#{#{{{
+#	local BODY_EL="((<$1>($(anti_both "$1"))*</$1>)|($(anti "<$1>" "<$2>")))"
+#	#local BODY_EL="($(skipper "$1")|$(skipper "$2"))"
+#	sed -r "s@<$2>(${BODY_EL}*)</$2>@$3\1$4@g"
+#}#}}}
+
+#function subtags_without
+#{#{{{
+#	local BODY_EL="($(anti "<$1>" "</$1>" "<$2>" "</$2>"))"
+#	sed -r "s@<$1>(${BODY_EL}*)</$1>@$3\1$4@g"
+#}#}}}
+
+#function subtags_within_
+#{#{{{
+#	#local BODY_EL1="($(skipper "$1"))"
+#	#local BODY_EL2="($(skipper "$1"))"
+#	local BODY_EL1="(<$1>($(anti_both "$1"))*</$1>|$(anti "<$1>" "<$2>"))"
+#	local BODY_EL2="($(skipper "$1" "$2"))"
+#	#local BODY_EL2="($(anti "$2"))"
+#	local BODY_EL3="($(skipper "$1"))"
+#	sed -r "s@<$1>(${BODY_EL1}*)<$2>(${BODY_EL2}*)</$2>(${BODY_EL3}*)</$1>@<$1>\1$3\4$4\8</$1>@g"
+#}#}}}
+
+#function subtags_within
+#{#{{{
+#	local N="$1"
+#	shift;
+#	if [ $N -gt 0 ]
+#	then
+#		subtags_within_ "$@" | subtags_within $(( N - 1 )) "$@"
+#	else
+#		cat
+#	fi
+#}#}}}
+
+#function subtags_atlevel__
+#{#{{{
+#	local LEV="$1"
+#	shift
+#	local NONINDTAG="(<<I [[:digit:]]+ [[:alpha:]]+>>($(anti "<<I " "<</I "))*<</I [[:digit:]]+ [[:alpha:]]+>>|$(anti "<<I " "<</I " "<$1>"))"
+#	local BODY_EL="($(skipper "$1"))"
+#	local NONIND="(<<I [[:digit:]]+ [[:alpha:]]+>>($(anti "<<I " "<</I "))*<</I [[:digit:]]+ [[:alpha:]]+>>|$(anti "<</I $LEV "))"
+#	sed -r "s@<<I $LEV ([[:alpha:]]+)>>(${NONINDTAG}*)<$1>(${BODY_EL}*)</$1>(${NONIND}*)<</I $LEV \1>>@<<I $LEV \1>>\2$2\5$3\8<</I $LEV \1>>@g"
+#}#}}}
+
+#function subtags_atlevel_
+#{#{{{
+#	local N="$1"
+#	shift;
+#	if [ $N -gt 0 ]
+#	then
+#		subtags_atlevel__ "$@" | subtags_atlevel_ $(( N - 1 )) "$@"
+#	else
+#		cat
+#	fi
+#}#}}}
+
+#function subtags_atlevel
+#{#{{{
+#	subtags_atlevel_ 10 "$@"
+#}#}}}
+
+#}}}
+
