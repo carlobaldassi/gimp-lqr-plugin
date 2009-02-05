@@ -98,6 +98,7 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GIMP_CFLAGS = @GIMP_CFLAGS@
+GIMP_DATADIR = @GIMP_DATADIR@
 GIMP_LIBDIR = @GIMP_LIBDIR@
 GIMP_LIBS = @GIMP_LIBS@
 GMOFILES = @GMOFILES@
@@ -161,6 +162,7 @@ POFILES = @POFILES@
 POSUB = @POSUB@
 PO_IN_DATADIR_FALSE = @PO_IN_DATADIR_FALSE@
 PO_IN_DATADIR_TRUE = @PO_IN_DATADIR_TRUE@
+SCRIPTSDIR = @SCRIPTSDIR@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -202,7 +204,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = po src gap help
+SUBDIRS = po src gap batch help
 EXTRA_DIST = \
 	BUGS			\
 	autogen.sh		\

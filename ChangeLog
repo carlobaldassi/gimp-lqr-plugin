@@ -1,3 +1,7 @@
+2009-02-04 Carlo Baldassi <carlobaldassi@gmail.com>
+	* bugfix : fixed non-interactive mode
+	* new : batch script for non-interactive execution
+
 2009-01-27 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new : interactive interface
 	* new : with and height (std) scaleback modes

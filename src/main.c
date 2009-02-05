@@ -37,6 +37,7 @@
 
 static gint32 layer_from_name(gint32 image_ID, gchar * name);
 static void set_aux_layer_name(gint layer_ID, gboolean status, gchar * name);
+static void noninteractive_read_vals (const GimpParam * param);
 static void query (void);
 static void run (const gchar * name,
                  gint nparams,
@@ -69,7 +70,8 @@ const PlugInVals default_vals = {
   TRUE,                         /* no disc upon enlarging */
   "",	                        /* pres_layer_name */
   "",                           /* disc_layer_name */
-  ""                            /* rigmask_layer_name */
+  "",                           /* rigmask_layer_name */
+  "",                           /* selected layer name */
 };
 
 const PlugInColVals default_col_vals = {
@@ -116,6 +118,37 @@ static PlugInDrawableVals drawable_vals;
 static PlugInUIVals ui_vals;
 static PlugInColVals col_vals;
 static PlugInDialogVals dialog_vals;
+static GimpParamDef args[] = {
+  {GIMP_PDB_INT32, "run_mode", "Interactive, non-interactive"},
+  {GIMP_PDB_IMAGE, "image", "Input image"},
+  {GIMP_PDB_DRAWABLE, "drawable", "Input drawable"},
+  {GIMP_PDB_INT32, "width", "Final width"},
+  {GIMP_PDB_INT32, "height", "Final height"},
+  {GIMP_PDB_INT32, "pres_layer", "Layer that marks preserved areas"},
+  {GIMP_PDB_INT32, "pres_coeff", "Preservation coefficient"},
+  {GIMP_PDB_INT32, "disc_layer", "Layer that marks areas to discard"},
+  {GIMP_PDB_INT32, "disc_coeff", "Discard coefficient"},
+  {GIMP_PDB_FLOAT, "rigidity", "Rigidity coefficient"},
+  {GIMP_PDB_INT32, "rigidity_mask_layer", "Layer used as rigidity mask"},
+  {GIMP_PDB_INT32, "delta_x", "max displacement of seams"},
+  {GIMP_PDB_FLOAT, "enl_step", "enlargment step (ratio)"},
+  {GIMP_PDB_INT32, "resize_aux_layers",
+   "Whether to resize auxiliary layers"},
+  {GIMP_PDB_INT32, "resize_canvas", "Whether to resize canvas"},
+  {GIMP_PDB_INT32, "new_layer", "Whether to output on a new layer"},
+  {GIMP_PDB_INT32, "seams", "Whether to output the seam map"},
+  {GIMP_PDB_INT32, "grad_func", "Gradient function to use"},
+  {GIMP_PDB_INT32, "res_order", "Resize order"},
+  {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
+  {GIMP_PDB_INT32, "scaleback", "Whether to scale back when done"},
+  {GIMP_PDB_INT32, "scaleback_mode", "Scale back mode"},
+  {GIMP_PDB_INT32, "no_disc_on_enlarge", "Ignore discard layer upon enlargement"},
+  {GIMP_PDB_STRING, "pres_layer_name", "Preservation layer name (for noninteractive mode only)"},
+  {GIMP_PDB_STRING, "disc_layer_name", "Discard layer name (for noninteractive mode only)"},
+  {GIMP_PDB_STRING, "rigmask_layer_name", "Rigidity mask layer name (for noninteractive mode only)"},
+  {GIMP_PDB_STRING, "selected_layer_name", "Selected layer name (for noninteractive mode only)"},
+};
+
 static int args_num;
 
 GimpPlugInInfo PLUG_IN_INFO = {
@@ -131,36 +164,6 @@ static void query (void)
 {
   gchar *help_path;
   gchar *help_uri;
-
-  static GimpParamDef args[] = {
-    {GIMP_PDB_INT32, "run_mode", "Interactive, non-interactive"},
-    {GIMP_PDB_IMAGE, "image", "Input image"},
-    {GIMP_PDB_DRAWABLE, "drawable", "Input drawable"},
-    {GIMP_PDB_INT32, "width", "Final width"},
-    {GIMP_PDB_INT32, "height", "Final height"},
-    {GIMP_PDB_INT32, "pres_layer", "Layer that marks preserved areas (for interactive mode only)"},
-    {GIMP_PDB_INT32, "pres_coeff", "Preservation coefficient (for interactive mode only)"},
-    {GIMP_PDB_INT32, "disc_layer", "Layer that marks areas to discard (for interactive mode only)"},
-    {GIMP_PDB_INT32, "disc_coeff", "Discard coefficient"},
-    {GIMP_PDB_FLOAT, "rigidity", "Rigidity coefficient"},
-    {GIMP_PDB_INT32, "rigidity_mask_layer", "Layer used as rigidity mask"},
-    {GIMP_PDB_INT32, "delta_x", "max displacement of seams"},
-    {GIMP_PDB_FLOAT, "enl_step", "enlargment step (ratio)"},
-    {GIMP_PDB_INT32, "resize_aux_layers",
-     "Whether to resize auxiliary layers"},
-    {GIMP_PDB_INT32, "resize_canvas", "Whether to resize canvas"},
-    {GIMP_PDB_INT32, "new_layer", "Whether to output on a new layer"},
-    {GIMP_PDB_INT32, "seams", "Whether to output the seam map"},
-    {GIMP_PDB_INT32, "grad_func", "Gradient function to use"},
-    {GIMP_PDB_INT32, "res_order", "Resize order"},
-    {GIMP_PDB_INT32, "mask_behavior", "What to do with masks"},
-    {GIMP_PDB_INT32, "scaleback", "Whether to scale back when done"},
-    {GIMP_PDB_INT32, "scaleback_mode", "Scale back mode"},
-    {GIMP_PDB_INT32, "no_disc_on_enlarge", "Ignore discard layer upon enlargement"},
-    {GIMP_PDB_STRING, "pres_layer_name", "Preservation layer name (for noninteractive mode only)"},
-    {GIMP_PDB_STRING, "disc_layer_name", "Discard layer name (for noninteractive mode only)"},
-    {GIMP_PDB_STRING, "rigmask_layer_name", "Rigidity mask layer name (for noninteractive mode only)"},
-  };
 
   args_num = G_N_ELEMENTS (args);
 
@@ -212,6 +215,8 @@ run (const gchar * name,
 #endif
   textdomain (GETTEXT_PACKAGE);
 
+  args_num = G_N_ELEMENTS (args);
+
   run_mode = param[0].data.d_int32;
   image_ID = param[1].data.d_int32;
   layer_ID = param[2].data.d_drawable;
@@ -223,6 +228,7 @@ run (const gchar * name,
     {
       layer_ID = gimp_image_get_active_layer (image_ID);
     }
+
 
   /*  Initialize with default values  */
   vals = default_vals;
@@ -246,32 +252,8 @@ run (const gchar * name,
             }
           else
             {
-              vals.new_width = param[3].data.d_int32;
-              vals.new_height = param[4].data.d_int32;
-              /* vals.pres_layer_ID = param[5].data.d_int32; */
-              vals.pres_coeff = param[6].data.d_int32;
-              /* vals.disc_layer_ID = param[7].data.d_int32; */
-              vals.disc_coeff = param[8].data.d_int32;
-              vals.rigidity = param[9].data.d_float;
-              /* vals.rigmask_layer_ID = param[10].data.d_int32; */
-              vals.delta_x = param[11].data.d_int32;
-              vals.enl_step = param[12].data.d_float;
-              vals.resize_aux_layers = param[13].data.d_int32;
-              vals.resize_canvas = param[14].data.d_int32;
-              vals.new_layer = param[15].data.d_int32;
-              vals.output_seams = param[16].data.d_int32;
-              vals.grad_func = param[17].data.d_int32;
-              vals.res_order = param[18].data.d_int32;
-              vals.mask_behavior = param[19].data.d_int32;
-              vals.scaleback = param[20].data.d_int32;
-              vals.scaleback_mode = param[21].data.d_int32;
-              vals.no_disc_on_enlarge = param[22].data.d_int32;
-              g_strlcpy(vals.pres_layer_name, param[23].data.d_string, VALS_MAX_NAME_LENGTH);
-              g_strlcpy(vals.disc_layer_name, param[24].data.d_string, VALS_MAX_NAME_LENGTH);
-              g_strlcpy(vals.rigmask_layer_name, param[25].data.d_string, VALS_MAX_NAME_LENGTH);
-              vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
-              vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
-              vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
+              noninteractive_read_vals (param);
+              layer_ID = drawable_vals.layer_ID;
             }
           break;
 
@@ -351,6 +333,7 @@ run (const gchar * name,
           vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
           vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
           vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
+          //printf("RWLV: lid=%i pres=%i disc=%i rmask=%i\n", drawable_vals.layer_ID, vals.pres_layer_ID, vals.disc_layer_ID, vals.rigmask_layer_ID); fflush(stdout);
 
           break;
 
@@ -440,4 +423,79 @@ set_aux_layer_name(gint layer_ID, gboolean status, gchar * name)
     {
       g_strlcpy(name, gimp_drawable_get_name(layer_ID), VALS_MAX_NAME_LENGTH);
     }
+}
+
+static void
+noninteractive_read_vals (const GimpParam * param)
+{
+  gint32 image_ID;
+  gint32 aux_pres_layer_ID;
+  gint32 aux_disc_layer_ID;
+  gint32 aux_rigmask_layer_ID;
+  gint32 aux_selected_layer_ID;
+
+  image_ID = image_vals.image_ID;
+
+  vals.new_width = param[3].data.d_int32;
+  vals.new_height = param[4].data.d_int32;
+  vals.pres_layer_ID = param[5].data.d_int32;
+  vals.pres_coeff = param[6].data.d_int32;
+  vals.disc_layer_ID = param[7].data.d_int32;
+  vals.disc_coeff = param[8].data.d_int32;
+  vals.rigidity = param[9].data.d_float;
+  vals.rigmask_layer_ID = param[10].data.d_int32;
+  vals.delta_x = param[11].data.d_int32;
+  vals.enl_step = param[12].data.d_float;
+  vals.resize_aux_layers = param[13].data.d_int32;
+  vals.resize_canvas = param[14].data.d_int32;
+  vals.new_layer = param[15].data.d_int32;
+  vals.output_seams = param[16].data.d_int32;
+  vals.grad_func = param[17].data.d_int32;
+  vals.res_order = param[18].data.d_int32;
+  vals.mask_behavior = param[19].data.d_int32;
+  vals.scaleback = param[20].data.d_int32;
+  vals.scaleback_mode = param[21].data.d_int32;
+  vals.no_disc_on_enlarge = param[22].data.d_int32;
+  g_strlcpy(vals.pres_layer_name, param[23].data.d_string, VALS_MAX_NAME_LENGTH);
+  g_strlcpy(vals.disc_layer_name, param[24].data.d_string, VALS_MAX_NAME_LENGTH);
+  g_strlcpy(vals.rigmask_layer_name, param[25].data.d_string, VALS_MAX_NAME_LENGTH);
+  g_strlcpy(vals.selected_layer_name, param[26].data.d_string, VALS_MAX_NAME_LENGTH);
+
+  aux_pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
+  aux_disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
+  aux_rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
+  aux_selected_layer_ID = layer_from_name(image_ID, vals.selected_layer_name);
+
+  if (aux_pres_layer_ID)
+    {
+      vals.pres_layer_ID = aux_pres_layer_ID;
+    }
+  if (aux_disc_layer_ID)
+    {
+      vals.disc_layer_ID = aux_disc_layer_ID;
+    }
+  if (aux_rigmask_layer_ID)
+    {
+      vals.rigmask_layer_ID = aux_rigmask_layer_ID;
+    }
+  if (aux_selected_layer_ID)
+    {
+      drawable_vals.layer_ID = aux_selected_layer_ID;
+    }
+
+  if (vals.pres_layer_ID)
+    {
+      ui_vals.pres_status = TRUE;
+    }
+  if (vals.disc_layer_ID)
+    {
+      ui_vals.disc_status = TRUE;
+    }
+  if (vals.rigmask_layer_ID)
+    {
+      ui_vals.rigmask_status = TRUE;
+    }
+  //printf("RNIN: lid=%i pres=%i disc=%i rmask=%i\n", aux_selected_layer_ID, aux_pres_layer_ID, aux_disc_layer_ID, aux_rigmask_layer_ID); fflush(stdout);
+  //printf("RNIN: lid=%i pres=%i disc=%i rmask=%i\n", drawable_vals.layer_ID, vals.pres_layer_ID, vals.disc_layer_ID, vals.rigmask_layer_ID); fflush(stdout);
+
 }

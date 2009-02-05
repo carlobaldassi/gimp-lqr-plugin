@@ -55,6 +55,7 @@ typedef struct
   gchar pres_layer_name[VALS_MAX_NAME_LENGTH];
   gchar disc_layer_name[VALS_MAX_NAME_LENGTH];
   gchar rigmask_layer_name[VALS_MAX_NAME_LENGTH];
+  gchar selected_layer_name[VALS_MAX_NAME_LENGTH];
 } PlugInVals;
 
 #endif /* __MAIN_COMMON_H__ */

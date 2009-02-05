@@ -697,6 +697,7 @@ PKG_CONFIG
 GIMP_CFLAGS
 GIMP_LIBS
 GIMP_LIBDIR
+GIMP_DATADIR
 LQR_CFLAGS
 LQR_LIBS
 LQR_LIBDIR
@@ -744,6 +745,7 @@ POSUB
 MKINSTALLDIRS
 LOCALEDIR
 DATADIR
+SCRIPTSDIR
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -5869,6 +5871,10 @@ fi
 GIMP_LIBDIR=`$PKG_CONFIG --variable=gimplibdir gimp-2.0`
 
 
+GIMP_DATADIR=`$PKG_CONFIG --variable=gimpdatadir gimp-2.0`
+
+
+
 LQR_REQUIRED_VERSION=0.3.0
 
 
@@ -8289,6 +8295,8 @@ fi
 DATADIR="${datadir}/gimp-lqr-plugin"
 
 
+SCRIPTSDIR="${GIMP_DATADIR}/scripts"
+
 
 { echo "$as_me:$LINENO: checking if GTK+ is version 2.7.0 or newer" >&5
 echo $ECHO_N "checking if GTK+ is version 2.7.0 or newer... $ECHO_C" >&6; }
@@ -8321,7 +8329,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile gap/Makefile po/Makefile.in help/Makefile help/en/Makefile help/it/Makefile help/ru/Makefile help/images/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile gap/Makefile batch/Makefile po/Makefile.in help/Makefile help/en/Makefile help/it/Makefile help/ru/Makefile help/images/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -8932,6 +8940,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "gap/Makefile") CONFIG_FILES="$CONFIG_FILES gap/Makefile" ;;
+    "batch/Makefile") CONFIG_FILES="$CONFIG_FILES batch/Makefile" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
     "help/Makefile") CONFIG_FILES="$CONFIG_FILES help/Makefile" ;;
     "help/en/Makefile") CONFIG_FILES="$CONFIG_FILES help/en/Makefile" ;;
@@ -9085,6 +9094,7 @@ PKG_CONFIG!$PKG_CONFIG$ac_delim
 GIMP_CFLAGS!$GIMP_CFLAGS$ac_delim
 GIMP_LIBS!$GIMP_LIBS$ac_delim
 GIMP_LIBDIR!$GIMP_LIBDIR$ac_delim
+GIMP_DATADIR!$GIMP_DATADIR$ac_delim
 LQR_CFLAGS!$LQR_CFLAGS$ac_delim
 LQR_LIBS!$LQR_LIBS$ac_delim
 LQR_LIBDIR!$LQR_LIBDIR$ac_delim
@@ -9097,7 +9107,6 @@ INTLTOOL_DESKTOP_RULE!$INTLTOOL_DESKTOP_RULE$ac_delim
 INTLTOOL_DIRECTORY_RULE!$INTLTOOL_DIRECTORY_RULE$ac_delim
 INTLTOOL_KEYS_RULE!$INTLTOOL_KEYS_RULE$ac_delim
 INTLTOOL_PROP_RULE!$INTLTOOL_PROP_RULE$ac_delim
-INTLTOOL_OAF_RULE!$INTLTOOL_OAF_RULE$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -9139,6 +9148,7 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+INTLTOOL_OAF_RULE!$INTLTOOL_OAF_RULE$ac_delim
 INTLTOOL_PONG_RULE!$INTLTOOL_PONG_RULE$ac_delim
 INTLTOOL_SERVER_RULE!$INTLTOOL_SERVER_RULE$ac_delim
 INTLTOOL_SHEET_RULE!$INTLTOOL_SHEET_RULE$ac_delim
@@ -9173,11 +9183,12 @@ POSUB!$POSUB$ac_delim
 MKINSTALLDIRS!$MKINSTALLDIRS$ac_delim
 LOCALEDIR!$LOCALEDIR$ac_delim
 DATADIR!$DATADIR$ac_delim
+SCRIPTSDIR!$SCRIPTSDIR$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 36; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 38; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

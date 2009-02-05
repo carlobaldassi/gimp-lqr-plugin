@@ -18,6 +18,8 @@ po/POTFILES
 po/*.gmo
 intltool-extract
 src/gimp-lqr-plugin
+src/tags
+gap/tags
 gap/plug_in_lqr_iter
 po/stamp-it
 po/Makefile.in

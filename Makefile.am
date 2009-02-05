@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = po src gap help
+SUBDIRS = po src gap batch help
 
 EXTRA_DIST = \
 	BUGS			\

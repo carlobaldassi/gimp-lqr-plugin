@@ -109,6 +109,7 @@ gint p_plug_in_lqr_iter(GimpRunMode run_mode, gint32 total_steps, gdouble curren
     g_strlcpy(buf.pres_layer_name, buf_to.pres_layer_name, VALS_MAX_NAME_LENGTH);
     g_strlcpy(buf.disc_layer_name, buf_to.disc_layer_name, VALS_MAX_NAME_LENGTH);
     g_strlcpy(buf.rigmask_layer_name, buf_to.rigmask_layer_name, VALS_MAX_NAME_LENGTH);
+    g_strlcpy(buf.selected_layer_name, buf_to.selected_layer_name, VALS_MAX_NAME_LENGTH);
 
     gimp_set_data("plug_in_lqr", &buf, sizeof(buf)); 
 

@@ -61,6 +61,10 @@ AC_SUBST(GIMP_LIBS)
 GIMP_LIBDIR=`$PKG_CONFIG --variable=gimplibdir gimp-2.0`
 AC_SUBST(GIMP_LIBDIR)
 
+GIMP_DATADIR=`$PKG_CONFIG --variable=gimpdatadir gimp-2.0`
+AC_SUBST(GIMP_DATADIR)
+
+
 LQR_REQUIRED_VERSION=0.3.0
 
 PKG_CHECK_MODULES(LQR,
@@ -101,6 +105,8 @@ AC_SUBST(LOCALEDIR)
 DATADIR="${datadir}/plugin_name"
 AC_SUBST(DATADIR)
 
+SCRIPTSDIR="${GIMP_DATADIR}/scripts"
+AC_SUBST(SCRIPTSDIR)
 
 AC_MSG_CHECKING([if GTK+ is version 2.7.0 or newer])
 if $PKG_CONFIG --atleast-version=2.7.0 gtk+-2.0; then
@@ -133,6 +139,7 @@ AC_CONFIG_FILES([
 Makefile
 src/Makefile
 gap/Makefile
+batch/Makefile
 po/Makefile.in
 help/Makefile
 help/en/Makefile
