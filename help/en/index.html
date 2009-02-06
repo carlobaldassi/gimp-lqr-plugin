@@ -48,6 +48,10 @@
  		The plugin only works on whole layers, if a selection is present it is saved to a channel and removed.
 		If the layer has a transparency mask, an option is given to select the behaviour (apply/discard).
 	</p>
+	<p>
+		The plugin can also be operated in batch mode from the command line, see
+		<a href="#batch">this section</a> for details.
+	</p>
 
 	<h2>User interface description (non-interactive mode)</h2>
 	<p>
@@ -183,17 +187,17 @@
 	</p>
 	<p>
 		<dl>
-		<dt><b>Output on a new layer</b></dt>
+		<dt>Output on a new layer</dt>
 		<dd>
 			Specifies if the resized image should be written on a new layer.
 			By default, it is off.
 		</dd>
-		<dt><b>Resize image canvas</b></dt>
+		<dt>Resize image canvas</dt>
 		<dd>
 			Specifies whether the image canvas should be resized to meet the new size of the active
 			layer. By default, it is on.
 		</dd>
-		<dt><b>Resize auxiliary layers</b></dt>
+		<dt>Resize auxiliary layers</dt>
 		<dd>
 			Specifies whether the layers used to manually select the features of the image
 			or to specify a rigidity mask will be resized along with the active layer.
@@ -202,7 +206,7 @@
 			By default, it is on, but it is only active when some layers are selected in
 			the <i>"Feature masks"</i> tab or if a rigidity mask is being used (see below).
 		</dd>
-		<dt><b>Output the seams on a new layer</b></dt>
+		<dt>Output the seams on a new layer</dt>
 		<dd>
 			Specifies whether to create a new layer with the seams map in interactive mode.
 			The two buttons on the right of it let the user choose the seams colour range.
@@ -217,7 +221,7 @@
 			Note that this option is ignored in interactive mode, except for the colours you choose,
 			which are used when dumping the seam maps manually.
 		</dd>
-		<dt><b>Scale back to the original size</b></dt>
+		<dt>Scale back to the original size</dt>
 		<dd>
 			Specifies whether to perform a scale back operation after the liquid rescale operation
 			has been performed.
@@ -233,107 +237,102 @@
 	</p>
 	<h3>Advanced</h3>
 	<p>
-		<img title="Advanced" alt="Advanced" src="../images/dialog3.jpg">
-	</p>
-	<p>
 		This tab has some options which can be used to tweak the plugin behavior.
 	</p>
+	<h4>Seams control</h4>
 	<p>
-		<dl>
-		<dt><b>Seams control</b></dt>
-		<dd>
-			<dl>
-			<dt>Max transversal step</dt>
-			<dd>
-				<div>
-				This option lets you choose the maximum transversal step that the pixels in the seams can
-				take. In the standard algorithm, corresponding to the default value step = 1, each pixel
-				in a seam can be shifted by at most one pixel with respect to its neighbors.
-				This implies that the seams can form an angle of at most 45 degrees with respect
-				to their base line.
-				</div>
-				<div>
-				Increasing the step value lets you overcome this limit, but may lead to the
-				introduction of artifacts. In order to balance the situation, you can use
-				the rigidity setting.
-				</div>
-			</dd>
-			<dt>Overall rigidity</dt>
-			<dd>
-				<div>
-				Use this value to give a negative bias to the seams which are not straight. May be useful
-				to prevent distortions in some situations, or to avoid artifacts from pixel skipping
-				(it is better to use low values in such case). This setting applies to the whole
-				selected layer if no rigidity mask is used.
-				</div>
-				<div>
-				<i>[Technical information: the bias is proportional to the difference in the transversal
-				coordinate between each two successive points, elevated to the power of 1.5, and summed up
-				for the whole seam.]</i>
-				</div>
-			</dd>
-			<dt>Use a rigidity mask</dt>
-			<dd>
-				<div>
-				It is possible to specify different rigidity values for different areas of the image,
-				using an auxiliary layer, by following the same procedure used to specify the feature masks
-				(the default colour for newly created rigidity masks is blue).
-				If a rigidity mask is specified, its value at each pixel (computed in the same way as
-				for the feature masks) will be used as a rigidity coefficient, to be multiplied with the
-				overall one.
-				</div>
-				<div>
-				Note #1: transparent (or black) areas in the rigidity mask always correspond to
-				0 rigidity, no matter what the overall value is.
-				</div>
-				<div>
-				Note #2: rigid areas have a slight repulsive effect on seams, similar to that
-				of a preservation mask. In order to compensate for this, you may use a discard mask.
-				</div>
-			</dd>
-			<dt>Gradient function</dt>
-			<dd>
-				It is possible to choose which function
-				is to be used to calculate the energy map of the image. For each pixel in the image,
-				the x,y components of the gradient are computed from the pixel's four nearest neighbors.
-				The exact form of the energy map depends on the choice of the gradient function, and
-				this in turn determines which elements of the image are more important, and should
-				thus be preserved, and which are not, and can be removed (if shrinking) or inflated
-				(if enlarging). Using the <i>Null</i> function in conjunction with the feature preservation
-				mask can be used to override completely the automatic feature detection, thus
-				allowing the user to generate his own energy map (e.g. by another plugin).
-			</dd>
-			</dl>
-		</dd>
-		<dt><b>Operations control</b></dt>
-		<dd>
-			<dl>
-			<dt>Max enlargement per step</dt>
-			<dd>
-				This option sets the maximum enlargement (in percent) which will be performed in a
-				single rescale step. When the final size is greater than this, the plugin will automatically
-				stop and restart the rescaling as many times as needed. You might need to reduce this
-				value if you have large preservation masks (but then the same areas will be affected
-				over and over by the rescaling).
-			</dd>
-			<dt>Rescale order</dt>
-			<dd>
-				When rescaling in both directions at the same time, it can be chosen whether to resize
-				first in the horizontal and then in the vertical direction, or vice versa.
-			</dd>
-			<dt>Ignore dicard mask when enlarging</dt>
-			<dd>
-				The effect of the discard mask is reversed when the plugin is used for enlarging an image;
-				as this is normally undesirable, they are ignored by default when the
-				first scaling direction is to be enlarged (in such cases, a small warning icon will
-				appear in the <i>"Feature discard mask"</i> section).
-				Unset this option if you want to override this behaviour.
-				Note that this option is ignored in interactive mode.
-			</dd>
-			</dl>
-		</dd>
-		</dl>
+		<img title="Seams control" alt="Seams control" src="../images/dialog3.jpg">
 	</p>
+	<dl>
+	<dt>Max transversal step</dt>
+	<dd>
+		<div>
+		This option lets you choose the maximum transversal step that the pixels in the seams can
+		take. In the standard algorithm, corresponding to the default value step = 1, each pixel
+		in a seam can be shifted by at most one pixel with respect to its neighbors.
+		This implies that the seams can form an angle of at most 45 degrees with respect
+		to their base line.
+		</div>
+		<div>
+		Increasing the step value lets you overcome this limit, but may lead to the
+		introduction of artifacts. In order to balance the situation, you can use
+		the rigidity setting.
+		</div>
+	</dd>
+	<dt>Overall rigidity</dt>
+	<dd>
+		<div>
+		Use this value to give a negative bias to the seams which are not straight. May be useful
+		to prevent distortions in some situations, or to avoid artifacts from pixel skipping
+		(it is better to use low values in such case). This setting applies to the whole
+		selected layer if no rigidity mask is used.
+		</div>
+		<div>
+		<i>[Technical information: the bias is proportional to the difference in the transversal
+		coordinate between each two successive points, elevated to the power of 1.5, and summed up
+		for the whole seam.]</i>
+		</div>
+	</dd>
+	<dt>Use a rigidity mask</dt>
+	<dd>
+		<div>
+		It is possible to specify different rigidity values for different areas of the image,
+		using an auxiliary layer, by following the same procedure used to specify the feature masks
+		(the default colour for newly created rigidity masks is blue).
+		If a rigidity mask is specified, its value at each pixel (computed in the same way as
+		for the feature masks) will be used as a rigidity coefficient, to be multiplied with the
+		overall one.
+		</div>
+		<div>
+		Note #1: transparent (or black) areas in the rigidity mask always correspond to
+		0 rigidity, no matter what the overall value is.
+		</div>
+		<div>
+		Note #2: rigid areas have a slight repulsive effect on seams, similar to that
+		of a preservation mask. In order to compensate for this, you may use a discard mask.
+		</div>
+	</dd>
+	<dt>Gradient function</dt>
+	<dd>
+		It is possible to choose which function
+		is to be used to calculate the energy map of the image. For each pixel in the image,
+		the x,y components of the gradient are computed from the pixel's four nearest neighbors.
+		The exact form of the energy map depends on the choice of the gradient function, and
+		this in turn determines which elements of the image are more important, and should
+		thus be preserved, and which are not, and can be removed (if shrinking) or inflated
+		(if enlarging). Using the <i>Null</i> function in conjunction with the feature preservation
+		mask can be used to override completely the automatic feature detection, thus
+		allowing the user to generate his own energy map (e.g. by another plugin).
+	</dd>
+	</dl>
+	<h4>Operations control</h4>
+	<p>
+		<img title="Operations control" alt="Operations control" src="../images/dialog4.jpg">
+	</p>
+	<dl>
+	<dt>Max enlargement per step</dt>
+	<dd>
+		This option sets the maximum enlargement (in percent) which will be performed in a
+		single rescale step. When the final size is greater than this, the plugin will automatically
+		stop and restart the rescaling as many times as needed. You might need to reduce this
+		value if you have large preservation masks (but then the same areas will be affected
+		over and over by the rescaling).
+	</dd>
+	<dt>Rescale order</dt>
+	<dd>
+		When rescaling in both directions at the same time, it can be chosen whether to resize
+		first in the horizontal and then in the vertical direction, or vice versa.
+	</dd>
+	<dt>Ignore dicard mask when enlarging</dt>
+	<dd>
+		The effect of the discard mask is reversed when the plugin is used for enlarging an image;
+		as this is normally undesirable, they are ignored by default when the
+		first scaling direction is to be enlarged (in such cases, a small warning icon will
+		appear in the <i>"Feature discard mask"</i> section).
+		Unset this option if you want to override this behaviour.
+		Note that this option is ignored in interactive mode.
+	</dd>
+	</dl>
       <h3>Using the plugin for video and animation editing</h3>
       <h4>Using the plugin with GAP</h4>
       <p>
@@ -377,8 +376,12 @@
 		problems if using auxiliary layers as masks, since the plugin will be applied
 		to those as well.
       </p>
-
-      <h2>User interface description (interactive mode)</h2><a name="interactive"></a>
+      
+      <a name="interactive"></a>
+      <h2>User interface description (interactive mode)</h2>
+      <p>
+	      <img title="Interactive interface" alt="Interactive interface" src="../images/dialog_interactive.jpg">
+      </p>
       <p>
 		Pressing the interactive button in the main plugin dialog switches the plugin to interactive mode, and
 		applies the current settings, including the current size settings. In interactive mode only the size
@@ -433,7 +436,19 @@
 		</dl>
       </p>
 
-      <h2>Appendix: The seam carving technique in brief</h2><a name="seam_carving"></a>
+      <a name="batch"></a>
+      <h2>Using the plugin in batch mode</h2>
+      <p>
+              The plugin comes with some convenience scripts which make it easy to operate it the on
+              files from the command line.
+              You can find a description of the scrits arguments by using the <i>"Procedure browser"</i> from
+              the <i>"Help"</i> menu in GIMP and looking for <i>batch-gimp-lqr</i>, <i>batch-gimp-lqr-full</i> and
+              <i>batch-gimp-lqr-full-use-id</i>; the meaning of the options should be obvious from knowing how the
+              standard interface works.
+      </p>
+      
+      <a name="seam_carving"></a>
+      <h2>Appendix: The seam carving technique in brief</h2>
       <p>
 	      The plugin works by finding so-called "seams" over an image, i.e. continuous, zig-zagged lines transversing
 	      the image from top to bottom ("vertical" seams), or from left to right ("horizontal" seams). When one such seam,

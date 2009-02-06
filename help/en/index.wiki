@@ -1,4 +1,4 @@
-
+﻿
 The Liquid Rescale plugin is an implementation of the content-aware resizing by seam carving algorithm by Shai Avidan and Ariel Shamir.
 
 It aims at resizing pictures non uniformly while preserving the features of the picture, i.e. avoiding distortion of the important parts of the picture. It can also be used to remove portions of the picture in a consistent way.
@@ -10,6 +10,8 @@ See also [#seam_carving Appendix: The seam carving technique in brief] at the en
 The plugin works on the active layer or floating selection. It can also operate on multiple layers through the //"Filter all layers"// plugin and using the GIMP Animation Package facilities for video editing.
 
 The plugin only works on whole layers, if a selection is present it is saved to a channel and removed. If the layer has a transparency mask, an option is given to select the behaviour (apply/discard).
+
+The plugin can also be operated in batch mode from the command line, see [#batch this section] for details.
 
 ++ User interface description (non-interactive mode)
 
@@ -62,27 +64,32 @@ Note that this option is only suitable for naïve object removals, and it may fa
 
 This tab has a number of options related to the output of the plugin.
 
-* //**Output on a new layer**.// Specifies if the resized image should be written on a new layer. By default, it is off.
-* //**Resize image canvas**.// Specifies whether the image canvas should be resized to meet the new size of the active layer. By default, it is on.
-* //**Resize auxiliary layers**.// Specifies whether the layers used to manually select the features of the image or to specify a rigidity mask will be resized along with the active layer. If this option is checked, those layers will be first cropped to the active layer's size, then they will undergo the same seam carving and inserting process as the active layer. By default, it is on, but it is only active when some layers are selected in the //"Feature masks"// tab or if a rigidity mask is being used (see below).
-* //**Output the seams on a new layer**.// Specifies whether to create a new layer with the seams map in interactive mode. The two buttons on the right of it let the user choose the seams colour range. The seams are computed on the original layer as far as they are needed for the new size (e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining areas are transparent. In order to read the result, use this option together with //"Output on a new layer"//, and overlay the seams map to the original layer. If you rescale in two directions at once, you will obtain two maps, but the second one will be computed over an invisible intermediate image, so this is not very useful. The same applies in the case you choose to rescale back to the original size with LqR, or when the resizing goes beyond the limit set with //"Max enlargment per step"//. Note that this option is ignored in interactive mode, except for the colours you choose, which are used when dumping the seam maps manually.
-* //**Scale back to the original size**.// Specifies whether to perform a scale back operation after the liquid rescale operation has been performed. This can be useful for example for object removal and content enhancement. If this option is checked, a menu appears below it to let the user choose the details of the operations: it is possible to revert to the opriginal width and height using either liquid rescale or the standard scaling algorithm, or it is possible to perform a uniform scaling with the standard algorithm and reach back only the original width, or only the original height. Note that this option is ignored in interactive mode.
+* //Output on a new layer.// Specifies if the resized image should be written on a new layer. By default, it is off.
+* //Resize image canvas.// Specifies whether the image canvas should be resized to meet the new size of the active layer. By default, it is on.
+* //Resize auxiliary layers.// Specifies whether the layers used to manually select the features of the image or to specify a rigidity mask will be resized along with the active layer. If this option is checked, those layers will be first cropped to the active layer's size, then they will undergo the same seam carving and inserting process as the active layer. By default, it is on, but it is only active when some layers are selected in the //"Feature masks"// tab or if a rigidity mask is being used (see below).
+* //Output the seams on a new layer.// Specifies whether to create a new layer with the seams map in interactive mode. The two buttons on the right of it let the user choose the seams colour range. The seams are computed on the original layer as far as they are needed for the new size (e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining areas are transparent. In order to read the result, use this option together with //"Output on a new layer"//, and overlay the seams map to the original layer. If you rescale in two directions at once, you will obtain two maps, but the second one will be computed over an invisible intermediate image, so this is not very useful. The same applies in the case you choose to rescale back to the original size with LqR, or when the resizing goes beyond the limit set with //"Max enlargment per step"//. Note that this option is ignored in interactive mode, except for the colours you choose, which are used when dumping the seam maps manually.
+* //Scale back to the original size.// Specifies whether to perform a scale back operation after the liquid rescale operation has been performed. This can be useful for example for object removal and content enhancement. If this option is checked, a menu appears below it to let the user choose the details of the operations: it is possible to revert to the opriginal width and height using either liquid rescale or the standard scaling algorithm, or it is possible to perform a uniform scaling with the standard algorithm and reach back only the original width, or only the original height. Note that this option is ignored in interactive mode.
 
 +++ Advanced
 
-[[image dialog3.jpg]]
-
 This tab has some options which can be used to tweak the plugin behavior.
 
-* //**Seams control**.//
- * //Max transversal step.// This option lets you choose the maximum transversal step that the pixels in the seams can take. In the standard algorithm, corresponding to the default value step = 1, each pixel in a seam can be shifted by at most one pixel with respect to its neighbors. This implies that the seams can form an angle of at most 45 degrees with respect to their base line. Increasing the step value lets you overcome this limit, but may lead to the introduction of artifacts. In order to balance the situation, you can use the rigidity setting.
- * //Overall rigidity.// Use this value to give a negative bias to the seams which are not straight. May be useful to prevent distortions in some situations, or to avoid artifacts from pixel skipping (it is better to use low values in such case). This setting applies to the whole selected layer if no rigidity mask is used. //[Technical information: the bias is proportional to the difference in the transversal coordinate between each two successive points, elevated to the power of 1.5, and summed up for the whole seam.]//
- * //Use a rigidity mask.// It is possible to specify different rigidity values for different areas of the image, using an auxiliary layer, by following the same procedure used to specify the feature masks (the default colour for newly created rigidity masks is blue). If a rigidity mask is specified, its value at each pixel (computed in the same way as for the feature masks) will be used as a rigidity coefficient, to be multiplied with the overall one. Note #1: transparent (or black) areas in the rigidity mask always correspond to 0 rigidity, no matter what the overall value is. Note #2: rigid areas have a slight repulsive effect on seams, similar to that of a preservation mask. In order to compensate for this, you may use a discard mask.
- * //Gradient function.// It is possible to choose which function is to be used to calculate the energy map of the image. For each pixel in the image, the x,y components of the gradient are computed from the pixel's four nearest neighbors. The exact form of the energy map depends on the choice of the gradient function, and this in turn determines which elements of the image are more important, and should thus be preserved, and which are not, and can be removed (if shrinking) or inflated (if enlarging). Using the //Null// function in conjunction with the feature preservation mask can be used to override completely the automatic feature detection, thus allowing the user to generate his own energy map (e.g. by another plugin).
-* //**Operations control**.//
- * //Max enlargement per step.// This option sets the maximum enlargement (in percent) which will be performed in a single rescale step. When the final size is greater than this, the plugin will automatically stop and restart the rescaling as many times as needed. You might need to reduce this value if you have large preservation masks (but then the same areas will be affected over and over by the rescaling).
- * //Rescale order.// When rescaling in both directions at the same time, it can be chosen whether to resize first in the horizontal and then in the vertical direction, or vice versa.
- * //Ignore dicard mask when enlarging.// The effect of the discard mask is reversed when the plugin is used for enlarging an image; as this is normally undesirable, they are ignored by default when the first scaling direction is to be enlarged (in such cases, a small warning icon will appear in the //"Feature discard mask"// section). Unset this option if you want to override this behaviour. Note that this option is ignored in interactive mode.
+++++ Seams control
+
+[[image dialog3.jpg]]
+
+* //Max transversal step.// This option lets you choose the maximum transversal step that the pixels in the seams can take. In the standard algorithm, corresponding to the default value step = 1, each pixel in a seam can be shifted by at most one pixel with respect to its neighbors. This implies that the seams can form an angle of at most 45 degrees with respect to their base line. Increasing the step value lets you overcome this limit, but may lead to the introduction of artifacts. In order to balance the situation, you can use the rigidity setting.
+* //Overall rigidity.// Use this value to give a negative bias to the seams which are not straight. May be useful to prevent distortions in some situations, or to avoid artifacts from pixel skipping (it is better to use low values in such case). This setting applies to the whole selected layer if no rigidity mask is used. //[Technical information: the bias is proportional to the difference in the transversal coordinate between each two successive points, elevated to the power of 1.5, and summed up for the whole seam.]//
+* //Use a rigidity mask.// It is possible to specify different rigidity values for different areas of the image, using an auxiliary layer, by following the same procedure used to specify the feature masks (the default colour for newly created rigidity masks is blue). If a rigidity mask is specified, its value at each pixel (computed in the same way as for the feature masks) will be used as a rigidity coefficient, to be multiplied with the overall one. Note #1: transparent (or black) areas in the rigidity mask always correspond to 0 rigidity, no matter what the overall value is. Note #2: rigid areas have a slight repulsive effect on seams, similar to that of a preservation mask. In order to compensate for this, you may use a discard mask.
+* //Gradient function.// It is possible to choose which function is to be used to calculate the energy map of the image. For each pixel in the image, the x,y components of the gradient are computed from the pixel's four nearest neighbors. The exact form of the energy map depends on the choice of the gradient function, and this in turn determines which elements of the image are more important, and should thus be preserved, and which are not, and can be removed (if shrinking) or inflated (if enlarging). Using the //Null// function in conjunction with the feature preservation mask can be used to override completely the automatic feature detection, thus allowing the user to generate his own energy map (e.g. by another plugin).
+
+++++ Operations control
+
+[[image dialog4.jpg]]
+
+* //Max enlargement per step.// This option sets the maximum enlargement (in percent) which will be performed in a single rescale step. When the final size is greater than this, the plugin will automatically stop and restart the rescaling as many times as needed. You might need to reduce this value if you have large preservation masks (but then the same areas will be affected over and over by the rescaling).
+* //Rescale order.// When rescaling in both directions at the same time, it can be chosen whether to resize first in the horizontal and then in the vertical direction, or vice versa.
+* //Ignore dicard mask when enlarging.// The effect of the discard mask is reversed when the plugin is used for enlarging an image; as this is normally undesirable, they are ignored by default when the first scaling direction is to be enlarged (in such cases, a small warning icon will appear in the //"Feature discard mask"// section). Unset this option if you want to override this behaviour. Note that this option is ignored in interactive mode.
 
 +++ Using the plugin for video and animation editing
 
@@ -99,9 +106,11 @@ In the latter case, you will be presented the liquidrescale plugin dialog twice,
 ++++ Applying the plugin to all layers (e.g. for animations)
 
 It is also possible to apply the plugin to all the layers in a given image (for example when editing an animation), using the option //"Filter all layers..."// from the //"Filters"// menu and choosing //"plug-in-lqr"// in the dialog which appears. Operations follow the rules explained in the GAP section; however, you will run into problems if using auxiliary layers as masks, since the plugin will be applied to those as well.
-
-++ User interface description (interactive mode)
 [[# interactive ]]
+++ User interface description (interactive mode)
+
+[[image dialog_interactive.jpg]]
+
 Pressing the interactive button in the main plugin dialog switches the plugin to interactive mode, and applies the current settings, including the current size settings. In interactive mode only the size can be modified (and modifications will be applied immidiately), and some options are ignored:
 * Output the seams (you have to do it manually, see below)
 * Scale back to the original size
@@ -120,8 +129,13 @@ The additional //"Map"// section in the dialog is about the internal seam map wh
 * //Reset button.// Force the map reset. This is like restarting the plugin from the current situation. For example, if you change the size, then press this button, then press the reset button in the size section, you will have the same result as using the //"Scale back to the original size"// option (with the //"liquid rescale"// setting) in non-interactive mode.
 * //Dump seam map button.// This button can be used to view the current seam map. Its effect is the same as that of the //"Output the seams"// option in noninteractive mode, only you need to do it manually, and it prints out one map at a time. The first time you press this button in a session, a new layer will be crated to hold the map, but if you press it again the new map will take the place of the old one. In order to make sense of the result, you have to bring the layer you're working on to its reference size after the dump, and overlay the map on it. This button is only active for RGB images.
 
-++ Appendix: The seam carving technique in brief
+[[# batch ]]
+++ Using the plugin in batch mode
+
+The plugin comes with some convenience scripts which make it easy to operate it the on files from the command line. You can find a description of the scrits arguments by using the //"Procedure browser"// from the //"Help"// menu in GIMP and looking for //batch-gimp-lqr//, //batch-gimp-lqr-full// and //batch-gimp-lqr-full-use-id//; the meaning of the options should be obvious from knowing how the standard interface works.
 [[# seam_carving ]]
+++ Appendix: The seam carving technique in brief
+
 The plugin works by finding so-called "seams" over an image, i.e. continuous, zig-zagged lines transversing the image from top to bottom ("vertical" seams), or from left to right ("horizontal" seams). When one such seam, say a vertical one, is removed from an image (the "carving" operation), the width of the image is reduced by one pixel. Removing horizontal seams reduces the height. Iterating such operations (find a seam and remove it), one can reduce the image size at will. Collecting together all the seams which were carved from an image, in their respective order, constitutes what is called a "seams map".
 
 Mirroring the carving process, by //inserting// additional seams besides the ones which are found by the algorithm, instead of removing them, image enlargement can be obtained, too. The meaning of the seam map is reversed in this case.

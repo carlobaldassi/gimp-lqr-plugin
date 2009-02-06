@@ -18,30 +18,8 @@
 # along with this program; if not, see <http://www.gnu.org.licences/>.
 #
 
-### DECLARATIONS ###
+### FUNCTIONS AND FILTERS ###
 #{{{
-
-# CONSTANTS AND SUBSTITUTION TABLES
-#{{{
-
-MAXLEV=4
-
-DARRAY_DT_B=( '* //' '<<SP>>* //' '<<SP2>>* //' '<<SP3>>* //' '<<SP4>>* //' '<<SP5>>* //' '<<SP6>>* //' '<<SP7>>* //' '<<SP8>>* //' '<<SP9>>* //' )
-DARRAY_DT_E=( './/' './/' './/' './/' './/' './/' './/' './/' './/' )
-
-DARRAY_DD_B=( '' '' '' '' '' '' '' '' '' )
-DARRAY_DD_E=( '<<NL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' )
-
-DARRAY_LI_B=( '* ' '<<SP>>* ' '<<SP2>>* ' '<<SP3>>* ' '<<SP4>>* ' '<<SP5>>* ' '<<SP6>>* ' '<<SP7>>* ' '<<SP8>>* ' '<<SP9>>* ' ) 
-DARRAY_LI_E=( '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' )
-
-DARRAY_DIV_B=( '' '' '' '' '' '' '' '' '' )
-DARRAY_DIV_E=( ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' )
-
-DARRAY_P_B=( '' '' '' '' '' '' '' '' '' )
-DARRAY_P_E=( ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' )
-
-#}}}
 
 # REGEX RELATED FUNCTIONS
 #{{{
@@ -178,10 +156,10 @@ function skipper
 
 #}}}
 
-# SUBSTITUTION FUNCTIONS (FLAT)
+# SUBSTITUTION FILTERS (FLAT)
 #{{{
 
-# grredy remove
+# greedy remove
 function rmtags
 { #{{{
 	sed -r "s@</?$1\>[^>]*>@@g";
@@ -209,7 +187,7 @@ function sublinks
 
 #}}}
 
-# SUBSTITUTION FUNCTIONS (NESTED)
+# SUBSTITUTION FILTERS (WITH NESTING)
 #{{{
 
 # associate a depth to the given tags
@@ -312,7 +290,7 @@ function subindent_alllevels
 
 #}}}
 
-# FORMAT AND CLEANUP FUNCTIONS
+# FORMAT AND CLEANUP FILTERS
 #{{{
 
 # remove unnecessary spaces
@@ -353,15 +331,37 @@ function subspace
 
 #}}}
 
-# CUSTOM FUNCTIONS
+# CUSTOM FILTERS
 #{{{
 
-function custom_hooks
+function custom_filters
 { #{{{
 	sed -r "s@(\[\[image[[:space:]]+)\.\./images/([^]]*\]\])@\1\2@g"
 } #}}}
 
 #}}}
+
+#}}}
+
+### CONSTANTS AND SUBSTITUTION TABLES
+#{{{
+
+MAXLEV=4
+
+DARRAY_DT_B=( '* //' '<<SP>>* //' '<<SP2>>* //' '<<SP3>>* //' '<<SP4>>* //' '<<SP5>>* //' '<<SP6>>* //' '<<SP7>>* //' '<<SP8>>* //' '<<SP9>>* //' )
+DARRAY_DT_E=( './/' './/' './/' './/' './/' './/' './/' './/' './/' )
+
+DARRAY_DD_B=( '' '' '' '' '' '' '' '' '' )
+DARRAY_DD_E=( '<<NL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' '<<WNL>>' )
+
+DARRAY_LI_B=( '* ' '<<SP>>* ' '<<SP2>>* ' '<<SP3>>* ' '<<SP4>>* ' '<<SP5>>* ' '<<SP6>>* ' '<<SP7>>* ' '<<SP8>>* ' '<<SP9>>* ' ) 
+DARRAY_LI_E=( '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' '<<NL>>' )
+
+DARRAY_DIV_B=( '' '' '' '' '' '' '' '' '' )
+DARRAY_DIV_E=( ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' )
+
+DARRAY_P_B=( '' '' '' '' '' '' '' '' '' )
+DARRAY_P_E=( ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' )
 
 #}}}
 
@@ -392,7 +392,7 @@ cat | \
 	subtags "b" '**' '**'							| \
 	subtags "i" '//' '//'							| \
 	subtags "u" '__' '__'							| \
-	indent_alllevels $MAXLEV "dl" "ul"					| \
+	indent_alllevels $MAXLEV "dl" "ul" "ol"					| \
 	subtags_multilevel $MAXLEV "dt" DARRAY_DT_B DARRAY_DT_E			| \
 	subtags_multilevel $MAXLEV "dd" DARRAY_DD_B DARRAY_DD_E			| \
 	subtags_multilevel $MAXLEV "li" DARRAY_LI_B DARRAY_LI_E			| \
@@ -402,10 +402,11 @@ cat | \
 	subtags "p" '<<NL>>' '<<NL>>'						| \
 	subindent_alllevels $MAXLEV "dl" '<<NL>>' ''				| \
 	subindent_alllevels $MAXLEV "ul" '<<NL>>' '<<NL>>'			| \
+	subindent_alllevels $MAXLEV "ol" '<<NL>>' '<<NL>>'			| \
 	rmspace_start								| \
 	rmspace									| \
 	rmweaknewlines								| \
-	custom_hooks								| \
+	custom_filters								| \
 	subspace								| \
 	cat -s
 echo

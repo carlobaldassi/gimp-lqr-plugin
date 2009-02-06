@@ -8,7 +8,7 @@ m4_define([plugin_name], [gimp-lqr-plugin])
 dnl These three define the plug-in version number
 m4_define([plugin_major_version], [0])
 m4_define([plugin_minor_version], [6])
-m4_define([plugin_micro_version], [0])
+m4_define([plugin_micro_version], [0rc])
 
 m4_define([plugin_version],
           [plugin_major_version.plugin_minor_version.plugin_micro_version])
