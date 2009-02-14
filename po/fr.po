@@ -5,13 +5,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Vincent Picavet <vpicavet@gmail.com>, 2007.
-# François Collard <francois.collard@free.fr>, 2008.
+# François Collard <francois.collard@free.fr>, 2008, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-03 05:15+0100\n"
-"PO-Revision-Date: 2008-11-15 00:15+0100\n"
+"POT-Creation-Date: 2009-02-14 14:29+0100\n"
+"PO-Revision-Date: 2009-02-13 15:05+0100\n"
 "Last-Translator: François Collard <francois.collard@free.fr>\n"
 "Language-Team: Français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr "Largeur et hauteur => dernières valeurs utilisées"
 #: ../src/interface.c:426
 msgid ""
 "Switch to interactive mode. Note that the current settings will be applied."
-msgstr ""
+msgstr "Passer en mode interactif. Les réglages actuels seront appliqués."
 
 #. Output settings page
 #: ../src/interface.c:531
@@ -94,7 +94,6 @@ msgid "Output the seams"
 msgstr "Écrire les lignes"
 
 #: ../src/interface.c:604
-#, fuzzy
 msgid ""
 "Creates an extra output layer with the seams, for visual inspection of what "
 "the plugin did. Use it together with \"Output on a new layer\", and resize "
@@ -103,7 +102,8 @@ msgid ""
 msgstr ""
 "Créer une sortie supplémentaire pour les lignes, pour une analyse visuelle "
 "de l'action du plugin. Utiliser cette option avec \"Sortie sur un nouveau "
-"calque\", et le redimensionnement dans une direction à la fois"
+"calque\", et le redimensionnement dans une direction à la fois.\n"
+"Cette option est ignorée en mode interactif"
 
 #: ../src/interface.c:620
 msgid "Last seams colour"
@@ -123,7 +123,7 @@ msgstr "Couleur à utiliser pour les premières lignes"
 
 #: ../src/interface.c:652
 msgid "Scale back to the original size"
-msgstr ""
+msgstr "Réduire à la taille originale"
 
 #: ../src/interface.c:662
 msgid ""
@@ -131,6 +131,9 @@ msgid ""
 "performed.\n"
 "Note that this option is ignored in interactive mode"
 msgstr ""
+"À sélectionner si vous voulez re-transformer le calque après exécution de "
+"LqR.\n"
+"Cette option est ignorée en mode interactif"
 
 #: ../src/interface.c:678
 msgid ""
@@ -138,6 +141,9 @@ msgid ""
 "scaling, or to use standard scaling to reach the previous width or height "
 "while preserving the aspect ratio"
 msgstr ""
+"Vous pouvez choisir de redimensionner à la taille originale avec LqR ou le "
+"redimensionnement standard, ou d'utiliser le redimensionnement standard pour "
+"retrouver largeur et hauteur précédentes en conservant les proportions"
 
 #: ../src/interface.c:687
 msgid "Mode:"
@@ -149,15 +155,15 @@ msgstr "redimensionnement liquide"
 
 #: ../src/interface.c:693
 msgid "standard scaling"
-msgstr ""
+msgstr "redimensionnement standard"
 
 #: ../src/interface.c:694
 msgid "width only (uniform scaling)"
-msgstr ""
+msgstr "largeur seule (redimensionnement uniforme)"
 
 #: ../src/interface.c:695
 msgid "height only (uniform scaling)"
-msgstr ""
+msgstr "hauteur seule (redimensionnement uniforme)"
 
 #. Mask page
 #: ../src/interface.c:731
@@ -235,7 +241,7 @@ msgid ""
 "click on the \"Refresh\" button"
 msgstr ""
 "Peindre le masque sur le nouveau calque, puis revenir à ce dialogue et "
-"cliquer sur le boutn \"Actualiser\"."
+"cliquer sur le bouton \"Actualiser\"."
 
 #: ../src/interface.c:1353
 msgid ""
@@ -243,7 +249,7 @@ msgid ""
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 "Calque à utiliser comme masque pour la conservation d'éléments.\n"
-" Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
+"Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
 #: ../src/interface.c:1384 ../src/interface.c:1621 ../src/interface.c:2072
 msgid "Layer:"
@@ -273,7 +279,7 @@ msgid ""
 msgstr ""
 "Des calques supplémentaires sont nécessaires pour activer la suppression "
 "d'éléments.\n"
-" Vous pouvez en créer un avec le bouton \"Nouveau\" et dessiner dessus, "
+"Vous pouvez en créer un avec le bouton \"Nouveau\" et dessiner dessus, "
 "ensuite pressez le bouton \"Actualiser\".\n"
 "Notez que peindre en noir n'a aucun effet"
 
@@ -305,7 +311,7 @@ msgstr ""
 #: ../src/interface.c:1536
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
-"Créer un nouveau calque transparent prêt à être utiliser comme calque de "
+"Créer un nouveau calque transparent prêt à être utiliser comme masque de "
 "suppression"
 
 #: ../src/interface.c:1588
@@ -314,7 +320,7 @@ msgid ""
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 "Calque à utiliser comme un masque pour la suppression d'élément.\n"
-" Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
+"Utiliser le bouton \"Rafraichir\" pour mettre la liste à jour"
 
 #: ../src/interface.c:1641
 #, c-format
@@ -332,13 +338,12 @@ msgid "Width"
 msgstr "Largeur"
 
 #: ../src/interface.c:1732
-#, fuzzy
 msgid ""
 "Try to set the final width as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
-"Essayer de régler la taille finale au mieux pour enlever les zones "
-"masquées. \n"
+"Essayer de régler la largeur finale au mieux pour enlever les zones "
+"masquées.\n"
 "A utiliser seulement avec des masques simples"
 
 #. Height auto-size button
@@ -347,12 +352,11 @@ msgid "Height"
 msgstr "Hauteur"
 
 #: ../src/interface.c:1756
-#, fuzzy
 msgid ""
 "Try to set the final height as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
-"Essayer de régler la taille finale au mieux pour enlever les zones "
+"Essayer de régler la hauteur finale au mieux pour enlever les zones "
 "masquées. \n"
 "A utiliser seulement avec des masques simples"
 
@@ -433,7 +437,7 @@ msgid ""
 "each pixel"
 msgstr ""
 "Cette option modifie la reconnaissance automatique d'éléments.\n"
-" Il s'agit de la fonction qui sera appliquée aux composants du gradient de "
+"Il s'agit de la fonction qui sera appliquée aux composants du gradient de "
 "chaque pixel"
 
 #: ../src/interface.c:2119
@@ -461,17 +465,19 @@ msgstr "Zéro"
 #. Please keep the <b> and </b> tags in translations
 #: ../src/interface.c:2139
 msgid "<b>Operations control</b>"
-msgstr ""
+msgstr "<b>Contrôle des opérations</b>"
 
 #: ../src/interface.c:2167
 msgid "Max enlargement per step:"
-msgstr ""
+msgstr "Agrandissement maxi par pas :"
 
 #: ../src/interface.c:2170
 msgid ""
 "When enlarging beyond the value set here the rescaling will be performed in "
 "multiple steps."
 msgstr ""
+"Si vous agrandissez au-delà de la valeur spécifiée, redimensionnement en "
+"plusieurs étapes."
 
 #: ../src/interface.c:2185
 msgid "This controls the order of operations if rescaling in both directions"
@@ -493,10 +499,9 @@ msgstr "Vertical d'abord"
 
 #: ../src/interface.c:2211
 msgid "Ignore discard mask when enlarging"
-msgstr "ignorer le masque de suppression en agrandissant"
+msgstr "Ignorer le masque de suppression en agrandissant"
 
 #: ../src/interface.c:2217
-#, fuzzy
 msgid ""
 "This will have the same effect as setting the strenght to 0 in the discard "
 "mask when the first rescale step is an image enlargment (which normally is "
@@ -505,7 +510,8 @@ msgid ""
 msgstr ""
 "Même effet qu'en réglant la force à 0 dans le masque de suppression quand la "
 "première étape est un agrandissement de l'image (c'est en principe le "
-"meilleur choix)"
+"meilleur choix).\n"
+"Cette option est ignorée en mode interactif"
 
 #. New size
 #: ../src/interface_I.c:190
@@ -515,29 +521,29 @@ msgstr "Sélectionner largeur et hauteur"
 #. Please keep the <b> and </b> tags in translations
 #: ../src/interface_I.c:284
 msgid "<b>Map</b>"
-msgstr ""
+msgstr "<b>Carte</b>"
 
 #: ../src/interface_I.c:303
 msgid "Show/hide internal map information"
-msgstr ""
+msgstr "Montrer/cacher info carte interne"
 
 #: ../src/interface_I.c:327
 msgid "Reset the internal map"
-msgstr ""
+msgstr "Remettre à zéro la carte interne"
 
 #: ../src/interface_I.c:350
 msgid "Dump the internal map on a new layer (RGB images only)"
-msgstr ""
+msgstr "Transférer la carte interne sur un nouveau calque (RVB seulement)"
 
 #: ../src/interface_I.c:550
 #, c-format
 msgid "Orientation"
-msgstr ""
+msgstr "Orientation"
 
 #: ../src/interface_I.c:551
 #, c-format
 msgid "Reference size"
-msgstr ""
+msgstr "Taille de référence"
 
 #: ../src/interface_I.c:552
 #, c-format
@@ -552,28 +558,28 @@ msgstr "vertical"
 #: ../src/interface_I.c:554
 #, c-format
 msgid "Range"
-msgstr ""
+msgstr "Intervalle"
 
 #: ../src/interface_I.c:555
 #, c-format
 msgid "Next step at"
-msgstr ""
+msgstr "Ètape suivante à"
 
-#: ../src/main.c:176
+#: ../src/main.c:179
 msgid "scaling which keeps layer features (or removes them)"
 msgstr "Redimensionnement qui conserver les élements du calque (ou les enlève)"
 
-#: ../src/main.c:180
+#: ../src/main.c:183
 msgid "Li_quid rescale..."
 msgstr "Redimensionnement li_quide ..."
 
 #: ../src/main.h:112
 msgid "Error: invalid image"
-msgstr ""
+msgstr "Erreur : image incorrecte"
 
 #: ../src/main.h:123
 msgid "Error: invalid layer"
-msgstr ""
+msgstr "Erreur : calque incorrect"
 
 #: ../src/render.c:42 ../src/render.c:43 ../src/render.c:44 ../src/render.c:45
 #: ../src/render.c:46
@@ -582,11 +588,11 @@ msgstr "Mémoire pleine"
 
 #: ../src/render.c:51
 msgid "Error: number of colour channels changed"
-msgstr ""
+msgstr "Erreur : nombre de canaux de couleurs modifié"
 
 #: ../src/render.c:59
 msgid "Error: image type changed"
-msgstr ""
+msgstr "Erreur : type d'image modifié"
 
 #. The name of the layer with the seams map
 #. (here "%s" represents the selected layer's name)
