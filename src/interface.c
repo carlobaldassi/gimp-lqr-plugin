@@ -1367,7 +1367,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 
   combo =
     gimp_layer_combo_box_new (dialog_layer_constraint_func,
-			      (gpointer *) (&layer_ID));
+			      (gpointer) (&layer_ID));
 
   g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
 
@@ -1602,7 +1602,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 
   combo =
     gimp_layer_combo_box_new (dialog_layer_constraint_func,
-			      (gpointer *) (&layer_ID));
+			      (gpointer) (&layer_ID));
 
   g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
 
@@ -2055,7 +2055,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 
   combo =
     gimp_layer_combo_box_new (dialog_layer_constraint_func,
-			      (gpointer *) (&layer_ID));
+			      (gpointer) (&layer_ID));
 
   g_object_set (combo, "ellipsize", PANGO_ELLIPSIZE_START, NULL);
 
