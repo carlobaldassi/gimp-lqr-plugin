@@ -5,10 +5,10 @@ Version 0.6.0 :
 
 * Interface
   * Added interactive mode
-  * Moved "Mode" to the output tab and renamed
+  * Moved "Mode" to the output tab and renamed it
   * Added 2 new scale-back modes
-  * Fixed non-interactive mode, added scripts
-    for command-line batch processing
+  * Fixed non-interactive mode, added scripts for
+    command-line batch processing
 
 Version 0.5.0 :
  

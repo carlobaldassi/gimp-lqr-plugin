@@ -1,3 +1,7 @@
+2009-02-15 Carlo Baldassi <carlobaldassi@gmail.com>
+	* modified : introduce Windows-specific code
+	  for interactive interface
+
 2009-02-04 Carlo Baldassi <carlobaldassi@gmail.com>
 	* bugfix : fixed non-interactive mode
 	* new : batch script for non-interactive execution
