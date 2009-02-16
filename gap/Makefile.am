@@ -10,7 +10,7 @@ plug_in_lqr_iter_SOURCES = \
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
-	-DDATADIR=\""$(DATADIR)"\"\
+	-DPLUGIN_DATADIR=\""$(PLUGIN_DATADIR)"\"\
 	-I$(top_srcdir)		\
 	@GIMP_CFLAGS@		\
 	-I$(includedir)

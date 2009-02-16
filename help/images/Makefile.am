@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-helpdatadir = $(DATADIR)/help/images
+helpdatadir = $(PLUGIN_DATADIR)/help/images
 
 helpdata_DATA = \
 	wilber.png \

@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-helpdatadir = $(DATADIR)/help/it
+helpdatadir = $(PLUGIN_DATADIR)/help/it
 
 helpdata_DATA = \
 	gimp-help.xml	\

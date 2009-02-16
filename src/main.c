@@ -169,7 +169,7 @@ static void query (void)
 
   gimp_plugin_domain_register (GETTEXT_PACKAGE, LOCALEDIR);
 
-  help_path = g_build_filename (DATADIR, "help", NULL);
+  help_path = g_build_filename (PLUGIN_DATADIR, "help", NULL);
   help_uri = g_filename_to_uri (help_path, NULL, NULL);
   g_free (help_path);
 

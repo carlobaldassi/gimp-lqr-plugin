@@ -28,7 +28,7 @@ gimp_lqr_plugin_SOURCES = \
 
 AM_CPPFLAGS = \
 	-DLOCALEDIR=\""$(LOCALEDIR)"\"		\
-	-DDATADIR=\""$(DATADIR)"\"\
+	-DPLUGIN_DATADIR=\""$(PLUGIN_DATADIR)"\"\
 	-I$(top_srcdir)		\
 	@GIMP_CFLAGS@		\
 	@LQR_CFLAGS@		\

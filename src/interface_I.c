@@ -24,7 +24,12 @@
 #include <math.h>
 #include <string.h>
 #include <signal.h>
+
+#ifdef WIN32
+#include <windows.h>
+#else
 #include <sys/time.h>
+#endif
 
 #include <lqr.h>
 
@@ -63,6 +68,8 @@ static void callback_show_info_button (GtkWidget * button, gpointer data);
 
 //static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
+static void set_signal_handler();
+static void reset_signal_handler();
 static void set_alarm (glong dseconds);
 static void alarm_handler (int signum);
 static void set_info_label_text (InterfaceIData * p_data);
@@ -84,6 +91,10 @@ GtkWidget *dlg;
 GtkTooltips *dlg_tips;
 GtkWidget *coordinates;
 
+#ifndef WIN32
+struct sigaction alarm_action, old_alarm_action;
+#endif
+
 
 /***  Public functions  ***/
 
@@ -94,7 +105,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
         PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
 {
-  struct sigaction alarm_action, old_alarm_action;
   gint orig_width, orig_height;
   GtkWidget *main_hbox;
   GtkWidget *vbox;
@@ -222,10 +232,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 		    G_CALLBACK (callback_size_changed),
 		    (gpointer) & interface_I_data);
 
-  sigaction(SIGALRM, NULL, &old_alarm_action);
-  alarm_action = old_alarm_action;
-  alarm_action.sa_handler = alarm_handler;
-  sigaction(SIGALRM, &alarm_action, NULL);
+  set_signal_handler();
 
   g_signal_connect (ALT_SIZE_ENTRY (coordinates), "coordinates-alarm",
                     G_CALLBACK (callback_alarm_triggered),
@@ -436,7 +443,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   gtk_widget_destroy (dlg);
   
-  sigaction(SIGALRM, &old_alarm_action, NULL);
+  reset_signal_handler();
 
   return dialog_I_response;
 }
@@ -473,6 +480,68 @@ callback_size_changed (GtkWidget * size_entry, gpointer data)
   set_alarm(ALARM_DELAY);
 }
 
+#ifdef WIN32
+
+static void
+set_signal_handler()
+{
+  signal(SIGBREAK, alarm_handler);
+}
+
+static void
+reset_signal_handler()
+{
+  signal(SIGBREAK, SIG_DFL);
+}
+
+//DWORD WINAPI ThreadFunc(void *pParam) // use with CreateThread
+unsigned __stdcall ThreadFunc(void *pParam)
+{
+  int dsec = *((long int*) pParam);
+  int i;
+  for (i = 0; i < dsec; i++) {
+    usleep(100000);
+  }
+  raise (SIGBREAK);
+  return 0;
+}
+
+static void
+set_alarm (long int dseconds)
+{
+  int i;
+  int p;
+
+  unsigned lThreadId;
+  HANDLE hThread;
+
+  //hThread = CreateThread(NULL, 0, ThreadFunc, (void*) &dseconds, 0, &lThreadId);
+  hThread = (HANDLE) _beginthreadex(NULL, 0, ThreadFunc, (void*) &dseconds, 0, &lThreadId);
+ 
+  if (hThread == NULL) {
+    fprintf(stderr, "error creating thread\n"); fflush(stderr);
+    abort();
+  }
+  
+}
+
+#else // def WIN32
+
+static void
+set_signal_handler()
+{
+  sigaction(SIGALRM, NULL, &old_alarm_action);
+  alarm_action = old_alarm_action;
+  alarm_action.sa_handler = alarm_handler;
+  sigaction(SIGALRM, &alarm_action, NULL);
+}
+
+static void
+reset_signal_handler()
+{
+  sigaction(SIGALRM, &old_alarm_action, NULL);
+}
+
 static void
 set_alarm (glong dseconds)
 {
@@ -485,6 +554,8 @@ set_alarm (glong dseconds)
   new.it_value.tv_sec = seconds;
   setitimer (ITIMER_REAL, &new, &old);
 }
+
+#endif // def WIN32
 
 static void
 alarm_handler (int signum)

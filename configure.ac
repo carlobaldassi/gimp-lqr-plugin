@@ -8,7 +8,7 @@ m4_define([plugin_name], [gimp-lqr-plugin])
 dnl These three define the plug-in version number
 m4_define([plugin_major_version], [0])
 m4_define([plugin_minor_version], [6])
-m4_define([plugin_micro_version], [0rc])
+m4_define([plugin_micro_version], [0rc2])
 
 m4_define([plugin_version],
           [plugin_major_version.plugin_minor_version.plugin_micro_version])
@@ -28,7 +28,7 @@ AM_CONFIG_HEADER(config.h)
 
 AM_INIT_AUTOMAKE(no-define)
 
-AC_ISC_POSIX
+dnl AC_ISC_POSIX
 AC_PROG_CC
 AM_PROG_CC_STDC
 AC_HEADER_STDC
@@ -102,8 +102,8 @@ if test "$DATADIRNAME" = "lib"; then
 fi
 AC_SUBST(LOCALEDIR)
 
-DATADIR="${datadir}/plugin_name"
-AC_SUBST(DATADIR)
+PLUGIN_DATADIR="${datadir}/plugin_name"
+AC_SUBST(PLUGIN_DATADIR)
 
 SCRIPTSDIR="${GIMP_DATADIR}/scripts"
 AC_SUBST(SCRIPTSDIR)
@@ -133,7 +133,20 @@ if test "x$have_gimp_2_3" != "xyes"; then
   CPPFLAGS="$CPPFLAGS -DGIMP_DISABLE_DEPRECATED"
 fi
 
-
+AC_MSG_CHECKING([if we are on Win32])
+AC_LANG([C])
+AC_PREPROC_IFELSE([[
+		   #ifndef WIN32
+		   #error
+		   #endif
+		   ]], is_win32=yes, is_win32=no)
+if test "x$is_win32" = "xyes"; then
+  AC_MSG_RESULT([yes])
+  CFLAGS="$CFLAGS -s"
+  LDFLAGS="$LDFLAGS -mwindows"
+else
+  AC_MSG_RESULT([no])
+fi
 
 AC_CONFIG_FILES([
 Makefile
