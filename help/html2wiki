@@ -182,7 +182,7 @@ function subimgs
 function sublinks
 { #{{{
 	sed -r "s@<a href=\"(#[^\"]*)\">(($(anti_both "a"))*)</a>@[\1 \2]@g"	| \
-	sed -r "s@<a name=\"([^\"]*)\">(($(anti_both "a"))*)</a>@[[# \1 \2]]@g"
+	sed -r "s@<a name=\"([^\"]*)\">(($(anti_both "a"))*)</a>@[[# \1]]\2@g"
 } #}}}
 
 #}}}

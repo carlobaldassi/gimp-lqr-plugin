@@ -1,5 +1,4 @@
-﻿
-Il plugin Liquid Rescale è un'implementazione dell'algoritmo "content-aware resizing by seam carving" ideato da Shai Avidan e Ariel Shamir.
+﻿Il plugin Liquid Rescale è un'implementazione dell'algoritmo "content-aware resizing by seam carving" ideato da Shai Avidan e Ariel Shamir.
 
 Il suo scopo è di ridimensionare non uniformemente le immagini pur mantenendo le caratteristiche più salienti dell'immagine, evitando possibilmente di distorcerle. Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale".
 
@@ -106,7 +105,7 @@ In quest'ultimo caso, la finestra di dialogo del liquid rescale plugin vi verrà
 ++++ Applicare il plugin su tutti i livelli (ad es. per le animazioni)
 
 È anche possibile applicare il plugin a tutti i livelli di una data immagine (per esempio quando si lavora su un'animazione), usando l'opzione //"Filtra tutti i livelli..."// dal menu //"Filtri"// e scegliendo //"plug-in-lqr"// nella finestra di dialogo che compare. Le regole usate sono le stesse descritte nella sezione per l'utilizzo di GAP; tuttavia, incontrerete dei problemi in questo caso se usate dei livelli ausiliarî come maschere, poiché il plugin viene applicato anche a questi.
-[[# interactive ]]
+[[# interactive]]
 ++ Descrizione dell'interfaccia utente (modalità interattiva)
 
 [[image dialog_interactive_it.jpg]]
@@ -129,11 +128,11 @@ La sezione addizionale //"Mappa"// nella finestra di dialogo interattiva riguard
 * //Pulsante reset.// Reimposta la mappa manualmente. Questo è equivalente a far ripartire il plugin dalla situazione attuale. Per esempio, se premete questo pulsante dopo aver modificato le dimensioni, e poi premete il pulsante reset nella sezione per le dimensioni, otterrete un risultato equivalente a quello che otterreste usando l'opzione //"Riporta alle dimensioni originali"// (impostata su //"liquid rescale"//) in modalità non-interattiva.
 * //Pulsante visualizza.// Mostra la mappa attualmente in uso. Funziona allo stesso modo dell'opzione //"Mostra le linee d'azione"// della modalità interattiva, solo che si fa manualmente e quindi mostra una sola mappa alla volta. In ogni sessione, la prima volta che si preme questo pulsante viene creato un nuovo livello sul quale la mappa viene visualizzata, mentre le volte successive la nuova mappa viene sostituita alla vecchia. Per leggere il risultato bisogna riportare il livello su cui si sta lavorando alle dimensioni di referimento, e sovrapporvi la mappa. Questo pulsante è utilizzabile solo con immagini di tipo RGB.
 
-[[# batch ]]
+[[# batch]]
 ++ Utilizzo del plugin in modalità batch
 
 Il plugin viene distribuito assieme a degli script che aiutano ad utilizzarlo dalla linea di comando. Per averne una descrizione, utilizzate il //"Navigatore di procedure"// dal menu //"Aiuto"// di GIMP, e cercate //batch-gimp-lqr//, //batch-gimp-lqr-full// e //batch-gimp-lqr-full-use-id//; il significato delle opzioni dovrebbe risultare ovvio, sapendo come funziona l'interfaccia standard.
-[[# seam_carving ]]
+[[# seam_carving]]
 ++ Appendice: La tecnica del //seam carving//
 
 Il funzionamento del plugin si basa sulla ricerca dei cosiddetti "seams", o "linee d'azione" di un'immagine, ovvero delle linee continue che attraversano a zig-zag tutta l'immagine ta sopra a sotto (nel caso di linee d'azione "verticali"), o da sinistra a destra (per le linee d'azione orizzontali). Se una di queste linee d'azione, una di quelle verticali poniamo, viene rimossa dall'immagine (l'operazione che prende il nome di "carving"), la larghezza dell'immagine si riduce di un pixel. Rimuovendo linee d'azione orizzontali si riduce invece l'altezza. Iterando queste operazioni (cioè la ricerca di una linea d'azione e la sua rimozione), l'immagine può essere ridotta a piacimento. L'insieme di tutte le linee d'azione, prese nell'ordine in cui sono state applicate, costituisce una cosiddetta "mappa delle linee d'azione".
