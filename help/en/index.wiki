@@ -1,5 +1,4 @@
-﻿
-The Liquid Rescale plugin is an implementation of the content-aware resizing by seam carving algorithm by Shai Avidan and Ariel Shamir.
+﻿The Liquid Rescale plugin is an implementation of the content-aware resizing by seam carving algorithm by Shai Avidan and Ariel Shamir.
 
 It aims at resizing pictures non uniformly while preserving the features of the picture, i.e. avoiding distortion of the important parts of the picture. It can also be used to remove portions of the picture in a consistent way.
 
@@ -106,7 +105,7 @@ In the latter case, you will be presented the liquidrescale plugin dialog twice,
 ++++ Applying the plugin to all layers (e.g. for animations)
 
 It is also possible to apply the plugin to all the layers in a given image (for example when editing an animation), using the option //"Filter all layers..."// from the //"Filters"// menu and choosing //"plug-in-lqr"// in the dialog which appears. Operations follow the rules explained in the GAP section; however, you will run into problems if using auxiliary layers as masks, since the plugin will be applied to those as well.
-[[# interactive ]]
+[[# interactive]]
 ++ User interface description (interactive mode)
 
 [[image dialog_interactive.jpg]]
@@ -129,11 +128,11 @@ The additional //"Map"// section in the dialog is about the internal seam map wh
 * //Reset button.// Force the map reset. This is like restarting the plugin from the current situation. For example, if you change the size, then press this button, then press the reset button in the size section, you will have the same result as using the //"Scale back to the original size"// option (with the //"liquid rescale"// setting) in non-interactive mode.
 * //Dump seam map button.// This button can be used to view the current seam map. Its effect is the same as that of the //"Output the seams"// option in noninteractive mode, only you need to do it manually, and it prints out one map at a time. The first time you press this button in a session, a new layer will be crated to hold the map, but if you press it again the new map will take the place of the old one. In order to make sense of the result, you have to bring the layer you're working on to its reference size after the dump, and overlay the map on it. This button is only active for RGB images.
 
-[[# batch ]]
+[[# batch]]
 ++ Using the plugin in batch mode
 
 The plugin comes with some convenience scripts which make it easy to operate it the on files from the command line. You can find a description of the scrits arguments by using the //"Procedure browser"// from the //"Help"// menu in GIMP and looking for //batch-gimp-lqr//, //batch-gimp-lqr-full// and //batch-gimp-lqr-full-use-id//; the meaning of the options should be obvious from knowing how the standard interface works.
-[[# seam_carving ]]
+[[# seam_carving]]
 ++ Appendix: The seam carving technique in brief
 
 The plugin works by finding so-called "seams" over an image, i.e. continuous, zig-zagged lines transversing the image from top to bottom ("vertical" seams), or from left to right ("horizontal" seams). When one such seam, say a vertical one, is removed from an image (the "carving" operation), the width of the image is reduced by one pixel. Removing horizontal seams reduces the height. Iterating such operations (find a seam and remove it), one can reduce the image size at will. Collecting together all the seams which were carved from an image, in their respective order, constitutes what is called a "seams map".
