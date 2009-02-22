@@ -298,7 +298,7 @@ write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name,
 
   /* The name of the layer with the seams map */
   /* (here "%s" represents the selected layer's name) */
-  snprintf (name, LQR_MAX_NAME_LENGTH, _("%s seam map"), orig_name);
+  g_snprintf (name, LQR_MAX_NAME_LENGTH, _("%s seam map"), orig_name);
 
 
   data.image_ID = image_ID;

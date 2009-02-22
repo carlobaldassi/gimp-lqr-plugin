@@ -25,12 +25,6 @@
 #include <string.h>
 #include <signal.h>
 
-#ifdef WIN32
-#include <windows.h>
-#else
-#include <sys/time.h>
-#endif
-
 #include <lqr.h>
 
 #include "plugin-intl.h"
@@ -45,13 +39,14 @@
 
 /***  Constants  ***/
 
-#define SCALE_WIDTH         (80)
+//#define SCALE_WIDTH         (80)
 #define SPIN_BUTTON_WIDTH   (75)
-#define MAX_COEFF	  (3000)
-#define MAX_RIGIDITY      (1000)
-#define MAX_DELTA_X         (10)
+//#define MAX_COEFF	  (3000)
+//#define MAX_RIGIDITY      (1000)
+//#define MAX_DELTA_X         (10)
 #define MAX_STRING_SIZE   (2048)
-#define ALARM_DELAY          (4)
+#define SIZE_CHANGE_DELAY  (400)
+#define READER_INTERVAL     (20)
 
 
 /***  Local functions declariations  ***/
@@ -67,11 +62,8 @@ static void callback_dump_button (GtkWidget * button, gpointer data);
 static void callback_show_info_button (GtkWidget * button, gpointer data);
 
 //static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
+static gboolean check_size_changes(gpointer dummy);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
-static void set_signal_handler();
-static void reset_signal_handler();
-static void set_alarm (glong dseconds);
-static void alarm_handler (int signum);
 static void set_info_label_text (InterfaceIData * p_data);
 static void callback_alarm_triggered (GtkWidget * size_entry, gpointer data);
 //static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
@@ -91,10 +83,8 @@ GtkWidget *dlg;
 GtkTooltips *dlg_tips;
 GtkWidget *coordinates;
 
-#ifndef WIN32
-struct sigaction alarm_action, old_alarm_action;
-#endif
-
+gulong size_changed = 0;
+gboolean reader_go = TRUE;
 
 /***  Public functions  ***/
 
@@ -160,6 +150,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   interface_I_data.col_vals = col_vals;
   interface_I_data.vmap_layer_ID = -1;
 
+  reader_go = TRUE;
 
   if (gimp_layer_get_mask (layer_ID) != -1)
     {
@@ -231,8 +222,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   g_signal_connect (ALT_SIZE_ENTRY (coordinates), "refval-changed",
 		    G_CALLBACK (callback_size_changed),
 		    (gpointer) & interface_I_data);
-
-  set_signal_handler();
 
   g_signal_connect (ALT_SIZE_ENTRY (coordinates), "coordinates-alarm",
                     G_CALLBACK (callback_alarm_triggered),
@@ -411,8 +400,12 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   set_info_label_text (&interface_I_data);
 
-  set_alarm (ALARM_DELAY);
-  //callback_alarm_triggered (coordinates, (gpointer) & interface_I_data);
+  //set_alarm (ALARM_DELAY);
+  size_changed = 1;
+
+  /* register size reader */
+
+  g_timeout_add (READER_INTERVAL, check_size_changes, NULL);
 
   /*  Show the main containers  */
 
@@ -443,7 +436,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   gtk_widget_destroy (dlg);
   
-  reset_signal_handler();
+  reader_go = FALSE;
 
   return dialog_I_response;
 }
@@ -477,91 +470,24 @@ callback_dialog_I_response (GtkWidget * dialog, gint response_id, gpointer data)
 static void
 callback_size_changed (GtkWidget * size_entry, gpointer data)
 {
-  set_alarm(ALARM_DELAY);
+  size_changed = 1;
 }
 
-#ifdef WIN32
-
-static void
-set_signal_handler()
+static gboolean
+check_size_changes(gpointer dummy)
 {
-  signal(SIGBREAK, alarm_handler);
-}
-
-static void
-reset_signal_handler()
-{
-  signal(SIGBREAK, SIG_DFL);
-}
-
-//DWORD WINAPI ThreadFunc(void *pParam) // use with CreateThread
-unsigned __stdcall ThreadFunc(void *pParam)
-{
-  int dsec = *((long int*) pParam);
-  int i;
-  for (i = 0; i < dsec; i++) {
-    usleep(100000);
-  }
-  raise (SIGBREAK);
-  return 0;
-}
-
-static void
-set_alarm (long int dseconds)
-{
-  int i;
-  int p;
-
-  unsigned lThreadId;
-  HANDLE hThread;
-
-  //hThread = CreateThread(NULL, 0, ThreadFunc, (void*) &dseconds, 0, &lThreadId);
-  hThread = (HANDLE) _beginthreadex(NULL, 0, ThreadFunc, (void*) &dseconds, 0, &lThreadId);
- 
-  if (hThread == NULL) {
-    fprintf(stderr, "error creating thread\n"); fflush(stderr);
-    abort();
-  }
-  
-}
-
-#else // def WIN32
-
-static void
-set_signal_handler()
-{
-  sigaction(SIGALRM, NULL, &old_alarm_action);
-  alarm_action = old_alarm_action;
-  alarm_action.sa_handler = alarm_handler;
-  sigaction(SIGALRM, &alarm_action, NULL);
-}
-
-static void
-reset_signal_handler()
-{
-  sigaction(SIGALRM, &old_alarm_action, NULL);
-}
-
-static void
-set_alarm (glong dseconds)
-{
-  struct itimerval old, new;
-  long int seconds = (dseconds * 100000) / 1000000;
-  long int useconds = (dseconds * 100000) % 1000000;
-  new.it_interval.tv_usec = 0;
-  new.it_interval.tv_sec = 0;
-  new.it_value.tv_usec = useconds;
-  new.it_value.tv_sec = seconds;
-  setitimer (ITIMER_REAL, &new, &old);
-}
-
-#endif // def WIN32
-
-static void
-alarm_handler (int signum)
-{
-  //printf("ALARM!\n"); fflush(stdout);
-  g_signal_emit_by_name (coordinates, "coordinates-alarm");
+  //printf("."); fflush(stdout);
+  if (size_changed > 0)
+    {
+      size_changed++;
+      if ((size_changed - 1) * READER_INTERVAL > SIZE_CHANGE_DELAY)
+        {
+          //printf("RENDER!\n"); fflush(stdout);
+          g_signal_emit_by_name (coordinates, "coordinates-alarm");
+          size_changed = 0;
+        }
+    }
+  return reader_go;
 }
 
 static void
@@ -603,42 +529,56 @@ static void
 set_info_label_text (InterfaceIData * p_data)
 {
   gchar label_text[MAX_STRING_SIZE];
-  gchar text_refsizes[MAX_STRING_SIZE];
+  gchar text_size_tag_open[MAX_STRING_SIZE];
+  gchar text_size_tag_close[MAX_STRING_SIZE];
+  gchar text_refsize[MAX_STRING_SIZE];
   gchar text_w[MAX_STRING_SIZE];
   gchar text_h[MAX_STRING_SIZE];
   gchar text_orientation[MAX_STRING_SIZE];
   gchar text_range[MAX_STRING_SIZE];
   gchar text_enl_step[MAX_STRING_SIZE];
   gint smin, smax;
+  gint sref;
   gint esmax;
   CarverData * c_data = p_data->carver_data;
 
-  smin = c_data->orientation == 0 ? c_data->ref_w - c_data->depth : c_data->ref_h - c_data->depth;
-  smax = c_data->orientation == 0 ? c_data->ref_w + c_data->depth : c_data->ref_h + c_data->depth;
-  esmax = (gint) ((c_data->orientation ? c_data->ref_h : c_data->ref_w) * c_data->enl_step) - 1;
+  sref = c_data->orientation == 0 ? c_data->ref_w : c_data->ref_h;
+
+  smin = sref - c_data->depth;
+  smax = sref + c_data->depth;
+  esmax = (gint) (c_data->enl_step * sref) - 1;
   esmax = MAX(1, esmax);
 
-  snprintf(text_orientation, MAX_STRING_SIZE, _("Orientation"));
-  snprintf(text_refsizes, MAX_STRING_SIZE, _("Reference size"));
-  snprintf(text_w, MAX_STRING_SIZE, _("horizontal"));
-  snprintf(text_h, MAX_STRING_SIZE, _("vertical"));
-  snprintf(text_range, MAX_STRING_SIZE, _("Range"));
-  snprintf(text_enl_step, MAX_STRING_SIZE, _("Next step at"));
+#ifndef WIN32
+  g_snprintf(text_size_tag_open, MAX_STRING_SIZE, _("<small><small>"));
+  g_snprintf(text_size_tag_close, MAX_STRING_SIZE, _("</small></small>"));
+#else
+  g_snprintf(text_size_tag_open, MAX_STRING_SIZE, _("<small>"));
+  g_snprintf(text_size_tag_close, MAX_STRING_SIZE, _("</small>"));
+#endif
 
-  snprintf(label_text, MAX_STRING_SIZE,
-      "<small>"
-      "<small>"
+  g_snprintf(text_orientation, MAX_STRING_SIZE, _("Orientation"));
+  g_snprintf(text_refsize, MAX_STRING_SIZE, _("Reference size"));
+  g_snprintf(text_w, MAX_STRING_SIZE, _("horizontal"));
+  g_snprintf(text_h, MAX_STRING_SIZE, _("vertical"));
+  g_snprintf(text_range, MAX_STRING_SIZE, _("Range"));
+  g_snprintf(text_enl_step, MAX_STRING_SIZE, _("Next step at"));
+
+  g_snprintf(label_text, MAX_STRING_SIZE,
+      "%s"
       "<b>%s</b>\n  %s\n"
       "<b>%s</b>\n  %i\n"
       "<b>%s</b>\n  %i - %i\n"
       "<b>%s</b>\n  %i"
-      "</small>"
-      "</small>",
+      "%s",
+          text_size_tag_open,
           text_orientation, c_data->orientation ? text_h : text_w,
-          text_refsizes, c_data->orientation ? c_data->ref_h : c_data->ref_w,
+          text_refsize, sref,
           text_range, smin, smax,
-          text_enl_step, esmax);
-  label_text[MAX_STRING_SIZE - 1] = '\0';
+          text_enl_step, esmax,
+          text_size_tag_close
+          );
+  //label_text[MAX_STRING_SIZE - 1] = '\0';
 
   gtk_label_set_markup(GTK_LABEL(p_data->info_label), label_text);
   gtk_widget_set_sensitive (p_data->dump_button, (c_data->depth != 0) && (c_data->base_type == GIMP_RGB));

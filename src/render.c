@@ -145,7 +145,7 @@ render_init_carver (gint32 image_ID,
   SELECTION_SAVE (image_ID);
   UNMASK (layer_ID);
 
-  snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
+  g_snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
             gimp_drawable_get_name (layer_ID));
 
   old_width = gimp_drawable_width (layer_ID);
@@ -168,7 +168,7 @@ render_init_carver (gint32 image_ID,
 
   if (vals->new_layer)
     {
-      snprintf (new_layer_name, LQR_MAX_NAME_LENGTH, "%s LqR", layer_name);
+      g_snprintf (new_layer_name, LQR_MAX_NAME_LENGTH, "%s LqR", layer_name);
       layer_ID = gimp_layer_copy (layer_ID);
       gimp_image_add_layer (image_ID, layer_ID, -1);
       gimp_drawable_set_name (layer_ID, new_layer_name);
@@ -242,6 +242,12 @@ render_init_carver (gint32 image_ID,
   carver_data->alpha_lock_disc = alpha_lock_disc;
   carver_data->alpha_lock_rigmask = alpha_lock_rigmask;
 
+  carver_data->ref_w = old_width;
+  carver_data->ref_h = old_height;
+  carver_data->orientation = 0;
+  carver_data->depth = 0;
+  carver_data->enl_step = vals->enl_step / 100;
+
   return carver_data;
 }
 
@@ -274,8 +280,8 @@ render_noninteractive (gint32 image_ID,
   alpha_lock_disc = carver_data->alpha_lock_disc;
   alpha_lock_rigmask = carver_data->alpha_lock_rigmask;
 
-  snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
-            gimp_drawable_get_name (layer_ID));
+  g_snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
+              gimp_drawable_get_name (layer_ID));
 
   old_width = gimp_drawable_width (layer_ID);
   old_height = gimp_drawable_height (layer_ID);
@@ -476,7 +482,7 @@ render_interactive (gint32 image_ID,
   SELECTION_SAVE (image_ID);
   UNMASK (layer_ID);
 
-  snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
+  g_snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
             gimp_drawable_get_name (layer_ID));
 
   old_width = gimp_drawable_width (layer_ID);
@@ -586,7 +592,7 @@ render_flatten (gint32 image_ID,
   SELECTION_SAVE (image_ID);
   UNMASK (layer_ID);
 
-  snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
+  g_snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
             gimp_drawable_get_name (layer_ID));
 
   old_width = gimp_drawable_width (layer_ID);
@@ -687,7 +693,7 @@ render_dump_vmap (gint32 image_ID,
   SELECTION_SAVE (image_ID);
   UNMASK (layer_ID);
 
-  snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
+  g_snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
             gimp_drawable_get_name (layer_ID));
 
   old_width = gimp_drawable_width (layer_ID);
@@ -702,7 +708,7 @@ render_dump_vmap (gint32 image_ID,
   vmap = lqr_vmap_dump (carver);
   MEM_CHECK (vmap);
 
-  snprintf (vmap_name, LQR_MAX_NAME_LENGTH, _("%s seam map"), layer_name);
+  g_snprintf (vmap_name, LQR_MAX_NAME_LENGTH, _("%s seam map"), layer_name);
 
 #ifdef __CLOCK_IT__
   clock2 = (double) clock () / CLOCKS_PER_SEC;

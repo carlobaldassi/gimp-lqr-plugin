@@ -348,6 +348,7 @@ run (const gchar * name,
 
   if (status == GIMP_PDB_SUCCESS)
     {
+      IMAGE_CHECK (image_ID, );
       AUX_LAYER_STATUS(vals.pres_layer_ID, ui_vals.pres_status);
       AUX_LAYER_STATUS(vals.disc_layer_ID, ui_vals.disc_status);
       AUX_LAYER_STATUS(vals.rigmask_layer_ID, ui_vals.rigmask_status);
@@ -382,6 +383,7 @@ run (const gchar * name,
           gimp_set_data (DATA_KEY_COL_VALS, &col_vals, sizeof (col_vals));
         }
 
+      IMAGE_CHECK (image_ID, );
       gimp_image_undo_group_end (image_ID);
     }
 

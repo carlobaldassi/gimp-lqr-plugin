@@ -1187,8 +1187,8 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   new_pres_layer_data->status = &(ui_state->pres_status);
   /* The name of a newly created layer for preservation */
   /* (here "%s" represents the selected layer's name) */
-  snprintf (new_pres_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s pres mask"),
-	    gimp_drawable_get_name (preview_data.orig_layer_ID));
+  g_snprintf (new_pres_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s pres mask"),
+              gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_pres_layer_data->colour), 0, 1, 0);
   new_pres_layer_data->presdisc = TRUE;
   new_pres_layer_data->info_show = &pres_info_show;
@@ -1198,7 +1198,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   new_disc_layer_data->status = &(ui_state->disc_status);
   /* The name of a newly created layer for discard */
   /* (here "%s" represents the selected layer's name) */
-  snprintf (new_disc_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s disc mask"),
+  g_snprintf (new_disc_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s disc mask"),
 	    gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_disc_layer_data->colour), 1, 0, 0);
   new_disc_layer_data->presdisc = TRUE;
@@ -1225,7 +1225,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_box_pack_start (GTK_BOX (thispage), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
-  snprintf (pres_inactive_tip_string, MAX_STRING_SIZE,
+  g_snprintf (pres_inactive_tip_string, MAX_STRING_SIZE,
 	    _("Extra layers are needed to activate feature preservation.\n"
 	      "You can create one with the \"New\" button and paint on it, "
 	      "then press the \"Refresh\" button.\n"
@@ -1403,7 +1403,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 
   if (features_are_sensitive)
     {
-      snprintf (pres_strength_tip_string_, MAX_STRING_SIZE,
+      g_snprintf (pres_strength_tip_string_, MAX_STRING_SIZE,
 	        _("Overall coefficient for "
 	          "feature preservation intensity"));
       pres_strength_tip_string = pres_strength_tip_string_;
@@ -1456,7 +1456,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_box_pack_start (GTK_BOX (thispage), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
-  snprintf (disc_inactive_tip_string, MAX_STRING_SIZE,
+  g_snprintf (disc_inactive_tip_string, MAX_STRING_SIZE,
 	    _("Extra layers are needed to activate feature discard.\n"
 	      "You can create one with the \"New\" button and paint on it, "
 	      "then press the \"Refresh\" button.\n"
@@ -1637,7 +1637,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 
   if (features_are_sensitive)
     {
-      snprintf (disc_strength_tip_string_, MAX_STRING_SIZE,
+      g_snprintf (disc_strength_tip_string_, MAX_STRING_SIZE,
 	        _("Overall coefficient for "
 	          "feature discard intensity"));
       disc_strength_tip_string = disc_strength_tip_string_;
@@ -1832,7 +1832,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   new_rigmask_layer_data->status = &(ui_state->rigmask_status);
   /* The name of a newly created layer for rigidity mask */
   /* (here "%s" represents the selected layer's name) */
-  snprintf (new_rigmask_layer_data->name, LQR_MAX_NAME_LENGTH,
+  g_snprintf (new_rigmask_layer_data->name, LQR_MAX_NAME_LENGTH,
 	    _("%s rigidity mask"),
 	    gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_rigmask_layer_data->colour), 0, 0, 1);
@@ -1875,7 +1875,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_box_pack_start (GTK_BOX (thispage), seams_control_expander, FALSE, FALSE, 0);
   gtk_widget_show (seams_control_expander);
 
-  snprintf (rigmask_inactive_tip_string, MAX_STRING_SIZE,
+  g_snprintf (rigmask_inactive_tip_string, MAX_STRING_SIZE,
 	    _("Extra layers are needed to be used as rigidity masks.\n"
 	      "You can create one with the \"New\" button and paint on it, "
 	      "then press the \"Refresh\" button.\n"
