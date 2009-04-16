@@ -118,7 +118,7 @@
 	  <p>
 		<b>Nota #2:</b> la preservazione dei contenuti non è possibile se si cerca di ingrandire
 		troppo l'immagine, poiché il processo di allargamento è l'inverso del processo di
-		restringimento, quindi la massima quantità di pixel che è possibile aggiungere a un layer
+		restringimento, quindi la massima quantità di pixel che è possibile aggiungere a un livello
 		corrisponde al numero di pixel che non sono protetti.
 		Per esempio, se avete un'immagine larga 1000 pixel e averte contrassegnato una porzione
 		da preservare larga 800 pixel, la larghezza finale dovrebbe essere inferiore ai 1200
@@ -129,12 +129,12 @@
 	  <h4>Descrizione completa</h4>
 	  <p>
 	  <div>
-		Nella sezione <b>Selezione del contenuto da preservare</b>
+		Nella sezione <b>"Maschera per i contenuti da preservare"</b>
 		è possibile specificare se ci sono regioni dell'immagine che dovrebbero
 		essere preservate dalle modifiche, attivando l'opzione
-		<i>Attiva la preservazione dei contenuti</i> e scegliendo
+		<i>"Attiva la preservazione dei contenuti"</i> e scegliendo
 		un livello tra quelli che appartengono all'imaggine attuale (e sono diversi
-		dal livello attivo) nel menu <i>Livelli disponibili</i>.
+		dal livello attivo) nel menu <i>"Livelli disponibili"</i>.
 		Il pulsante <i>"Nuovo"</i> crea un nuovo livello trasparente
 		con opacità 50% e un nome appropriato, e lo imposta
 		come maschera da utilizzare per la preservazione dei contenuti
@@ -146,26 +146,26 @@
 	  </div>
 	  <div>
 		L'intensità dell'effetto su ogni pixel si ricava dalla media dei valori
-		del pixel in ogni canale del colore, moltiplicato per il canale alpha.
-		Quindi per un livello RGB con un canale alpha, il valore massimo si otterrà
-		con i pixel binachi, mentre quelli neri e quelli trasparenti
+		del pixel in ogni canale del colore, moltiplicato per il valore di opacità
+		(canale alpha). Quindi, per un livello RGB con un canale alpha, il valore massimo
+		si otterrà con i pixel binachi, mentre quelli neri e quelli trasparenti
 		sono ignorati. In generale, è consigliabile lavorare con un solo colore per
 		maschera, e, se necessario, regolare l'intensità nelle diverse aree cambiando
 		il valore della trasparenza piuttosto che agire sulla luminosità o sulla
 		saturazione.
 	  </div>
 	  <div>
-		Le dimensioni e la posizione dei layer selezionati può essere arbitraria,
+		Le dimensioni e la posizione dei livelli selezionati può essere arbitraria,
 		il plugin utilizza solo le porzioni che si sovrappongono al livello attivo.
 		La scala <i>"Intensità"</i> può essere utilizzata come parametro globale
 		per modulare la preservazione dei contenuti.
-		Nota selezioni più sottili (nel verso del ridimensionamento) hanno bisogno
+		Nota: selezioni più sottili (nel verso del ridimensionamento) hanno bisogno
 		di valori di intensità più alti, e viceversa.
 	  </div>
 	  </p>
 	  <p>
 		<div>
-			La sezione <b>Selezione dei contenuti da eliminare</b> è identica alla precedente,
+			La sezione <b>"Maschera per i contenuti da eliminare"</b> è identica alla precedente,
 			ma l'effetto è invertito, e il colore impostato dal pulsante <i>"Nuovo"</i>
 			è il rosso anziché il verde.
 		</div>
@@ -219,7 +219,7 @@
 			  assieme al livello attivo. Se quest'opzione è attivata (è il default), le parti
 			  dei livelli in questione che escono dal livello attivo verranno tagliate, dopodichè
 			  i livelli ausiliarî subiranno lo stesso processo di eliminazione/inserimento di
-			  linee del layer attivo.
+			  linee del livello attivo.
 		  </dd>
 		  <dt>Mostra le linee d'azione</dt>
 		  <dd>
@@ -393,7 +393,7 @@
 		  la rigidità ecc.), e valori intermedî di questi verranno usati per i frames intermedî
 		  (per esempio, impostando a 100% la larghezza nel primo frame e 110% nell'ultimo, e
 		  supponendo che i frames in tutto siano 11, i frames intermedî avranno larghezza
-		  101%, 102%, 103% e così via..
+		  101%, 102%, 103% e così via).
 		  Tutte le opzioni non graduali, invece, come l'ordine di ridimensionamento, il
 		  nome dei livelli ausiliarî ecc., vengono prese dell'<u>ultima</u> finestra di dialogo
 		  per i livelli intermedî.
@@ -494,7 +494,7 @@
 		d'azione "verticali"), o da sinistra a destra (per le linee d'azione orizzontali). Se una di queste linee
 		d'azione, una di quelle verticali poniamo, viene rimossa dall'immagine (l'operazione che prende il nome di
 		"carving"), la larghezza dell'immagine si riduce di un pixel. Rimuovendo linee d'azione orizzontali si riduce
-		invece l'altezza. Iterando queste operazioni (cioè la ricerca di una linea d'azione e la sua rimozione),
+		invece l'altezza. Reiterando queste operazioni (cioè la ricerca di una linea d'azione e la sua rimozione),
 		l'immagine può essere ridotta a piacimento. L'insieme di tutte le linee d'azione, prese nell'ordine in cui
 		sono state applicate, costituisce una cosiddetta "mappa delle linee d'azione".
 	</p>
@@ -504,7 +504,7 @@
 		delle linee d'azione è invertito.
 	</p>
 	<p>
-		Per opter ottenere buoni risultati con questa tecnica, la questione principale è di scegliere come individuare
+		Per poter ottenere buoni risultati con questa tecnica, il problema principale è di scegliere come individuare
 		le linee d'azione più adatte per l'inserimento o la rimozione. Se lo scopo del ridimensionmento è semplicemente
 		quello di modificare le proporzioni di un'immagine senza alterarne troppo i contenuti, per esempio, allora
 		le linee d'azione "buone" saranno quelle che non attraversano parti importanti dell'immagine, passando piuttosto
@@ -512,7 +512,7 @@
 	</p>
 	<p>
 		Per default, il plugin cerca di trovare le linee che attraversano le aree a minore contrasto (la specificazione
-		esatta di questo puno avviene tramite la scelta della funzione gradiente nella tab <i>"Avanzate"</i>).
+		esatta di come viene calcolato il contrasto avviene tramite la scelta della funzione gradiente nella tab <i>"Avanzate"</i>).
 		Perciò, ad ogni pixel dell'immagine viene associato un cosiddetto "valore energetico": più è elevato il
 		contrasto, più è alta l'energia, e le linee d'azione tendono ad evitare le aree con alta energia.
 	</p>
