@@ -1473,7 +1473,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 
   pres_toggle_data.status = &(ui_state->pres_status);
 
-  g_signal_connect (pres_button, "toggled",
+  g_signal_connect (G_OBJECT (pres_button), "toggled",
 		    G_CALLBACK (callback_combo_set_sensitive),
 		    (gpointer) (&pres_toggle_data));
 

@@ -21,14 +21,20 @@
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 
+#include "plugin-intl.h"
 #include "main.h"
 #include "preview.h"
 
+extern GtkWidget * dlg;
 
 void
 callback_pres_combo_set_sensitive_preview (GtkWidget * button, gpointer data)
 {
   PreviewData *p_data = PREVIEW_DATA (data);
+
+  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
+  LAYER_CHECK_ACTION(p_data->vals->pres_layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), );
+
   if (p_data->pres_combo_awaked == FALSE)
     {
       g_signal_emit_by_name (G_OBJECT (p_data->pres_combo), "changed");
@@ -42,6 +48,10 @@ void
 callback_disc_combo_set_sensitive_preview (GtkWidget * button, gpointer data)
 {
   PreviewData *p_data = PREVIEW_DATA (data);
+
+  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
+  LAYER_CHECK_ACTION(p_data->vals->disc_layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), );
+
   if (p_data->disc_combo_awaked == FALSE)
     {
       g_signal_emit_by_name (G_OBJECT (p_data->disc_combo), "changed");
@@ -56,6 +66,10 @@ callback_rigmask_combo_set_sensitive_preview (GtkWidget * button,
 					      gpointer data)
 {
   PreviewData *p_data = PREVIEW_DATA (data);
+
+  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
+  LAYER_CHECK_ACTION(p_data->vals->rigmask_layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), );
+
   if (p_data->rigmask_combo_awaked == FALSE)
     {
       g_signal_emit_by_name (G_OBJECT (p_data->rigmask_combo), "changed");

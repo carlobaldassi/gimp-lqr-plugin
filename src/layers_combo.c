@@ -245,10 +245,10 @@ callback_edit_mask_button (GtkWidget * button, gpointer data)
   GimpRGB grey;
 
   IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
-  LAYER_CHECK_ACTION(layer_ID, , );  // TODO : unset layer
+  LAYER_CHECK_ACTION(layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), );
   if (*(nl_data->status) != TRUE)
     {
-      //TODO : what!
+      g_message (_("You just found a bug!"));
       return;
     }
 
