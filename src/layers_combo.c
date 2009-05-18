@@ -161,6 +161,10 @@ callback_combo_set_sensitive (GtkWidget * button, gpointer data)
     {
       gtk_widget_set_sensitive (t_data->guess_button_ver, button_status);
     }
+  if (t_data->edit_button)
+    {
+      gtk_widget_set_sensitive (t_data->edit_button, button_status);
+    }
   *(t_data->status) = button_status;
 }
 
@@ -210,6 +214,60 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   gimp_image_undo_group_end (p_data->image_ID);
   *(nl_data->layer_ID) = layer_ID;
   *(nl_data->status) = TRUE;
+  context_calls++;
+  gimp_context_set_foreground (fg_colour);
+
+  pres_info_show = FALSE;
+  disc_info_show = FALSE;
+  rigmask_info_show = FALSE;
+
+  *(nl_data->info_show) = TRUE;
+
+  if (nl_data->presdisc == TRUE)
+    {
+      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FEAT_REFRESH);
+    }
+  else
+    {
+      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_ADV_REFRESH);
+    }
+
+  *(nl_data->info_show) = FALSE;
+}
+
+void
+callback_edit_mask_button (GtkWidget * button, gpointer data)
+{
+  NewLayerData *nl_data = NEW_LAYER_DATA (data);
+  PreviewData *p_data = nl_data->preview_data;
+  gint32 layer_ID = *(nl_data->layer_ID);
+  GimpRGB *fg_colour;
+  GimpRGB grey;
+
+  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
+  LAYER_CHECK_ACTION(layer_ID, , );  // TODO : unset layer
+  if (*(nl_data->status) != TRUE)
+    {
+      //TODO : what!
+      return;
+    }
+
+  switch (gimp_image_base_type (p_data->image_ID))
+    {
+      case GIMP_RGB:
+        fg_colour = &(nl_data->colour);
+        break;
+      case GIMP_GRAY:
+        gimp_rgb_set(&grey, 1.0 / 3, 1.0 / 3, 1.0 / 3);
+        fg_colour = &grey;
+        break;
+      default:
+        return;
+    }
+
+  gimp_image_undo_group_start (p_data->image_ID);
+  gimp_image_set_active_layer(p_data->image_ID, layer_ID);
+  gimp_image_undo_group_end (p_data->image_ID);
   context_calls++;
   gimp_context_set_foreground (fg_colour);
 

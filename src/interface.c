@@ -1158,13 +1158,18 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   //GtkWidget *new_hbox;
   GtkWidget *new_icon;
   //GtkWidget *new_label;
+  //GtkWidget *edit_hbox;
+  GtkWidget *edit_icon;
+  //GtkWidget *edit_label;
   GtkWidget *pres_button;
   GtkWidget *pres_new_button;
+  GtkWidget *pres_edit_button;
   GtkWidget *pres_info_image;
   GtkWidget *disc_vbox;
   GtkWidget *disc_vbox2;
   GtkWidget *disc_button;
   GtkWidget *disc_new_button;
+  GtkWidget *disc_edit_button;
   GtkWidget *disc_info_image;
   GtkWidget *disc_warning_image;
   GtkWidget *guess_label;
@@ -1300,6 +1305,27 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			     "ready to be used as a preservation mask"),
 			   NULL);
 
+  //pres_edit_button = gtk_button_new_with_label (_("Edit"));
+  pres_edit_button = gtk_button_new ();
+  gtk_box_pack_end (GTK_BOX (hbox), pres_edit_button, FALSE, FALSE, 0);
+  gtk_widget_show (pres_edit_button);
+
+  //edit_hbox = gtk_hbox_new (FALSE, 4);
+  //gtk_container_add (GTK_CONTAINER(pres_edit_button), edit_hbox);
+  //gtk_widget_show (edit_hbox);
+
+  edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER(pres_edit_button), edit_icon);
+  //gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
+  gtk_widget_show (edit_icon);
+  //edit_label = gtk_label_new (_("Edit"));
+  //gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
+  //gtk_widget_show (edit_label);
+
+  gimp_help_set_help_data (pres_edit_button,
+			   _("Edit the currently selected preservation layer"),
+			   NULL);
+
   if (pres_info_show == TRUE)
     {
       pres_info_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
@@ -1317,6 +1343,11 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   g_signal_connect (pres_new_button, "clicked",
 		    G_CALLBACK
 		    (callback_new_mask_button),
+		    (gpointer) (new_pres_layer_data));
+
+  g_signal_connect (pres_edit_button, "clicked",
+		    G_CALLBACK
+		    (callback_edit_mask_button),
 		    (gpointer) (new_pres_layer_data));
 
 
@@ -1388,8 +1419,13 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 
   gtk_widget_set_sensitive (combo, ui_state->pres_status
 			    && features_are_sensitive);
+
+  gtk_widget_set_sensitive (pres_edit_button, ui_state->pres_status
+			    && features_are_sensitive);
+
   pres_toggle_data.combo = combo;
   pres_toggle_data.combo_label = label;
+  pres_toggle_data.edit_button = pres_edit_button;
   preview_data.pres_combo = combo;
 
   gtk_widget_show (combo);
@@ -1536,6 +1572,27 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Creates a new transparent layer "
 			     "ready to be used as a discard mask"), NULL);
 
+  //disc_edit_button = gtk_button_new_with_label (_("Edit"));
+  disc_edit_button = gtk_button_new ();
+  gtk_box_pack_end (GTK_BOX (hbox), disc_edit_button, FALSE, FALSE, 0);
+  gtk_widget_show (disc_edit_button);
+
+  //edit_hbox = gtk_hbox_new (FALSE, 4);
+  //gtk_container_add (GTK_CONTAINER(disc_edit_button), edit_hbox);
+  //gtk_widget_show (edit_hbox);
+
+  edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER(disc_edit_button), edit_icon);
+  //gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
+  gtk_widget_show (edit_icon);
+  //edit_label = gtk_label_new (_("Edit"));
+  //gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
+  //gtk_widget_show (edit_label);
+
+  gimp_help_set_help_data (disc_edit_button,
+			   _("Edit the currently selected discard layer"),
+			   NULL);
+
   if (disc_info_show == TRUE)
     {
       disc_info_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
@@ -1552,6 +1609,11 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   g_signal_connect (disc_new_button, "clicked",
 		    G_CALLBACK
 		    (callback_new_mask_button),
+		    (gpointer) (new_disc_layer_data));
+
+  g_signal_connect (disc_edit_button, "clicked",
+		    G_CALLBACK
+		    (callback_edit_mask_button),
 		    (gpointer) (new_disc_layer_data));
 
 
@@ -1615,18 +1677,25 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (combo), old_layer_ID);
 
-  gtk_widget_set_sensitive (combo, ui_state->disc_status
-			    && features_are_sensitive);
   label = gimp_table_attach_aligned (GTK_TABLE (table), 0, row++,
 				     _("Layer:"), 0.0, 0.5, combo, 1, FALSE);
 
-  disc_toggle_data.combo = combo;
-  disc_toggle_data.combo_label = label;
-  preview_data.disc_combo = combo;
 
+  gtk_widget_set_sensitive (combo, ui_state->disc_status
+			    && features_are_sensitive);
 
   gtk_widget_set_sensitive (label, ui_state->disc_status
 			    && features_are_sensitive);
+
+  gtk_widget_set_sensitive (disc_edit_button, ui_state->disc_status
+			    && features_are_sensitive);
+
+  disc_toggle_data.combo = combo;
+  disc_toggle_data.combo_label = label;
+  disc_toggle_data.edit_button = disc_edit_button;
+  preview_data.disc_combo = combo;
+
+  gtk_widget_show (combo);
 
   table = gtk_table_new (1, 2, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
@@ -1757,29 +1826,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
                                 "Only use with simple masks"), NULL);
     }
 
-  /*
-  guess_dir_combo =
-    gimp_int_combo_box_new (_("horizontal"), 0, _("vertical"), 1, NULL);
-  gtk_box_pack_end (GTK_BOX (hbox), guess_dir_combo, TRUE, TRUE, 0);
-  gtk_widget_show (guess_dir_combo);
-
-  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (guess_dir_combo),
-				 ui_state->guess_direction);
-
-  disc_toggle_data.guess_dir_combo = guess_dir_combo;
-
-  gimp_help_set_help_data (guess_dir_combo,
-			   _("Resizing direction for auto size"), NULL);
-
-  gtk_widget_set_sensitive (guess_dir_combo,
-			    (ui_state->disc_status
-			     && features_are_sensitive));
-
-  g_signal_connect (guess_dir_combo, "changed",
-		    G_CALLBACK (callback_guess_direction),
-		    (gpointer) & preview_data);
-		    */
-
   g_signal_connect (guess_button_ver, "clicked",
 		    G_CALLBACK (callback_guess_button_ver),
 		    (gpointer) & preview_data);
@@ -1809,8 +1855,10 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *rigmask_vbox2;
   GtkWidget *hbox;
   GtkWidget *new_icon;
+  GtkWidget *edit_icon;
   GtkWidget *rigmask_button;
   GtkWidget *rigmask_new_button;
+  GtkWidget *rigmask_edit_button;
   GtkWidget *rigmask_info_image;
   GtkWidget *operations_vbox;
   GtkWidget *no_disc_on_enlarge_button;
@@ -1989,6 +2037,27 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Creates a new transparent layer "
 			     "ready to be used as a rigidity mask"), NULL);
 
+  //rigmask_edit_button = gtk_button_new_with_label (_("Edit"));
+  rigmask_edit_button = gtk_button_new ();
+  gtk_box_pack_end (GTK_BOX (hbox), rigmask_edit_button, FALSE, FALSE, 0);
+  gtk_widget_show (rigmask_edit_button);
+
+  //edit_hbox = gtk_hbox_new (FALSE, 4);
+  //gtk_container_add (GTK_CONTAINER(rigmask_edit_button), edit_hbox);
+  //gtk_widget_show (edit_hbox);
+
+  edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
+  gtk_container_add (GTK_CONTAINER(rigmask_edit_button), edit_icon);
+  //gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
+  gtk_widget_show (edit_icon);
+  //edit_label = gtk_label_new (_("Edit"));
+  //gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
+  //gtk_widget_show (edit_label);
+
+  gimp_help_set_help_data (rigmask_edit_button,
+			   _("Edit the currently selected rigidity mask layer"),
+			   NULL);
+
   if (rigmask_info_show == TRUE)
     {
       rigmask_info_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
@@ -2005,6 +2074,11 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   g_signal_connect (rigmask_new_button, "clicked",
 		    G_CALLBACK
 		    (callback_new_mask_button),
+		    (gpointer) (new_rigmask_layer_data));
+
+  g_signal_connect (rigmask_edit_button, "clicked",
+		    G_CALLBACK
+		    (callback_edit_mask_button),
 		    (gpointer) (new_rigmask_layer_data));
 
 
@@ -2076,8 +2150,13 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 
   gtk_widget_set_sensitive (combo, ui_state->rigmask_status
 			    && features_are_sensitive);
+
+  gtk_widget_set_sensitive (rigmask_edit_button, ui_state->rigmask_status
+			    && features_are_sensitive);
+
   rigmask_toggle_data.combo = combo;
   rigmask_toggle_data.combo_label = label;
+  rigmask_toggle_data.edit_button = rigmask_edit_button;
   preview_data.rigmask_combo = combo;
 
   gtk_widget_show (combo);
@@ -2088,11 +2167,11 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   rigmask_toggle_data.guess_label = NULL;
   rigmask_toggle_data.guess_button_hor = NULL;
   rigmask_toggle_data.guess_button_ver = NULL;
-  //rigmask_toggle_data.guess_dir_combo = NULL;
 
   g_signal_connect (G_OBJECT (rigmask_button), "toggled",
 		    G_CALLBACK (callback_combo_set_sensitive),
 		    (gpointer) (&rigmask_toggle_data));
+
   g_signal_connect (G_OBJECT (rigmask_button), "toggled",
 		    G_CALLBACK (callback_rigmask_combo_set_sensitive_preview),
 		    (gpointer) (&preview_data));

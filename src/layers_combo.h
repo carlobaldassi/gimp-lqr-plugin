@@ -38,6 +38,7 @@ typedef struct
   GtkWidget *guess_label;
   GtkWidget *guess_button_hor;
   GtkWidget *guess_button_ver;
+  GtkWidget *edit_button;
   //GtkWidget *guess_dir_combo;
 } ToggleData;
 
@@ -74,6 +75,7 @@ void callback_rigmask_combo_get_active (GtkWidget * combo,
 void callback_combo_set_sensitive (GtkWidget * button, gpointer data);
 void callback_status_button (GtkWidget * button, gpointer data);
 void callback_new_mask_button (GtkWidget * button, gpointer data);
+void callback_edit_mask_button (GtkWidget * button, gpointer data);
 
 void callback_guess_button_hor (GtkWidget * button, gpointer data);
 void callback_guess_button_ver (GtkWidget * button, gpointer data);
