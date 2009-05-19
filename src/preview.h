@@ -58,6 +58,10 @@ typedef struct
   gboolean rigmask_combo_awaked;
   GtkWidget *coordinates;
   GtkWidget *disc_warning_image;
+  GtkWidget *pres_use_image;
+  GtkWidget *disc_use_image;
+  GtkWidget *rigmask_use_image;
+
 } PreviewData;
 
 #define PREVIEW_DATA(data) ((PreviewData*)data)

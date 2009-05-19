@@ -1,3 +1,11 @@
+2009-05-19 Carlo Baldassi <carlobaldassi@gmail.com>
+	* new: info icons for aux layers
+	* modified: new liblqr energy functions instead
+	  of old gradients
+
+2009-05-18 Carlo Baldassi <carlobaldassi@gmail.com>
+	* new: edit buttons for aux layers
+
 2009-02-15 Carlo Baldassi <carlobaldassi@gmail.com>
 	* modified : introduce Windows-specific code
 	  for interactive interface

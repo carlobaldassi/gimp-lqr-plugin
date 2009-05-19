@@ -130,6 +130,9 @@ dialog (gint32 image_ID,
   GtkWidget *notebook;
   gfloat wfactor, hfactor;
   GtkWidget *preview_area;
+  GtkWidget *pres_use_image;
+  GtkWidget *disc_use_image;
+  GtkWidget *rigmask_use_image;
   GtkWidget *coordinates;
   GtkWidget *resetvalues_event_box;
   GtkWidget *resetvalues_button;
@@ -265,6 +268,11 @@ dialog (gint32 image_ID,
   gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
+  gtk_container_add (GTK_CONTAINER (frame), hbox);
+  gtk_widget_show (hbox);
+
   /* Preview */
 
   preview_data.image_ID = image_ID;
@@ -309,13 +317,44 @@ dialog (gint32 image_ID,
   gtk_widget_set_size_request (preview_area, PREVIEW_MAX_WIDTH,
 			       PREVIEW_MAX_HEIGHT);
 
+  //gtk_container_add (GTK_CONTAINER (frame), preview_area);
+  gtk_box_pack_end (GTK_BOX (hbox), preview_area, FALSE, FALSE, 0);
+
+  gtk_widget_show (preview_area);
+
+  vbox2 = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox2), 4);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox2, TRUE, FALSE, 0);
+  gtk_widget_show (vbox2);
+
+  pres_use_image = gtk_image_new_from_stock (GIMP_STOCK_CHANNEL_GREEN,
+						  GTK_ICON_SIZE_MENU);
+
+  gtk_box_pack_start (GTK_BOX (vbox2), pres_use_image, FALSE, FALSE, 0);
+
+  gtk_widget_show (pres_use_image);
+
+  disc_use_image = gtk_image_new_from_stock (GIMP_STOCK_CHANNEL_RED,
+						  GTK_ICON_SIZE_MENU);
+
+  gtk_box_pack_start (GTK_BOX (vbox2), disc_use_image, FALSE, FALSE, 0);
+
+  gtk_widget_show (disc_use_image);
+
+  rigmask_use_image = gtk_image_new_from_stock (GIMP_STOCK_CHANNEL_BLUE,
+						  GTK_ICON_SIZE_MENU);
+
+  gtk_widget_show (rigmask_use_image);
+
+  gtk_box_pack_start (GTK_BOX (vbox2), rigmask_use_image, FALSE, FALSE, 0);
+
+  preview_data.pres_use_image = pres_use_image;
+  preview_data.disc_use_image = disc_use_image;
+  preview_data.rigmask_use_image = rigmask_use_image;
+
   g_signal_connect (G_OBJECT (preview_area), "expose_event",
 		    G_CALLBACK (callback_preview_expose_event),
 		    (gpointer) (&preview_data));
-
-  gtk_container_add (GTK_CONTAINER (frame), preview_area);
-
-  gtk_widget_show (preview_area);
 
 
   /*  New size  */
