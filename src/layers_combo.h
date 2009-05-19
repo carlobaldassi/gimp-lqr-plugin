@@ -51,7 +51,8 @@ typedef struct
   gchar name[LQR_MAX_NAME_LENGTH];
   GimpRGB colour;
   gboolean presdisc;
-  gboolean *info_show;
+  gboolean *info_new_show;
+  gboolean *info_edit_show;
   PreviewData *preview_data;
 } NewLayerData;
 

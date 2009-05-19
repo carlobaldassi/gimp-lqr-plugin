@@ -96,9 +96,12 @@ ToggleData disc_toggle_data;
 ToggleData rigmask_toggle_data;
 GtkWidget *nrg_func_combo_box;
 GtkWidget *res_order_combo_box;
-gboolean pres_info_show = FALSE;
-gboolean disc_info_show = FALSE;
-gboolean rigmask_info_show = FALSE;
+gboolean pres_info_new_show = FALSE;
+gboolean disc_info_new_show = FALSE;
+gboolean rigmask_info_new_show = FALSE;
+gboolean pres_info_edit_show = FALSE;
+gboolean disc_info_edit_show = FALSE;
+gboolean rigmask_info_edit_show = FALSE;
 
 GtkWidget *dlg;
 GtkTooltips *dlg_tips;
@@ -1164,13 +1167,15 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *pres_button;
   GtkWidget *pres_new_button;
   GtkWidget *pres_edit_button;
-  GtkWidget *pres_info_image;
+  GtkWidget *pres_info_new_image;
+  GtkWidget *pres_info_edit_image;
   GtkWidget *disc_vbox;
   GtkWidget *disc_vbox2;
   GtkWidget *disc_button;
   GtkWidget *disc_new_button;
   GtkWidget *disc_edit_button;
-  GtkWidget *disc_info_image;
+  GtkWidget *disc_info_new_image;
+  GtkWidget *disc_info_edit_image;
   GtkWidget *disc_warning_image;
   GtkWidget *guess_label;
   GtkWidget *guess_button_hor;
@@ -1196,7 +1201,8 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
               gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_pres_layer_data->colour), 0, 1, 0);
   new_pres_layer_data->presdisc = TRUE;
-  new_pres_layer_data->info_show = &pres_info_show;
+  new_pres_layer_data->info_new_show = &pres_info_new_show;
+  new_pres_layer_data->info_edit_show = &pres_info_edit_show;
 
   new_disc_layer_data->preview_data = &preview_data;
   new_disc_layer_data->layer_ID = &(state->disc_layer_ID);
@@ -1207,7 +1213,8 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 	    gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_disc_layer_data->colour), 1, 0, 0);
   new_disc_layer_data->presdisc = TRUE;
-  new_disc_layer_data->info_show = &disc_info_show;
+  new_disc_layer_data->info_new_show = &disc_info_new_show;
+  new_disc_layer_data->info_edit_show = &disc_info_edit_show;
 
   num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
@@ -1326,18 +1333,32 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Edit the currently selected preservation layer"),
 			   NULL);
 
-  if (pres_info_show == TRUE)
+  if (pres_info_new_show == TRUE)
     {
-      pres_info_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
+      pres_info_new_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
 						  GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (pres_info_image,
+      gimp_help_set_help_data (pres_info_new_image,
 			       _
 			       ("Paint the mask on the newly created layer, then come back to this "
 				"dialog and click on the \"Refresh\" button"),
 			       NULL);
 
-      gtk_box_pack_end (GTK_BOX (hbox), pres_info_image, FALSE, FALSE, 0);
-      gtk_widget_show (pres_info_image);
+      gtk_box_pack_end (GTK_BOX (hbox), pres_info_new_image, FALSE, FALSE, 0);
+      gtk_widget_show (pres_info_new_image);
+    }
+
+  if (pres_info_edit_show == TRUE)
+    {
+      pres_info_edit_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
+						  GTK_ICON_SIZE_MENU);
+      gimp_help_set_help_data (pres_info_edit_image,
+			       _
+			       ("Edit the preservation layer, then come back to this "
+				"dialog and click on the \"Refresh\" button"),
+			       NULL);
+
+      gtk_box_pack_end (GTK_BOX (hbox), pres_info_edit_image, FALSE, FALSE, 0);
+      gtk_widget_show (pres_info_edit_image);
     }
 
   g_signal_connect (pres_new_button, "clicked",
@@ -1593,17 +1614,30 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Edit the currently selected discard layer"),
 			   NULL);
 
-  if (disc_info_show == TRUE)
+  if (disc_info_new_show == TRUE)
     {
-      disc_info_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
+      disc_info_new_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
 						  GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (disc_info_image,
+      gimp_help_set_help_data (disc_info_new_image,
 			       _
 			       ("Paint the mask on the newly created layer, then come back to this "
 				"dialog and click on the \"Refresh\" button"),
 			       NULL);
-      gtk_box_pack_end (GTK_BOX (hbox), disc_info_image, FALSE, FALSE, 0);
-      gtk_widget_show (disc_info_image);
+      gtk_box_pack_end (GTK_BOX (hbox), disc_info_new_image, FALSE, FALSE, 0);
+      gtk_widget_show (disc_info_new_image);
+    }
+
+  if (disc_info_edit_show == TRUE)
+    {
+      disc_info_edit_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
+						  GTK_ICON_SIZE_MENU);
+      gimp_help_set_help_data (disc_info_edit_image,
+			       _
+			       ("Edit the discard layer, then come back to this "
+				"dialog and click on the \"Refresh\" button"),
+			       NULL);
+      gtk_box_pack_end (GTK_BOX (hbox), disc_info_edit_image, FALSE, FALSE, 0);
+      gtk_widget_show (disc_info_edit_image);
     }
 
   g_signal_connect (disc_new_button, "clicked",
@@ -1859,7 +1893,8 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *rigmask_button;
   GtkWidget *rigmask_new_button;
   GtkWidget *rigmask_edit_button;
-  GtkWidget *rigmask_info_image;
+  GtkWidget *rigmask_info_new_image;
+  GtkWidget *rigmask_info_edit_image;
   GtkWidget *operations_vbox;
   GtkWidget *no_disc_on_enlarge_button;
   GtkWidget *table;
@@ -1885,7 +1920,8 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 	    gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_rigmask_layer_data->colour), 0, 0, 1);
   new_rigmask_layer_data->presdisc = FALSE;
-  new_rigmask_layer_data->info_show = &rigmask_info_show;
+  new_rigmask_layer_data->info_new_show = &rigmask_info_new_show;
+  new_rigmask_layer_data->info_edit_show = &rigmask_info_edit_show;
 
   num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
@@ -2058,17 +2094,30 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Edit the currently selected rigidity mask layer"),
 			   NULL);
 
-  if (rigmask_info_show == TRUE)
+  if (rigmask_info_new_show == TRUE)
     {
-      rigmask_info_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
+      rigmask_info_new_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
 						     GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (rigmask_info_image,
+      gimp_help_set_help_data (rigmask_info_new_image,
 			       _
 			       ("Paint the mask on the newly created layer, then come back to this "
 				"dialog and click on the \"Refresh\" button"),
 			       NULL);
-      gtk_box_pack_end (GTK_BOX (hbox), rigmask_info_image, FALSE, FALSE, 0);
-      gtk_widget_show (rigmask_info_image);
+      gtk_box_pack_end (GTK_BOX (hbox), rigmask_info_new_image, FALSE, FALSE, 0);
+      gtk_widget_show (rigmask_info_new_image);
+    }
+
+  if (rigmask_info_edit_show == TRUE)
+    {
+      rigmask_info_edit_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
+						     GTK_ICON_SIZE_MENU);
+      gimp_help_set_help_data (rigmask_info_edit_image,
+			       _
+			       ("Edit the rigidity mask layer, then come back to this "
+				"dialog and click on the \"Refresh\" button"),
+			       NULL);
+      gtk_box_pack_end (GTK_BOX (hbox), rigmask_info_edit_image, FALSE, FALSE, 0);
+      gtk_widget_show (rigmask_info_edit_image);
     }
 
   g_signal_connect (rigmask_new_button, "clicked",

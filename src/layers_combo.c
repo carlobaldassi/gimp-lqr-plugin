@@ -30,9 +30,12 @@
 #include "layers_combo.h"
 
 extern int context_calls;
-extern gboolean pres_info_show;
-extern gboolean disc_info_show;
-extern gboolean rigmask_info_show;
+extern gboolean pres_info_new_show;
+extern gboolean disc_info_new_show;
+extern gboolean rigmask_info_new_show;
+extern gboolean pres_info_edit_show;
+extern gboolean disc_info_edit_show;
+extern gboolean rigmask_info_edit_show;
 extern GtkWidget * dlg;
 
 
@@ -217,11 +220,11 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   context_calls++;
   gimp_context_set_foreground (fg_colour);
 
-  pres_info_show = FALSE;
-  disc_info_show = FALSE;
-  rigmask_info_show = FALSE;
+  pres_info_new_show = FALSE;
+  disc_info_new_show = FALSE;
+  rigmask_info_new_show = FALSE;
 
-  *(nl_data->info_show) = TRUE;
+  *(nl_data->info_new_show) = TRUE;
 
   if (nl_data->presdisc == TRUE)
     {
@@ -232,7 +235,7 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
       gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_ADV_REFRESH);
     }
 
-  *(nl_data->info_show) = FALSE;
+  *(nl_data->info_new_show) = FALSE;
 }
 
 void
@@ -271,11 +274,11 @@ callback_edit_mask_button (GtkWidget * button, gpointer data)
   context_calls++;
   gimp_context_set_foreground (fg_colour);
 
-  pres_info_show = FALSE;
-  disc_info_show = FALSE;
-  rigmask_info_show = FALSE;
+  pres_info_edit_show = FALSE;
+  disc_info_edit_show = FALSE;
+  rigmask_info_edit_show = FALSE;
 
-  *(nl_data->info_show) = TRUE;
+  *(nl_data->info_edit_show) = TRUE;
 
   if (nl_data->presdisc == TRUE)
     {
@@ -286,7 +289,7 @@ callback_edit_mask_button (GtkWidget * button, gpointer data)
       gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_ADV_REFRESH);
     }
 
-  *(nl_data->info_show) = FALSE;
+  *(nl_data->info_edit_show) = FALSE;
 }
 
 
