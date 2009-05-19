@@ -46,7 +46,7 @@ typedef struct
   gboolean resize_canvas;
   gboolean new_layer;
   gboolean output_seams;
-  gint grad_func;
+  gint nrg_func;
   gint res_order;
   gint mask_behavior;
   gboolean scaleback;

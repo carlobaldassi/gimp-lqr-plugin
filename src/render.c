@@ -211,7 +211,7 @@ render_init_carver (gint32 image_ID,
     }
   MEM_CHECK1_N (set_rigmask
                (carver, vals->rigmask_layer_ID, x_off, y_off));
-  lqr_carver_set_gradient_function (carver, vals->grad_func);
+  lqr_carver_set_energy_function_builtin (carver, vals->nrg_func);
   lqr_carver_set_resize_order (carver, vals->res_order);
   lqr_carver_set_progress (carver, progress);
   lqr_carver_set_side_switch_frequency (carver, 2);

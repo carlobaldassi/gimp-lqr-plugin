@@ -94,7 +94,7 @@ PresDiscStatus presdisc_status;
 ToggleData pres_toggle_data;
 ToggleData disc_toggle_data;
 ToggleData rigmask_toggle_data;
-GtkWidget *grad_func_combo_box;
+GtkWidget *nrg_func_combo_box;
 GtkWidget *res_order_combo_box;
 gboolean pres_info_show = FALSE;
 gboolean disc_info_show = FALSE;
@@ -770,8 +770,8 @@ dialog (gint32 image_ID,
 	ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (coordinates), 0));
       state->new_height =
 	ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (coordinates), 1));
-      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
-				     &(state->grad_func));
+      gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (nrg_func_combo_box),
+				     &(state->nrg_func));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
 				     &(state->res_order));
       state->new_layer =
@@ -1867,7 +1867,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *combo;
   GtkObject *adj;
 
-  GtkWidget *gradient_event_box;
+  GtkWidget *nrg_event_box;
   GtkWidget *res_order_event_box;
 
   label = gtk_label_new (_("Advanced"));
@@ -2176,40 +2176,43 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 		    G_CALLBACK (callback_rigmask_combo_set_sensitive_preview),
 		    (gpointer) (&preview_data));
 
-  /* Gradient */
+  /* Energy function */
 
-  gradient_event_box = gtk_event_box_new ();
-  gtk_box_pack_start (GTK_BOX (rigmask_vbox), gradient_event_box, FALSE, FALSE,
+  nrg_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (rigmask_vbox), nrg_event_box, FALSE, FALSE,
 		      0);
-  gtk_widget_show (gradient_event_box);
+  gtk_widget_show (nrg_event_box);
 
-  gimp_help_set_help_data (gradient_event_box,
+  gimp_help_set_help_data (nrg_event_box,
 			   _
 			   ("This affects the automatic feature recognition.\n"
-			    "It's the function which will be applied to "
-			    "the components of the gradient on each pixel"),
+			    "It's the filter which will be used to determine "
+			    "the relevance of each pixel"),
 			   NULL);
 
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
-  gtk_container_add (GTK_CONTAINER (gradient_event_box), hbox);
+  gtk_container_add (GTK_CONTAINER (nrg_event_box), hbox);
   gtk_widget_show (hbox);
 
-  label = gtk_label_new (_("Gradient function:"));
+  label = gtk_label_new (_("Feature recog.:"));
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
-  grad_func_combo_box =
-    gimp_int_combo_box_new (_("Transversal absolute value"), LQR_GF_XABS,
-			    _("Sum of absolute values"), LQR_GF_SUMABS,
-			    _("Norm"), LQR_GF_NORM,
+  nrg_func_combo_box =
+    gimp_int_combo_box_new (_("Transversal grad. (bright.) "), LQR_EF_GRAD_XABS,
+			    _("Grad. sum (bright.)"), LQR_EF_GRAD_SUMABS,
+			    _("Grad. norm (bright.)"), LQR_EF_GRAD_NORM,
+			    _("Transversal grad. (luma) "), LQR_EF_LUMA_GRAD_XABS, 
+                            _("Grad. sum (luma)"), LQR_EF_LUMA_GRAD_SUMABS,
+                            _("Grad. norm (luma)"), LQR_EF_LUMA_GRAD_NORM,
 			    /* Null can be translated as Zero */
-			    _("Null"), LQR_GF_NULL, NULL);
-  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (grad_func_combo_box),
-				 state->grad_func);
+			    _("Null"), LQR_EF_NULL, NULL);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (nrg_func_combo_box),
+				 state->nrg_func);
 
-  gtk_box_pack_start (GTK_BOX (hbox), grad_func_combo_box, TRUE, TRUE, 0);
-  gtk_widget_show (grad_func_combo_box);
+  gtk_box_pack_start (GTK_BOX (hbox), nrg_func_combo_box, TRUE, TRUE, 0);
+  gtk_widget_show (nrg_func_combo_box);
 
 
   /* Operations control */

@@ -550,11 +550,11 @@ set_info_label_text (InterfaceIData * p_data)
   esmax = MAX(1, esmax);
 
 #ifndef WIN32
-  g_snprintf(text_size_tag_open, MAX_STRING_SIZE, _("<small><small>"));
-  g_snprintf(text_size_tag_close, MAX_STRING_SIZE, _("</small></small>"));
+  g_snprintf(text_size_tag_open, MAX_STRING_SIZE, "<small><small>");
+  g_snprintf(text_size_tag_close, MAX_STRING_SIZE, "</small></small>");
 #else
-  g_snprintf(text_size_tag_open, MAX_STRING_SIZE, _("<small>"));
-  g_snprintf(text_size_tag_close, MAX_STRING_SIZE, _("</small>"));
+  g_snprintf(text_size_tag_open, MAX_STRING_SIZE, "<small>");
+  g_snprintf(text_size_tag_close, MAX_STRING_SIZE, "</small>");
 #endif
 
   g_snprintf(text_orientation, MAX_STRING_SIZE, _("Orientation"));

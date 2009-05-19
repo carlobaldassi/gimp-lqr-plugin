@@ -100,7 +100,7 @@ gint p_plug_in_lqr_iter(GimpRunMode run_mode, gint32 total_steps, gdouble curren
     buf.resize_canvas = buf_to.resize_canvas;
     buf.new_layer = buf_to.new_layer;
     buf.output_seams = buf_to.output_seams;
-    buf.grad_func = buf_to.grad_func;
+    buf.nrg_func = buf_to.nrg_func;
     buf.res_order = buf_to.res_order;
     buf.mask_behavior = buf_to.mask_behavior;
     buf.scaleback = buf_to.scaleback;
