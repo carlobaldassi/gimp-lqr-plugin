@@ -81,9 +81,13 @@ guchar * preview_build_buffer (gint32 layer_ID);
 void preview_build_pixbuf (PreviewData * preview_data);
 void preview_free_pixbuf (guchar * buffer, gpointer data);
 
-gboolean
+void
 callback_preview_expose_event (GtkWidget * preview_area,
                                GdkEventExpose * event, gpointer data);
+
+void
+update_info_aux_use_icons(PlugInVals *vals, PlugInUIVals *ui_vals,
+    GtkWidget *pres_use_image, GtkWidget *disc_use_image, GtkWidget *rigmask_use_image);
 
 #endif /* __PREVIEW_H__ */
 

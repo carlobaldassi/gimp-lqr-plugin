@@ -252,7 +252,7 @@ preview_free_pixbuf (guchar * buffer, gpointer data)
   g_free (buffer);
 }
 
-gboolean
+void
 callback_preview_expose_event (GtkWidget * preview_area,
 			       GdkEventExpose * event, gpointer data)
 {
@@ -264,50 +264,67 @@ callback_preview_expose_event (GtkWidget * preview_area,
 		   (PREVIEW_MAX_HEIGHT - p_data->height) / 2,
 		   -1, -1, GDK_RGB_DITHER_NORMAL, 0, 0);
 
-  if (p_data->ui_vals->pres_status == TRUE)
+  update_info_aux_use_icons(p_data->vals, p_data->ui_vals, p_data->pres_use_image, p_data->disc_use_image, p_data->rigmask_use_image);
+}
+
+void
+update_info_aux_use_icons(PlugInVals *vals, PlugInUIVals *ui_vals, GtkWidget *pres_use_image, GtkWidget *disc_use_image, GtkWidget *rigmask_use_image)
+{
+  gchar help_text_common[MAX_STRING_SIZE];
+  gchar help_text[MAX_STRING_SIZE];
+  if (ui_vals->pres_status == TRUE)
     {
-      gtk_widget_set_sensitive (p_data->pres_use_image, TRUE);
-      gimp_help_set_help_data (p_data->pres_use_image,
-                               _("A preservation mask is currently in use"),
+      g_snprintf(help_text_common, MAX_STRING_SIZE, _("Layer in use as preservation mask: "));
+      g_snprintf(help_text, MAX_STRING_SIZE, "%s %s", help_text_common, gimp_drawable_get_name(vals->pres_layer_ID));
+      gimp_help_set_help_data (pres_use_image,
+                               help_text,
                                NULL);
+
+      gtk_widget_set_sensitive (pres_use_image, TRUE);
     }
   else
     {
-      gtk_widget_set_sensitive (p_data->pres_use_image, FALSE);
-      gimp_help_set_help_data (p_data->pres_use_image,
+      gimp_help_set_help_data (pres_use_image,
                                _("No preservation mask is currently in use"),
                                NULL);
+
+      gtk_widget_set_sensitive (pres_use_image, FALSE);
     }
 
-  if (p_data->ui_vals->disc_status == TRUE)
+  if (ui_vals->disc_status == TRUE)
     {
-      gtk_widget_set_sensitive (p_data->disc_use_image, TRUE);
-      gimp_help_set_help_data (p_data->disc_use_image,
-                               _("A discard mask is currently in use"),
+      g_snprintf(help_text_common, MAX_STRING_SIZE, _("Layer in use as discard mask: "));
+      g_snprintf(help_text, MAX_STRING_SIZE, "%s %s", help_text_common, gimp_drawable_get_name(vals->disc_layer_ID));
+      gimp_help_set_help_data (disc_use_image,
+                               help_text,
                                NULL);
+
+      gtk_widget_set_sensitive (disc_use_image, TRUE);
     }
   else
     {
-      gtk_widget_set_sensitive (p_data->disc_use_image, FALSE);
-      gimp_help_set_help_data (p_data->disc_use_image,
+      gtk_widget_set_sensitive (disc_use_image, FALSE);
+      gimp_help_set_help_data (disc_use_image,
                                _("No discard mask is currently in use"),
                                NULL);
     }
 
-  if (p_data->ui_vals->rigmask_status == TRUE)
+  if (ui_vals->rigmask_status == TRUE)
     {
-      gtk_widget_set_sensitive (p_data->rigmask_use_image, TRUE);
-      gimp_help_set_help_data (p_data->rigmask_use_image,
-                               _("A rigidity mask is currently in use"),
+      g_snprintf(help_text_common, MAX_STRING_SIZE, _("Layer in use as rigidity mask: "));
+      g_snprintf(help_text, MAX_STRING_SIZE, "%s %s", help_text_common, gimp_drawable_get_name(vals->rigmask_layer_ID));
+      gimp_help_set_help_data (rigmask_use_image,
+                               help_text,
                                NULL);
+
+      gtk_widget_set_sensitive (rigmask_use_image, TRUE);
     }
   else
     {
-      gtk_widget_set_sensitive (p_data->rigmask_use_image, FALSE);
-      gimp_help_set_help_data (p_data->rigmask_use_image,
+      gtk_widget_set_sensitive (rigmask_use_image, FALSE);
+      gimp_help_set_help_data (rigmask_use_image,
                                _("No rigidity mask is currently in use"),
                                NULL);
     }
-
-  return TRUE;
 }
+

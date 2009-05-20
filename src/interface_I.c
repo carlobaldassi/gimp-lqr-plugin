@@ -28,6 +28,7 @@
 #include <lqr.h>
 
 #include "plugin-intl.h"
+#include "main_common.h"
 #include "main.h"
 #include "render.h"
 #include "interface_I.h"
@@ -44,7 +45,6 @@
 //#define MAX_COEFF	  (3000)
 //#define MAX_RIGIDITY      (1000)
 //#define MAX_DELTA_X         (10)
-#define MAX_STRING_SIZE   (2048)
 #define SIZE_CHANGE_DELAY  (400)
 #define READER_INTERVAL     (20)
 

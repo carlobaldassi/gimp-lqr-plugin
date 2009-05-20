@@ -29,6 +29,7 @@
 #define PARASITE_KEY     "plug_in_lqr_options"
 
 #define VALS_MAX_NAME_LENGTH (1024)
+#define MAX_STRING_SIZE   (2048)
 
 typedef struct
 {
