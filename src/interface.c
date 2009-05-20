@@ -130,6 +130,7 @@ dialog (gint32 image_ID,
   GtkWidget *notebook;
   gfloat wfactor, hfactor;
   GtkWidget *preview_area;
+  GtkWidget *filler;
   GtkWidget *pres_use_image;
   GtkWidget *disc_use_image;
   GtkWidget *rigmask_use_image;
@@ -268,10 +269,10 @@ dialog (gint32 image_ID,
   gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
-  hbox = gtk_hbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
-  gtk_container_add (GTK_CONTAINER (frame), hbox);
-  gtk_widget_show (hbox);
+  vbox2 = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox2), 0);
+  gtk_container_add (GTK_CONTAINER (frame), vbox2);
+  gtk_widget_show (vbox2);
 
   /* Preview */
 
@@ -318,26 +319,34 @@ dialog (gint32 image_ID,
 			       PREVIEW_MAX_HEIGHT);
 
   //gtk_container_add (GTK_CONTAINER (frame), preview_area);
-  gtk_box_pack_end (GTK_BOX (hbox), preview_area, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox2), preview_area, FALSE, FALSE, 0);
 
   gtk_widget_show (preview_area);
 
-  vbox2 = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox2), 4);
-  gtk_box_pack_start (GTK_BOX (hbox), vbox2, TRUE, FALSE, 0);
-  gtk_widget_show (vbox2);
+  hbox = gtk_hbox_new (FALSE, 10);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
+  gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
+  gtk_widget_show (hbox);
+
+  filler = gtk_image_new ();
+  gtk_box_pack_start (GTK_BOX (hbox), filler, TRUE, TRUE, 0);
+  gtk_widget_show (filler);
+  filler = gtk_image_new ();
+  gtk_box_pack_end (GTK_BOX (hbox), filler, TRUE, TRUE, 0);
+  gtk_widget_show (filler);
+
 
   pres_use_image = gtk_image_new_from_stock (GIMP_STOCK_CHANNEL_GREEN,
 						  GTK_ICON_SIZE_MENU);
 
-  gtk_box_pack_start (GTK_BOX (vbox2), pres_use_image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), pres_use_image, FALSE, FALSE, 0);
 
   gtk_widget_show (pres_use_image);
 
   disc_use_image = gtk_image_new_from_stock (GIMP_STOCK_CHANNEL_RED,
 						  GTK_ICON_SIZE_MENU);
 
-  gtk_box_pack_start (GTK_BOX (vbox2), disc_use_image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), disc_use_image, FALSE, FALSE, 0);
 
   gtk_widget_show (disc_use_image);
 
@@ -346,7 +355,7 @@ dialog (gint32 image_ID,
 
   gtk_widget_show (rigmask_use_image);
 
-  gtk_box_pack_start (GTK_BOX (vbox2), rigmask_use_image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), rigmask_use_image, FALSE, FALSE, 0);
 
   preview_data.pres_use_image = pres_use_image;
   preview_data.disc_use_image = disc_use_image;
