@@ -103,6 +103,11 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   GtkWidget *hbox;
   GtkWidget *hbox2;
   GtkWidget *frame;
+
+  GtkWidget *filler;
+  GtkWidget *pres_use_image;
+  GtkWidget *disc_use_image;
+  GtkWidget *rigmask_use_image;
   //GtkWidget *noninter_button;
   GtkWidget *resetvalues_event_box;
   GtkWidget *resetvalues_button;
@@ -229,6 +234,44 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   gtk_box_pack_start (GTK_BOX (vbox3), coordinates, FALSE, FALSE, 0);
   gtk_widget_show (coordinates);
+
+  /* Aux layer usage icons */
+ 
+  hbox2 = gtk_hbox_new (FALSE, 10);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox2), 4);
+  gtk_box_pack_start (GTK_BOX (vbox3), hbox2, FALSE, FALSE, 0);
+  gtk_widget_show (hbox2);
+
+  filler = gtk_image_new ();
+  gtk_box_pack_start (GTK_BOX (hbox2), filler, TRUE, TRUE, 0);
+  gtk_widget_show (filler);
+  filler = gtk_image_new ();
+  gtk_box_pack_end (GTK_BOX (hbox2), filler, TRUE, TRUE, 0);
+  gtk_widget_show (filler);
+
+  pres_use_image = gtk_image_new_from_stock (GIMP_STOCK_CHANNEL_GREEN,
+						  GTK_ICON_SIZE_MENU);
+
+  gtk_box_pack_start (GTK_BOX (hbox2), pres_use_image, FALSE, FALSE, 0);
+
+  gtk_widget_show (pres_use_image);
+
+  disc_use_image = gtk_image_new_from_stock (GIMP_STOCK_CHANNEL_RED,
+						  GTK_ICON_SIZE_MENU);
+
+  gtk_box_pack_start (GTK_BOX (hbox2), disc_use_image, FALSE, FALSE, 0);
+
+  gtk_widget_show (disc_use_image);
+
+  rigmask_use_image = gtk_image_new_from_stock (GIMP_STOCK_CHANNEL_BLUE,
+						  GTK_ICON_SIZE_MENU);
+
+  gtk_widget_show (rigmask_use_image);
+
+  gtk_box_pack_start (GTK_BOX (hbox2), rigmask_use_image, FALSE, FALSE, 0);
+
+  update_info_aux_use_icons(vals, ui_vals, pres_use_image, disc_use_image, rigmask_use_image);
+
 
   /* Reset size button */
 
