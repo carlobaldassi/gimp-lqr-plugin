@@ -1,0 +1,1 @@
+source g_additional_syntax_hi.vim
