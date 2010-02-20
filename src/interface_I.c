@@ -171,6 +171,8 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   gtk_window_set_resizable (GTK_WINDOW (dlg), FALSE);
 
+  gtk_window_set_keep_above(GTK_WINDOW (dlg), TRUE);
+
   if (dialog_state->has_pos)
     {
       //printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);

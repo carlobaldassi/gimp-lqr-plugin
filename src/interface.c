@@ -96,12 +96,6 @@ ToggleData disc_toggle_data;
 ToggleData rigmask_toggle_data;
 GtkWidget *nrg_func_combo_box;
 GtkWidget *res_order_combo_box;
-gboolean pres_info_new_show = FALSE;
-gboolean disc_info_new_show = FALSE;
-gboolean rigmask_info_new_show = FALSE;
-gboolean pres_info_edit_show = FALSE;
-gboolean disc_info_edit_show = FALSE;
-gboolean rigmask_info_edit_show = FALSE;
 
 GtkWidget *dlg;
 GtkTooltips *dlg_tips;
@@ -143,9 +137,9 @@ dialog (gint32 image_ID,
   GtkWidget *lastvalues_icon;
   GtkWidget *interactive_event_box;
   GtkWidget *interactive_button;
-  //GtkWidget *interactive_hbox;
+  GtkWidget *interactive_hbox;
   GtkWidget *interactive_icon;
-  //GtkWidget *interactive_label;
+  GtkWidget *interactive_label;
   //GtkWidget *v_separator;
   //GtkWidget *h_separator;
   GtkWidget *scaleback_mode_alignment;
@@ -467,28 +461,32 @@ dialog (gint32 image_ID,
 			     && (ui_state->last_used_height !=
 				 -1)) ? TRUE : FALSE);
 
+  vbox3 = gtk_vbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox3, FALSE, FALSE, 0);
+  gtk_widget_show (vbox3);
+
   interactive_event_box = gtk_event_box_new ();
   gtk_box_pack_start (GTK_BOX (vbox3), interactive_event_box, FALSE, FALSE,
 		      0);
   gtk_widget_show (interactive_event_box);
 
   gimp_help_set_help_data (interactive_event_box,
-			   _
-			   ("Switch to interactive mode. Note that the current settings will be applied."),
+			   _("Switch to interactive mode. "
+                           "Note that the current settings will be applied."),
 			   NULL);
 
   interactive_button = gtk_button_new ();
-  //interactive_hbox = gtk_hbox_new (FALSE, 4);
-  //gtk_container_add (GTK_CONTAINER (interactive_button), interactive_hbox);
-  //gtk_widget_show (interactive_hbox);
+  interactive_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER (interactive_button), interactive_hbox);
+  gtk_widget_show (interactive_hbox);
   interactive_icon =
-    gtk_image_new_from_stock (GTK_STOCK_EXECUTE, GTK_ICON_SIZE_MENU);
-  gtk_container_add (GTK_CONTAINER (interactive_button), interactive_icon);
-  //gtk_box_pack_start (GTK_BOX(interactive_hbox), interactive_icon, TRUE, FALSE, 0);
+    gtk_image_new_from_stock (GTK_STOCK_EXECUTE, GTK_ICON_SIZE_LARGE_TOOLBAR);
+  //gtk_container_add (GTK_CONTAINER (interactive_button), interactive_icon);
+  gtk_box_pack_start (GTK_BOX(interactive_hbox), interactive_icon, TRUE, FALSE, 0);
   gtk_widget_show (interactive_icon);
-  //interactive_label = gtk_label_new_with_mnemonic (_("_Interactive"));
-  //gtk_box_pack_start (GTK_BOX (interactive_hbox), interactive_label, TRUE, FALSE, 0);
-  //gtk_widget_show (interactive_label);
+  interactive_label = gtk_label_new_with_mnemonic (_("_Interactive"));
+  gtk_box_pack_start (GTK_BOX (interactive_hbox), interactive_label, TRUE, FALSE, 0);
+  gtk_widget_show (interactive_label);
   gtk_container_add (GTK_CONTAINER (interactive_event_box),
 		     interactive_button);
   gtk_widget_show (interactive_button);
@@ -496,68 +494,6 @@ dialog (gint32 image_ID,
   g_signal_connect (interactive_button, "clicked",
 		    G_CALLBACK (callback_interactive_button),
 		    (gpointer) dlg);
-
-
-  /* Operational mode combo box */
-
-  /*
-  v_separator = gtk_vseparator_new();
-  gtk_box_pack_start (GTK_BOX (hbox), v_separator, TRUE, TRUE, 0);
-  gtk_widget_show(v_separator);
-
-  vbox3 = gtk_vbox_new (FALSE, 4);
-  //gtk_container_add (GTK_CONTAINER (mode_event_box), vbox3);
-  gtk_box_pack_end (GTK_BOX (hbox), vbox3, FALSE, FALSE, 0);
-  gtk_widget_show (vbox3);
-
-  h_separator = gtk_hseparator_new();
-  gtk_box_pack_start (GTK_BOX (vbox3), h_separator, TRUE, TRUE, 0);
-  gtk_widget_show(h_separator);
-
-  mode_event_box = gtk_event_box_new ();
-  gtk_box_pack_end (GTK_BOX (vbox3), mode_event_box, FALSE, FALSE, 0);
-  gtk_widget_show (mode_event_box);
-
-  gimp_help_set_help_data (mode_event_box,
-			   _
-			   ("Here you can choose if you want to transform back the "
-			    "image to its original size after LqR has been performed, "
-			    "and whether to do it with LqR again or with standard scaling.\n"
-			    "You can also choose to use standard scaling to reach the previous width "
-			    "or height and preserve the aspect ratio.\n"
-			    "Note that this setting is ignored in interactive mode"),
-			   NULL);
-
-  scaleback_mode_combo_box =
-    gimp_int_combo_box_new (_("No"), SCALEBACK_MODE_NORMAL,
-			    _("With LqR"), SCALEBACK_MODE_LQRBACK,
-			    _("Standard"), SCALEBACK_MODE_STD,
-			    _("Width (Std)"), SCALEBACK_MODE_STDW,
-			    _("Height (Std)"), SCALEBACK_MODE_STDH,
-			    NULL);
-  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (scaleback_mode_combo_box),
-				 state->scaleback_mode);
-  
-  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (scaleback_mode_combo_box),
-			      state->scaleback_mode,
-			      G_CALLBACK (callback_scaleback_mode_changed),
-			      (gpointer) & preview_data);
-
-  gtk_container_add (GTK_CONTAINER (mode_event_box), scaleback_mode_combo_box);
-  //gtk_box_pack_start (GTK_BOX (vbox3), scaleback_mode_combo_box, FALSE, FALSE, 0);
-  gtk_widget_show (scaleback_mode_combo_box);
-
-  hbox2 = gtk_hbox_new (FALSE, 4);
-  gtk_box_pack_end (GTK_BOX (vbox3), hbox2, FALSE, FALSE, 0);
-  gtk_widget_show (hbox2);
-
-  label = gtk_label_new (_("Scale back:"));
-  //gtk_label_set_text(GTK_LABEL(label), _("When done:"));
-  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
-  gtk_widget_show (label);
-
-  */
-
 
   /* Notebook */
 
@@ -567,7 +503,6 @@ dialog (gint32 image_ID,
   notebook_data->notebook = notebook;
   notebook_data->image_ID = image_ID;
   notebook_data->layer_ID = layer_ID;
-  //notebook_data->drawable = drawable;
 
   /* Fature masks page */
 
@@ -753,7 +688,6 @@ dialog (gint32 image_ID,
 			      G_CALLBACK (callback_scaleback_mode_changed),
 			      (gpointer) & preview_data);
 
-  //gtk_container_add (GTK_CONTAINER (scaleback_mode_alignment), scaleback_mode_combo_box);
   gtk_box_pack_start (GTK_BOX (scaleback_mode_hbox), scaleback_mode_combo_box, FALSE, FALSE, 0);
   gtk_widget_show (scaleback_mode_combo_box);
 
@@ -808,11 +742,8 @@ dialog (gint32 image_ID,
   gtk_widget_show (dlg);
   gtk_main ();
 
-  //printf("RESPONSE=%i\n", dialog_response); fflush(stdout);
-
-  if ((dialog_response == GTK_RESPONSE_OK) || (dialog_response == RESPONSE_INTERACTIVE))
+  if ((dialog_response == GTK_RESPONSE_OK) || (dialog_response == RESPONSE_INTERACTIVE) || (dialog_response == RESPONSE_WORK_ON_AUX_LAYER))
     {
-      //printf("OK or INTERACTIVE\n"); fflush(stdout);
       /*  Save ui values  */
       ui_state->chain_active =
 	gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
@@ -871,19 +802,17 @@ dialog (gint32 image_ID,
 
     }
 
-  //printf("DESTROY\n"); fflush(stdout);
   gtk_widget_destroy (dlg);
 
-  //printf("UNREF\n"); fflush(stdout);
   g_object_unref (G_OBJECT (preview_data.pixbuf));
+  g_free(state);
+  g_free(ui_state);
+  g_free(notebook_data);
 
   if (context_calls > 0)
     {
       gimp_context_set_foreground (&saved_colour);
     }
-
-  //printf("DETACH\n"); fflush(stdout);
-  //gimp_drawable_detach (preview_data.drawable);
 
   return dialog_response;
 }
@@ -896,23 +825,19 @@ dialog (gint32 image_ID,
 static void
 callback_dialog_response (GtkWidget * dialog, gint response_id, gpointer data)
 {
-  //ResponseData * r_data = RESPONSE_DATA (data);
   NotebookData *n_data = NOTEBOOK_DATA (data);
   switch (response_id)
     {
+    case RESPONSE_WORK_ON_AUX_LAYER:
     case RESPONSE_INTERACTIVE:
-      gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
-      dialog_state->has_pos = TRUE;
-      //printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
     case RESPONSE_REFRESH:
     case GTK_RESPONSE_OK:
     case RESPONSE_FEAT_REFRESH:
     case RESPONSE_ADV_REFRESH:
-      LAYER_CHECK_ACTION (n_data->layer_ID, gtk_dialog_response (GTK_DIALOG(dialog), RESPONSE_FATAL), );
     case RESPONSE_RESET:
+      LAYER_CHECK_ACTION (n_data->layer_ID, gtk_dialog_response (GTK_DIALOG(dialog), RESPONSE_FATAL), );
       gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
       dialog_state->has_pos = TRUE;
-      //printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       break;
     default:
       break;
@@ -1090,6 +1015,8 @@ callback_out_seams_col_button1 (GtkWidget * button, gpointer data)
   col_data->r1 = colour->r;
   col_data->g1 = colour->g;
   col_data->b1 = colour->b;
+
+  g_free(colour);
 }
 
 static void
@@ -1105,6 +1032,8 @@ callback_out_seams_col_button2 (GtkWidget * button, gpointer data)
   col_data->r2 = colour->r;
   col_data->g2 = colour->g;
   col_data->b2 = colour->b;
+
+  g_free(colour);
 }
 
 static void
@@ -1206,29 +1135,24 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *pres_vbox;
   GtkWidget *pres_vbox2;
   GtkWidget *hbox;
-  //GtkWidget *new_hbox;
+  GtkWidget *new_hbox;
   GtkWidget *new_icon;
-  //GtkWidget *new_label;
-  //GtkWidget *edit_hbox;
+  GtkWidget *new_label;
+  GtkWidget *edit_hbox;
   GtkWidget *edit_icon;
-  //GtkWidget *edit_label;
+  GtkWidget *edit_label;
   GtkWidget *pres_button;
   GtkWidget *pres_new_button;
   GtkWidget *pres_edit_button;
-  GtkWidget *pres_info_new_image;
-  GtkWidget *pres_info_edit_image;
   GtkWidget *disc_vbox;
   GtkWidget *disc_vbox2;
   GtkWidget *disc_button;
   GtkWidget *disc_new_button;
   GtkWidget *disc_edit_button;
-  GtkWidget *disc_info_new_image;
-  GtkWidget *disc_info_edit_image;
   GtkWidget *disc_warning_image;
   GtkWidget *guess_label;
   GtkWidget *guess_button_hor;
   GtkWidget *guess_button_ver;
-  //GtkWidget *guess_dir_combo;
   GtkWidget *table;
   gint row;
   GtkWidget *combo;
@@ -1248,9 +1172,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   g_snprintf (new_pres_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s pres mask"),
               gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_pres_layer_data->colour), 0, 1, 0);
-  new_pres_layer_data->presdisc = TRUE;
-  new_pres_layer_data->info_new_show = &pres_info_new_show;
-  new_pres_layer_data->info_edit_show = &pres_info_edit_show;
+  new_pres_layer_data->layer_type = AUX_LAYER_PRES;
 
   new_disc_layer_data->preview_data = &preview_data;
   new_disc_layer_data->layer_ID = &(state->disc_layer_ID);
@@ -1260,9 +1182,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   g_snprintf (new_disc_layer_data->name, LQR_MAX_NAME_LENGTH, _("%s disc mask"),
 	    gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_disc_layer_data->colour), 1, 0, 0);
-  new_disc_layer_data->presdisc = TRUE;
-  new_disc_layer_data->info_new_show = &disc_info_new_show;
-  new_disc_layer_data->info_edit_show = &disc_info_edit_show;
+  new_disc_layer_data->layer_type = AUX_LAYER_DISC;
 
   num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
@@ -1338,76 +1258,49 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Use an extra layer to preserve "
 			     "selected areas from distortion"), NULL);
 
+  //pres_edit_button = gtk_button_new_with_label (_("Edit"));
+  pres_edit_button = gtk_button_new ();
+  gtk_box_pack_end (GTK_BOX (hbox), pres_edit_button, FALSE, FALSE, 0);
+  gtk_widget_show (pres_edit_button);
+
+  edit_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER(pres_edit_button), edit_hbox);
+  gtk_widget_show (edit_hbox);
+
+  edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
+  //gtk_container_add (GTK_CONTAINER(pres_edit_button), edit_icon);
+  gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
+  gtk_widget_show (edit_icon);
+  edit_label = gtk_label_new (_("Edit"));
+  gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
+  gtk_widget_show (edit_label);
+
+  gimp_help_set_help_data (pres_edit_button,
+			   _("Edit the currently selected preservation layer"),
+			   NULL);
+
   //pres_new_button = gtk_button_new_with_label (_("New"));
   pres_new_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), pres_new_button, FALSE, FALSE, 0);
   gtk_widget_show (pres_new_button);
 
-  //new_hbox = gtk_hbox_new (FALSE, 4);
-  //gtk_container_add (GTK_CONTAINER(pres_new_button), new_hbox);
-  //gtk_widget_show (new_hbox);
+  new_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER(pres_new_button), new_hbox);
+  gtk_widget_show (new_hbox);
 
   new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
-  gtk_container_add (GTK_CONTAINER(pres_new_button), new_icon);
-  //gtk_box_pack_start (GTK_BOX(new_hbox), new_icon, TRUE, TRUE, 0);
+  //gtk_container_add (GTK_CONTAINER(pres_new_button), new_icon);
+  gtk_box_pack_start (GTK_BOX(new_hbox), new_icon, TRUE, TRUE, 0);
   gtk_widget_show (new_icon);
-  //new_label = gtk_label_new (_("New"));
-  //gtk_box_pack_end (GTK_BOX(new_hbox), new_label, TRUE, TRUE, 0);
-  //gtk_widget_show (new_label);
+  new_label = gtk_label_new (_("New"));
+  gtk_box_pack_end (GTK_BOX(new_hbox), new_label, TRUE, TRUE, 0);
+  gtk_widget_show (new_label);
 
   gimp_help_set_help_data (pres_new_button,
 			   _("Creates a new transparent layer "
 			     "ready to be used as a preservation mask"),
 			   NULL);
 
-  //pres_edit_button = gtk_button_new_with_label (_("Edit"));
-  pres_edit_button = gtk_button_new ();
-  gtk_box_pack_end (GTK_BOX (hbox), pres_edit_button, FALSE, FALSE, 0);
-  gtk_widget_show (pres_edit_button);
-
-  //edit_hbox = gtk_hbox_new (FALSE, 4);
-  //gtk_container_add (GTK_CONTAINER(pres_edit_button), edit_hbox);
-  //gtk_widget_show (edit_hbox);
-
-  edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-  gtk_container_add (GTK_CONTAINER(pres_edit_button), edit_icon);
-  //gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
-  gtk_widget_show (edit_icon);
-  //edit_label = gtk_label_new (_("Edit"));
-  //gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
-  //gtk_widget_show (edit_label);
-
-  gimp_help_set_help_data (pres_edit_button,
-			   _("Edit the currently selected preservation layer"),
-			   NULL);
-
-  if (pres_info_new_show == TRUE)
-    {
-      pres_info_new_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
-						  GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (pres_info_new_image,
-			       _
-			       ("Paint the mask on the newly created layer, then come back to this "
-				"dialog and click on the \"Refresh\" button"),
-			       NULL);
-
-      gtk_box_pack_end (GTK_BOX (hbox), pres_info_new_image, FALSE, FALSE, 0);
-      gtk_widget_show (pres_info_new_image);
-    }
-
-  if (pres_info_edit_show == TRUE)
-    {
-      pres_info_edit_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
-						  GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (pres_info_edit_image,
-			       _
-			       ("Edit the preservation layer, then come back to this "
-				"dialog and click on the \"Refresh\" button"),
-			       NULL);
-
-      gtk_box_pack_end (GTK_BOX (hbox), pres_info_edit_image, FALSE, FALSE, 0);
-      gtk_widget_show (pres_info_edit_image);
-    }
 
   g_signal_connect (pres_new_button, "clicked",
 		    G_CALLBACK
@@ -1628,65 +1521,47 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   preview_data.disc_warning_image = disc_warning_image;
   callback_set_disc_warning (NULL, (gpointer) & preview_data);
 
-  //disc_new_button = gtk_button_new_with_label (_("New"));
-  disc_new_button = gtk_button_new ();
-  gtk_box_pack_end (GTK_BOX (hbox), disc_new_button, FALSE, FALSE, 0);
-  gtk_widget_show (disc_new_button);
-
-  new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
-  gtk_container_add (GTK_CONTAINER(disc_new_button), new_icon);
-  gtk_widget_show (new_icon);
-
-  gimp_help_set_help_data (disc_new_button,
-			   _("Creates a new transparent layer "
-			     "ready to be used as a discard mask"), NULL);
-
-  //disc_edit_button = gtk_button_new_with_label (_("Edit"));
   disc_edit_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), disc_edit_button, FALSE, FALSE, 0);
   gtk_widget_show (disc_edit_button);
 
-  //edit_hbox = gtk_hbox_new (FALSE, 4);
-  //gtk_container_add (GTK_CONTAINER(disc_edit_button), edit_hbox);
-  //gtk_widget_show (edit_hbox);
+  edit_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER(disc_edit_button), edit_hbox);
+  gtk_widget_show (edit_hbox);
 
   edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-  gtk_container_add (GTK_CONTAINER(disc_edit_button), edit_icon);
-  //gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
+  //gtk_container_add (GTK_CONTAINER(disc_edit_button), edit_icon);
+  gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
   gtk_widget_show (edit_icon);
-  //edit_label = gtk_label_new (_("Edit"));
-  //gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
-  //gtk_widget_show (edit_label);
+  edit_label = gtk_label_new (_("Edit"));
+  gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
+  gtk_widget_show (edit_label);
 
   gimp_help_set_help_data (disc_edit_button,
 			   _("Edit the currently selected discard layer"),
 			   NULL);
 
-  if (disc_info_new_show == TRUE)
-    {
-      disc_info_new_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
-						  GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (disc_info_new_image,
-			       _
-			       ("Paint the mask on the newly created layer, then come back to this "
-				"dialog and click on the \"Refresh\" button"),
-			       NULL);
-      gtk_box_pack_end (GTK_BOX (hbox), disc_info_new_image, FALSE, FALSE, 0);
-      gtk_widget_show (disc_info_new_image);
-    }
+  //disc_new_button = gtk_button_new_with_label (_("New"));
+  disc_new_button = gtk_button_new ();
+  gtk_box_pack_end (GTK_BOX (hbox), disc_new_button, FALSE, FALSE, 0);
+  gtk_widget_show (disc_new_button);
 
-  if (disc_info_edit_show == TRUE)
-    {
-      disc_info_edit_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
-						  GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (disc_info_edit_image,
-			       _
-			       ("Edit the discard layer, then come back to this "
-				"dialog and click on the \"Refresh\" button"),
-			       NULL);
-      gtk_box_pack_end (GTK_BOX (hbox), disc_info_edit_image, FALSE, FALSE, 0);
-      gtk_widget_show (disc_info_edit_image);
-    }
+  new_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER(disc_new_button), new_hbox);
+  gtk_widget_show (new_hbox);
+
+  new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
+  //gtk_container_add (GTK_CONTAINER(disc_new_button), new_icon);
+  gtk_box_pack_start (GTK_BOX(new_hbox), new_icon, TRUE, TRUE, 0);
+  gtk_widget_show (new_icon);
+  new_label = gtk_label_new (_("New"));
+  gtk_box_pack_end (GTK_BOX(new_hbox), new_label, TRUE, TRUE, 0);
+  gtk_widget_show (new_label);
+
+  gimp_help_set_help_data (disc_new_button,
+			   _("Creates a new transparent layer "
+			     "ready to be used as a discard mask"), NULL);
+
 
   g_signal_connect (disc_new_button, "clicked",
 		    G_CALLBACK
@@ -1936,13 +1811,15 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *rigmask_vbox;
   GtkWidget *rigmask_vbox2;
   GtkWidget *hbox;
+  GtkWidget *new_hbox;
   GtkWidget *new_icon;
+  GtkWidget *new_label;
+  GtkWidget *edit_hbox;
   GtkWidget *edit_icon;
+  GtkWidget *edit_label;
   GtkWidget *rigmask_button;
   GtkWidget *rigmask_new_button;
   GtkWidget *rigmask_edit_button;
-  GtkWidget *rigmask_info_new_image;
-  GtkWidget *rigmask_info_edit_image;
   GtkWidget *operations_vbox;
   GtkWidget *no_disc_on_enlarge_button;
   GtkWidget *table;
@@ -1967,9 +1844,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 	    _("%s rigidity mask"),
 	    gimp_drawable_get_name (preview_data.orig_layer_ID));
   gimp_rgb_set (&(new_rigmask_layer_data->colour), 0, 0, 1);
-  new_rigmask_layer_data->presdisc = FALSE;
-  new_rigmask_layer_data->info_new_show = &rigmask_info_new_show;
-  new_rigmask_layer_data->info_edit_show = &rigmask_info_edit_show;
+  new_rigmask_layer_data->layer_type = AUX_LAYER_RIGMASK;
 
   num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
@@ -2108,65 +1983,47 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 			   ("Use an extra layer to mark areas where seams should be straighter"),
 			   NULL);
 
-  //rigmask_new_button = gtk_button_new_with_label (_("New"));
-  rigmask_new_button = gtk_button_new ();
-  gtk_box_pack_end (GTK_BOX (hbox), rigmask_new_button, FALSE, FALSE, 0);
-  gtk_widget_show (rigmask_new_button);
-
-  new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
-  gtk_container_add (GTK_CONTAINER(rigmask_new_button), new_icon);
-  gtk_widget_show (new_icon);
-
-  gimp_help_set_help_data (rigmask_new_button,
-			   _("Creates a new transparent layer "
-			     "ready to be used as a rigidity mask"), NULL);
-
   //rigmask_edit_button = gtk_button_new_with_label (_("Edit"));
   rigmask_edit_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), rigmask_edit_button, FALSE, FALSE, 0);
   gtk_widget_show (rigmask_edit_button);
 
-  //edit_hbox = gtk_hbox_new (FALSE, 4);
-  //gtk_container_add (GTK_CONTAINER(rigmask_edit_button), edit_hbox);
-  //gtk_widget_show (edit_hbox);
+  edit_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER(rigmask_edit_button), edit_hbox);
+  gtk_widget_show (edit_hbox);
 
   edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-  gtk_container_add (GTK_CONTAINER(rigmask_edit_button), edit_icon);
-  //gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
+  //gtk_container_add (GTK_CONTAINER(rigmask_edit_button), edit_icon);
+  gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
   gtk_widget_show (edit_icon);
-  //edit_label = gtk_label_new (_("Edit"));
-  //gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
-  //gtk_widget_show (edit_label);
+  edit_label = gtk_label_new (_("Edit"));
+  gtk_box_pack_end (GTK_BOX(edit_hbox), edit_label, TRUE, TRUE, 0);
+  gtk_widget_show (edit_label);
 
   gimp_help_set_help_data (rigmask_edit_button,
 			   _("Edit the currently selected rigidity mask layer"),
 			   NULL);
 
-  if (rigmask_info_new_show == TRUE)
-    {
-      rigmask_info_new_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
-						     GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (rigmask_info_new_image,
-			       _
-			       ("Paint the mask on the newly created layer, then come back to this "
-				"dialog and click on the \"Refresh\" button"),
-			       NULL);
-      gtk_box_pack_end (GTK_BOX (hbox), rigmask_info_new_image, FALSE, FALSE, 0);
-      gtk_widget_show (rigmask_info_new_image);
-    }
+  //rigmask_new_button = gtk_button_new_with_label (_("New"));
+  rigmask_new_button = gtk_button_new ();
+  gtk_box_pack_end (GTK_BOX (hbox), rigmask_new_button, FALSE, FALSE, 0);
+  gtk_widget_show (rigmask_new_button);
 
-  if (rigmask_info_edit_show == TRUE)
-    {
-      rigmask_info_edit_image = gtk_image_new_from_stock (GIMP_STOCK_INFO,
-						     GTK_ICON_SIZE_MENU);
-      gimp_help_set_help_data (rigmask_info_edit_image,
-			       _
-			       ("Edit the rigidity mask layer, then come back to this "
-				"dialog and click on the \"Refresh\" button"),
-			       NULL);
-      gtk_box_pack_end (GTK_BOX (hbox), rigmask_info_edit_image, FALSE, FALSE, 0);
-      gtk_widget_show (rigmask_info_edit_image);
-    }
+  new_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER(rigmask_new_button), new_hbox);
+  gtk_widget_show (new_hbox);
+
+  new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
+  //gtk_container_add (GTK_CONTAINER(rigmask_new_button), new_icon);
+  gtk_box_pack_start (GTK_BOX(new_hbox), new_icon, TRUE, TRUE, 0);
+  gtk_widget_show (new_icon);
+  new_label = gtk_label_new (_("New"));
+  gtk_box_pack_end (GTK_BOX(new_hbox), new_label, TRUE, TRUE, 0);
+  gtk_widget_show (new_label);
+
+  gimp_help_set_help_data (rigmask_new_button,
+			   _("Creates a new transparent layer "
+			     "ready to be used as a rigidity mask"), NULL);
 
   g_signal_connect (rigmask_new_button, "clicked",
 		    G_CALLBACK

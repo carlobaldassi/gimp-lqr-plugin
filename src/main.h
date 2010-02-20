@@ -27,10 +27,17 @@
 #define RESPONSE_FEAT_REFRESH (2)
 #define RESPONSE_ADV_REFRESH (3)
 #define RESPONSE_RESET (4)
-#define RESPONSE_INTERACTIVE (5)
-#define RESPONSE_NONINTERACTIVE (6)
-#define RESPONSE_FATAL (7)
+#define RESPONSE_WORK_ON_AUX_LAYER (5)
+#define RESPONSE_INTERACTIVE (6)
+#define RESPONSE_NONINTERACTIVE (7)
+#define RESPONSE_FATAL (8)
 
+typedef enum
+{
+  AUX_LAYER_PRES,
+  AUX_LAYER_DISC,
+  AUX_LAYER_RIGMASK,
+} AuxLayerType;
 
 /* Structs for parameters */
 
@@ -58,6 +65,8 @@ typedef struct
   gboolean dlg_has_pos;
   gint dlg_x;
   gint dlg_y;
+  gint32 layer_on_edit_ID;
+  AuxLayerType layer_on_edit_type;
 } PlugInUIVals;
 
 #define PLUGIN_UI_VALS(data) ((PlugInUIVals*)data)

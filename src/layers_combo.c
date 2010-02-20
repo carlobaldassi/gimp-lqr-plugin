@@ -29,13 +29,6 @@
 #include "preview.h"
 #include "layers_combo.h"
 
-extern int context_calls;
-extern gboolean pres_info_new_show;
-extern gboolean disc_info_new_show;
-extern gboolean rigmask_info_new_show;
-extern gboolean pres_info_edit_show;
-extern gboolean disc_info_edit_show;
-extern gboolean rigmask_info_edit_show;
 extern GtkWidget * dlg;
 
 
@@ -52,7 +45,7 @@ count_extra_layers (gint32 image_ID)
 gboolean
 dialog_layer_constraint_func (gint32 image_ID, gint32 layer_ID, gpointer data)
 {
-  //GimpDrawable * gdrawable = (GimpDrawable *) data;
+  /* GimpDrawable * gdrawable = (GimpDrawable *) data; */
   gint32 ref_layer_ID = *((gint32*) data);
   if (image_ID != gimp_drawable_get_image (ref_layer_ID))
     {
@@ -158,7 +151,6 @@ callback_combo_set_sensitive (GtkWidget * button, gpointer data)
   if (t_data->guess_button_hor)
     {
       gtk_widget_set_sensitive (t_data->guess_button_hor, button_status);
-      //gtk_widget_set_sensitive (t_data->guess_dir_combo, button_status);
     }
   if (t_data->guess_button_ver)
     {
@@ -186,8 +178,6 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   NewLayerData *nl_data = NEW_LAYER_DATA (data);
   PreviewData *p_data = nl_data->preview_data;
   GimpImageType image_type;
-  GimpRGB *fg_colour;
-  GimpRGB grey;
 
   IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
 
@@ -195,12 +185,9 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
     {
       case GIMP_RGB:
         image_type = GIMP_RGBA_IMAGE;
-        fg_colour = &(nl_data->colour);
         break;
       case GIMP_GRAY:
         image_type = GIMP_GRAYA_IMAGE;
-        gimp_rgb_set(&grey, 1.0 / 3, 1.0 / 3, 1.0 / 3);
-        fg_colour = &grey;
         break;
       default:
         return;
@@ -217,25 +204,13 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
   gimp_image_undo_group_end (p_data->image_ID);
   *(nl_data->layer_ID) = layer_ID;
   *(nl_data->status) = TRUE;
-  context_calls++;
-  gimp_context_set_foreground (fg_colour);
 
-  pres_info_new_show = FALSE;
-  disc_info_new_show = FALSE;
-  rigmask_info_new_show = FALSE;
+  nl_data->preview_data->ui_vals->layer_on_edit_ID = layer_ID;
+  nl_data->preview_data->ui_vals->layer_on_edit_type = nl_data->layer_type;
 
-  *(nl_data->info_new_show) = TRUE;
+  g_free(nl_data);
 
-  if (nl_data->presdisc == TRUE)
-    {
-      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FEAT_REFRESH);
-    }
-  else
-    {
-      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_ADV_REFRESH);
-    }
-
-  *(nl_data->info_new_show) = FALSE;
+  gtk_dialog_response (GTK_DIALOG(dlg), RESPONSE_WORK_ON_AUX_LAYER);
 }
 
 void
@@ -244,52 +219,23 @@ callback_edit_mask_button (GtkWidget * button, gpointer data)
   NewLayerData *nl_data = NEW_LAYER_DATA (data);
   PreviewData *p_data = nl_data->preview_data;
   gint32 layer_ID = *(nl_data->layer_ID);
-  GimpRGB *fg_colour;
-  GimpRGB grey;
 
   IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
   LAYER_CHECK_ACTION(layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), );
   if (*(nl_data->status) != TRUE)
     {
-      g_message (_("You just found a bug!"));
+      g_message ("You just found a bug!");
       return;
-    }
-
-  switch (gimp_image_base_type (p_data->image_ID))
-    {
-      case GIMP_RGB:
-        fg_colour = &(nl_data->colour);
-        break;
-      case GIMP_GRAY:
-        gimp_rgb_set(&grey, 1.0 / 3, 1.0 / 3, 1.0 / 3);
-        fg_colour = &grey;
-        break;
-      default:
-        return;
     }
 
   gimp_image_undo_group_start (p_data->image_ID);
   gimp_image_set_active_layer(p_data->image_ID, layer_ID);
   gimp_image_undo_group_end (p_data->image_ID);
-  context_calls++;
-  gimp_context_set_foreground (fg_colour);
 
-  pres_info_edit_show = FALSE;
-  disc_info_edit_show = FALSE;
-  rigmask_info_edit_show = FALSE;
+  nl_data->preview_data->ui_vals->layer_on_edit_ID = layer_ID;
+  nl_data->preview_data->ui_vals->layer_on_edit_type = nl_data->layer_type;
 
-  *(nl_data->info_edit_show) = TRUE;
-
-  if (nl_data->presdisc == TRUE)
-    {
-      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FEAT_REFRESH);
-    }
-  else
-    {
-      gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_ADV_REFRESH);
-    }
-
-  *(nl_data->info_edit_show) = FALSE;
+  gtk_dialog_response (GTK_DIALOG(dlg), RESPONSE_WORK_ON_AUX_LAYER);
 }
 
 
@@ -322,18 +268,6 @@ callback_guess_button_ver (GtkWidget * button, gpointer data)
   alt_size_entry_set_refval (ALT_SIZE_ENTRY
 			      (p_data->coordinates), 1, new_height);
 }
-
-
-/*
-void
-callback_guess_direction (GtkWidget * combo, gpointer data)
-{
-  PreviewData *p_data = PREVIEW_DATA (data);
-
-  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (combo),
-				 &(p_data->ui_vals->guess_direction));
-}
-*/
 
 gint
 guess_new_size (GtkWidget * button, PreviewData * p_data, GuessDir direction)
@@ -369,7 +303,7 @@ guess_new_size (GtkWidget * button, PreviewData * p_data, GuessDir direction)
         return 0;
     }
 
-  LAYER_CHECK (disc_layer_ID, old_size); /* Should refresh at failure */
+  LAYER_CHECK_ACTION(disc_layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), old_size);
 
   width = gimp_drawable_width (disc_layer_ID);
   height = gimp_drawable_height (disc_layer_ID);

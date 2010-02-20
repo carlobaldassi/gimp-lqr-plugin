@@ -32,6 +32,7 @@
 #include "interface.h"
 #include "render.h"
 #include "interface_I.h"
+#include "interface_aux.h"
 
 /*  Local function prototypes  */
 
@@ -111,6 +112,35 @@ const PlugInDialogVals default_dialog_vals = {
   0,            /* dialog root position x */
   0,            /* dialog root position y */
 };
+
+const GimpRGB default_pres_col = {
+  0.0,
+  1.0,
+  0.0,
+  1.0
+};
+
+const GimpRGB default_disc_col = {
+  1.0,
+  0.0,
+  0.0,
+  1.0
+};
+
+const GimpRGB default_rigmask_col = {
+  0.0,
+  0.0,
+  1.0,
+  1.0
+};
+
+const GimpRGB default_gray_col = {
+  0.333333,
+  0.333333,
+  0.333333,
+  1.0
+};
+
 
 static PlugInVals vals;
 static PlugInImageVals image_vals;
@@ -206,6 +236,7 @@ run (const gchar * name,
   gboolean run_render = TRUE;
   gint dialog_resp;
   gint dialog_I_resp;
+  gint dialog_aux_resp;
   gboolean render_success = FALSE;
 
   /*  Initialize i18n support  */
@@ -267,7 +298,6 @@ run (const gchar * name,
           g_signal_newv("coordinates-alarm", ALT_TYPE_SIZE_ENTRY, G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
               0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
 
-          /* gimp_context_push(); */
           while (run_dialog == TRUE)
             {
               dialog_resp = dialog (image_ID, layer_ID,
@@ -310,18 +340,32 @@ run (const gchar * name,
                           break;
                       }
                     break;
+		  case RESPONSE_WORK_ON_AUX_LAYER:
+                    dialog_aux_resp = dialog_aux (image_ID, drawable_vals.layer_ID,
+                        &vals, &image_vals, &drawable_vals,
+                        &ui_vals, &col_vals, &dialog_vals);
+                    switch(dialog_aux_resp)
+                      {
+                        case GTK_RESPONSE_OK:
+                          break;
+                        default:
+                          /* TODO: do something more sensible here */
+                          run_dialog = FALSE;
+                          run_render = FALSE;
+                          status = GIMP_PDB_CANCEL;
+                          break;
+                      }
+                    break;
                   case RESPONSE_FATAL:
                     run_dialog = FALSE;
                     status = GIMP_PDB_CALLING_ERROR;
                     break;
                   default:
-                    //printf("DEFAULT\n"); fflush(stdout);
                     run_dialog = FALSE;
                     status = GIMP_PDB_CANCEL;
                     break;
                 }
             }
-          /* gimp_context_pop(); */
           break;
 
         case GIMP_RUN_WITH_LAST_VALS:

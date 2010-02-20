@@ -1,3 +1,14 @@
+2010-02-20 Carlo Baldassi <carlobaldassi@gmail.com>
+	* new: reduced interface for aux layers
+	* modified: text in new and edit buttons for
+	  aux layers; inverted new/edit positions
+	* modified: active layer goes back to the one
+	  which is to be rescaled after creating/editing
+	  aux layers
+	* modified: interactive dialog stays above
+	  other windows
+	* modified: Interactive button bigger with text
+
 2009-05-19 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new: info icons for aux layers
 	* modified: new liblqr energy functions instead

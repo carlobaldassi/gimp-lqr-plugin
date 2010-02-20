@@ -48,9 +48,10 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_gimp_lqr_plugin_OBJECTS = main.$(OBJEXT) interface.$(OBJEXT) \
-	interface_I.$(OBJEXT) preview.$(OBJEXT) layers_combo.$(OBJEXT) \
-	render.$(OBJEXT) io_functions.$(OBJEXT) \
-	altcoordinates.$(OBJEXT) altsizeentry.$(OBJEXT)
+	interface_I.$(OBJEXT) interface_aux.$(OBJEXT) \
+	preview.$(OBJEXT) layers_combo.$(OBJEXT) render.$(OBJEXT) \
+	io_functions.$(OBJEXT) altcoordinates.$(OBJEXT) \
+	altsizeentry.$(OBJEXT)
 gimp_lqr_plugin_OBJECTS = $(am_gimp_lqr_plugin_OBJECTS)
 gimp_lqr_plugin_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -152,6 +153,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
@@ -211,6 +213,8 @@ gimp_lqr_plugin_SOURCES = \
 	interface.h      \
 	interface_I.c    \
 	interface_I.h    \
+	interface_aux.c  \
+	interface_aux.h  \
 	preview.c        \
 	preview.h        \
 	layers_combo.c   \
@@ -303,6 +307,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/altsizeentry.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface_I.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface_aux.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/layers_combo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
