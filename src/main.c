@@ -1,5 +1,5 @@
 /* GIMP LiquidRescale Plug-in
- * Copyright (C) 2007-2009 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
+ * Copyright (C) 2007-2010 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
  * All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -209,7 +209,7 @@ static void query (void)
                           N_("scaling which keeps layer features (or removes them)"),
                           "Resize a layer preserving (or removing) content",
                           "Carlo Baldassi <carlobaldassi@gmail.com>",
-                          "Carlo Baldassi <carlobaldassi@gmail.com>", "2008",
+                          "Carlo Baldassi <carlobaldassi@gmail.com>", "2010",
                           N_("Li_quid rescale..."), "RGB*, GRAY*",
                           GIMP_PLUGIN, args_num, 0, args, NULL);
 

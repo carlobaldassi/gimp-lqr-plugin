@@ -1,7 +1,7 @@
 GIMP LiquidRescale Plug-In
 =====================
 
-Copyright (C) 2007-2009 Carlo Baldassi <carlobaldassi@gmail.com>
+Copyright (C) 2007-2010 Carlo Baldassi <carlobaldassi@gmail.com>
 (implementation based on the GIMP Plug-in Template by Michael Natterer)
 
 This package is a plug-in for GIMP 2.4 or newer. It is a frontend to

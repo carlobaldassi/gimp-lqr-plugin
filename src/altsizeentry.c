@@ -1,5 +1,5 @@
 /* GIMP LiquidRescale Plug-in
- * Copyright (C) 2007-2009 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
+ * Copyright (C) 2007-2010 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
  * All Rights Reserved.
  *
  * The code in this file is taken from gimpsizeentry.c

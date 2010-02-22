@@ -1,5 +1,5 @@
 ; GIMP LiquidRescale Plug-in
-; Copyright (C) 2007-2009 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
+; Copyright (C) 2007-2010 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
 ; All Rights Reserved.
 ;
 ; This program is free software; you can redistribute it and/or modify
@@ -204,8 +204,8 @@
 	   This is a simplified version in which most \
 	   options take their default values."		; description
           "Carlo Baldassi"				; author
-          "copyright 2009, Carlo Baldassi"              ; copyright notice
-          "2009"					; date created
+          "copyright 2010, Carlo Baldassi"              ; copyright notice
+          "2010"					; date created
           "RGB* GRAY*"					; image type that the script works on
 	  SF-STRING	"File name" ""
 	  SF-VALUE	"New width [INTEGER]" ""
@@ -222,8 +222,8 @@
 	   noninteractively. \
 	   This is the full-options version."		; description
           "Carlo Baldassi"				; author
-          "copyright 2009, Carlo Baldassi"              ; copyright notice
-          "2009"					; date created
+          "copyright 2010, Carlo Baldassi"              ; copyright notice
+          "2010"					; date created
           "RGB*, GRAY*"					; image type that the script works on
 	  SF-STRING	"Input file name" ""
 	  SF-STRING	"Output file name" ""
@@ -260,8 +260,8 @@
 	   in which layed ID's are passed as arguments \
 	   instead of layer names."			; description
           "Carlo Baldassi"				; author
-          "copyright 2009, Carlo Baldassi"              ; copyright notice
-          "2009"					; date created
+          "copyright 2010, Carlo Baldassi"              ; copyright notice
+          "2010"					; date created
           "RGB*, GRAY*"					; image type that the script works on
 	  SF-STRING	"Input file name" ""
 	  SF-STRING	"Output file name" ""
