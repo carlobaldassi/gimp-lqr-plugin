@@ -108,28 +108,28 @@ AC_SUBST(PLUGIN_DATADIR)
 SCRIPTSDIR="${GIMP_DATADIR}/scripts"
 AC_SUBST(SCRIPTSDIR)
 
-AC_MSG_CHECKING([if GTK+ is version 2.7.0 or newer])
-if $PKG_CONFIG --atleast-version=2.7.0 gtk+-2.0; then
-  have_gtk_2_7=yes
+AC_MSG_CHECKING([if GTK+ is version 2.12.0 or newer])
+if $PKG_CONFIG --atleast-version=2.12.0 gtk+-2.0; then
+  have_gtk_2_12=yes
 else
-  have_gtk_2_7=no
+  have_gtk_2_12=no
 fi
-AC_MSG_RESULT($have_gtk_2_7)
+AC_MSG_RESULT($have_gtk_2_12)
 
 if test "x$have_gtk_2_7" != "xyes"; then
   CPPFLAGS="$CPPFLAGS -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 fi
 
 
-AC_MSG_CHECKING([if GIMP is version 2.3.0 or newer])
-if $PKG_CONFIG --atleast-version=2.3.0 gimp-2.0; then
-  have_gimp_2_3=yes
+AC_MSG_CHECKING([if GIMP is version 2.4.0 or newer])
+if $PKG_CONFIG --atleast-version=2.4.0 gimp-2.0; then
+  have_gimp_2_4=yes
 else
-  have_gimp_2_3=no
+  have_gimp_2_4=no
 fi
-AC_MSG_RESULT($have_gimp_2_3)
+AC_MSG_RESULT($have_gimp_2_4)
 
-if test "x$have_gimp_2_3" != "xyes"; then
+if test "x$have_gimp_2_4" != "xyes"; then
   CPPFLAGS="$CPPFLAGS -DGIMP_DISABLE_DEPRECATED"
 fi
 

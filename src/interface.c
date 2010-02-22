@@ -11,13 +11,14 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- 
+
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org.licences/>.
  */
 
 #include "config.h"
 
+#include <gtk/gtk.h>
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 #include "altsizeentry.h"
@@ -96,7 +97,7 @@ GtkWidget *nrg_func_combo_box;
 GtkWidget *res_order_combo_box;
 
 GtkWidget *dlg;
-GtkTooltips *dlg_tips;
+/* GtkTooltips *dlg_tips; */
 
 
 /***  Public functions  ***/
@@ -187,7 +188,7 @@ dialog (gint32 image_ID,
   preview_data.disc_combo_awaked = FALSE;
   if (ui_state->pres_status == TRUE)
     {
-      if (gimp_drawable_is_valid(state->pres_layer_ID) && 
+      if (gimp_drawable_is_valid(state->pres_layer_ID) &&
           gimp_drawable_is_layer(state->pres_layer_ID) &&
           (state->pres_layer_ID != layer_ID))
         {
@@ -265,11 +266,11 @@ dialog (gint32 image_ID,
   g_signal_connect (dlg, "response", G_CALLBACK (callback_dialog_response),
 		    (gpointer) (notebook_data));
 
-  dlg_tips = gtk_tooltips_new ();
+  /* dlg_tips = gtk_tooltips_new (); */
 
   main_hbox = gtk_hbox_new (FALSE, 12);
   gtk_container_set_border_width (GTK_CONTAINER (main_hbox), 12);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), main_hbox);
+  gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area(GTK_DIALOG (dlg))), main_hbox);
 
   vbox = gtk_vbox_new (FALSE, 12);
   gtk_box_pack_start (GTK_BOX (main_hbox), vbox, TRUE, TRUE, 0);
@@ -698,7 +699,7 @@ dialog (gint32 image_ID,
 			    NULL);
   gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (scaleback_mode_combo_box),
 				 state->scaleback_mode);
-  
+
   gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (scaleback_mode_combo_box),
 			      state->scaleback_mode,
 			      G_CALLBACK (callback_scaleback_mode_changed),
@@ -1139,8 +1140,8 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *disc_frame_event_box2;
   GtkWidget *pres_combo_event_box;
   GtkWidget *disc_combo_event_box;
-  GtkTooltips *pres_frame_tips;
-  GtkTooltips *disc_frame_tips;
+  /* GtkTooltips *pres_frame_tips; */
+  /* GtkTooltips *disc_frame_tips; */
   gint32 old_layer_ID;
   GtkWidget *frame;
   GtkWidget *pres_vbox;
@@ -1234,7 +1235,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 	      "then press the \"Refresh\" button.\n"
 	      "Note that painting in black has no effect"));
 
-  pres_frame_tips = gtk_tooltips_new ();
+  /* pres_frame_tips = gtk_tooltips_new (); */
 
 
   pres_vbox = gtk_vbox_new (FALSE, 4);
@@ -1256,9 +1257,10 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
     {
       gtk_event_box_set_above_child (GTK_EVENT_BOX (pres_frame_event_box1),
 				     TRUE);
-      gtk_tooltips_set_tip (GTK_TOOLTIPS (pres_frame_tips),
+      gtk_widget_set_tooltip_text(pres_frame_event_box1, pres_inactive_tip_string);
+      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (pres_frame_tips),
 			    pres_frame_event_box1,
-			    pres_inactive_tip_string, NULL);
+			    pres_inactive_tip_string, NULL);*/
     }
 
 
@@ -1348,9 +1350,10 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
     {
       gtk_event_box_set_above_child (GTK_EVENT_BOX (pres_frame_event_box2),
 				     TRUE);
-      gtk_tooltips_set_tip (GTK_TOOLTIPS (pres_frame_tips),
+      gtk_widget_set_tooltip_text(pres_frame_event_box2, pres_inactive_tip_string);
+      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (pres_frame_tips),
 			    pres_frame_event_box2,
-			    pres_inactive_tip_string, NULL);
+			    pres_inactive_tip_string, NULL);*/
     }
 
   pres_vbox2 = gtk_vbox_new (FALSE, 4);
@@ -1483,7 +1486,7 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 	      "then press the \"Refresh\" button.\n"
 	      "Note that painting in black has no effect"));
 
-  disc_frame_tips = gtk_tooltips_new ();
+  /* disc_frame_tips = gtk_tooltips_new (); */
 
 
   disc_vbox = gtk_vbox_new (FALSE, 4);
@@ -1504,9 +1507,10 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
     {
       gtk_event_box_set_above_child (GTK_EVENT_BOX (disc_frame_event_box1),
 				     TRUE);
-      gtk_tooltips_set_tip (GTK_TOOLTIPS (disc_frame_tips),
+      gtk_widget_set_tooltip_text(disc_frame_event_box1, disc_inactive_tip_string);
+      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (disc_frame_tips),
 			    disc_frame_event_box1,
-			    disc_inactive_tip_string, NULL);
+			    disc_inactive_tip_string, NULL);*/
     }
 
   disc_button = gtk_check_button_new_with_label (_("Discard features"));
@@ -1609,9 +1613,10 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
     {
       gtk_event_box_set_above_child (GTK_EVENT_BOX (disc_frame_event_box2),
 				     TRUE);
-      gtk_tooltips_set_tip (GTK_TOOLTIPS (disc_frame_tips),
+      gtk_widget_set_tooltip_text(disc_frame_event_box2, disc_inactive_tip_string);
+      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (disc_frame_tips),
 			    disc_frame_event_box2,
-			    disc_inactive_tip_string, NULL);
+			    disc_inactive_tip_string, NULL);*/
     }
 
   disc_vbox2 = gtk_vbox_new (FALSE, 4);
@@ -1827,7 +1832,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *rigmask_frame_event_box1;
   GtkWidget *rigmask_frame_event_box2;
   GtkWidget *rigmask_combo_event_box;
-  GtkTooltips *rigmask_frame_tips;
+  /* GtkTooltips *rigmask_frame_tips; */
   gint32 old_layer_ID;
   GtkWidget *seams_control_expander;
   GtkWidget *operations_expander;
@@ -1915,7 +1920,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 	      "then press the \"Refresh\" button.\n"
 	      "Note that painting in black has no effect"));
 
-  rigmask_frame_tips = gtk_tooltips_new ();
+  /* rigmask_frame_tips = gtk_tooltips_new (); */
 
 
   rigmask_vbox = gtk_vbox_new (FALSE, 4);
@@ -1974,9 +1979,10 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
     {
       gtk_event_box_set_above_child (GTK_EVENT_BOX (rigmask_frame_event_box1),
 				     TRUE);
-      gtk_tooltips_set_tip (GTK_TOOLTIPS (rigmask_frame_tips),
+      gtk_widget_set_tooltip_text(rigmask_frame_event_box1, rigmask_inactive_tip_string);
+      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (rigmask_frame_tips),
 			    rigmask_frame_event_box1,
-			    rigmask_inactive_tip_string, NULL);
+			    rigmask_inactive_tip_string, NULL);*/
     }
 
 
@@ -2075,9 +2081,10 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
     {
       gtk_event_box_set_above_child (GTK_EVENT_BOX (rigmask_frame_event_box2),
 				     TRUE);
-      gtk_tooltips_set_tip (GTK_TOOLTIPS (rigmask_frame_tips),
+      gtk_widget_set_tooltip_text(rigmask_frame_event_box2, rigmask_inactive_tip_string);
+      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (rigmask_frame_tips),
 			    rigmask_frame_event_box2,
-			    rigmask_inactive_tip_string, NULL);
+			    rigmask_inactive_tip_string, NULL);*/
     }
 
   rigmask_vbox2 = gtk_vbox_new (FALSE, 4);
@@ -2184,7 +2191,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
     gimp_int_combo_box_new (_("Transversal grad. (bright.) "), LQR_EF_GRAD_XABS,
 			    _("Grad. sum (bright.)"), LQR_EF_GRAD_SUMABS,
 			    _("Grad. norm (bright.)"), LQR_EF_GRAD_NORM,
-			    _("Transversal grad. (luma) "), LQR_EF_LUMA_GRAD_XABS, 
+			    _("Transversal grad. (luma) "), LQR_EF_LUMA_GRAD_XABS,
                             _("Grad. sum (luma)"), LQR_EF_LUMA_GRAD_SUMABS,
                             _("Grad. norm (luma)"), LQR_EF_LUMA_GRAD_NORM,
 			    /* Null can be translated as Zero */
@@ -2216,7 +2223,7 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_widget_show (operations_vbox);
 
   /* Enlargement step */
-  
+
   table = gtk_table_new (3, 1, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);

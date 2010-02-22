@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- 
+
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org.licences/>.
  */
@@ -22,6 +22,7 @@
 #include <libgimp/gimpui.h>
 
 #include "plugin-intl.h"
+
 #include "main.h"
 #include "preview.h"
 
@@ -258,7 +259,7 @@ callback_preview_expose_event (GtkWidget * preview_area,
 {
   PreviewData *p_data = PREVIEW_DATA (data);
 
-  gdk_draw_pixbuf (p_data->area->window, NULL,
+  gdk_draw_pixbuf (gtk_widget_get_window(p_data->area), NULL,
 		   p_data->pixbuf, 0, 0,
 		   (PREVIEW_MAX_WIDTH - p_data->width) / 2,
 		   (PREVIEW_MAX_HEIGHT - p_data->height) / 2,

@@ -13,12 +13,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- 
+
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org.licences/>.
  */
 
-/* SYTEM (UNIX) includes */ 
+/* SYTEM (UNIX) includes */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,19 +32,19 @@
 #include "../src/main_common.h"
 
 gint p_plug_in_lqr_iter(GimpRunMode run_mode, gint32 total_steps, gdouble current_step, gint32 len_struct);
-static void query(void); 
-static void run(const gchar *name, gint nparam, const GimpParam *param, gint *nretvals, GimpParam **retvals); 
+static void query(void);
+static void run(const gchar *name, gint nparam, const GimpParam *param, gint *nretvals, GimpParam **retvals);
 
-GimpPlugInInfo PLUG_IN_INFO = 
+GimpPlugInInfo PLUG_IN_INFO =
 {
-  NULL,  /* init_proc */ 
-  NULL,  /* quit_proc */ 
-  query, /* query_proc */ 
-  run,   /* run_proc */ 
-}; 
+  NULL,  /* init_proc */
+  NULL,  /* quit_proc */
+  query, /* query_proc */
+  run,   /* run_proc */
+};
 
 /* ----------------------------------------------------------------------
- * iterator functions for basic datatypes 
+ * iterator functions for basic datatypes
  * ----------------------------------------------------------------------
  */
 
@@ -55,7 +55,7 @@ static void p_delta_gint(gint *val, gint val_from, gint val_to, gint32 total_ste
     if(total_steps < 1) return;
 
     delta = ((double)(val_to - val_from) / (double)total_steps) * ((double)total_steps - current_step);
-    *val  = ROUND(val_from + delta);  
+    *val  = ROUND(val_from + delta);
 }
 static void p_delta_gfloat(gfloat *val, gfloat val_from, gfloat val_to, gint32 total_steps, gdouble current_step)
 {
@@ -68,22 +68,22 @@ static void p_delta_gfloat(gfloat *val, gfloat val_from, gfloat val_to, gint32 t
 }
 
 /* ----------------------------------------------------------------------
- * p_plug_in_lqr_iter 
+ * p_plug_in_lqr_iter
  * ----------------------------------------------------------------------
  */
-gint p_plug_in_lqr_iter(GimpRunMode run_mode, gint32 total_steps, gdouble current_step, gint32 len_struct) 
+gint p_plug_in_lqr_iter(GimpRunMode run_mode, gint32 total_steps, gdouble current_step, gint32 len_struct)
 {
-    PlugInVals  buf, buf_from, buf_to; 
+    PlugInVals  buf, buf_from, buf_to;
 
-    if(len_struct != sizeof(PlugInVals)) 
+    if(len_struct != sizeof(PlugInVals))
     {
-      fprintf(stderr, "ERROR: p_plug_in_lqr_iter  stored Data missmatch in size %d != %d\n",   
-                       (int)len_struct, sizeof(PlugInVals) ); 
-      return -1;  /* ERROR */ 
+      fprintf(stderr, "ERROR: p_plug_in_lqr_iter  stored Data missmatch in size %d != %d\n",
+                       (int)len_struct, sizeof(PlugInVals) );
+      return -1;  /* ERROR */
     }
 
-    gimp_get_data("plug_in_lqr-ITER-FROM", &buf_from); 
-    gimp_get_data("plug_in_lqr-ITER-TO",   &buf_to); 
+    gimp_get_data("plug_in_lqr-ITER-FROM", &buf_from);
+    gimp_get_data("plug_in_lqr-ITER-TO",   &buf_to);
     memcpy(&buf, &buf_from, sizeof(buf));
 
     p_delta_gint(&buf.new_width, buf_from.new_width, buf_to.new_width, total_steps, current_step);
@@ -111,7 +111,7 @@ gint p_plug_in_lqr_iter(GimpRunMode run_mode, gint32 total_steps, gdouble curren
     g_strlcpy(buf.rigmask_layer_name, buf_to.rigmask_layer_name, VALS_MAX_NAME_LENGTH);
     g_strlcpy(buf.selected_layer_name, buf_to.selected_layer_name, VALS_MAX_NAME_LENGTH);
 
-    gimp_set_data("plug_in_lqr", &buf, sizeof(buf)); 
+    gimp_set_data("plug_in_lqr", &buf, sizeof(buf));
 
     return 0; /* OK */
 }

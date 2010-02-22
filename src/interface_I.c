@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- 
+
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org.licences/>.
  */
@@ -28,6 +28,7 @@
 #include <lqr.h>
 
 #include "plugin-intl.h"
+
 #include "main_common.h"
 #include "main.h"
 #include "render.h"
@@ -80,7 +81,7 @@ InterfaceIData interface_I_data;
 //volatile sig_atomic_t interface_locked = 0;
 
 GtkWidget *dlg;
-GtkTooltips *dlg_tips;
+/* GtkTooltips *dlg_tips; */
 GtkWidget *coordinates;
 
 gulong size_changed = 0;
@@ -162,7 +163,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
       has_mask = TRUE;
     }
 
-  dlg = gtk_dialog_new_with_buttons (_("GIMP LiquidRescale Plug-In"), 
+  dlg = gtk_dialog_new_with_buttons (_("GIMP LiquidRescale Plug-In"),
 			 NULL, 0,
 			 //GIMP_STOCK_RESET, RESPONSE_RESET,
 			 //GTK_STOCK_REFRESH, RESPONSE_REFRESH,
@@ -183,11 +184,11 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   g_signal_connect (dlg, "response", G_CALLBACK (callback_dialog_I_response),
 		    (gpointer) (NULL));
 
-  dlg_tips = gtk_tooltips_new ();
+  /* dlg_tips = gtk_tooltips_new (); */
 
   main_hbox = gtk_hbox_new (FALSE, 12);
   gtk_container_set_border_width (GTK_CONTAINER (main_hbox), 12);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), main_hbox);
+  gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area(GTK_DIALOG (dlg))), main_hbox);
 
   vbox = gtk_vbox_new (FALSE, 12);
   gtk_box_pack_start (GTK_BOX (main_hbox), vbox, TRUE, TRUE, 0);
@@ -238,7 +239,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   gtk_widget_show (coordinates);
 
   /* Aux layer usage icons */
- 
+
   hbox2 = gtk_hbox_new (FALSE, 10);
   gtk_container_set_border_width (GTK_CONTAINER (hbox2), 4);
   gtk_box_pack_start (GTK_BOX (vbox3), hbox2, FALSE, FALSE, 0);
@@ -480,7 +481,7 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
     }
 
   gtk_widget_destroy (dlg);
-  
+
   reader_go = FALSE;
 
   return dialog_I_response;

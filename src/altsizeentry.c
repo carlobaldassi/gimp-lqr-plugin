@@ -15,12 +15,14 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- 
+
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org.licences/>.
  */
 
 #include "config.h"
+
+#include <string.h>
 
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
@@ -473,20 +475,30 @@ alt_size_entry_attach_label (AltSizeEntry *gse,
 
   if (column == 0)
     {
-      GtkTableChild *child;
-      GList         *list;
+      GList *children;
+      GList *list;
 
-      for (list = GTK_TABLE (gse)->children; list; list = g_list_next (list))
+      children = gtk_container_get_children (GTK_CONTAINER (gse));
+
+      for (list = children; list; list = g_list_next (list))
         {
-          child = (GtkTableChild *) list->data;
+          GtkWidget *child = list->data;
+          gint       left_attach;
+          gint       top_attach;
 
-          if (child->left_attach == 1 && child->top_attach == row)
+          gtk_container_child_get (GTK_CONTAINER (gse), child,
+                                   "left-attach", &left_attach,
+                                   "top-attach",  &top_attach,
+                                   NULL);
+
+          if (left_attach == 1 && top_attach == row)
             {
-              gtk_label_set_mnemonic_widget (GTK_LABEL (label),
-                                             child->widget);
+              gtk_label_set_mnemonic_widget (GTK_LABEL (label), child);
               break;
             }
         }
+
+      g_list_free (children);
     }
 
   gtk_misc_set_alignment (GTK_MISC (label), alignment, 0.5);
@@ -615,8 +627,8 @@ alt_size_entry_set_value_boundaries (AltSizeEntry *gse,
   gsef->min_value        = lower;
   gsef->max_value        = upper;
 
-  GTK_ADJUSTMENT (gsef->value_adjustment)->lower = gsef->min_value;
-  GTK_ADJUSTMENT (gsef->value_adjustment)->upper = gsef->max_value;
+  gtk_adjustment_set_lower (GTK_ADJUSTMENT (gsef->value_adjustment), gsef->min_value);
+  gtk_adjustment_set_upper (GTK_ADJUSTMENT (gsef->value_adjustment), gsef->max_value);
 
   if (gsef->stop_recursion) /* this is a hack (but useful ;-) */
     return;
@@ -799,7 +811,7 @@ alt_size_entry_value_callback (GtkWidget *widget,
 
   gsef = (AltSizeEntryField *) data;
 
-  new_value = GTK_ADJUSTMENT (widget)->value;
+  new_value = gtk_adjustment_get_value (GTK_ADJUSTMENT (widget));
 
   if (gsef->value != new_value)
     alt_size_entry_update_value (gsef, new_value);
@@ -838,8 +850,8 @@ alt_size_entry_set_refval_boundaries (AltSizeEntry *gse,
 
   if (gse->show_refval)
     {
-      GTK_ADJUSTMENT (gsef->refval_adjustment)->lower = gsef->min_refval;
-      GTK_ADJUSTMENT (gsef->refval_adjustment)->upper = gsef->max_refval;
+      gtk_adjustment_set_lower (GTK_ADJUSTMENT (gsef->refval_adjustment), gsef->min_refval);
+      gtk_adjustment_set_upper (GTK_ADJUSTMENT (gsef->refval_adjustment), gsef->max_refval);
     }
 
   if (gsef->stop_recursion) /* this is a hack (but useful ;-) */
@@ -1055,7 +1067,7 @@ alt_size_entry_refval_callback (GtkWidget *widget,
 
   gsef = (AltSizeEntryField *) data;
 
-  new_refval = GTK_ADJUSTMENT (widget)->value;
+  new_refval = gtk_adjustment_get_value (GTK_ADJUSTMENT (widget));
 
   if (gsef->refval != new_refval)
     alt_size_entry_update_refval (gsef, new_refval);

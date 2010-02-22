@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- 
+
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org.licences/>.
  */
@@ -27,9 +27,10 @@
 
 #include "io_functions.h"
 
+#include "plugin-intl.h"
+
 #include "main.h"
 #include "render.h"
-#include "plugin-intl.h"
 
 
 #if 0
@@ -88,7 +89,7 @@
 /* static functions declarations */
 
 static gboolean my_progress_end (const gchar * message);
-static LqrProgress * progress_init ();
+static LqrProgress * progress_init (void);
 static gfloat rigidity_init (PlugInVals * vals);
 static gboolean compute_ignore_disc_mask (PlugInVals * vals, gint old_width, gint old_height, gint new_width, gint new_height);
 static void set_tiles (gint width);
@@ -749,7 +750,7 @@ my_progress_end (const gchar * message)
 }
 
 static LqrProgress*
-progress_init ()
+progress_init (void)
 {
   LqrProgress * progress = lqr_progress_new ();
   MEM_CHECK_N (progress);
@@ -856,7 +857,7 @@ attach_aux_carver (LqrCarver * carver, gint32 layer_ID, gint width, gint height)
       bpp = gimp_drawable_bpp (layer_ID);
       aux_carver =
         lqr_carver_new (rgb_buffer, width, height, bpp);
-                        
+
       MEM_CHECK_N (aux_carver);
       MEM_CHECK1_N (lqr_carver_attach (carver, aux_carver));
     }

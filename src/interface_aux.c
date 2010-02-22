@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- 
+
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org.licences/>.
  */
@@ -54,7 +54,6 @@ PlugInVals *state;
 PlugInDialogVals *dialog_state;
 
 GtkWidget *dlg;
-GtkTooltips *dlg_tips;
 
 /***  Public functions  ***/
 
@@ -98,7 +97,7 @@ dialog_aux (gint32 image_ID, gint32 layer_ID,
   gimp_context_get_foreground (&saved_colour);
   gimp_context_set_foreground (&fg_colour);
 
-  dlg = gtk_dialog_new_with_buttons (_("GIMP LiquidRescale Plug-In"), 
+  dlg = gtk_dialog_new_with_buttons (_("GIMP LiquidRescale Plug-In"),
 			 NULL, 0,
 			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			 GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
@@ -116,8 +115,6 @@ dialog_aux (gint32 image_ID, gint32 layer_ID,
 
   g_signal_connect (dlg, "response", G_CALLBACK (callback_dialog_aux_response),
 		    (gpointer) ia_data);
-
-  dlg_tips = gtk_tooltips_new ();
 
   main_hbox = gtk_hbox_new (FALSE, 12);
   gtk_container_set_border_width (GTK_CONTAINER (main_hbox), 12);
@@ -152,14 +149,14 @@ dialog_aux (gint32 image_ID, gint32 layer_ID,
   gtk_main ();
 
   gtk_widget_destroy (dlg);
-  
+
   gimp_displays_flush();
 
   gimp_context_set_foreground (&saved_colour);
 
   g_free(state);
   g_free(ui_state);
-  
+
   return dialog_aux_response;
 }
 

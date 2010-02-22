@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- 
+
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org.licences/>.
  */
@@ -25,6 +25,7 @@
 #include <lqr.h>
 
 #include "plugin-intl.h"
+
 #include "main.h"
 #include "preview.h"
 #include "layers_combo.h"
@@ -45,7 +46,6 @@ count_extra_layers (gint32 image_ID)
 gboolean
 dialog_layer_constraint_func (gint32 image_ID, gint32 layer_ID, gpointer data)
 {
-  /* GimpDrawable * gdrawable = (GimpDrawable *) data; */
   gint32 ref_layer_ID = *((gint32*) data);
   if (image_ID != gimp_drawable_get_image (ref_layer_ID))
     {
