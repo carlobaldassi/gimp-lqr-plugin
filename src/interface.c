@@ -82,8 +82,6 @@ static void refresh_advanced_page (NotebookData * data);
 
 gint dialog_response = GTK_RESPONSE_CANCEL;
 
-gint context_calls = 0;
-
 PlugInUIVals *ui_state;
 PlugInVals *state;
 PlugInDialogVals *dialog_state;
@@ -111,7 +109,6 @@ dialog (gint32 image_ID,
 	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
 	PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
 {
-  GimpRGB saved_colour;
   gint num_extra_layers;
   gint orig_width, orig_height;
   GtkWidget *main_hbox;
@@ -171,8 +168,6 @@ dialog (gint32 image_ID,
 
   dialog_state = dialog_vals;
 
-  gimp_context_get_foreground (&saved_colour);
-
   state = g_new (PlugInVals, 1);
   memcpy (state, vals, sizeof (PlugInVals));
 
@@ -181,22 +176,43 @@ dialog (gint32 image_ID,
 
   notebook_data = g_new (NotebookData, 1);
 
+  if (!gimp_drawable_is_valid(layer_ID))
+    {
+      layer_ID = gimp_image_get_active_layer (image_ID);
+    }
+
   pres_toggle_data.ui_toggled = &(ui_state->pres_status);
   disc_toggle_data.ui_toggled = &(ui_state->disc_status);
   preview_data.pres_combo_awaked = FALSE;
   preview_data.disc_combo_awaked = FALSE;
   if (ui_state->pres_status == TRUE)
     {
-      preview_data.pres_combo_awaked = TRUE;
+      if (gimp_drawable_is_valid(state->pres_layer_ID) && 
+          gimp_drawable_is_layer(state->pres_layer_ID) &&
+          (state->pres_layer_ID != layer_ID))
+        {
+          preview_data.pres_combo_awaked = TRUE;
+        }
+      else
+        {
+          state->pres_layer_ID = 0;
+          ui_state->pres_status = FALSE;
+        }
     }
   if (ui_state->disc_status == TRUE)
     {
+      if (gimp_drawable_is_valid(state->disc_layer_ID) &&
+          gimp_drawable_is_layer(state->disc_layer_ID) &&
+          (state->disc_layer_ID != layer_ID))
+        {
+          preview_data.disc_combo_awaked = TRUE;
+        }
+      else
+        {
+          state->disc_layer_ID = 0;
+          ui_state->disc_status = FALSE;
+        }
       preview_data.disc_combo_awaked = TRUE;
-    }
-
-  if (!gimp_drawable_is_valid(layer_ID))
-    {
-      layer_ID = gimp_image_get_active_layer (image_ID);
     }
 
   orig_width = gimp_drawable_width (layer_ID);
@@ -809,11 +825,6 @@ dialog (gint32 image_ID,
   g_free(ui_state);
   g_free(notebook_data);
 
-  if (context_calls > 0)
-    {
-      gimp_context_set_foreground (&saved_colour);
-    }
-
   return dialog_response;
 }
 
@@ -1186,11 +1197,23 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 
   num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
-  if (!features_are_sensitive)
+
+  if (!features_are_sensitive ||
+      !gimp_drawable_is_valid(state->pres_layer_ID) ||
+      !gimp_drawable_is_layer(state->pres_layer_ID) ||
+      (state->pres_layer_ID == layer_ID))
     {
       ui_state->pres_status = FALSE;
-      ui_state->disc_status = FALSE;
+      state->pres_layer_ID = 0;
       preview_data.pres_combo_awaked = FALSE;
+    }
+  if (!features_are_sensitive ||
+      !gimp_drawable_is_valid(state->disc_layer_ID) ||
+      !gimp_drawable_is_layer(state->disc_layer_ID) ||
+      (state->disc_layer_ID == layer_ID))
+    {
+      ui_state->disc_status = FALSE;
+      state->disc_layer_ID = 0;
       preview_data.disc_combo_awaked = FALSE;
     }
 
@@ -1849,15 +1872,19 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   num_extra_layers = count_extra_layers (image_ID);
   features_are_sensitive = (num_extra_layers > 0 ? TRUE : FALSE);
   preview_data.rigmask_combo_awaked = FALSE;
-  if (!features_are_sensitive)
+
+  if (!features_are_sensitive ||
+      !gimp_drawable_is_valid(state->rigmask_layer_ID) ||
+      !gimp_drawable_is_layer(state->rigmask_layer_ID) ||
+      (state->rigmask_layer_ID == layer_ID))
     {
       ui_state->rigmask_status = FALSE;
-      preview_data.rigmask_combo_awaked = FALSE;
+      state->rigmask_layer_ID = 0;
+      /* preview_data.rigmask_combo_awaked = FALSE; */
     }
 
   thispage = gtk_vbox_new (FALSE, 12);
   gtk_container_set_border_width (GTK_CONTAINER (thispage), 12);
-  //notebook_data->advanced_page = thispage;
   gtk_widget_show (thispage);
 
   scrollwindow = gtk_scrolled_window_new (NULL, NULL);

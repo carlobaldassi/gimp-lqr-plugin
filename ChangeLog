@@ -1,3 +1,8 @@
+2010-02-22 Carlo Baldassi <carlobaldassi@gmail.com>
+	* modified: if an aux layer is deleted during or
+	  between sessions, it is not substitued by another
+	  one and the corresponding setting is made inactive
+
 2010-02-20 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new: reduced interface for aux layers
 	* modified: text in new and edit buttons for
