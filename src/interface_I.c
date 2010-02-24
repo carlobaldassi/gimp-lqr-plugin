@@ -90,12 +90,15 @@ gboolean reader_go = TRUE;
 /***  Public functions  ***/
 
 gint
-dialog_I (gint32 image_ID, gint32 layer_ID,
+dialog_I (PlugInImageVals * image_vals,
+	PlugInDrawableVals * drawable_vals,
 	PlugInVals * vals,
-	PlugInImageVals * image_vals,
-	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
-        PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
+	PlugInUIVals * ui_vals,
+        PlugInColVals * col_vals,
+        PlugInDialogVals * dialog_vals)
 {
+  gint32 image_ID;
+  gint32 layer_ID;
   gint orig_width, orig_height;
   GtkWidget *main_hbox;
   GtkWidget *vbox;
@@ -135,6 +138,9 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   CarverData * carver_data;
 
+  image_ID = image_vals->image_ID;
+  layer_ID = drawable_vals->layer_ID;
+
   state = g_new (PlugInVals, 1);
   memcpy (state, vals, sizeof (PlugInVals));
 
@@ -148,9 +154,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   g_assert (gimp_drawable_is_layer (layer_ID) == TRUE);
 
-  drawable_vals->layer_ID = layer_ID;
-  interface_I_data.image_ID = image_ID;
-  interface_I_data.drawable_vals = drawable_vals;
   interface_I_data.orig_width = orig_width;
   interface_I_data.orig_height = orig_height;
   interface_I_data.col_vals = col_vals;
@@ -199,8 +202,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   frame = gimp_frame_new (_("Set width and height"));
   gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
   gtk_widget_show (frame);
-
-  //interface_I_data.size_frame = frame;
 
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_container_add (GTK_CONTAINER (frame), hbox);
@@ -304,8 +305,6 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   g_signal_connect (resetvalues_button, "clicked",
 		    G_CALLBACK (callback_resetvalues_button),
 		    (gpointer) & interface_I_data);
-
-  //interface_I_data.resetvalues_button = resetvalues_button;
 
   /* Map info */
 
@@ -437,12 +436,17 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
   AUX_LAYER_STATUS(state->pres_layer_ID, ui_state->pres_status);
   AUX_LAYER_STATUS(state->disc_layer_ID, ui_state->disc_status);
   AUX_LAYER_STATUS(state->rigmask_layer_ID, ui_state->rigmask_status);
-  carver_data = render_init_carver(image_ID, state, drawable_vals, TRUE);
+  gimp_image_undo_group_start(image_ID);
+  carver_data = render_init_carver(image_vals, drawable_vals, state, TRUE);
+  gimp_image_undo_group_end(image_ID);
   if (carver_data == NULL)
     {
       return RESPONSE_FATAL;
     }
   interface_I_data.carver_data = carver_data;
+
+  image_vals->image_ID = carver_data->image_ID;
+  drawable_vals->layer_ID = carver_data->layer_ID;
 
   set_info_label_text (&interface_I_data);
 
@@ -462,22 +466,31 @@ dialog_I (gint32 image_ID, gint32 layer_ID,
 
   lqr_carver_destroy (carver_data->carver);
 
-  if ((dialog_I_response == GTK_RESPONSE_OK) || (dialog_I_response == RESPONSE_NONINTERACTIVE))
+  switch (dialog_I_response)
     {
-      /*  Save ui values  */
-      ui_state->chain_active =
-	gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
-				      (coordinates));
-      /*
-      state->new_width =
-	ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (coordinates), 0));
-      state->new_height =
-	ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (coordinates), 1));
-        */
+      case RESPONSE_NONINTERACTIVE:
+        switch (state->output_target)
+          {
+            case OUTPUT_TARGET_NEW_LAYER:
+            case OUTPUT_TARGET_NEW_IMAGE:
+              state->output_target = OUTPUT_TARGET_SAME_LAYER; 
+              break;
+            case OUTPUT_TARGET_SAME_LAYER:
+            default:
+              break;
+          }
+      case GTK_RESPONSE_OK:
+        /*  Save ui values  */
+        ui_state->chain_active =
+          gimp_chain_button_get_active (GIMP_COORDINATES_CHAINBUTTON
+                                        (coordinates));
 
-      /* save all */
-      memcpy (vals, state, sizeof (PlugInVals));
-      memcpy (ui_vals, ui_state, sizeof (PlugInUIVals));
+        /* save all */
+        memcpy (vals, state, sizeof (PlugInVals));
+        memcpy (ui_vals, ui_state, sizeof (PlugInUIVals));
+        break;
+      default:
+        break;
     }
 
   gtk_widget_destroy (dlg);
@@ -498,14 +511,9 @@ callback_dialog_I_response (GtkWidget * dialog, gint response_id, gpointer data)
   //ResponseData * r_data = RESPONSE_DATA (data);
   switch (response_id)
     {
-      /*
-      case RESPONSE_REFRESH:
-        break;
-      */
       case RESPONSE_NONINTERACTIVE:
         gtk_window_get_position(GTK_WINDOW(dialog), &(dialog_state->x), &(dialog_state->y));
         dialog_state->has_pos = TRUE;
-        //printf("state set, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       default:
         dialog_I_response = response_id;
         gtk_main_quit ();
@@ -551,11 +559,10 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
     ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (size_entry), 1));
   state->new_width = new_width;
   state->new_height = new_height;
-  //printf("[w,h=%i,%i]\n", new_width, new_height); fflush(stdout);
-  gimp_image_undo_group_start (p_data->image_ID);
-  render_success = render_interactive (p_data->image_ID, state, p_data->drawable_vals, p_data->carver_data);
-  gimp_image_undo_group_end (p_data->image_ID);
-  p_data->drawable_vals->layer_ID = c_data->layer_ID;
+  gimp_image_undo_group_start (c_data->image_ID);
+  render_success = render_interactive (state, p_data->carver_data);
+  gimp_image_undo_group_end (c_data->image_ID);
+  /* p_data->drawable_vals->layer_ID = c_data->layer_ID; */
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;
@@ -662,11 +669,11 @@ callback_flatten_button (GtkWidget * button, gpointer data)
 {
   gboolean render_success;
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
-  //CarverData * c_data = p_data->carver_data;
+  CarverData * c_data = p_data->carver_data;
 
-  gimp_image_undo_group_start (p_data->image_ID);
-  render_success = render_flatten (p_data->image_ID, state, p_data->drawable_vals, p_data->carver_data);
-  gimp_image_undo_group_end (p_data->image_ID);
+  gimp_image_undo_group_start (c_data->image_ID);
+  render_success = render_flatten (state, p_data->carver_data);
+  gimp_image_undo_group_end (c_data->image_ID);
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;
@@ -684,11 +691,11 @@ callback_dump_button (GtkWidget * button, gpointer data)
 {
   gboolean render_success;
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
-  //CarverData * c_data = p_data->carver_data;
+  CarverData * c_data = p_data->carver_data;
 
-  gimp_image_undo_group_start (p_data->image_ID);
-  render_success = render_dump_vmap (p_data->image_ID, state, p_data->drawable_vals, p_data->col_vals, p_data->carver_data, &(p_data->vmap_layer_ID));
-  gimp_image_undo_group_end (p_data->image_ID);
+  gimp_image_undo_group_start (c_data->image_ID);
+  render_success = render_dump_vmap (state, p_data->col_vals, p_data->carver_data, &(p_data->vmap_layer_ID));
+  gimp_image_undo_group_end (c_data->image_ID);
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;

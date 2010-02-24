@@ -45,7 +45,7 @@ typedef struct
   gfloat enl_step;
   gboolean resize_aux_layers;
   gboolean resize_canvas;
-  gboolean new_layer;
+  gint32 output_target;
   gboolean output_seams;
   gint nrg_func;
   gint res_order;

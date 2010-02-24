@@ -61,6 +61,7 @@ static void callback_interactive_button (GtkWidget * button, gpointer data);
 static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
 static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
+static void callback_output_target_changed (GtkWidget * res_order, gpointer data);
 static void callback_scaleback_mode_changed (GtkWidget * res_order, gpointer data);
 static void callback_expander_changed (GtkWidget * expander, gpointer data);
 
@@ -103,13 +104,15 @@ GtkWidget *dlg;
 /***  Public functions  ***/
 
 gint
-dialog (gint32 image_ID,
-	gint32 layer_ID,
+dialog (PlugInImageVals * image_vals,
+	PlugInDrawableVals * drawable_vals,
 	PlugInVals * vals,
-	PlugInImageVals * image_vals,
-	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
-	PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
+        PlugInUIVals * ui_vals,
+	PlugInColVals * col_vals,
+        PlugInDialogVals * dialog_vals)
 {
+  gint32 image_ID;
+  gint32 layer_ID;
   gint num_extra_layers;
   gint orig_width, orig_height;
   GtkWidget *main_hbox;
@@ -149,7 +152,10 @@ dialog (gint32 image_ID,
   GtkWidget *advanced_page;
   GtkWidget *thispage;
   GtkWidget *label;
-  GtkWidget *new_layer_button;
+  GtkWidget *output_target_event_box;
+  GtkWidget *output_target_label;
+  GtkWidget *output_target_hbox;
+  GtkWidget *output_target_combo_box;
   GtkWidget *resize_canvas_button;
   GtkWidget *resize_aux_layers_button;
   GtkWidget *out_seams_hbox;
@@ -162,6 +168,9 @@ dialog (gint32 image_ID,
   gboolean has_mask = FALSE;
   GimpUnit unit;
   gdouble xres, yres;
+
+  image_ID = image_vals->image_ID;
+  layer_ID = drawable_vals->layer_ID;
 
   IMAGE_CHECK (image_ID, FALSE);
 
@@ -545,6 +554,7 @@ dialog (gint32 image_ID,
   gtk_box_pack_start (GTK_BOX (thispage), vbox, FALSE, FALSE, 0);
   gtk_widget_show (vbox);
 
+  /*
   new_layer_button =
     gtk_check_button_new_with_label (_("Output on a new layer"));
 
@@ -556,6 +566,42 @@ dialog (gint32 image_ID,
   gimp_help_set_help_data (new_layer_button,
 			   _("Outputs the resulting image "
 			     "on a new layer"), NULL);
+                             */
+
+  output_target_event_box = gtk_event_box_new ();
+  gtk_box_pack_start (GTK_BOX (vbox), output_target_event_box, FALSE, FALSE, 0);
+  gtk_widget_show (output_target_event_box);
+
+  gimp_help_set_help_data (output_target_event_box,
+			   _
+			   ("The result of rescaling can be put in the current layer, in a new one "
+                            "or in a new image"),
+			   NULL);
+
+  output_target_hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_add (GTK_CONTAINER (output_target_event_box), output_target_hbox);
+  gtk_widget_show (output_target_hbox);
+
+  output_target_label = gtk_label_new(_("Output target:"));
+  gtk_box_pack_start (GTK_BOX(output_target_hbox), output_target_label, FALSE, FALSE, 0);
+  gtk_widget_show (output_target_label);
+
+  output_target_combo_box =
+    gimp_int_combo_box_new (_("selected layer"), OUTPUT_TARGET_SAME_LAYER,
+			    _("new layer"), OUTPUT_TARGET_NEW_LAYER,
+			    _("new image"), OUTPUT_TARGET_NEW_IMAGE,
+			    NULL);
+  gimp_int_combo_box_set_active (GIMP_INT_COMBO_BOX (output_target_combo_box),
+				 state->output_target);
+
+  gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (output_target_combo_box),
+			      state->output_target,
+			      G_CALLBACK (callback_output_target_changed),
+			      (gpointer) & preview_data);
+
+  gtk_box_pack_start (GTK_BOX (output_target_hbox), output_target_combo_box, FALSE, FALSE, 0);
+  gtk_widget_show (output_target_combo_box);
+  /**/
 
   resize_canvas_button =
     gtk_check_button_new_with_label (_("Resize image canvas"));
@@ -773,8 +819,8 @@ dialog (gint32 image_ID,
 				     &(state->nrg_func));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
 				     &(state->res_order));
-      state->new_layer =
-	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (new_layer_button));
+      /*state->new_layer =
+	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (new_layer_button));*/
       state->resize_canvas =
 	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
 				      (resize_canvas_button));
@@ -944,6 +990,14 @@ callback_res_order_changed (GtkWidget * res_order, gpointer data)
   callback_set_disc_warning (NULL, data);
 }
 
+static void
+callback_output_target_changed (GtkWidget * output_target_combo, gpointer data)
+{
+  gint mode;
+  PreviewData *p_data = PREVIEW_DATA (data);
+  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (output_target_combo), &mode);
+  p_data->vals->output_target = mode;
+}
 
 static void
 callback_scaleback_button (GtkWidget * button, gpointer data)

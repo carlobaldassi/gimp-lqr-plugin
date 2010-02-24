@@ -91,6 +91,18 @@ typedef struct
 #define PLUGIN_DIALOG_VALS(data) ((PlugInDialogVals*)data)
 
 
+/* Output target */
+
+enum _OutputTarget
+{
+  OUTPUT_TARGET_SAME_LAYER,
+  OUTPUT_TARGET_NEW_LAYER,
+  OUTPUT_TARGET_NEW_IMAGE
+};
+
+typedef enum _OutputTarget OutputTarget;
+
+
 /* Scaleback modes */
 
 enum _ScalebackMode

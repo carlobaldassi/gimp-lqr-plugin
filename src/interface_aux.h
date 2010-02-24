@@ -31,10 +31,10 @@ typedef struct
 /*  Public functions  */
 
 gint
-dialog_aux (gint32 image_ID, gint32 layer_ID,
+dialog_aux (PlugInImageVals * image_vals,
+	PlugInDrawableVals * drawable_vals,
 	PlugInVals * vals,
-	PlugInImageVals * image_vals,
-	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
+	PlugInUIVals * ui_vals,
      	PlugInColVals * col_vals, PlugInDialogVals * dialog_vals);
 
 GimpRGB * colour_from_type (gint32 image_ID, AuxLayerType layer_type);

@@ -58,18 +58,23 @@ GtkWidget *dlg;
 /***  Public functions  ***/
 
 gint
-dialog_aux (gint32 image_ID, gint32 layer_ID,
+dialog_aux (PlugInImageVals * image_vals,
+	PlugInDrawableVals * drawable_vals,
 	PlugInVals * vals,
-	PlugInImageVals * image_vals,
-	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
+	PlugInUIVals * ui_vals,
         PlugInColVals * col_vals, PlugInDialogVals * dialog_vals)
 {
+  gint32 image_ID;
+  gint32 layer_ID;
   GimpRGB fg_colour;
   GimpRGB saved_colour;
   GtkWidget *main_hbox;
   GtkWidget *info_icon;
   GtkWidget *info_label;
   InterfaceAuxData *ia_data;
+
+  image_ID = image_vals->image_ID;
+  layer_ID = drawable_vals->layer_ID;
 
   state = g_new (PlugInVals, 1);
   memcpy (state, vals, sizeof (PlugInVals));

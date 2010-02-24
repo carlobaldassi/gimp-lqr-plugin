@@ -2,7 +2,6 @@
 * rescale transparency mask along with
   the active layer
 * increase gradient function radius
-* add option "new image" (?)
 * add option "apply to all layers" (?)
 * improve interface (preview(?))
 * clean up the interface.c code!

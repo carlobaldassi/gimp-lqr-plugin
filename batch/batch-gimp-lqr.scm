@@ -46,7 +46,7 @@
 		150			;(FLOAT "enl-step" "enlargment step (ratio)")
 		1			;(INT "resize-aux-layers" "Whether to resize auxiliary layers")
 		1			;(INT "resize-canvas" "Whether to resize canvas")
-		0			;(INT "new-layer" "Whether to output on a new layer")
+		0			;(INT "output-target" "Output target")
 		0			;(INT "seams" "Whether to output the seam map")
 		3			;(INT "grad-func" "Gradient function to use")
 		0			;(INT "res-order" "Resize order")
@@ -82,7 +82,7 @@
 	enlargement_step		; (FLOAT) enlargement step percentage (default=150)
 	resize_aux_layers		; (INT) whether to resize auxiliary layers (0=False [1=True])
 	resize_canvas			; (INT) whether to resize canvas (0=False [1=True])
-	new_layer			; (INT) whether to output on a new layer ([0=False] 1=True)
+	output_target			; (INT) output target ([0=Selected layer] 1=New layer)
 	output_seams			; (INT) whether to output the seam map(s) ([0=False] 1=True)
 	gradient_function		; (INT) gradient function to use (0=Norm 2=SumAbs [3=xAbs] 5=Null)
 	resize_order			; (INT) resize order ([0=HorizontalFirst] 1=VerticalFirst)
@@ -112,7 +112,7 @@
 		enlargement_step	;(FLOAT "enl-step" "enlargment step (ratio)")
 		resize_aux_layers	;(INT "resize-aux-layers" "Whether to resize auxiliary layers")
 		resize_canvas		;(INT "resize-canvas" "Whether to resize canvas")
-		new_layer		;(INT "new-layer" "Whether to output on a new layer")
+		output_target		;(INT "output-target" "Output target")
 		output_seams		;(INT "seams" "Whether to output the seam map")
 		gradient_function	;(INT "grad-func" "Gradient function to use")
 		resize_order		;(INT "res-order" "Resize order")
@@ -148,7 +148,7 @@
 	enlargement_step		; (FLOAT) enlargement step percentage (default=150)
 	resize_aux_layers		; (INT) whether to resize auxiliary layers (0=False [1=True])
 	resize_canvas			; (INT) whether to resize canvas (0=False [1=True])
-	new_layer			; (INT) whether to output on a new layer ([0=False] 1=True)
+	output_target			; (INT) output target ([0=Selected layer] 1=New layer)
 	output_seams			; (INT) whether to output the seam map(s) ([0=False] 1=True)
 	gradient_function		; (INT) gradient function to use (0=Norm 2=SumAbs [3=xAbs] 5=Null)
 	resize_order			; (INT) resize order ([0=HorizontalFirst] 1=VerticalFirst)
@@ -177,7 +177,7 @@
 		enlargement_step	;(FLOAT "enl-step" "enlargment step (ratio)")
 		resize_aux_layers	;(INT "resize-aux-layers" "Whether to resize auxiliary layers")
 		resize_canvas		;(INT "resize-canvas" "Whether to resize canvas")
-		new_layer		;(INT "new-layer" "Whether to output on a new layer")
+		output_target		;(INT "output-target" "Output target")
 		output_seams		;(INT "seams" "Whether to output the seam map")
 		gradient_function	;(INT "grad-func" "Gradient function to use")
 		resize_order		;(INT "res-order" "Resize order")
@@ -240,7 +240,7 @@
 	  SF-VALUE	"Enlargement step (percentage) [FLOAT, default=150.0]" "150.0"
 	  SF-TOGGLE	"Resize aux layer [BOOLEAN, default=TRUE]" TRUE
 	  SF-TOGGLE	"Resize canvas [BOOLEAN, default=TRUE]" TRUE
-	  SF-TOGGLE	"Output on a new layer [BOOLEAN, default=FALSE]" FALSE
+	  SF-VALUE	"Output target ([0=Selected layer] 1=New layer)" "0"
 	  SF-TOGGLE	"Output the seam map(s) [BOOLEAN, default=FALSE]" FALSE
 	  SF-VALUE	"Gradient function [INTEGER, 0=Norm 2=SumAbs 3=xAbs 5=Null, default=3]" "3"
 	  SF-VALUE	"Resize order [INTEGER, 0=HorizontalFirst 1=VerticalFirst, default=0]" "0"
@@ -278,7 +278,7 @@
 	  SF-VALUE	"Enlargement step (percentage) [FLOAT, default=150.0]" "150.0"
 	  SF-TOGGLE	"Resize aux layer [BOOLEAN, default=TRUE]" TRUE
 	  SF-TOGGLE	"Resize canvas [BOOLEAN, default=TRUE]" TRUE
-	  SF-TOGGLE	"Output on a new layer [BOOLEAN, default=FALSE]" FALSE
+	  SF-VALUE	"Output target ([0=Selected layer] 1=New layer)" "0"
 	  SF-TOGGLE	"Output the seam map(s) [BOOLEAN, default=FALSE]" FALSE
 	  SF-VALUE	"Gradient function [INTEGER, 0=Norm 2=SumAbs 3=xAbs 5=Null, default=3]" "3"
 	  SF-VALUE	"Resize order [INTEGER, 0=HorizontalFirst 1=VerticalFirst, default=0]" "0"

@@ -61,7 +61,7 @@ const PlugInVals default_vals = {
   150,				/* enl step */
   TRUE,                         /* resize aux layers */
   TRUE,                         /* resize canvas */
-  FALSE,                        /* output on a new layer */
+  OUTPUT_TARGET_SAME_LAYER,     /* output target (same layer, new layer, new image) */
   FALSE,                        /* output seams */
   LQR_EF_GRAD_XABS,             /* nrg func */
   LQR_RES_ORDER_HOR,            /* resize order */
@@ -165,7 +165,7 @@ static GimpParamDef args[] = {
   {GIMP_PDB_INT32, "resize_aux_layers",
    "Whether to resize auxiliary layers"},
   {GIMP_PDB_INT32, "resize_canvas", "Whether to resize canvas"},
-  {GIMP_PDB_INT32, "new_layer", "Whether to output on a new layer"},
+  {GIMP_PDB_INT32, "output target", "Output target (same layer, new layer, new image)"},
   {GIMP_PDB_INT32, "seams", "Whether to output the seam map"},
   {GIMP_PDB_INT32, "nrg_func", "Energy function to use"},
   {GIMP_PDB_INT32, "res_order", "Resize order"},
@@ -300,30 +300,27 @@ run (const gchar * name,
 
           while (run_dialog == TRUE)
             {
-              dialog_resp = dialog (image_ID, layer_ID,
-                             &vals, &image_vals, &drawable_vals, &ui_vals,
+              dialog_resp = dialog (&image_vals, &drawable_vals,
+                             &vals, &ui_vals,
                              &col_vals, &dialog_vals);
               switch (dialog_resp)
                 {
                   case GTK_RESPONSE_OK:
-                    //printf("OK\n"); fflush(stdout);
                     run_dialog = FALSE;
                     break;
                   case RESPONSE_RESET:
-                    //printf("RESET\n"); fflush(stdout);
                     vals = default_vals;
-                    image_vals = default_image_vals;
-                    drawable_vals = default_drawable_vals;
+                    /* image_vals = default_image_vals; */
+                    /* drawable_vals = default_drawable_vals; */
                     ui_vals = default_ui_vals;
                     col_vals = default_col_vals;
-                    image_vals.image_ID = image_ID;
-                    drawable_vals.layer_ID = layer_ID;
+                    /* image_vals.image_ID = image_ID; */
+                    /* drawable_vals.layer_ID = layer_ID; */
                     break;
 		  case RESPONSE_INTERACTIVE:
                     //printf("INTERACTIVE\n"); fflush(stdout);
-		    dialog_I_resp = dialog_I (image_ID, drawable_vals.layer_ID,
-                                &vals, &image_vals, &drawable_vals,
-                                &ui_vals, &col_vals, &dialog_vals);
+		    dialog_I_resp = dialog_I (&image_vals, &drawable_vals,
+                                &vals, &ui_vals, &col_vals, &dialog_vals);
                     switch (dialog_I_resp)
                       {
                         case GTK_RESPONSE_OK:
@@ -341,9 +338,8 @@ run (const gchar * name,
                       }
                     break;
 		  case RESPONSE_WORK_ON_AUX_LAYER:
-                    dialog_aux_resp = dialog_aux (image_ID, drawable_vals.layer_ID,
-                        &vals, &image_vals, &drawable_vals,
-                        &ui_vals, &col_vals, &dialog_vals);
+                    dialog_aux_resp = dialog_aux (&image_vals, &drawable_vals,
+                        &vals, &ui_vals, &col_vals, &dialog_vals);
                     switch(dialog_aux_resp)
                       {
                         case GTK_RESPONSE_OK:
@@ -377,7 +373,6 @@ run (const gchar * name,
           vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
           vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
           vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
-          //printf("RWLV: lid=%i pres=%i disc=%i rmask=%i\n", drawable_vals.layer_ID, vals.pres_layer_ID, vals.disc_layer_ID, vals.rigmask_layer_ID); fflush(stdout);
 
           break;
 
@@ -389,6 +384,9 @@ run (const gchar * name,
     {
       status = GIMP_PDB_CALLING_ERROR;
     }
+
+  image_ID = image_vals.image_ID;
+  layer_ID = drawable_vals.layer_ID;
 
   if (status == GIMP_PDB_SUCCESS)
     {
@@ -406,11 +404,18 @@ run (const gchar * name,
           CarverData * carver_data;
 
           render_success = FALSE;
-          carver_data = render_init_carver (image_ID, &vals, &drawable_vals, FALSE);
+          carver_data = render_init_carver (&image_vals, &drawable_vals, &vals, FALSE);
           if (carver_data)
             {
-              render_success = render_noninteractive (image_ID, &vals, &drawable_vals,
-                &col_vals, carver_data);
+              image_vals.image_ID = carver_data->image_ID;
+              drawable_vals.layer_ID = carver_data->layer_ID;
+              if (image_ID != image_vals.image_ID)
+                {
+                  gimp_image_undo_group_end (image_ID);
+                  image_ID = image_vals.image_ID;
+                  gimp_image_undo_group_start (image_ID);
+                }
+              render_success = render_noninteractive (&vals, &col_vals, carver_data);
             }
         }
 
@@ -479,33 +484,34 @@ noninteractive_read_vals (const GimpParam * param)
   gint32 aux_disc_layer_ID;
   gint32 aux_rigmask_layer_ID;
   gint32 aux_selected_layer_ID;
+  int val_ind = 3;
 
   image_ID = image_vals.image_ID;
 
-  vals.new_width = param[3].data.d_int32;
-  vals.new_height = param[4].data.d_int32;
-  vals.pres_layer_ID = param[5].data.d_int32;
-  vals.pres_coeff = param[6].data.d_int32;
-  vals.disc_layer_ID = param[7].data.d_int32;
-  vals.disc_coeff = param[8].data.d_int32;
-  vals.rigidity = param[9].data.d_float;
-  vals.rigmask_layer_ID = param[10].data.d_int32;
-  vals.delta_x = param[11].data.d_int32;
-  vals.enl_step = param[12].data.d_float;
-  vals.resize_aux_layers = param[13].data.d_int32;
-  vals.resize_canvas = param[14].data.d_int32;
-  vals.new_layer = param[15].data.d_int32;
-  vals.output_seams = param[16].data.d_int32;
-  vals.nrg_func = param[17].data.d_int32;
-  vals.res_order = param[18].data.d_int32;
-  vals.mask_behavior = param[19].data.d_int32;
-  vals.scaleback = param[20].data.d_int32;
-  vals.scaleback_mode = param[21].data.d_int32;
-  vals.no_disc_on_enlarge = param[22].data.d_int32;
-  g_strlcpy(vals.pres_layer_name, param[23].data.d_string, VALS_MAX_NAME_LENGTH);
-  g_strlcpy(vals.disc_layer_name, param[24].data.d_string, VALS_MAX_NAME_LENGTH);
-  g_strlcpy(vals.rigmask_layer_name, param[25].data.d_string, VALS_MAX_NAME_LENGTH);
-  g_strlcpy(vals.selected_layer_name, param[26].data.d_string, VALS_MAX_NAME_LENGTH);
+  vals.new_width = param[val_ind++].data.d_int32;
+  vals.new_height = param[val_ind++].data.d_int32;
+  vals.pres_layer_ID = param[val_ind++].data.d_int32;
+  vals.pres_coeff = param[val_ind++].data.d_int32;
+  vals.disc_layer_ID = param[val_ind++].data.d_int32;
+  vals.disc_coeff = param[val_ind++].data.d_int32;
+  vals.rigidity = param[val_ind++].data.d_float;
+  vals.rigmask_layer_ID = param[val_ind++].data.d_int32;
+  vals.delta_x = param[val_ind++].data.d_int32;
+  vals.enl_step = param[val_ind++].data.d_float;
+  vals.resize_aux_layers = param[val_ind++].data.d_int32;
+  vals.resize_canvas = param[val_ind++].data.d_int32;
+  vals.output_target = param[val_ind++].data.d_int32;
+  vals.output_seams = param[val_ind++].data.d_int32;
+  vals.nrg_func = param[val_ind++].data.d_int32;
+  vals.res_order = param[val_ind++].data.d_int32;
+  vals.mask_behavior = param[val_ind++].data.d_int32;
+  vals.scaleback = param[val_ind++].data.d_int32;
+  vals.scaleback_mode = param[val_ind++].data.d_int32;
+  vals.no_disc_on_enlarge = param[val_ind++].data.d_int32;
+  g_strlcpy(vals.pres_layer_name, param[val_ind++].data.d_string, VALS_MAX_NAME_LENGTH);
+  g_strlcpy(vals.disc_layer_name, param[val_ind++].data.d_string, VALS_MAX_NAME_LENGTH);
+  g_strlcpy(vals.rigmask_layer_name, param[val_ind++].data.d_string, VALS_MAX_NAME_LENGTH);
+  g_strlcpy(vals.selected_layer_name, param[val_ind++].data.d_string, VALS_MAX_NAME_LENGTH);
 
   aux_pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
   aux_disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);

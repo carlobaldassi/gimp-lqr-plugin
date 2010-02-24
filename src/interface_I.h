@@ -28,8 +28,6 @@ typedef struct
         //GtkWidget * size_frame;
         GtkWidget * info_label;
         GtkWidget * dump_button;
-        gint32 image_ID;
-        PlugInDrawableVals * drawable_vals;
         PlugInColVals * col_vals;
         CarverData * carver_data;
         gint orig_width;
@@ -42,10 +40,11 @@ typedef struct
 /*  Public functions  */
 
 gint
-dialog_I (gint32 image_ID, gint32 layer_ID,
-	PlugInVals * vals,
-	PlugInImageVals * image_vals,
-	PlugInDrawableVals * drawable_vals, PlugInUIVals * ui_vals,
-     	PlugInColVals * col_vals, PlugInDialogVals * dialog_vals);
+dialog_I (PlugInImageVals * image_vals,
+          PlugInDrawableVals * drawable_vals,
+          PlugInVals * vals,
+          PlugInUIVals * ui_vals,
+          PlugInColVals * col_vals,
+          PlugInDialogVals * dialog_vals);
 
 #endif /* __INTERFACE_I_H__ */

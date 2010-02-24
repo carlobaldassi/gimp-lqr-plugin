@@ -22,6 +22,7 @@
 typedef struct
 {
   LqrCarver * carver;
+  gint32 image_ID;
   gint32 layer_ID;
   GimpImageBaseType base_type;
   gboolean alpha_lock;
@@ -41,34 +42,26 @@ typedef struct
 /* Functions  */
 
 CarverData *
-render_init_carver (gint32 image_ID,
-        PlugInVals * vals,
+render_init_carver (PlugInImageVals * image_vals,
         PlugInDrawableVals * drawable_vals,
+        PlugInVals * vals,
         gboolean interactive);
 
 gboolean
-render_noninteractive (gint32 image_ID,
-        PlugInVals * vals,
-        PlugInDrawableVals * drawable_vals,
+render_noninteractive (PlugInVals * vals,
         PlugInColVals * col_vals,
         CarverData * carver_data);
 
 gboolean
-render_interactive (gint32 image_ID,
-        PlugInVals * vals,
-        PlugInDrawableVals * drawable_vals,
+render_interactive (PlugInVals * vals,
         CarverData * carver_data);
 
 gboolean
-render_flatten (gint32 image_ID,
-        PlugInVals * vals,
-        PlugInDrawableVals * drawable_vals,
+render_flatten (PlugInVals * vals,
         CarverData * carver_data);
 
 gboolean
-render_dump_vmap (gint32 image_ID,
-        PlugInVals * vals,
-        PlugInDrawableVals * drawable_vals,
+render_dump_vmap (PlugInVals * vals,
         PlugInColVals * col_vals,
         CarverData * carver_data,
         gint32 * vmap_layer_ID_p);

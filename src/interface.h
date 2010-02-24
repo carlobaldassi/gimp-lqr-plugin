@@ -47,11 +47,9 @@ typedef struct
 
 /*  Public functions  */
 
-gint dialog (gint32 image_ID,
-             gint32 layer_ID,
-             PlugInVals * vals,
-             PlugInImageVals * image_vals,
+gint dialog (PlugInImageVals * image_vals,
              PlugInDrawableVals * drawable_vals,
+             PlugInVals * vals,
              PlugInUIVals * ui_vals, PlugInColVals * col_vals,
 	     PlugInDialogVals * dialog_vals);
 

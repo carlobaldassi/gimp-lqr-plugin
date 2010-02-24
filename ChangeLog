@@ -1,3 +1,12 @@
+2010-02-23 Carlo Baldassi <carlobaldassi@gmail.com>
+	* new: output on new image option
+	* modified: output target is reset when coming
+	  back from interactive mode
+	* bugfix: fixed some minor issues arising
+	  when working on a new layer and going back
+	  and forth through interactive/non-interactive
+	  modes (undo groups, layer selections)
+
 2010-02-22 Carlo Baldassi <carlobaldassi@gmail.com>
 	* modified: if an aux layer is deleted during or
 	  between sessions, it is not substitued by another
