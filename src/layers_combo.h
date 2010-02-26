@@ -65,7 +65,7 @@ gboolean dialog_layer_constraint_func (gint32 image_ID,
 
 void combo_get_active (GtkWidget * combo, PreviewData * data,
 			      gint32 * layer_ID_add, gboolean status,
-			      guchar ** buffer_add);
+			      GdkPixbuf ** pixbuf_add, SizeInfo * size_info);
 void callback_pres_combo_get_active (GtkWidget * combo, gpointer data);
 void callback_disc_combo_get_active (GtkWidget * combo, gpointer data);
 void callback_rigmask_combo_get_active (GtkWidget * combo,
@@ -78,10 +78,7 @@ void callback_edit_mask_button (GtkWidget * button, gpointer data);
 
 void callback_guess_button_hor (GtkWidget * button, gpointer data);
 void callback_guess_button_ver (GtkWidget * button, gpointer data);
-//void callback_guess_direction (GtkWidget * combo, gpointer data);
 gint guess_new_size (GtkWidget * button, PreviewData * data, GuessDir direction);
-//int guess_new_width (GtkWidget * button, gpointer data);
-//int guess_new_height (GtkWidget * button, gpointer data);
 
 #endif /* __COMBO_H__ */
 

@@ -26,6 +26,14 @@
 #define PREVIEW_MAX_WIDTH  300
 #define PREVIEW_MAX_HEIGHT 200
 
+typedef struct
+{
+  gint x_off;
+  gint y_off;
+  gint width;
+  gint height;
+} SizeInfo;
+
 /*  Preview data struct */
 
 typedef struct
@@ -34,20 +42,22 @@ typedef struct
   gint32 orig_layer_ID;
   gint32 layer_ID;
   GimpImageType type;
+  PlugInVals *vals;
+  PlugInUIVals *ui_vals;
   gint width;
   gint height;
   gint old_width;
   gint old_height;
+  gfloat factor;
   gint x_off;
   gint y_off;
-  gfloat factor;
-  guchar *buffer;
-  guchar *pres_buffer;
-  guchar *disc_buffer;
-  guchar *rigmask_buffer;
-  guchar *preview_buffer;
-  PlugInVals *vals;
-  PlugInUIVals *ui_vals;
+  SizeInfo pres_size_info;
+  SizeInfo disc_size_info;
+  SizeInfo rigmask_size_info;
+  GdkPixbuf *base_pixbuf;
+  GdkPixbuf *pres_pixbuf;
+  GdkPixbuf *disc_pixbuf;
+  GdkPixbuf *rigmask_pixbuf;
   GdkPixbuf *pixbuf;
   GtkWidget *dlg;
   GtkWidget *area;
@@ -70,6 +80,8 @@ typedef struct
 
 /*  Functions  */
 
+void size_info_scale(SizeInfo * size_info, gdouble factor);
+
 void callback_pres_combo_set_sensitive_preview (GtkWidget * button,
                                                        gpointer data);
 void callback_disc_combo_set_sensitive_preview (GtkWidget * button,
@@ -80,9 +92,7 @@ void callback_rigmask_combo_set_sensitive_preview (GtkWidget * button,
 void preview_init_mem (PreviewData * preview_data);
 void preview_data_create(gint32 image_ID, gint32 layer_ID, PreviewData * p_data);
 GtkWidget * preview_area_create(PreviewData * p_data);
-guchar * preview_build_buffer (gint32 layer_ID);
 void preview_build_pixbuf (PreviewData * preview_data);
-void preview_free_pixbuf (guchar * buffer, gpointer data);
 
 void
 callback_preview_expose_event (GtkWidget * preview_area,

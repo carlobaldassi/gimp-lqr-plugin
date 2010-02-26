@@ -28,10 +28,10 @@
 
 /***  Local functions declarations ***/
 
-static gdouble compute_tfactor(guchar * buffer, gdouble alpha, gint ind, gint bpp);
 static gboolean preview_has_pres_buffer(PreviewData * p_data);
 static gboolean preview_has_disc_buffer(PreviewData * p_data);
 static gboolean preview_has_rigmask_buffer(PreviewData * p_data);
+void preview_composite(PreviewData * p_data, GdkPixbuf * src_pixbuf, SizeInfo * size_info);
 
 /***  Functions definitions ***/
 
@@ -93,10 +93,10 @@ callback_rigmask_combo_set_sensitive_preview (GtkWidget * button,
 void
 preview_init_mem (PreviewData * p_data)
 {
-  p_data->buffer = NULL;
-  p_data->pres_buffer = NULL;
-  p_data->disc_buffer = NULL;
-  p_data->rigmask_buffer = NULL;
+  p_data->base_pixbuf = NULL;
+  p_data->pres_pixbuf = NULL;
+  p_data->disc_pixbuf = NULL;
+  p_data->rigmask_pixbuf = NULL;
   p_data->pixbuf = NULL;
 }
 
@@ -107,6 +107,11 @@ preview_data_create(gint32 image_ID, gint32 layer_ID, PreviewData * p_data)
 
   preview_init_mem (p_data);
 
+  /* gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, p_data->width, p_data->height); */
+  p_data->base_pixbuf = gimp_drawable_get_thumbnail(layer_ID, p_data->width, p_data->height, GIMP_PIXBUF_SMALL_CHECKS); 
+
+
+  /*
   gimp_image_undo_freeze (image_ID);
   p_data->layer_ID = gimp_layer_copy (layer_ID);
   gimp_image_add_layer (image_ID, p_data->layer_ID, 1);
@@ -119,6 +124,7 @@ preview_data_create(gint32 image_ID, gint32 layer_ID, PreviewData * p_data)
 
   gimp_image_remove_layer (image_ID, p_data->layer_ID);
   gimp_image_undo_thaw (image_ID);
+  */
 }
 
 GtkWidget *
@@ -130,172 +136,67 @@ preview_area_create(PreviewData * p_data)
   return p_data->area;
 }
 
-guchar *
-preview_build_buffer (gint32 layer_ID)
+void
+size_info_scale(SizeInfo * size_info, gdouble factor)
 {
-
-  gint x, y, k;
-  gint width, height;
-  GimpPixelRgn rgn_in;
-  guchar *inrow;
-  GimpDrawable *drawable;
-  gboolean isgray;
-  guchar *buffer;
-
-  drawable = gimp_drawable_get (layer_ID);
-  width = gimp_drawable_width (layer_ID);
-  height = gimp_drawable_height (layer_ID);
-  isgray = gimp_drawable_is_gray (layer_ID);
-
-  gimp_pixel_rgn_init (&rgn_in, drawable, 0, 0, width, height, FALSE, FALSE);
-
-  inrow = g_new (guchar, drawable->bpp * width);
-  buffer = g_new (guchar, 4 * width * height);
-
-  for (y = 0; y < height; y++)
-    {
-      gimp_pixel_rgn_get_row (&rgn_in, inrow, 0, y, width);
-
-      for (x = 0; x < width; x++)
-	{
-	  for (k = 0; k < 3; k++)
-	    {
-	      if (isgray)
-		{
-		  buffer[(y * width + x) * 4 + k] = inrow[2 * x];
-		}
-	      else
-		{
-		  buffer[(y * width + x) * 4 + k] = inrow[4 * x + k];
-		}
-	    }
-	  if (isgray)
-	    {
-	      buffer[(y * width + x) * 4 + 3] = inrow[2 * x + 1];
-	    }
-	  else
-	    {
-	      buffer[(y * width + x) * 4 + 3] = inrow[4 * x + 3];
-	    }
-	}
-
-    }
-
-  g_free (inrow);
-  gimp_drawable_detach (drawable);
-  return buffer;
+  size_info->x_off = (guint) (size_info->x_off / factor);
+  size_info->y_off = (guint) (size_info->y_off / factor);
+  size_info->width = (guint) (size_info->width / factor);
+  size_info->height = (guint) (size_info->height / factor);
 }
 
-static gdouble
-compute_tfactor(guchar * buffer, gdouble alpha, gint ind, gint bpp)
+void
+preview_composite(PreviewData * p_data, GdkPixbuf * src_pixbuf, SizeInfo * size_info)
 {
-  return (gdouble) (255 - alpha * buffer[(ind + 1) * bpp - 1]) / 255;
+  gint x_off = size_info->x_off;
+  gint y_off = size_info->y_off;
+  gint dest_x = MAX(0, x_off);
+  gint dest_y = MAX(0, y_off);
+  gint dest_width = MIN(p_data->width, size_info->width + x_off) - dest_x;
+  gint dest_height = MIN(p_data->height, size_info->height + y_off) - dest_y;
+  gdk_pixbuf_composite(src_pixbuf, p_data->pixbuf, dest_x, dest_y, dest_width, dest_height, (gdouble) x_off, (gdouble) y_off, 1.0, 1.0, GDK_INTERP_BILINEAR, 127);
 }
 
 static gboolean
 preview_has_pres_buffer(PreviewData * p_data)
 {
-  return ((p_data->pres_buffer) && (p_data->ui_vals->pres_status));
+  return ((p_data->pres_pixbuf) && (p_data->ui_vals->pres_status));
 }
 
 static gboolean
 preview_has_disc_buffer(PreviewData * p_data)
 {
-  return ((p_data->disc_buffer) && (p_data->ui_vals->disc_status));
+  return ((p_data->disc_pixbuf) && (p_data->ui_vals->disc_status));
 }
 
 static gboolean
 preview_has_rigmask_buffer(PreviewData * p_data)
 {
-  return ((p_data->rigmask_buffer) && (p_data->ui_vals->rigmask_status));
+  return ((p_data->rigmask_pixbuf) && (p_data->ui_vals->rigmask_status));
 }
 
 void
 preview_build_pixbuf (PreviewData * p_data)
 {
-  gint bpp;
-  gint x, y, k;
-  gint index, index1;
-  gdouble tfactor_orig, tfactor_pres, tfactor_disc, tfactor_rigmask, tfactor;
-  gdouble value;
-
-  if (p_data->pixbuf != NULL)
+  if (p_data->pixbuf)
     {
       g_object_unref (G_OBJECT (p_data->pixbuf));
     }
 
-  p_data->preview_buffer =
-    g_new (guchar, p_data->width * p_data->height * 4);
+  p_data->pixbuf = gdk_pixbuf_copy(p_data->base_pixbuf);
 
-  bpp = 4;
-
-  for (y = 0; y < p_data->height; y++)
+  if (preview_has_pres_buffer(p_data))
     {
-      for (x = 0; x < p_data->width; x++)
-	{
-	  index1 = (y * p_data->width + x);
-	  tfactor_orig = 0;
-	  tfactor_pres = 1;
-	  tfactor_disc = 1;
-	  tfactor_rigmask = 1;
-
-          tfactor_orig = compute_tfactor(p_data->buffer, 1.0, index1, bpp);
-	  if (preview_has_pres_buffer(p_data))
-	    {
-	      tfactor_pres = compute_tfactor(p_data->pres_buffer, 0.5, index1, bpp);
-	    }
-	  if (preview_has_disc_buffer(p_data))
-	    {
-	      tfactor_disc = compute_tfactor(p_data->disc_buffer, 0.5, index1, bpp);
-	    }
-	  if (preview_has_rigmask_buffer(p_data))
-	    {
-	      tfactor_rigmask = compute_tfactor(p_data->rigmask_buffer, 0.5, index1, bpp);
-	    }
-	  tfactor = (1 - tfactor_orig) *
-            tfactor_pres * tfactor_disc * tfactor_rigmask;
-
-	  for (k = 0; k < bpp; k++)
-	    {
-	      index = index1 * bpp + k;
-	      value = (tfactor * p_data->buffer[index]);
-	      if (tfactor_pres < 1)
-		{
-		  value +=
-		    (guchar) (tfactor_rigmask * tfactor_disc * (1 - tfactor_pres) *
-			      p_data->pres_buffer[index]);
-		}
-	      if (tfactor_disc < 1)
-		{
-		  value +=
-		    (guchar) (tfactor_rigmask * (1 - tfactor_disc) *
-			      p_data->disc_buffer[index]);
-		}
-	      if (tfactor_rigmask < 1)
-		{
-		  value +=
-		    (guchar) ((1 - tfactor_rigmask) *
-			      p_data->rigmask_buffer[index]);
-		}
-              value = MIN(value, 255);
-	      p_data->preview_buffer[index] = (guchar) value;
-	    }
-	}
+      preview_composite(p_data, p_data->pres_pixbuf, &p_data->pres_size_info);
     }
-  /* p_data->pixbuf = gimp_drawable_get_thumbnail(p_data->orig_layer_ID, p_data->width, p_data->height, GIMP_PIXBUF_SMALL_CHECKS); */
-  
-  p_data->pixbuf =
-    gdk_pixbuf_new_from_data (p_data->preview_buffer,
-			      GDK_COLORSPACE_RGB, TRUE, 8,
-			      p_data->width, p_data->height,
-			      bpp * p_data->width * sizeof (guchar),
-			      preview_free_pixbuf, NULL);
-}
-
-void
-preview_free_pixbuf (guchar * buffer, gpointer data)
-{
-  g_free (buffer);
+  if (preview_has_disc_buffer(p_data))
+    {
+      preview_composite(p_data, p_data->disc_pixbuf, &p_data->disc_size_info);
+    }
+  if (preview_has_rigmask_buffer(p_data))
+    {
+      preview_composite(p_data, p_data->rigmask_pixbuf, &p_data->rigmask_size_info);
+    }
 }
 
 void

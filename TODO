@@ -1,4 +1,3 @@
-* do preview without generating new layers
 * rescale transparency mask along with
   the active layer
 * increase gradient function radius

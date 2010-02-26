@@ -65,9 +65,10 @@ callback_pres_combo_get_active (GtkWidget * combo, gpointer data)
 
   gint32 *layer_ID_add = &(p_data->vals->pres_layer_ID);
   gboolean status = p_data->ui_vals->pres_status;
-  guchar ** buffer_add = &(p_data->pres_buffer);
+  GdkPixbuf ** pixbuf_add = &(p_data->pres_pixbuf);
+  SizeInfo * size_info = &(p_data->pres_size_info);
 
-  combo_get_active (combo, p_data, layer_ID_add, status, buffer_add);
+  combo_get_active (combo, p_data, layer_ID_add, status, pixbuf_add, size_info);
 }
 
 void
@@ -77,9 +78,10 @@ callback_disc_combo_get_active (GtkWidget * combo, gpointer data)
 
   gint32 *layer_ID_add = &(p_data->vals->disc_layer_ID);
   gboolean status = p_data->ui_vals->disc_status;
-  guchar **buffer_add = &(p_data->disc_buffer);
+  GdkPixbuf ** pixbuf_add = &(p_data->disc_pixbuf);
+  SizeInfo * size_info = &(p_data->disc_size_info);
 
-  combo_get_active (combo, p_data, layer_ID_add, status, buffer_add);
+  combo_get_active (combo, p_data, layer_ID_add, status, pixbuf_add, size_info);
 }
 
 void
@@ -89,36 +91,35 @@ callback_rigmask_combo_get_active (GtkWidget * combo, gpointer data)
 
   gint32 *layer_ID_add = &(p_data->vals->rigmask_layer_ID);
   gboolean status = p_data->ui_vals->rigmask_status;
-  guchar **buffer_add = &(p_data->rigmask_buffer);
+  GdkPixbuf ** pixbuf_add = &(p_data->rigmask_pixbuf);
+  SizeInfo * size_info = &(p_data->rigmask_size_info);
 
-  combo_get_active (combo, p_data, layer_ID_add, status, buffer_add);
+  combo_get_active (combo, p_data, layer_ID_add, status, pixbuf_add, size_info);
 }
 
 void
 combo_get_active (GtkWidget * combo, PreviewData * p_data,
 		  gint32 * layer_ID_add, gboolean status,
-		  guchar ** buffer_add)
+		  GdkPixbuf ** pixbuf_add, SizeInfo * size_info)
 {
-  gint32 new_layer_ID;
-  gint x_off, y_off;
-
   gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (combo), layer_ID_add);
   if (status == TRUE)
     {
-      gimp_image_undo_freeze (p_data->image_ID);
-      new_layer_ID = gimp_layer_copy (*layer_ID_add);
-      gimp_image_add_layer (p_data->image_ID, new_layer_ID, -1);
-      gimp_drawable_offsets (new_layer_ID, &x_off, &y_off);
-      gimp_layer_resize (new_layer_ID, p_data->old_width,
-			 p_data->old_height,
-			 x_off - p_data->x_off, y_off - p_data->y_off);
-      gimp_layer_scale (new_layer_ID, p_data->width, p_data->height, TRUE);
-      gimp_layer_add_alpha (new_layer_ID);
-      g_free (*buffer_add);
-      (*buffer_add) = preview_build_buffer (new_layer_ID);
-      gimp_image_remove_layer (p_data->image_ID, new_layer_ID);
-      gimp_image_undo_thaw (p_data->image_ID);
+      if (*pixbuf_add)
+        {
+          g_object_unref (G_OBJECT (*pixbuf_add));
+        }
+      gimp_drawable_offsets (*layer_ID_add, &(size_info->x_off), &(size_info->y_off));
 
+      size_info->x_off -= p_data->x_off;
+      size_info->y_off -= p_data->y_off;
+
+      size_info->width = gimp_drawable_width(*layer_ID_add);
+      size_info->height = gimp_drawable_height(*layer_ID_add);
+
+      size_info_scale(size_info, p_data->factor);
+
+      *pixbuf_add = gimp_drawable_get_thumbnail(*layer_ID_add, size_info->width, size_info->height, GIMP_PIXBUF_KEEP_ALPHA); 
     }
   preview_build_pixbuf (p_data);
   gtk_widget_queue_draw (p_data->area);

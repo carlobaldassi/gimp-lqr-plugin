@@ -1,3 +1,7 @@
+2010-02-25 Carlo Baldassi <carlobaldassi@gmail.com>
+	* modified: no longer use extra layers for
+	  preview display
+
 2010-02-23 Carlo Baldassi <carlobaldassi@gmail.com>
 	* new: output on new image option
 	* modified: output target is reset when coming
