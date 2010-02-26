@@ -1,6 +1,7 @@
 # List of source files containing translatable strings.
 
 src/interface.c
+src/interface_aux.c
 src/interface_I.c
 src/main.c
 src/main.h
