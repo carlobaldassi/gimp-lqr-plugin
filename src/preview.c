@@ -26,15 +26,22 @@
 #include "main.h"
 #include "preview.h"
 
-extern GtkWidget * dlg;
+/***  Local functions declarations ***/
+
+static gdouble compute_tfactor(guchar * buffer, gdouble alpha, gint ind, gint bpp);
+static gboolean preview_has_pres_buffer(PreviewData * p_data);
+static gboolean preview_has_disc_buffer(PreviewData * p_data);
+static gboolean preview_has_rigmask_buffer(PreviewData * p_data);
+
+/***  Functions definitions ***/
 
 void
 callback_pres_combo_set_sensitive_preview (GtkWidget * button, gpointer data)
 {
   PreviewData *p_data = PREVIEW_DATA (data);
 
-  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
-  LAYER_CHECK_ACTION(p_data->vals->pres_layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), );
+  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (p_data->dlg), RESPONSE_FATAL), );
+  LAYER_CHECK_ACTION(p_data->vals->pres_layer_ID, gtk_dialog_response (GTK_DIALOG (p_data->dlg), RESPONSE_REFRESH), );
 
   if (p_data->pres_combo_awaked == FALSE)
     {
@@ -50,8 +57,8 @@ callback_disc_combo_set_sensitive_preview (GtkWidget * button, gpointer data)
 {
   PreviewData *p_data = PREVIEW_DATA (data);
 
-  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
-  LAYER_CHECK_ACTION(p_data->vals->disc_layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), );
+  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (p_data->dlg), RESPONSE_FATAL), );
+  LAYER_CHECK_ACTION(p_data->vals->disc_layer_ID, gtk_dialog_response (GTK_DIALOG (p_data->dlg), RESPONSE_REFRESH), );
 
   if (p_data->disc_combo_awaked == FALSE)
     {
@@ -68,8 +75,8 @@ callback_rigmask_combo_set_sensitive_preview (GtkWidget * button,
 {
   PreviewData *p_data = PREVIEW_DATA (data);
 
-  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_FATAL), );
-  LAYER_CHECK_ACTION(p_data->vals->rigmask_layer_ID, gtk_dialog_response (GTK_DIALOG (dlg), RESPONSE_REFRESH), );
+  IMAGE_CHECK_ACTION(p_data->image_ID, gtk_dialog_response (GTK_DIALOG (p_data->dlg), RESPONSE_FATAL), );
+  LAYER_CHECK_ACTION(p_data->vals->rigmask_layer_ID, gtk_dialog_response (GTK_DIALOG (p_data->dlg), RESPONSE_REFRESH), );
 
   if (p_data->rigmask_combo_awaked == FALSE)
     {
@@ -91,6 +98,36 @@ preview_init_mem (PreviewData * p_data)
   p_data->disc_buffer = NULL;
   p_data->rigmask_buffer = NULL;
   p_data->pixbuf = NULL;
+}
+
+void
+preview_data_create(gint32 image_ID, gint32 layer_ID, PreviewData * p_data)
+{
+  g_assert(p_data != NULL);
+
+  preview_init_mem (p_data);
+
+  gimp_image_undo_freeze (image_ID);
+  p_data->layer_ID = gimp_layer_copy (layer_ID);
+  gimp_image_add_layer (image_ID, p_data->layer_ID, 1);
+
+  gimp_layer_scale (p_data->layer_ID, p_data->width,
+                    p_data->height, TRUE);
+  gimp_layer_add_alpha (p_data->layer_ID);
+
+  p_data->buffer = preview_build_buffer (p_data->layer_ID);
+
+  gimp_image_remove_layer (image_ID, p_data->layer_ID);
+  gimp_image_undo_thaw (image_ID);
+}
+
+GtkWidget *
+preview_area_create(PreviewData * p_data)
+{
+  p_data->area = gtk_drawing_area_new ();
+  gtk_widget_set_size_request (p_data->area, PREVIEW_MAX_WIDTH,
+                               PREVIEW_MAX_HEIGHT);
+  return p_data->area;
 }
 
 guchar *
@@ -149,8 +186,32 @@ preview_build_buffer (gint32 layer_ID)
   return buffer;
 }
 
+static gdouble
+compute_tfactor(guchar * buffer, gdouble alpha, gint ind, gint bpp)
+{
+  return (gdouble) (255 - alpha * buffer[(ind + 1) * bpp - 1]) / 255;
+}
+
+static gboolean
+preview_has_pres_buffer(PreviewData * p_data)
+{
+  return ((p_data->pres_buffer) && (p_data->ui_vals->pres_status));
+}
+
+static gboolean
+preview_has_disc_buffer(PreviewData * p_data)
+{
+  return ((p_data->disc_buffer) && (p_data->ui_vals->disc_status));
+}
+
+static gboolean
+preview_has_rigmask_buffer(PreviewData * p_data)
+{
+  return ((p_data->rigmask_buffer) && (p_data->ui_vals->rigmask_status));
+}
+
 void
-preview_build_pixbuf (PreviewData * preview_data)
+preview_build_pixbuf (PreviewData * p_data)
 {
   gint bpp;
   gint x, y, k;
@@ -158,92 +219,76 @@ preview_build_pixbuf (PreviewData * preview_data)
   gdouble tfactor_orig, tfactor_pres, tfactor_disc, tfactor_rigmask, tfactor;
   gdouble value;
 
-  if (preview_data->pixbuf != NULL)
+  if (p_data->pixbuf != NULL)
     {
-      g_object_unref (G_OBJECT (preview_data->pixbuf));
+      g_object_unref (G_OBJECT (p_data->pixbuf));
     }
 
-  preview_data->preview_buffer =
-    g_new (guchar, preview_data->width * preview_data->height * 4);
+  p_data->preview_buffer =
+    g_new (guchar, p_data->width * p_data->height * 4);
 
   bpp = 4;
 
-  for (y = 0; y < preview_data->height; y++)
+  for (y = 0; y < p_data->height; y++)
     {
-      for (x = 0; x < preview_data->width; x++)
+      for (x = 0; x < p_data->width; x++)
 	{
-	  index1 = (y * preview_data->width + x);
+	  index1 = (y * p_data->width + x);
 	  tfactor_orig = 0;
 	  tfactor_pres = 1;
 	  tfactor_disc = 1;
 	  tfactor_rigmask = 1;
-	  tfactor_orig =
-	    (gdouble) (255 -
-		       preview_data->buffer[index1 * bpp + bpp - 1]) / 255;
-	  if ((preview_data->pres_buffer != NULL)
-	      && (preview_data->ui_vals->pres_status == TRUE))
+
+          tfactor_orig = compute_tfactor(p_data->buffer, 1.0, index1, bpp);
+	  if (preview_has_pres_buffer(p_data))
 	    {
-	      tfactor_pres =
-		(gdouble) (255 -
-			   preview_data->pres_buffer[index1 * bpp + bpp -
-						     1] / 2) / 255;
+	      tfactor_pres = compute_tfactor(p_data->pres_buffer, 0.5, index1, bpp);
 	    }
-	  if ((preview_data->disc_buffer != NULL)
-	      && (preview_data->ui_vals->disc_status == TRUE))
+	  if (preview_has_disc_buffer(p_data))
 	    {
-	      tfactor_disc =
-		(gdouble) (255 -
-			   0.5 * preview_data->disc_buffer[(index1 + 1) *
-							   bpp - 1]) / 255;
+	      tfactor_disc = compute_tfactor(p_data->disc_buffer, 0.5, index1, bpp);
 	    }
-	  if ((preview_data->rigmask_buffer != NULL)
-	      && (preview_data->ui_vals->rigmask_status == TRUE))
+	  if (preview_has_rigmask_buffer(p_data))
 	    {
-	      tfactor_rigmask =
-		(gdouble) (255 -
-			   0.5 * preview_data->rigmask_buffer[(index1 + 1) *
-							      bpp - 1]) / 255;
+	      tfactor_rigmask = compute_tfactor(p_data->rigmask_buffer, 0.5, index1, bpp);
 	    }
-	  tfactor =
-	    (1 -
-	     tfactor_orig) * tfactor_pres * tfactor_disc * tfactor_rigmask;
+	  tfactor = (1 - tfactor_orig) *
+            tfactor_pres * tfactor_disc * tfactor_rigmask;
+
 	  for (k = 0; k < bpp; k++)
 	    {
 	      index = index1 * bpp + k;
-	      value = (tfactor * preview_data->buffer[index]);
+	      value = (tfactor * p_data->buffer[index]);
 	      if (tfactor_pres < 1)
 		{
 		  value +=
-		    (guchar) (tfactor_disc * (1 - tfactor_pres) *
-			      preview_data->pres_buffer[index]);
+		    (guchar) (tfactor_rigmask * tfactor_disc * (1 - tfactor_pres) *
+			      p_data->pres_buffer[index]);
 		}
 	      if (tfactor_disc < 1)
 		{
 		  value +=
-		    (guchar) ((1 -
-			       tfactor_disc) *
-			      preview_data->disc_buffer[index]);
+		    (guchar) (tfactor_rigmask * (1 - tfactor_disc) *
+			      p_data->disc_buffer[index]);
 		}
 	      if (tfactor_rigmask < 1)
 		{
 		  value +=
-		    (guchar) ((1 -
-			       tfactor_rigmask) *
-			      preview_data->rigmask_buffer[index]);
+		    (guchar) ((1 - tfactor_rigmask) *
+			      p_data->rigmask_buffer[index]);
 		}
-	      if (value > 255)
-		{
-		  value = 255;
-		}
-	      preview_data->preview_buffer[index] = (guchar) value;
+              value = MIN(value, 255);
+	      p_data->preview_buffer[index] = (guchar) value;
 	    }
 	}
     }
-  preview_data->pixbuf =
-    gdk_pixbuf_new_from_data (preview_data->preview_buffer,
+  /* p_data->pixbuf = gimp_drawable_get_thumbnail(p_data->orig_layer_ID, p_data->width, p_data->height, GIMP_PIXBUF_SMALL_CHECKS); */
+  
+  p_data->pixbuf =
+    gdk_pixbuf_new_from_data (p_data->preview_buffer,
 			      GDK_COLORSPACE_RGB, TRUE, 8,
-			      preview_data->width, preview_data->height,
-			      bpp * preview_data->width * sizeof (guchar),
+			      p_data->width, p_data->height,
+			      bpp * p_data->width * sizeof (guchar),
 			      preview_free_pixbuf, NULL);
 }
 

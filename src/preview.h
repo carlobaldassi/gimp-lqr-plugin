@@ -49,6 +49,7 @@ typedef struct
   PlugInVals *vals;
   PlugInUIVals *ui_vals;
   GdkPixbuf *pixbuf;
+  GtkWidget *dlg;
   GtkWidget *area;
   GtkWidget *pres_combo;
   GtkWidget *disc_combo;
@@ -77,6 +78,8 @@ void callback_rigmask_combo_set_sensitive_preview (GtkWidget * button,
                                                           gpointer data);
 
 void preview_init_mem (PreviewData * preview_data);
+void preview_data_create(gint32 image_ID, gint32 layer_ID, PreviewData * p_data);
+GtkWidget * preview_area_create(PreviewData * p_data);
 guchar * preview_build_buffer (gint32 layer_ID);
 void preview_build_pixbuf (PreviewData * preview_data);
 void preview_free_pixbuf (guchar * buffer, gpointer data);

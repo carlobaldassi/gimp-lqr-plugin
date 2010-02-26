@@ -275,7 +275,7 @@ dialog (PlugInImageVals * image_vals,
   g_signal_connect (dlg, "response", G_CALLBACK (callback_dialog_response),
 		    (gpointer) (notebook_data));
 
-  /* dlg_tips = gtk_tooltips_new (); */
+  preview_data.dlg = dlg;
 
   main_hbox = gtk_hbox_new (FALSE, 12);
   gtk_container_set_border_width (GTK_CONTAINER (main_hbox), 12);
@@ -315,28 +315,11 @@ dialog (PlugInImageVals * image_vals,
     gimp_drawable_height (preview_data.orig_layer_ID) / preview_data.factor;
 
 
-  gimp_image_undo_freeze (image_ID);
-  preview_data.layer_ID = gimp_layer_copy (layer_ID);
-  gimp_image_add_layer (image_ID, preview_data.layer_ID, 1);
-
-  gimp_layer_scale (preview_data.layer_ID, preview_data.width,
-		    preview_data.height, TRUE);
-  gimp_layer_add_alpha (preview_data.layer_ID);
-  //preview_data.drawable = gimp_drawable_get (preview_data.layer_ID);
-
-  preview_init_mem (&preview_data);
-  g_free (preview_data.buffer);
-  preview_data.buffer = preview_build_buffer (preview_data.layer_ID);
-
-  gimp_image_remove_layer (image_ID, preview_data.layer_ID);
-  gimp_image_undo_thaw (image_ID);
+  preview_data_create(image_ID, layer_ID, &preview_data);
 
   preview_build_pixbuf (&preview_data);
 
-  preview_area = gtk_drawing_area_new ();
-  preview_data.area = preview_area;
-  gtk_widget_set_size_request (preview_area, PREVIEW_MAX_WIDTH,
-			       PREVIEW_MAX_HEIGHT);
+  preview_area = preview_area_create(&preview_data);
 
   //gtk_container_add (GTK_CONTAINER (frame), preview_area);
   gtk_box_pack_start (GTK_BOX (vbox2), preview_area, FALSE, FALSE, 0);
