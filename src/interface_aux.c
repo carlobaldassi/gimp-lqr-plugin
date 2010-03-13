@@ -102,7 +102,7 @@ dialog_aux (PlugInImageVals * image_vals,
   gimp_context_get_foreground (&saved_colour);
   gimp_context_set_foreground (&fg_colour);
 
-  dlg = gtk_dialog_new_with_buttons (_("GIMP LiquidRescale Plug-In"),
+  dlg = gtk_dialog_new_with_buttons (_("GIMP LqR Plug-In - Mask editor mode"),
 			 NULL, 0,
 			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			 GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
@@ -132,12 +132,15 @@ dialog_aux (PlugInImageVals * image_vals,
   switch (ui_state->layer_on_edit_type)
     {
       case AUX_LAYER_PRES:
+        /* Note for translators: remember to split the line with \n so that the window dialog won't be too large */
         info_label = gtk_label_new(_("Paint the preservation mask\non the current layer, then press OK"));
         break;
       case AUX_LAYER_DISC:
+        /* Note for translators: remember to split the line with \n so that the window dialog won't be too large */
         info_label = gtk_label_new(_("Paint the discard mask\non the current layer, then press OK"));
         break;
       case AUX_LAYER_RIGMASK:
+        /* Note for translators: remember to split the line with \n so that the window dialog won't be too large */
         info_label = gtk_label_new(_("Paint the rigidity mask\non the current layer, then press OK"));
         break;
       default:

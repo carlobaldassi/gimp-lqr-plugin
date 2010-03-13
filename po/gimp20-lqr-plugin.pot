@@ -1,41 +1,41 @@
-# Hungarian translation of gimp22-lqr-plugin.
-# Copyright (C) 2007 Bálint Magyar
-# This file is distributed under the same license as the gimp22-lqr-plugin package.
-# Bálint Magyar <magyarbalint@indi.hu>, 2007.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-13 18:07+0100\n"
-"PO-Revision-Date: 2007-10-03 11:07+0200\n"
-"Last-Translator: jeghegy <(null)>\n"
-"Language-Team: English <en@li.org>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../src/interface.c:257 ../src/interface_I.c:169
 msgid "GIMP LiquidRescale Plug-In"
-msgstr "GIMP LiquidRescale Plug-In"
+msgstr ""
 
 #: ../src/interface.c:288
 msgid "Selected layer"
-msgstr "Kijelölt réteg"
+msgstr ""
 
 #. New size
 #: ../src/interface.c:374
 msgid "Select new width and height"
-msgstr "Válasszon új szélességet és magasságot"
+msgstr ""
 
 #: ../src/interface.c:394 ../src/interface_I.c:220
 msgid "Width:"
-msgstr "Szélesség:"
+msgstr ""
 
 #: ../src/interface.c:396 ../src/interface_I.c:222
 msgid "Height:"
-msgstr "Magasság:"
+msgstr ""
 
 #: ../src/interface.c:433 ../src/interface_I.c:293
 msgid "Reset width and height to their original values"
@@ -83,16 +83,15 @@ msgstr ""
 
 #: ../src/interface.c:590
 msgid "Resize image canvas"
-msgstr "Vászon átméretezése"
+msgstr ""
 
 #: ../src/interface.c:598
 msgid "Resize and translate the image canvas to fit the resized layer"
 msgstr ""
 
 #: ../src/interface.c:602
-#, fuzzy
 msgid "Resize auxiliary layers"
-msgstr "Alakmegőrzés/alakelvetés rétegek átméretezése"
+msgstr ""
 
 #: ../src/interface.c:620
 msgid ""
@@ -152,7 +151,7 @@ msgstr ""
 
 #: ../src/interface.c:724
 msgid "liquid rescale"
-msgstr "liquid rescale"
+msgstr ""
 
 #: ../src/interface.c:725
 msgid "standard scaling"
@@ -173,15 +172,15 @@ msgstr ""
 
 #: ../src/interface.c:770
 msgid "Select behaviour for the mask"
-msgstr "Maszk viselkedésének kiválasztása"
+msgstr ""
 
 #: ../src/interface.c:775
 msgid "Apply"
-msgstr "Alkalmaz"
+msgstr ""
 
 #: ../src/interface.c:775
 msgid "Discard"
-msgstr "Elvet"
+msgstr ""
 
 #: ../src/interface.c:1210
 msgid "Feature masks"
@@ -203,9 +202,8 @@ msgstr ""
 
 #. Feature preservation
 #: ../src/interface.c:1265
-#, fuzzy
 msgid "Feature preservation mask"
-msgstr "Alakmegőrzés kijelölése"
+msgstr ""
 
 #: ../src/interface.c:1270
 #, c-format
@@ -253,7 +251,7 @@ msgstr ""
 #: ../src/interface.c:1468
 #, c-format
 msgid "Overall coefficient for feature preservation intensity"
-msgstr "Alakmegőrzés intenzitásának együtthatója"
+msgstr ""
 
 #: ../src/interface.c:1478 ../src/interface.c:1743
 msgid "Strength:"
@@ -261,9 +259,8 @@ msgstr ""
 
 #. Feature discard
 #: ../src/interface.c:1516
-#, fuzzy
 msgid "Feature discard mask"
-msgstr "Alakelvetés kijelölése"
+msgstr ""
 
 #: ../src/interface.c:1521
 #, c-format
@@ -309,7 +306,7 @@ msgstr ""
 #: ../src/interface.c:1732
 #, c-format
 msgid "Overall coefficient for feature discard intensity"
-msgstr "Alakelvetés intenzitásának együtthatója"
+msgstr ""
 
 #. Auto-size buttons
 #: ../src/interface.c:1798
@@ -319,7 +316,7 @@ msgstr ""
 #. Width auto-size button
 #: ../src/interface.c:1809
 msgid "Width"
-msgstr "Szélesség"
+msgstr ""
 
 #: ../src/interface.c:1823
 msgid ""
@@ -330,7 +327,7 @@ msgstr ""
 #. Height auto-size button
 #: ../src/interface.c:1833
 msgid "Height"
-msgstr "Magasság"
+msgstr ""
 
 #: ../src/interface.c:1847
 msgid ""
@@ -439,7 +436,7 @@ msgstr ""
 #. Null can be translated as Zero
 #: ../src/interface.c:2235
 msgid "Null"
-msgstr "Null"
+msgstr ""
 
 #. Operations control
 #. Please keep the <b> and </b> tags in translations
@@ -568,7 +565,7 @@ msgstr ""
 
 #: ../src/main.c:213
 msgid "Li_quid rescale..."
-msgstr "Li_quid rescale..."
+msgstr ""
 
 #: ../src/main.h:133
 msgid "Error: invalid image"
@@ -581,7 +578,7 @@ msgstr ""
 #: ../src/render.c:43 ../src/render.c:44 ../src/render.c:45 ../src/render.c:46
 #: ../src/render.c:47
 msgid "Not enough memory"
-msgstr "Nincs elég memória"
+msgstr ""
 
 #: ../src/render.c:52
 msgid "Error: number of colour channels changed"
@@ -600,29 +597,20 @@ msgstr ""
 
 #: ../src/render.c:781
 msgid "Resizing width..."
-msgstr "Szélesség átméretezése..."
+msgstr ""
 
 #: ../src/render.c:783
 msgid "Resizing height..."
-msgstr "Magasság átméretezése..."
+msgstr ""
 
 #: ../src/io_functions.c:39
 msgid "Parsing layer..."
-msgstr "Réteg feldolgozása..."
+msgstr ""
 
 #: ../src/io_functions.c:144
 msgid "Applying changes..."
-msgstr "Változások alkalmazása..."
+msgstr ""
 
 #: ../src/io_functions.c:221
 msgid "Drawing seam map..."
 msgstr ""
-
-#~ msgid "Gradient function:"
-#~ msgstr "Színátmenet függvény kiválasztása:"
-
-#~ msgid "Sum of absolute values"
-#~ msgstr "Abszolútértékek összege"
-
-#~ msgid "Norm"
-#~ msgstr "Normatíva"
