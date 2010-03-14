@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # html to wiki script
-# Copyright (C) 2007-2009 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
+# Copyright (C) 2007-2010 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
 # All Rights Reserved.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -392,6 +392,7 @@ cat | \
 	subtags "b" '**' '**'							| \
 	subtags "i" '//' '//'							| \
 	subtags "u" '__' '__'							| \
+	subtags "code" '<<NL>>[[code]]<<NL>>' '<<NL>>[[/code]]<<NL>>'		| \
 	indent_alllevels $MAXLEV "dl" "ul" "ol"					| \
 	subtags_multilevel $MAXLEV "dt" DARRAY_DT_B DARRAY_DT_E			| \
 	subtags_multilevel $MAXLEV "dd" DARRAY_DD_B DARRAY_DD_E			| \

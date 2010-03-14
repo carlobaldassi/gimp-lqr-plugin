@@ -16,13 +16,13 @@
     </tr>
     <tr bgcolor="black">
       <td width="100%" align="center">
-        <font size="+2" color="white">Liquid Rescale help page</font>
+        <font size="+2" color="white">Liquid Rescale GIMP Plug-In version 0.7 help page</font>
       </td>
     </tr>  
     <tr>
       <td width="100%" align="left">
 	<p>
-		The Liquid Rescale plugin is an implementation of the content-aware resizing by
+		The Liquid Rescale GIMP Plug-In is an implementation of the content-aware resizing by
 		seam carving algorithm by Shai Avidan and Ariel Shamir.
 	</p>
         <p>
@@ -31,7 +31,7 @@
 		It can also be used to remove portions of the picture in a consistent way.
 	</p>
         <p>
-		It works both ways (enlarging is performed in successive steps), and
+		It works both ways, shrinking and enlaging (enlarging is performed in successive steps), and
 		it can use extra layers as masks to select which features of the image should be
 		preserved and which should be discarded.
 	</p>
@@ -42,7 +42,7 @@
 	<p>
 		The plugin works on the active layer or floating selection. It can also operate on multiple layers
 		through the <i>"Filter all layers"</i> plugin and using the GIMP Animation Package facilities for
-		video editing.
+		video editing (see <a href="#GAP">this section</a> for details).
 	</p>
 	<p>
  		The plugin only works on whole layers, if a selection is present it is saved to a channel and removed.
@@ -67,9 +67,9 @@
 			width first, then on the height. This can be changed in the <i>"Advanced"</i> tab.
 		</div>
 		<div>
-			The three small buttons on the right can be used to reset the size parameters
-			to the image size (top) or set them to the last used values (middle), or to
-			switch to the interactive mode (bottom - see the
+			The two small buttons on the right can be used to reset the size parameters
+			to the image size (top) or set them to the last used values (bottom), while the
+			bigger button to the right switches to the interactive mode (see the
 			<a href="#interactive">corresponding section</a> for more details).
 		</div>
 	</p>
@@ -89,13 +89,13 @@
 			</li><li>
 				Press the <i>"New"</i> button in the <b>"Feature preservation mask"</b> section
 				(this will create a transparent layer, with 50% opacity, and pick an appropriate
-				colour).
+				colour; also, the plugin main dialog will be substituted by a small dialog).
 			</li><li>
-				Put the plugin dialog aside and paint on the areas of the image you want to preserve
+				Paint on the areas of the image you want to preserve, e.g. with the paintbrush
 			</li><li>
-				Go back to the plugin dialog and press the refresh button to see the mask you painted
+				When you're done, press OK in the small window: the main dialog will appear again.
 			</li><li>
-				Repeat everything for the features to discard
+				Repeat everything for the features you want to discard
 			</li>
 		</ul>
 	</p>
@@ -133,10 +133,13 @@
 			box, and by choosing a layer among the ones which belong to the current image (excluding the active one)
 			in the <i>"Available layers"</i> menu.
 			The <i>"New"</i> button creates a transparent layer with 50% opacity and an appropriate name,
-			and sets it as the selected layer mask (note that this fails if the plugin is invoked on a
-			floating selection, because GIMP does not allow to work on other layers in such case).
-			It also sets the foreground colour to green; the previous colour is restored when the
-			dialog is closed.
+			sets it as the selected layer mask and switches to a "mask editor" mode, in which there only is a reduced,
+			always-on-top dialog, and in which the foregroud colour is set to green. When you exit the "mask editor" mode,
+			the previous foreground colour is restored and the plugin main dialog is presented again with the updated
+			information.
+			The <i>"Edit"</i> button invokes the "mask editor" mode over the currently selected preservation mask.
+			Note that the "mask editor" mode is useless if the plugin is invoked on a floating selection unless a new layer
+			is created from it, because GIMP does not allow to work on other layers in such case.
 		</div>
 		<div>
 			The intensity of the effect of the mask on each pixel is obtained as
@@ -153,11 +156,16 @@
 			Note that thinner selection areas (in the sense of the resizing) need higher strength values, and
 			vice-versa.
 		</div>
+		<div>
+			When a preservation mask is selected, the small green icon under the layer thumbnail on the left will
+			become active, and its tooltip will give you the name of the selected preservation layer. The remaining two
+			icons serve the same purpose for the discard mask (red) and the rigidity mask (blue).
+		</div>
 	</p>
 	<p>
 		<div>
 			The <b>Feature discard selection</b> section is nearly identical to the previous one,
-			but the effect is reversed, and the default colour for the <i>"New"</i> button is red instead of green.
+			but the effect is reversed, and the default colour for the <i>"New"</i> and <i>"Edit"</i> buttons is red instead of green.
 		</div>
 		<div>
 			Furthermore, there are two additional buttons besides the <i>"Auto size:"</i> label, which can be used for
@@ -187,10 +195,12 @@
 	</p>
 	<p>
 		<dl>
-		<dt>Output on a new layer</dt>
+		<dt>Output target</dt>
 		<dd>
-			Specifies if the resized image should be written on a new layer.
-			By default, it is off.
+			Specifies if the resized image should be written on the currently selected layer, or on
+			a new one, or on a new image. In the latter case, the newly created image will contain all the
+			output from the plugin, including the rescaled auxiliary layers and the seams map (see below).
+			By default, it is set to the selected layer.
 		</dd>
 		<dt>Resize image canvas</dt>
 		<dd>
@@ -212,8 +222,8 @@
 			The two buttons on the right of it let the user choose the seams colour range.
 			The seams are computed on the original layer as far as they are needed for the new size
 			(e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining
-			areas are transparent. In order to read the result, use this option together with
-			<i>"Output on a new layer"</i>, and overlay the seams map to the original layer.
+			areas are transparent. In order to read the result, use this option with the 
+			<i>"Output target"</i> set to <i>"new layer"</i>, and overlay the seams map to the original layer.
 			If you rescale in two directions at once, you will obtain two maps, but the second
 			one will be computed over an invisible intermediate image, so this is not very useful.
 			The same applies in the case you choose to rescale back to the original size with LqR,
@@ -278,7 +288,7 @@
 		<div>
 		It is possible to specify different rigidity values for different areas of the image,
 		using an auxiliary layer, by following the same procedure used to specify the feature masks
-		(the default colour for newly created rigidity masks is blue).
+		(the default colour for the "Mask editor" mode is blue in this case).
 		If a rigidity mask is specified, its value at each pixel (computed in the same way as
 		for the feature masks) will be used as a rigidity coefficient, to be multiplied with the
 		overall one.
@@ -333,6 +343,7 @@
 		Note that this option is ignored in interactive mode.
 	</dd>
 	</dl>
+      <a name="GAP"></a>
       <h3>Using the plugin for video and animation editing</h3>
       <h4>Using the plugin with GAP</h4>
       <p>
@@ -439,13 +450,32 @@
       <a name="batch"></a>
       <h2>Using the plugin in batch mode</h2>
       <p>
-              The plugin comes with some convenience scripts which make it easy to operate it the on
-              files from the command line.
-              You can find a description of the scrits arguments by using the <i>"Procedure browser"</i> from
-              the <i>"Help"</i> menu in GIMP and looking for <i>batch-gimp-lqr</i>, <i>batch-gimp-lqr-full</i> and
-              <i>batch-gimp-lqr-full-use-id</i>; the meaning of the options should be obvious from knowing how the
-              standard interface works.
+		The plugin comes with some convenience scripts which make it easy to operate it the on
+		files from the command line.
+		You can find a description of the scrits arguments by using the <i>"Procedure browser"</i> from
+		the <i>"Help"</i> menu in GIMP and looking for <i>batch-gimp-lqr</i>, <i>batch-gimp-lqr-full</i> and
+		<i>batch-gimp-lqr-full-use-id</i>; the meaning of the options should be obvious from knowing how the
+		standard interface works.
       </p>
+      <h3>Example</h3>
+	<p>
+		This is an example of how you would invoke the simplest of the scripts, <i>batch-gimp-lqr</i>, from the
+		Linux / BSD / Mac OS X command line:
+	</p>
+	<p>
+		<code>
+		gimp -i -f -b "(batch-gimp-lqr \"my_image.xcf\" 400 300 \"Backgound\" \"\" \"disc. mask\")" -b "(gimp-quit 0)"
+		</code>
+	</p>
+	<p>
+		This will rescale the "Backgound" layer of the file "my_image.xcf" to 400x300 pixels, using the layer named "disc. mask" as
+		a discard mask and using no preservation masks (notice the empty pair of quotes after "Backgound").
+	</p>
+	<p>
+		On Windows, the command would be the same, but you should substitute <code>gimp</code> with something
+		like <code>%ProgramFiles%/GIMP-2.0/bin/gimp-2.6.exe</code> (the exact command depends on which version of GIMP you have
+		installed and its installation folder).
+	</p>
       
       <a name="seam_carving"></a>
       <h2>Appendix: The seam carving technique in brief</h2>

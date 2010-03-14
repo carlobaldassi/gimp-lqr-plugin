@@ -16,7 +16,7 @@
       </tr>
       <tr bgcolor="black">
 	<td width="100%" align="center">
-	  <font size="+2" color="white">Pagina di aiuto per il plugin Liquid rescale</font>
+	  <font size="+2" color="white">Pagina di aiuto per il plugin di GIMP Liquid Rescale versione 0.7</font>
 	</td>
       </tr>
       <tr>
@@ -42,7 +42,8 @@
 	  <p>
 	  Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo.
 	  Può anche essere applicato a più livelli di un immagine attraverso il plugin
-	  <i>"Filtra tutti i livelli"</i> o usando il GIMP Animation Package per l'editing video.
+	  <i>"Filtra tutti i livelli"</i> o usando il GIMP Animation Package per l'editing video (si veda
+	  <a href="#GAP">questa sezione</a> per maggiori dettagli).
 	  </p>
 	  <p>
 	  Il plugin opera sempre su interi livelli; se una selezione è presente, è salvata come canale
@@ -70,10 +71,11 @@
 			  può essere modificato attrverso un'opzione nella linguetta <i>"Avanzate"</i>.
 		  </div>
 		  <div>
-			  I tre piccoli pulsanti sulla destra possono essere utilizzati per riportare
+			  I due piccoli pulsanti sulla destra possono essere utilizzati per riportare
 			  le dimensioni ai valori originali dell'immagine (sopra) o agli ultimi valori
-			  usati (in mezzo), o per passare alla modalità interattiva (sotto - vedi la 
-			  <a href="#interactive">sezione corrispondente</a> per maggiori dettagli).
+			  usati (sotto), mentre il pulsante più grande sulla destra permette di passare
+			  alla modalità interattiva (vedi la <a href="#interactive">sezione corrispondente</a>
+			  per maggiori dettagli).
 		  </div>
 	  </p>
 	  <p>
@@ -92,13 +94,13 @@
 		</li><li>
 		Cliccate il pulsante <i>"Nuovo"</i> nella sezione <b>"Maschera per i contenuti da preservare"</b>
 		(questo creerà un nuovo livello trasparente, con opacità 50%, e imposterà un colore
-		appropriato)
+		appropriato; inoltre, la finestra di dialogo principale del plugin verrà sostituita con una più piccola)
 		</li><li>
-		Spostate da un lato la finestra del plugin e dipingete con il pennello (o altro) le aree che volete preservare
+		Dipingete con il pennello (o altro) le aree che volete preservare
 		</li><li>
-		Tornate alla finestra del plugin e cliccate sul pulsante <i>"Aggiorna"</i> per vedere le modifiche
+		Quando avete finito, premete OK: la finestra di dialogo principale del plugin riapparirà.
 		</li><li>
-		Ripetete il tutto per i contenuti da eliminare
+		Ripetete il tutto per i contenuti che volete eliminare
 		</li>
 	  </ul>
 	  </p>
@@ -128,45 +130,58 @@
 
 	  <h4>Descrizione completa</h4>
 	  <p>
-	  <div>
-		Nella sezione <b>"Maschera per i contenuti da preservare"</b>
-		è possibile specificare se ci sono regioni dell'immagine che dovrebbero
-		essere preservate dalle modifiche, attivando l'opzione
-		<i>"Attiva la preservazione dei contenuti"</i> e scegliendo
-		un livello tra quelli che appartengono all'imaggine attuale (e sono diversi
-		dal livello attivo) nel menu <i>"Livelli disponibili"</i>.
-		Il pulsante <i>"Nuovo"</i> crea un nuovo livello trasparente
-		con opacità 50% e un nome appropriato, e lo imposta
-		come maschera da utilizzare per la preservazione dei contenuti
-		(nota che se il plugin viene lanciato su una selezione fluttuante
-		questa procedura non è adatta, dato che non si potrà lavorare
-		sul nuovo livello). Inoltre, il colore di primo piano viene impostato
-		a verde; il colore precedente viene ripristinato alla chiusura
-		della finestra di dialogo.
-	  </div>
-	  <div>
-		L'intensità dell'effetto su ogni pixel si ricava dalla media dei valori
-		del pixel in ogni canale del colore, moltiplicato per il valore di opacità
-		(canale alpha). Quindi, per un livello RGB con un canale alpha, il valore massimo
-		si otterrà con i pixel binachi, mentre quelli neri e quelli trasparenti
-		sono ignorati. In generale, è consigliabile lavorare con un solo colore per
-		maschera, e, se necessario, regolare l'intensità nelle diverse aree cambiando
-		il valore della trasparenza piuttosto che agire sulla luminosità o sulla
-		saturazione.
-	  </div>
-	  <div>
-		Le dimensioni e la posizione dei livelli selezionati può essere arbitraria,
-		il plugin utilizza solo le porzioni che si sovrappongono al livello attivo.
-		La scala <i>"Intensità"</i> può essere utilizzata come parametro globale
-		per modulare la preservazione dei contenuti.
-		Nota: selezioni più sottili (nel verso del ridimensionamento) hanno bisogno
-		di valori di intensità più alti, e viceversa.
-	  </div>
+		<div>
+			Nella sezione <b>"Maschera per i contenuti da preservare"</b>
+			è possibile specificare se ci sono regioni dell'immagine che dovrebbero
+			essere preservate dalle modifiche, attivando l'opzione
+			<i>"Attiva la preservazione dei contenuti"</i> e scegliendo
+			un livello tra quelli che appartengono all'imaggine attuale (e sono diversi
+			dal livello attivo) nel menu <i>"Livelli disponibili"</i>.
+			Il pulsante <i>"Nuovo"</i> crea un nuovo livello trasparente
+			con opacità 50% e un nome appropriato, lo imposta
+			come maschera da utilizzare per la preservazione dei contenuti e passa alla
+			modalità "Modifica della maschera", nella quale la finestra di dialogo è ridotta
+			e sempre in primo piano, e in cui il colore di primo piano viene impostato a
+			verde. Quando si esce dalla modalità "modifica della maschera", il colore
+			di primo piano precedente viene ripristinato e la finestra di dialogo principale
+			del plugin riappare con le informazioni aggiornate.
+			Il pulsante <i>"Modifica"</i> lancia la modalità "Modifica della maschera" sul
+			livello attualmente selezionato per la preservazione.
+			Nota che se il plugin viene lanciato su una selezione fluttuante
+			questa procedura non è adatta a meno di non trasformare la selezione fluttuante
+			in un nuovo livello, dato che GIMP non permette di lavorare su altri livelli se
+			c'è una selezione fluttuante attiva.
+		</div>
+		<div>
+			L'intensità dell'effetto su ogni pixel si ricava dalla media dei valori
+			del pixel in ogni canale del colore, moltiplicato per il valore di opacità
+			(canale alpha). Quindi, per un livello RGB con un canale alpha, il valore massimo
+			si otterrà con i pixel binachi, mentre quelli neri e quelli trasparenti
+			sono ignorati. In generale, è consigliabile lavorare con un solo colore per
+			maschera, e, se necessario, regolare l'intensità nelle diverse aree cambiando
+			il valore della trasparenza piuttosto che agire sulla luminosità o sulla
+			saturazione.
+		</div>
+		<div>
+			Le dimensioni e la posizione dei livelli selezionati può essere arbitraria,
+			il plugin utilizza solo le porzioni che si sovrappongono al livello attivo.
+			La scala <i>"Intensità"</i> può essere utilizzata come parametro globale
+			per modulare la preservazione dei contenuti.
+			Nota: selezioni più sottili (nel verso del ridimensionamento) hanno bisogno
+			di valori di intensità più alti, e viceversa.
+		</div>
+		<div>
+			Se una maschera per la preservazione viene selezionata, la piccola icona verde
+			sotto l'immagine sulla sinistra si attiverà e il tooltip corrispondente conterrà
+			il nome del livello selezionato per la preservazione. Le due icone rimanenti svolgono
+			la stessa funzione per la maschera per l'eliminazione (icona rossa) e quella per
+			la rigidità (icona blu).
+		</div>
 	  </p>
 	  <p>
 		<div>
 			La sezione <b>"Maschera per i contenuti da eliminare"</b> è identica alla precedente,
-			ma l'effetto è invertito, e il colore impostato dal pulsante <i>"Nuovo"</i>
+			ma l'effetto è invertito, e il colore impostato dai pulsanti <i>"Nuovo"</i> e <i>"Modifica"</i>
 			è il rosso anziché il verde.
 		</div>
 		<div>
@@ -200,10 +215,13 @@
 	  </p>
 	  <p>
 		  <dl>
-		  <dt>Scrivi su un nuovo livello</dt>
+		  <dt>Risultato</dt>
 		  <dd>
-			  Specifica se il risultato del ridimensionamento deve essere scritto su un nuovo
-			  livello. Per default è disattivata.
+			  Permette di scegliere se il risultato del ridimensionamento deve essere scritto sul
+			  livello selezionato, o su uno nuovo, o messo in una nuova immagine. In quest'ultimo
+			  caso, la nuova immagine che verrà creata conterrà anche i livelli ausiliarî riscalati
+			  e le linee d'azione (vedi sotto).
+			  Per default è impostato a <i>"sul livello selezionato"</i>.
 		  </dd>
 		  <dt>Ridimensiona la tela</dt>
 		  <dd>
@@ -230,8 +248,8 @@
 			  per le linee. Le linee sono calcolate sull'immagine originale in base alla necessità
 			  (per es. ne saranno calcolate 100 se si sta restringendo o allargando
 			  il livello di 100 pixel); le aree rimanenti restano trasparenti.
-			  Per interpretare il risultato, usate questa opzione assieme a
-			  <i>"Scrivi su un nuovo livello"</i>, e sovrapponete il livello con le linee
+			  Per interpretare il risultato, usate questa opzione impostando <i>"Risulatato"</i>
+			  a <i>"su un nuovo livello"</i>, e sovrapponete il livello con le linee
 			  d'azione a quello originale.
 			  Se riscalate in due direzioni contemporaneamente, otterete due mappe,
 			  ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi
@@ -300,8 +318,9 @@
 	<dd>
 		<div>
 		È possibile specificare diversi valori di rigidità per le diverse aree dell'immagine,
-		usando un livello ausiliario, e seguendo la stessa procedura usata per specificar le
-		maschere per i contenuti (il colore di default in questo caso è il blu).
+		usando un livello ausiliario, e seguendo la stessa procedura usata per specificare le
+		maschere per i contenuti (il colore di default in modalità "Modifica della maschera" in
+		questo caso è il blu).
 		Quando si imposta una maschera per la rigidità, il valore in ogni pixel (calcolato
 		allo stesso modo che per le maschere per i contenuti) viene utilizzato come coefficiente
 		di rigidità e moltiplicato al valore globale.
@@ -360,6 +379,7 @@
 		Nota che questa opzione viene ignorata in modalità interattiva.
 	</dd>
 	</dl>
+        <a name="GAP"></a>
 	<h3>Utilizzo del plugin per l'editing di video e animazioni</h3>
 	<h4>Utilizzo del plugin con GAP</h4>
 	<p>
@@ -480,11 +500,31 @@
         <a name="batch"></a>
         <h2>Utilizzo del plugin in modalità batch</h2>
         <p>
-                Il plugin viene distribuito assieme a degli script che aiutano ad utilizzarlo dalla linea di comando.
+		Il plugin viene distribuito assieme a degli script che aiutano ad utilizzarlo dalla linea di comando.
 		Per averne una descrizione, utilizzate il <i>"Navigatore di procedure"</i> dal menu <i>"Aiuto"</i> di
 		GIMP, e cercate <i>batch-gimp-lqr</i>, <i>batch-gimp-lqr-full</i> e <i>batch-gimp-lqr-full-use-id</i>;
 		il significato delle opzioni dovrebbe risultare ovvio, sapendo come funziona l'interfaccia standard.
         </p>
+        <h3>Esempio</h3>
+	<p>
+		Ecco un esempio di come si usa il più semplice tra gli script, <i>batch-gimp-lqr</i>, dalla linea di
+		comando di Linux / BSD / Mac OS X:
+	</p>
+	<p>
+		<code>
+		gimp -i -f -b "(batch-gimp-lqr \"my_image.xcf\" 400 300 \"Backgound\" \"\" \"disc. mask\")" -b "(gimp-quit 0)"
+		</code>
+	</p>
+	<p>
+		Questo comando riscalerà il livello "Background" del file "my_image.xcf" alla dimensione di 400x300 pixel, usando
+		il livello chiamato "disc. mask" come maschera per l'eliminazione e senza usare alcuna maschera per la preservazione
+		(si noti la coppia di apici vuota dopo "Background").
+	</p>
+	<p>
+		Su Windows il comando è uguale, ma bisogna sostituire a <code>gimp</code> qualcosa
+		come <code>%ProgramFiles%/GIMP-2.0/bin/gimp-2.6.exe</code> (il comando esatto dipende da che versione di GIMP
+		avete installato e dalla cartella di installazione).
+	</p>
 
         <a name="seam_carving"></a>
 	<h2>Appendice: La tecnica del <i>seam carving</i></h2>
