@@ -43,7 +43,7 @@ rgb_buffer_from_layer (gint32 layer_ID)
 
   bpp = gimp_drawable_bpp (layer_ID);
 
-  TRY_N_N (buffer = g_try_new (guchar, bpp * w * h));
+  LQR_TRY_N_N (buffer = g_try_new (guchar, bpp * w * h));
 
   drawable = gimp_drawable_get (layer_ID);
 
