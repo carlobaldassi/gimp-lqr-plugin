@@ -1,3 +1,7 @@
+2010-03-20 Carlo Baldassi <carlobaldassi@gmail.com>
+	* bugfix: thumbnail creation error under some
+	circumstances (preview.c)
+
 2010-03-14 Carlo Baldassi <carlobaldassi@gmail.com>
 	* bugfix: removed legacy liblqr macro call
 	  in io_functions.c

@@ -107,24 +107,9 @@ preview_data_create(gint32 image_ID, gint32 layer_ID, PreviewData * p_data)
 
   preview_init_mem (p_data);
 
-  /* gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, p_data->width, p_data->height); */
   p_data->base_pixbuf = gimp_drawable_get_thumbnail(layer_ID, p_data->width, p_data->height, GIMP_PIXBUF_SMALL_CHECKS); 
-
-
-  /*
-  gimp_image_undo_freeze (image_ID);
-  p_data->layer_ID = gimp_layer_copy (layer_ID);
-  gimp_image_add_layer (image_ID, p_data->layer_ID, 1);
-
-  gimp_layer_scale (p_data->layer_ID, p_data->width,
-                    p_data->height, TRUE);
-  gimp_layer_add_alpha (p_data->layer_ID);
-
-  p_data->buffer = preview_build_buffer (p_data->layer_ID);
-
-  gimp_image_remove_layer (image_ID, p_data->layer_ID);
-  gimp_image_undo_thaw (image_ID);
-  */
+  p_data->width = gdk_pixbuf_get_width(p_data->base_pixbuf);
+  p_data->height = gdk_pixbuf_get_height(p_data->base_pixbuf);
 }
 
 GtkWidget *
