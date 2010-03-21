@@ -67,6 +67,7 @@ typedef struct
   gint dlg_y;
   gint32 layer_on_edit_ID;
   AuxLayerType layer_on_edit_type;
+  gboolean layer_on_edit_is_new;
 } PlugInUIVals;
 
 #define PLUGIN_UI_VALS(data) ((PlugInUIVals*)data)

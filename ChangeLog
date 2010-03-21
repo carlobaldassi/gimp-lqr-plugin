@@ -1,3 +1,12 @@
+2010-03-21 Carlo Baldassi <carlobaldassi@gmail.com>
+	* modified: pressing "back" in the interactive
+	  dialog saves the plugin values
+	* modified: removed "Cancel" button from mask
+	  editor mode
+	* modified: if mask editor mode dialog is closed
+	  when working on a new layer, that layer is
+	  removed
+
 2010-03-20 Carlo Baldassi <carlobaldassi@gmail.com>
 	* bugfix: thumbnail creation error under some
 	circumstances (preview.c)

@@ -38,7 +38,12 @@
 
 static gint32 layer_from_name(gint32 image_ID, gchar * name);
 static void set_aux_layer_name(gint layer_ID, gboolean status, gchar * name);
+static void save_vals (void);
+static void retrieve_vals (void);
+static void retrieve_vals_use_aux_layers_names (gint32 image_ID);
 static void noninteractive_read_vals (const GimpParam * param);
+static void install_custom_signals();
+static void cancel_work_on_aux_layer(void);
 static void query (void);
 static void run (const gchar * name,
                  gint nparams,
@@ -93,18 +98,21 @@ const PlugInDrawableVals default_drawable_vals = {
 };
 
 const PlugInUIVals default_ui_vals = {
-  FALSE,        /* chain active */
-  FALSE,        /* pres status */
-  FALSE,        /* disc status */
-  FALSE,        /* rigmask status */
-  -1,           /* last used width */
-  -1,           /* last used height */
-  0,            /* last layer */
-  FALSE,	/* seams control expanded */
-  FALSE,	/* operations expanded */
-  FALSE,        /* dialog has position */
-  0,            /* dialog root position x */
-  0,            /* dialog root position y */
+  FALSE,                /* chain active */
+  FALSE,                /* pres status */
+  FALSE,                /* disc status */
+  FALSE,                /* rigmask status */
+  -1,                   /* last used width */
+  -1,                   /* last used height */
+  0,                    /* last layer */
+  FALSE,                /* seams control expanded */
+  FALSE,                /* operations expanded */
+  FALSE,                /* dialog has position */
+  0,                    /* dialog root position x */
+  0,                    /* dialog root position y */
+  0,                    /* layer on edit ID */
+  AUX_LAYER_PRES,       /* layer on edit type */
+  TRUE,                 /* layer on edit is new */
 };
 
 const PlugInDialogVals default_dialog_vals = {
@@ -279,6 +287,8 @@ run (const gchar * name,
         case GIMP_RUN_NONINTERACTIVE:
           if (n_params != args_num)
             {
+              fprintf(stderr, "gimp-lqr-plugin: error: wrong number of arguments\n");
+              fflush(stderr);
               status = GIMP_PDB_CALLING_ERROR;
             }
           else
@@ -289,20 +299,14 @@ run (const gchar * name,
           break;
 
         case GIMP_RUN_INTERACTIVE:
-          /*  Possibly retrieve data  */
-          gimp_get_data (DATA_KEY_VALS, &vals);
-          gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
-          gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
+          retrieve_vals();
 
-          /* Install a new signal needed by interface_I */
-          g_signal_newv("coordinates-alarm", ALT_TYPE_SIZE_ENTRY, G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-              0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
+          install_custom_signals();
 
           while (run_dialog == TRUE)
             {
               dialog_resp = dialog (&image_vals, &drawable_vals,
-                             &vals, &ui_vals,
-                             &col_vals, &dialog_vals);
+                             &vals, &ui_vals, &col_vals, &dialog_vals);
               switch (dialog_resp)
                 {
                   case GTK_RESPONSE_OK:
@@ -310,15 +314,10 @@ run (const gchar * name,
                     break;
                   case RESPONSE_RESET:
                     vals = default_vals;
-                    /* image_vals = default_image_vals; */
-                    /* drawable_vals = default_drawable_vals; */
                     ui_vals = default_ui_vals;
                     col_vals = default_col_vals;
-                    /* image_vals.image_ID = image_ID; */
-                    /* drawable_vals.layer_ID = layer_ID; */
                     break;
 		  case RESPONSE_INTERACTIVE:
-                    //printf("INTERACTIVE\n"); fflush(stdout);
 		    dialog_I_resp = dialog_I (&image_vals, &drawable_vals,
                                 &vals, &ui_vals, &col_vals, &dialog_vals);
                     switch (dialog_I_resp)
@@ -328,6 +327,7 @@ run (const gchar * name,
                           run_render = FALSE;
                           break;
                         case RESPONSE_NONINTERACTIVE:
+                          save_vals();
                           run_dialog = TRUE;
                           break;
                         default:
@@ -345,7 +345,7 @@ run (const gchar * name,
                         case GTK_RESPONSE_OK:
                           break;
                         default:
-                          /* TODO: do something more sensible here */
+                          cancel_work_on_aux_layer();
                           run_dialog = FALSE;
                           run_render = FALSE;
                           status = GIMP_PDB_CANCEL;
@@ -365,15 +365,7 @@ run (const gchar * name,
           break;
 
         case GIMP_RUN_WITH_LAST_VALS:
-          /*  Possibly retrieve data  */
-          gimp_get_data (DATA_KEY_VALS, &vals);
-          gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
-          gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
-
-          vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
-          vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
-          vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
-
+          retrieve_vals_use_aux_layers_names(image_ID);
           break;
 
         default:
@@ -424,12 +416,7 @@ run (const gchar * name,
 
       if ((run_mode == GIMP_RUN_INTERACTIVE) && render_success)
         {
-          set_aux_layer_name (vals.pres_layer_ID, ui_vals.pres_status, vals.pres_layer_name);
-          set_aux_layer_name (vals.disc_layer_ID, ui_vals.disc_status, vals.disc_layer_name);
-          set_aux_layer_name (vals.rigmask_layer_ID, ui_vals.rigmask_status, vals.rigmask_layer_name);
-          gimp_set_data (DATA_KEY_VALS, &vals, sizeof (vals));
-          gimp_set_data (DATA_KEY_UI_VALS, &ui_vals, sizeof (ui_vals));
-          gimp_set_data (DATA_KEY_COL_VALS, &col_vals, sizeof (col_vals));
+          save_vals();
         }
 
       IMAGE_CHECK (image_ID, );
@@ -474,6 +461,38 @@ set_aux_layer_name(gint layer_ID, gboolean status, gchar * name)
     {
       g_strlcpy(name, gimp_drawable_get_name(layer_ID), VALS_MAX_NAME_LENGTH);
     }
+}
+
+static void
+save_vals (void)
+{
+  set_aux_layer_name (vals.pres_layer_ID, ui_vals.pres_status, vals.pres_layer_name);
+  set_aux_layer_name (vals.disc_layer_ID, ui_vals.disc_status, vals.disc_layer_name);
+  set_aux_layer_name (vals.rigmask_layer_ID, ui_vals.rigmask_status, vals.rigmask_layer_name);
+
+  gimp_set_data (DATA_KEY_VALS, &vals, sizeof (vals));
+  gimp_set_data (DATA_KEY_UI_VALS, &ui_vals, sizeof (ui_vals));
+  gimp_set_data (DATA_KEY_COL_VALS, &col_vals, sizeof (col_vals));
+}
+
+static void
+retrieve_vals (void)
+{
+  /*  Possibly retrieve data  */
+  gimp_get_data (DATA_KEY_VALS, &vals);
+  gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
+  gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
+}
+
+static void
+retrieve_vals_use_aux_layers_names (gint32 image_ID)
+{
+  /*  Possibly retrieve data and set aux layers from names */
+  retrieve_vals();
+
+  vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
+  vals.disc_layer_ID = layer_from_name(image_ID, vals.disc_layer_name);
+  vals.rigmask_layer_ID = layer_from_name(image_ID, vals.rigmask_layer_name);
 }
 
 static void
@@ -551,3 +570,26 @@ noninteractive_read_vals (const GimpParam * param)
   //printf("RNIN: lid=%i pres=%i disc=%i rmask=%i\n", drawable_vals.layer_ID, vals.pres_layer_ID, vals.disc_layer_ID, vals.rigmask_layer_ID); fflush(stdout);
 
 }
+
+static void
+install_custom_signals()
+{
+  /* Install a new signal needed by interface_I */
+  g_signal_newv("coordinates-alarm", ALT_TYPE_SIZE_ENTRY, G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+      0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
+}
+
+static void
+cancel_work_on_aux_layer(void)
+{
+  if (!gimp_image_is_valid(image_vals.image_ID))
+    {
+      return;
+    }
+  gimp_image_set_active_layer(image_vals.image_ID, drawable_vals.layer_ID);
+  if (ui_vals.layer_on_edit_is_new && gimp_drawable_is_valid (ui_vals.layer_on_edit_ID))
+    {
+      gimp_image_remove_layer(image_vals.image_ID, ui_vals.layer_on_edit_ID);
+    }
+}
+

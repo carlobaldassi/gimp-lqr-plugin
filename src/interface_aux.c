@@ -104,7 +104,6 @@ dialog_aux (PlugInImageVals * image_vals,
 
   dlg = gtk_dialog_new_with_buttons (_("GIMP LqR Plug-In - Mask editor mode"),
 			 NULL, 0,
-			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			 GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
   gtk_window_set_resizable (GTK_WINDOW (dlg), FALSE);

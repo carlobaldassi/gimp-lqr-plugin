@@ -208,6 +208,7 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
 
   nl_data->preview_data->ui_vals->layer_on_edit_ID = layer_ID;
   nl_data->preview_data->ui_vals->layer_on_edit_type = nl_data->layer_type;
+  nl_data->preview_data->ui_vals->layer_on_edit_is_new = TRUE;
 
   g_free(nl_data);
 
@@ -235,6 +236,7 @@ callback_edit_mask_button (GtkWidget * button, gpointer data)
 
   nl_data->preview_data->ui_vals->layer_on_edit_ID = layer_ID;
   nl_data->preview_data->ui_vals->layer_on_edit_type = nl_data->layer_type;
+  nl_data->preview_data->ui_vals->layer_on_edit_is_new = FALSE;
 
   gtk_dialog_response (GTK_DIALOG(dlg), RESPONSE_WORK_ON_AUX_LAYER);
 }

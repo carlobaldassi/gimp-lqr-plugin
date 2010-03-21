@@ -802,38 +802,12 @@ dialog (PlugInImageVals * image_vals,
 				     &(state->nrg_func));
       gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order_combo_box),
 				     &(state->res_order));
-      /*state->new_layer =
-	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (new_layer_button));*/
       state->resize_canvas =
 	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
 				      (resize_canvas_button));
       state->resize_aux_layers =
 	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
 				      (resize_aux_layers_button));
-      /*
-      state->output_seams =
-	gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (out_seams_button));
-	*/
-
-      /* save vsmap colours */
-      /*
-      if (state->output_seams)
-	{
-	  gimp_color_button_get_color (GIMP_COLOR_BUTTON
-				       (out_seams_col_button1), colour_start);
-	  gimp_color_button_get_color (GIMP_COLOR_BUTTON
-				       (out_seams_col_button2), colour_end);
-
-	  col_vals->r1 = colour_start->r;
-	  col_vals->g1 = colour_start->g;
-	  col_vals->b1 = colour_start->b;
-
-	  col_vals->r2 = colour_end->r;
-	  col_vals->g2 = colour_end->g;
-	  col_vals->b2 = colour_end->b;
-	}
-	*/
-
       /* save mask behaviour */
       if (has_mask == TRUE)
 	{
@@ -845,7 +819,6 @@ dialog (PlugInImageVals * image_vals,
       /* save all */
       memcpy (vals, state, sizeof (PlugInVals));
       memcpy (ui_vals, ui_state, sizeof (PlugInUIVals));
-
     }
 
   gtk_widget_destroy (dlg);
