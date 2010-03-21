@@ -14,571 +14,647 @@
 
     <table width="100%" cellspacing="1" cellpadding="1">
       <tr bgcolor="black">
-	<td width="100%" align="center">
-	  <font size="+2" color="white">Pagina di aiuto per il plugin di GIMP Liquid Rescale versione 0.7</font>
-	</td>
+        <td width="100%" align="center">
+          <font size="+2" color="white">Pagina di aiuto per il plugin di GIMP Liquid Rescale versione 0.7</font>
+        </td>
       </tr>
       <tr>
-	<td width="100%" align="left">
-	  <p>
-	  Il plugin Liquid Rescale è un'implementazione dell'algoritmo
-	  "content-aware resizing by seam carving"
-	  ideato da Shai Avidan e Ariel Shamir.
-	  </p>
-	  <p>
-	  Il suo scopo è di ridimensionare non uniformemente le immagini pur mantenendo le
-	  caratteristiche più salienti dell'immagine, evitando possibilmente di distorcerle.
-	  Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale".
-	  </p>
-	  <p>
-	  Funziona sia rimpicciolentdo che ingrandendo, ed è possibile specificare manualmente
-	  quali zone dell'immagine devono essere preservate e quali ignorate (o rimosse).
-	  </p>
-	  <p>
-	  Si veda anche <a href="#seam_carving">Appendice: La tecnica del <i>seam carving</i></a> alla fine di questa
-	  pagina per un'introduzione ai concetti su cui si basa questa tecnica.
-	  </p>
-	  <p>
-	  Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo.
-	  Può anche essere applicato a più livelli di un immagine attraverso il plugin
-	  <i>"Filtra tutti i livelli"</i> o usando il GIMP Animation Package per l'editing video (si veda
-	  <a href="#GAP">questa sezione</a> per maggiori dettagli).
-	  </p>
-	  <p>
-	  Il plugin opera sempre su interi livelli; se una selezione è presente, è salvata come canale
-	  e rimossa.
-	  Se il livello ha una maschera per la trasparenza, viene mostrata un'opzione
-	  per stabilire se applicarla o rimuoverla prima di procedere.
-	  </p>
+        <td width="100%" align="left">
           <p>
-          Il plugin può anche essere usato in modalità batch dalla linea di comando, si veda
-          <a href="#batch">questa sezione</a> per maggiori dettagli.
+          <div>
+            Il plugin Liquid Rescale è un'implementazione dell'algoritmo
+            "content-aware resizing by seam carving"
+            ideato da Shai Avidan e Ariel Shamir.
+          </div>
+          </p>
+          <p>
+          <div>
+            Il suo scopo è di ridimensionare non uniformemente le immagini pur mantenendo le
+            caratteristiche più salienti dell'immagine, evitando possibilmente di distorcerle.
+            Può anche essere utilizzato per rimuovere porzioni di immagine in modo "naturale".
+          </div>
+          </p>
+          <p>
+          <div>
+            Funziona sia rimpicciolentdo che ingrandendo, ed è possibile specificare manualmente
+            quali zone dell'immagine devono essere preservate e quali ignorate (o rimosse).
+          </div>
+          </p>
+          <p>
+          <div>
+            Si veda anche <a href="#seam_carving">Appendice: La tecnica del <i>seam carving</i></a> alla fine di questa
+            pagina per un'introduzione ai concetti su cui si basa questa tecnica.
+          </div>
+          </p>
+          <p>
+          <div>
+            Il plugin agisce sul livello (o sulla selezione fluttuante) correntemente attivo.
+            Può anche essere applicato a più livelli di un immagine attraverso il plugin
+            <i>"Filtra tutti i livelli"</i> o usando il GIMP Animation Package per l'editing video (si veda
+            <a href="#GAP">questa sezione</a> per maggiori dettagli).
+          </div>
+          </p>
+          <p>
+          <div>
+            Il plugin opera sempre su interi livelli; se una selezione è presente, è salvata come canale
+            e rimossa.
+            Se il livello ha una maschera per la trasparenza, viene mostrata un'opzione
+            per stabilire se applicarla o rimuoverla prima di procedere.
+          </div>
+          </p>
+          <p>
+          <div>
+            Il plugin può anche essere usato in modalità batch dalla linea di comando, si veda
+            <a href="#batch">questa sezione</a> per maggiori dettagli.
+          </div>
           </p>
 
-	  <h2>Descrizione dell'interfaccia utente (modalità non-interattiva)</h2>
-	  <p>
-	  <img title="Esempio finestra di dialogo" alt="Esempio finestra di dialogo" src="../images/dialog1_it.jpg">
-	  </p>
+          <h2>Descrizione dell'interfaccia utente (modalità non-interattiva)</h2>
+          <p>
+          <img title="Esempio finestra di dialogo" alt="Esempio finestra di dialogo" src="../images/dialog1_it.jpg">
+          </p>
 
-	  <h3>Selezionare le nuove dimensioni</h3>
-	  <p>
-		  <div>
-			  In questa sezione è possibile impostare le dimensioni finali dell'immagine.
-			  È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui
-			  si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin
-			  agisce prima nel senso della larghezza, e poi in altezza. Questo compurtamento
-			  può essere modificato attrverso un'opzione nella linguetta <i>"Avanzate"</i>.
-		  </div>
-		  <div>
-			  I due piccoli pulsanti sulla destra possono essere utilizzati per riportare
-			  le dimensioni ai valori originali dell'immagine (sopra) o agli ultimi valori
-			  usati (sotto), mentre il pulsante più grande sulla destra permette di passare
-			  alla modalità interattiva (vedi la <a href="#interactive">sezione corrispondente</a>
-			  per maggiori dettagli).
-		  </div>
-	  </p>
-	  <p>
-	  	Nota che le dimensioni finali possono essere impostate automaticamente quando si rimuovono
-		contenuti, vedi più sotto.
-	  </p>
+          <h3>Selezionare le nuove dimensioni</h3>
+          <p>
+          <div>
+            In questa sezione è possibile impostare le dimensioni finali dell'immagine.
+            È consigliabile riscalare sempre una direzione alla volta. Nel caso in cui
+            si vogliano modificare entrambe le dimensioni contemporaneamente, il plugin
+            agisce prima nel senso della larghezza, e poi in altezza. Questo compurtamento
+            può essere modificato attrverso un'opzione nella linguetta <i>"Avanzate"</i>.
+          </div>
+          <div>
+            I due piccoli pulsanti sulla destra possono essere utilizzati per riportare
+            le dimensioni ai valori originali dell'immagine (sopra) o agli ultimi valori
+            usati (sotto), mentre il pulsante più grande sulla destra permette di passare
+            alla modalità interattiva (vedi la <a href="#interactive">sezione corrispondente</a>
+            per maggiori dettagli).
+          </div>
+          </p>
+          <p>
+          <div>
+            Nota che le dimensioni finali possono essere impostate automaticamente quando si rimuovono
+            contenuti, vedi più sotto.
+          </div>
+          </p>
 
-	  <h3>Maschere per i contenuti</h3>
-	  <h4>Guida rapida</h4>
-	  <p>
-	  Il sistema più semplice per selezionare manualmente le zone dell'immagine che si
-	  vogliono proteggere/ignorare è il seguente:
-	  <ul>
-		<li>
-		Selezionate il livello (non la selezione fluttuante) che volete riscalare e invocate il plugin
-		</li><li>
-		Cliccate il pulsante <i>"Nuovo"</i> nella sezione <b>"Maschera per i contenuti da preservare"</b>
-		(questo creerà un nuovo livello trasparente, con opacità 50%, e imposterà un colore
-		appropriato; inoltre, la finestra di dialogo principale del plugin verrà sostituita con una più piccola)
-		</li><li>
-		Dipingete con il pennello (o altro) le aree che volete preservare
-		</li><li>
-		Quando avete finito, premete OK: la finestra di dialogo principale del plugin riapparirà.
-		</li><li>
-		Ripetete il tutto per i contenuti che volete eliminare
-		</li>
-	  </ul>
-	  </p>
-	  <p>
-		Volendo eliminare porzioni di immagine, un metodo rapido per impostare le dimensioni
-		finali è, dopo aver impostato una maschera per l'eliminazione, di cliccare su uno
-	       	dei pulsanti a fianco dell'etichetta <i>"Auto dimensionamento"</i>.
-		(Questo metodo tuttavia funziona solo con maschere molto semplici).
-	  </p>
-	  <p>
-		<b>Nota #1:</b> l'eliminazione di parti dell'immaagine è possibile solamente quando
-		la si restringe. Per default, la maschera per la preservazione dei contenuti viene ignorata
-		quando si allarga l'immagine, perché in quel caso le aree contrassegnate verrebbero
-		gonfiate anziché rimosse. Se volete davvero ottenere questo effetto, dovete disattivare
-		l'opzione corrispondente nella linguetta <i>"Avanzate"</i>.
-	  </p>
-	  <p>
-		<b>Nota #2:</b> la preservazione dei contenuti non è possibile se si cerca di ingrandire
-		troppo l'immagine, poiché il processo di allargamento è l'inverso del processo di
-		restringimento, quindi la massima quantità di pixel che è possibile aggiungere a un livello
-		corrisponde al numero di pixel che non sono protetti.
-		Per esempio, se avete un'immagine larga 1000 pixel e averte contrassegnato una porzione
-		da preservare larga 800 pixel, la larghezza finale dovrebbe essere inferiore ai 1200
-		pixel. Per ingrandire di più, procedete in passi successivi, oppure impostate adeguatamente
-		il valore del <i>"Max ingrandimento per passo"</i>.
-	  </p>
+          <h3>Maschere per i contenuti</h3>
+          <h4>Guida rapida</h4>
+          <p>
+          <div>
+            Il sistema più semplice per selezionare manualmente le zone dell'immagine che si
+            vogliono proteggere/ignorare è il seguente:
+            <ul>
+              <li>
+              Selezionate il livello (non la selezione fluttuante) che volete riscalare e invocate il plugin
+              </li>
+              <li>
+              Cliccate il pulsante <i>"Nuovo"</i> nella sezione <b>"Maschera per i contenuti da preservare"</b>
+              (questo creerà un nuovo livello trasparente, con opacità 50%, e imposterà un colore
+              appropriato; inoltre, la finestra di dialogo principale del plugin verrà sostituita con una più piccola)
+              </li>
+              <li>
+              Dipingete con il pennello (o altro) le aree che volete preservare
+              </li>
+              <li>
+              Quando avete finito, premete OK: la finestra di dialogo principale del plugin riapparirà.
+              </li>
+              <li>
+              Ripetete il tutto per i contenuti che volete eliminare
+              </li>
+            </ul>
+          </div>
+          </p>
+          <p>
+          <div>
+            Volendo eliminare porzioni di immagine, un metodo rapido per impostare le dimensioni
+            finali è, dopo aver impostato una maschera per l'eliminazione, di cliccare su uno
+            dei pulsanti a fianco dell'etichetta <i>"Auto dimensionamento"</i>.
+            (Questo metodo tuttavia funziona solo con maschere molto semplici).
+          </div>
+          </p>
+          <p>
+          <div>
+            <b>Nota #1:</b> l'eliminazione di parti dell'immaagine è possibile solamente quando
+            la si restringe. Per default, la maschera per la preservazione dei contenuti viene ignorata
+            quando si allarga l'immagine, perché in quel caso le aree contrassegnate verrebbero
+            gonfiate anziché rimosse. Se volete davvero ottenere questo effetto, dovete disattivare
+            l'opzione corrispondente nella linguetta <i>"Avanzate"</i>.
+          </div>
+          </p>
+          <p>
+          <div>
+            <b>Nota #2:</b> la preservazione dei contenuti non è possibile se si cerca di ingrandire
+            troppo l'immagine, poiché il processo di allargamento è l'inverso del processo di
+            restringimento, quindi la massima quantità di pixel che è possibile aggiungere a un livello
+            corrisponde al numero di pixel che non sono protetti.
+            Per esempio, se avete un'immagine larga 1000 pixel e averte contrassegnato una porzione
+            da preservare larga 800 pixel, la larghezza finale dovrebbe essere inferiore ai 1200
+            pixel. Per ingrandire di più, procedete in passi successivi, oppure impostate adeguatamente
+            il valore del <i>"Max ingrandimento per passo"</i>.
+          </div>
+          </p>
 
-	  <h4>Descrizione completa</h4>
-	  <p>
-		<div>
-			Nella sezione <b>"Maschera per i contenuti da preservare"</b>
-			è possibile specificare se ci sono regioni dell'immagine che dovrebbero
-			essere preservate dalle modifiche, attivando l'opzione
-			<i>"Attiva la preservazione dei contenuti"</i> e scegliendo
-			un livello tra quelli che appartengono all'imaggine attuale (e sono diversi
-			dal livello attivo) nel menu <i>"Livelli disponibili"</i>.
-			Il pulsante <i>"Nuovo"</i> crea un nuovo livello trasparente
-			con opacità 50% e un nome appropriato, lo imposta
-			come maschera da utilizzare per la preservazione dei contenuti e passa alla
-			modalità "Modifica della maschera", nella quale la finestra di dialogo è ridotta
-			e sempre in primo piano, e in cui il colore di primo piano viene impostato a
-			verde. Quando si esce dalla modalità "modifica della maschera", il colore
-			di primo piano precedente viene ripristinato e la finestra di dialogo principale
-			del plugin riappare con le informazioni aggiornate.
-			Il pulsante <i>"Modifica"</i> lancia la modalità "Modifica della maschera" sul
-			livello attualmente selezionato per la preservazione.
-			Nota che se il plugin viene lanciato su una selezione fluttuante
-			questa procedura non è adatta a meno di non trasformare la selezione fluttuante
-			in un nuovo livello, dato che GIMP non permette di lavorare su altri livelli se
-			c'è una selezione fluttuante attiva.
-		</div>
-		<div>
-			L'intensità dell'effetto su ogni pixel si ricava dalla media dei valori
-			del pixel in ogni canale del colore, moltiplicato per il valore di opacità
-			(canale alpha). Quindi, per un livello RGB con un canale alpha, il valore massimo
-			si otterrà con i pixel binachi, mentre quelli neri e quelli trasparenti
-			sono ignorati. In generale, è consigliabile lavorare con un solo colore per
-			maschera, e, se necessario, regolare l'intensità nelle diverse aree cambiando
-			il valore della trasparenza piuttosto che agire sulla luminosità o sulla
-			saturazione.
-		</div>
-		<div>
-			Le dimensioni e la posizione dei livelli selezionati può essere arbitraria,
-			il plugin utilizza solo le porzioni che si sovrappongono al livello attivo.
-			La scala <i>"Intensità"</i> può essere utilizzata come parametro globale
-			per modulare la preservazione dei contenuti.
-			Nota: selezioni più sottili (nel verso del ridimensionamento) hanno bisogno
-			di valori di intensità più alti, e viceversa.
-		</div>
-		<div>
-			Se una maschera per la preservazione viene selezionata, la piccola icona verde
-			sotto l'immagine sulla sinistra si attiverà e il tooltip corrispondente conterrà
-			il nome del livello selezionato per la preservazione. Le due icone rimanenti svolgono
-			la stessa funzione per la maschera per l'eliminazione (icona rossa) e quella per
-			la rigidità (icona blu).
-		</div>
-	  </p>
-	  <p>
-		<div>
-			La sezione <b>"Maschera per i contenuti da eliminare"</b> è identica alla precedente,
-			ma l'effetto è invertito, e il colore impostato dai pulsanti <i>"Nuovo"</i> e <i>"Modifica"</i>
-			è il rosso anziché il verde.
-		</div>
-		<div>
-			In più, rispetto alla sezione precedente, ci sono due altri pulsanti, accanto all'etichetta
-			<i>"Auto dimensionamento"</i>, che possono essere usati per effettuare l'eliminazione "rapida" di
-			aree dell'immagine.
-			Se si preme uno di questi pulsanti, il plug-in cerca di calcolare l'ammontare di riscalatura necessaria per
-			rimuovere gli oggetti marcati dall'attuale maschera per l'eliminazione, e imposta corrispondentemente
-			le dimensioni finali (nella sezione <b>"Selezionare le nuove dimensioni"</b>).
-			Questi pulsanti producono sempre un riscalamento in una singola direzione: il tasto <i>"Larghezza"</i>
-			modifica la larghezza e reimposta l'altezza al valore originario, il tasto <i>"Altezza"</i> fa
-			l'opposto.
-		</div>
-		<div>
-			Si noti che questa opzione è adeguata solamente per operazioni di rimozione elementari,
-			poiché questo metodo può facilmente sbagliare se la maschera è troppo complicata.
-		</div>
-		<div>
-			<i>[Dettagli tecnici: le dimensioni finali sono calcolate semplicemente a partire dal massimo numero
-			di pixel per riga (o colonna) per i quali la maschera supera una data soglia; questa soglia corrisponde
-			al 50% di un colore RGB pieno (ad es. del rosso con le impostazioni di default).]</i>
-		</div>
-	  </p>
+          <h4>Descrizione completa</h4>
+          <p>
+          <div>
+            Nella sezione <b>"Maschera per i contenuti da preservare"</b>
+            è possibile specificare se ci sono regioni dell'immagine che dovrebbero
+            essere preservate dalle modifiche, attivando l'opzione
+            <i>"Attiva la preservazione dei contenuti"</i> e scegliendo
+            un livello tra quelli che appartengono all'imaggine attuale (e sono diversi
+            dal livello attivo) nel menu <i>"Livelli disponibili"</i>.
+            Il pulsante <i>"Nuovo"</i> crea un nuovo livello trasparente
+            con opacità 50% e un nome appropriato, lo imposta
+            come maschera da utilizzare per la preservazione dei contenuti e passa alla
+            modalità "Modifica della maschera", nella quale la finestra di dialogo è ridotta
+            e sempre in primo piano, e in cui il colore di primo piano viene impostato a
+            verde. Quando si esce dalla modalità "modifica della maschera", il colore
+            di primo piano precedente viene ripristinato e la finestra di dialogo principale
+            del plugin riappare con le informazioni aggiornate.
+            Il pulsante <i>"Modifica"</i> lancia la modalità "Modifica della maschera" sul
+            livello attualmente selezionato per la preservazione.
+            Nota che se il plugin viene lanciato su una selezione fluttuante
+            questa procedura non è adatta a meno di non trasformare la selezione fluttuante
+            in un nuovo livello, dato che GIMP non permette di lavorare su altri livelli se
+            c'è una selezione fluttuante attiva.
+          </div>
+          <div>
+            L'intensità dell'effetto su ogni pixel si ricava dalla media dei valori
+            del pixel in ogni canale del colore, moltiplicato per il valore di opacità
+            (canale alpha). Quindi, per un livello RGB con un canale alpha, il valore massimo
+            si otterrà con i pixel binachi, mentre quelli neri e quelli trasparenti
+            sono ignorati. In generale, è consigliabile lavorare con un solo colore per
+            maschera, e, se necessario, regolare l'intensità nelle diverse aree cambiando
+            il valore della trasparenza piuttosto che agire sulla luminosità o sulla
+            saturazione.
+          </div>
+          <div>
+            Le dimensioni e la posizione dei livelli selezionati può essere arbitraria,
+            il plugin utilizza solo le porzioni che si sovrappongono al livello attivo.
+            La scala <i>"Intensità"</i> può essere utilizzata come parametro globale
+            per modulare la preservazione dei contenuti.
+            Nota: selezioni più sottili (nel verso del ridimensionamento) hanno bisogno
+            di valori di intensità più alti, e viceversa.
+          </div>
+          <div>
+            Se una maschera per la preservazione viene selezionata, la piccola icona verde
+            sotto l'immagine sulla sinistra si attiverà e il tooltip corrispondente conterrà
+            il nome del livello selezionato per la preservazione. Le due icone rimanenti svolgono
+            la stessa funzione per la maschera per l'eliminazione (icona rossa) e quella per
+            la rigidità (icona blu).
+          </div>
+          </p>
+          <p>
+          <div>
+            La sezione <b>"Maschera per i contenuti da eliminare"</b> è identica alla precedente,
+            ma l'effetto è invertito, e il colore impostato dai pulsanti <i>"Nuovo"</i> e <i>"Modifica"</i>
+            è il rosso anziché il verde.
+          </div>
+          <div>
+            In più, rispetto alla sezione precedente, ci sono due altri pulsanti, accanto all'etichetta
+            <i>"Auto dimensionamento"</i>, che possono essere usati per effettuare l'eliminazione "rapida" di
+            aree dell'immagine.
+            Se si preme uno di questi pulsanti, il plug-in cerca di calcolare l'ammontare di riscalatura necessaria per
+            rimuovere gli oggetti marcati dall'attuale maschera per l'eliminazione, e imposta corrispondentemente
+            le dimensioni finali (nella sezione <b>"Selezionare le nuove dimensioni"</b>).
+            Questi pulsanti producono sempre un riscalamento in una singola direzione: il tasto <i>"Larghezza"</i>
+            modifica la larghezza e reimposta l'altezza al valore originario, il tasto <i>"Altezza"</i> fa
+            l'opposto.
+          </div>
+          <div>
+            Si noti che questa opzione è adeguata solamente per operazioni di rimozione elementari,
+            poiché questo metodo può facilmente sbagliare se la maschera è troppo complicata.
+          </div>
+          <div>
+            <i>[Dettagli tecnici: le dimensioni finali sono calcolate semplicemente a partire dal massimo numero
+              di pixel per riga (o colonna) per i quali la maschera supera una data soglia; questa soglia corrisponde
+              al 50% di un colore RGB pieno (ad es. del rosso con le impostazioni di default).]</i>
+          </div>
+          </p>
 
-	  <h3>Output</h3>
-	  <p>
-	  <img title="Output" alt="Output" src="../images/dialog2_it.jpg">
-	  </p>
-	  <p>
-	  Questa linguetta contiene alcune opzioni riguardo all'output del plugin.
-	  </p>
-	  <p>
-		  <dl>
-		  <dt>Risultato</dt>
-		  <dd>
-			  Permette di scegliere se il risultato del ridimensionamento deve essere scritto sul
-			  livello selezionato, o su uno nuovo, o messo in una nuova immagine. In quest'ultimo
-			  caso, la nuova immagine che verrà creata conterrà anche i livelli ausiliarî riscalati
-			  e le linee d'azione (vedi sotto).
-			  Per default è impostato a <i>"sul livello selezionato"</i>.
-		  </dd>
-		  <dt>Ridimensiona la tela</dt>
-		  <dd>
-			  Specifica se la tela deve essere ridimensionata in modo da adattarsi alle nuove
-			  dimensioni del livello attivo.
-			  Se quest'opzione è attivata (è il default), il livello attivo verrà anche
-			  riposizionato in modo da essere completamente visibile.
-		  </dd>
-		  <dt>Ridimensiona i livelli ausiliarî</dt>
-		  <dd>
-			  Specifica se i livelli che sono stati impostati per la selezione manuale dei
-			  contenuti e per specificare una maschera per la rigidità verranno ridimensionati
-			  assieme al livello attivo. Se quest'opzione è attivata (è il default), le parti
-			  dei livelli in questione che escono dal livello attivo verranno tagliate, dopodichè
-			  i livelli ausiliarî subiranno lo stesso processo di eliminazione/inserimento di
-			  linee del livello attivo.
-		  </dd>
-		  <dt>Mostra le linee d'azione</dt>
-		  <dd>
-			  Specifica se creare un nuovo livello che mostra la mappa delle linee d'azione
-			  (che sono le parti dell'immagine che vengono eliminate, se si restringe,
-			  o moltiplicate, se si allarga).
-			  I due pulsanti sulla destra permettono di stabilire le gamma dei colori da usare
-			  per le linee. Le linee sono calcolate sull'immagine originale in base alla necessità
-			  (per es. ne saranno calcolate 100 se si sta restringendo o allargando
-			  il livello di 100 pixel); le aree rimanenti restano trasparenti.
-			  Per interpretare il risultato, usate questa opzione impostando <i>"Risulatato"</i>
-			  a <i>"su un nuovo livello"</i>, e sovrapponete il livello con le linee
-			  d'azione a quello originale.
-			  Se riscalate in due direzioni contemporaneamente, otterete due mappe,
-			  ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi
-			  non è molto utile. Lo stesso vale se si esegue un doppio ridimensionamento
-			  liquido (attivendo l'opzione <i>"Riporta alle dimensioni originalo"</i> in
-			  modalità <i>"liquid rescale"</i>), o se il ridimensionamento
-			  avviene in più passi perché si è superato il valore del <i>"Max ingrandimento per passo"</i>.
-			  Nota che questa opzione è ignorata in modalità interattiva, ma i colori selezionati
-			  vengono usati quando si visualizza la mappa manualmente con l'apposito pulsante.
-		  </dd>
-		  <dt>Riporta alle dimensioni originali</dt>
-		  <dd>
-			  Specifica se riscalare all'indietro dopo la trasformazione con liquid rescale.
-			  Questo può essere utile ad esempio per la rimozione di oggetti o per fare uno
-			  "zoom dei contenuti".
-			  Se questa opzione è attivata, un menu compare al di sotto per scegliere la modalità
-			  delle operazioni: è possibile scegliere di ritornare alle dimensioni originali
-			  usando LqR o il ridimensionamento standard, oppure di ridimensionare uniformemente
-			  l'immagine fino a raggiungere o la larghezza o l'altezza originali, mantenendo però
-			  le proporzioni.
-		  </dd>
-		  </dl>
-	  </p>
+          <h3>Output</h3>
+          <p>
+          <img title="Output" alt="Output" src="../images/dialog2_it.jpg">
+          </p>
+          <p>
+          <div>
+            Questa linguetta contiene alcune opzioni riguardo all'output del plugin.
+          </div>
+          </p>
+          <p>
+          <div>
+            <dl>
+              <dt>Risultato</dt>
+              <dd>
+              Permette di scegliere se il risultato del ridimensionamento deve essere scritto sul
+              livello selezionato, o su uno nuovo, o messo in una nuova immagine. In quest'ultimo
+              caso, la nuova immagine che verrà creata conterrà anche i livelli ausiliarî riscalati
+              e le linee d'azione (vedi sotto).
+              Per default è impostato a <i>"sul livello selezionato"</i>.
+              </dd>
+              <dt>Ridimensiona la tela</dt>
+              <dd>
+              Specifica se la tela deve essere ridimensionata in modo da adattarsi alle nuove
+              dimensioni del livello attivo.
+              Se quest'opzione è attivata (è il default), il livello attivo verrà anche
+              riposizionato in modo da essere completamente visibile.
+              </dd>
+              <dt>Ridimensiona i livelli ausiliarî</dt>
+              <dd>
+              Specifica se i livelli che sono stati impostati per la selezione manuale dei
+              contenuti e per specificare una maschera per la rigidità verranno ridimensionati
+              assieme al livello attivo. Se quest'opzione è attivata (è il default), le parti
+              dei livelli in questione che escono dal livello attivo verranno tagliate, dopodichè
+              i livelli ausiliarî subiranno lo stesso processo di eliminazione/inserimento di
+              linee del livello attivo.
+              </dd>
+              <dt>Mostra le linee d'azione</dt>
+              <dd>
+              Specifica se creare un nuovo livello che mostra la mappa delle linee d'azione
+              (che sono le parti dell'immagine che vengono eliminate, se si restringe,
+              o moltiplicate, se si allarga).
+              I due pulsanti sulla destra permettono di stabilire le gamma dei colori da usare
+              per le linee. Le linee sono calcolate sull'immagine originale in base alla necessità
+              (per es. ne saranno calcolate 100 se si sta restringendo o allargando
+              il livello di 100 pixel); le aree rimanenti restano trasparenti.
+              Per interpretare il risultato, usate questa opzione impostando <i>"Risulatato"</i>
+              a <i>"su un nuovo livello"</i>, e sovrapponete il livello con le linee
+              d'azione a quello originale.
+              Se riscalate in due direzioni contemporaneamente, otterete due mappe,
+              ma la seconda sarà calcolata su un'immagine intermedia invisibile, quindi
+              non è molto utile. Lo stesso vale se si esegue un doppio ridimensionamento
+              liquido (attivendo l'opzione <i>"Riporta alle dimensioni originalo"</i> in
+              modalità <i>"liquid rescale"</i>), o se il ridimensionamento
+              avviene in più passi perché si è superato il valore del <i>"Max ingrandimento per passo"</i>.
+              Nota che questa opzione è ignorata in modalità interattiva, ma i colori selezionati
+              vengono usati quando si visualizza la mappa manualmente con l'apposito pulsante.
+              </dd>
+              <dt>Riporta alle dimensioni originali</dt>
+              <dd>
+              Specifica se riscalare all'indietro dopo la trasformazione con liquid rescale.
+              Questo può essere utile ad esempio per la rimozione di oggetti o per fare uno
+              "zoom dei contenuti".
+              Se questa opzione è attivata, un menu compare al di sotto per scegliere la modalità
+              delle operazioni: è possibile scegliere di ritornare alle dimensioni originali
+              usando LqR o il ridimensionamento standard, oppure di ridimensionare uniformemente
+              l'immagine fino a raggiungere o la larghezza o l'altezza originali, mantenendo però
+              le proporzioni.
+              </dd>
+            </dl>
+          </div>
+          </p>
 
-	  <h3>Avanzate</h3>
-	  <p>
-		  Questa linguetta contiene alcune opzioni che permettono un controllo avanzato
-		  dell'algoritmo di ridimensionamento.
-	  </p>
-	  <h4>Impostazioni linee d'azione</h4>
-	  <p>
-		  <img title="Impostazioni linee d'azione" alt="Impostazioni linee d'azione" src="../images/dialog3_it.jpg">
-	  </p>
-	<dl>
-	<dt>Massimo passo trasverso</dt>
-	<dd>
-		<div>
-		Questa opzione permette di impostare il massimo passo trasvero ammesso
-		tra due pixel successivi delle linee d'azione. L'algoritmo standard usa
-		un passo = 1, che significa che ogni pixel di una linea può essere
-		spostato al massimo di un pixel rispetto ai suoi vicini. Questo
-		comporta che le linee d'azione possono formare un angolo massimo di 45 gradi
-		rispetto alla loro base.
-		</div>
-		<div>
-		Aumentare il valore del passo massimo è l'unico modo di superare questo limite,
-		tuttavia può portare all'introduzione di errori visibili. Per bilanciare
-		questo effetto è consigliabile agire sul parametro di rigidità.
-		</div>
-	</dd>
-	<dt>Rigidità globale</dt>
-	<dd>
-		<div>
-		Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte.
-		Può risultare utile per ridurre le distorsioni in certi casi, o per evitare
-		di introdurre gli errori derivanti da un valore troppo alto del passo (è consigliabile
-		usare valori bassi in questo caso). Questo valore viene utilizzato su tutta l'immagine
-		se non è specificata una maschera per la rigidità.
-		</div>
-		<div>
-		<i>[Dettagli tecnici: la penalizzazione è proporzionale alla somma delle differenze di coordinate trasversali
-		(passo) per ogni coppia di punti successivi della linea, elevate alla potenza di 1,5.]</i>
-		</div>
-	</dd>
-	<dt>Usa una maschera per la rigidità</dt>
-	<dd>
-		<div>
-		È possibile specificare diversi valori di rigidità per le diverse aree dell'immagine,
-		usando un livello ausiliario, e seguendo la stessa procedura usata per specificare le
-		maschere per i contenuti (il colore di default in modalità "Modifica della maschera" in
-		questo caso è il blu).
-		Quando si imposta una maschera per la rigidità, il valore in ogni pixel (calcolato
-		allo stesso modo che per le maschere per i contenuti) viene utilizzato come coefficiente
-		di rigidità e moltiplicato al valore globale.
-		</div>
-		<div>
-		Nota #1: le aree trasparenti (o nere) di una maschera per la rigidità corrispondono sempre
-		a un valore di rigidità 0, indipendentemente dal valore globale.
-		</div>
-		<div>
-		Nota #2: le aree più rigide hanno un leggero effetto repulsivo rispetto alle linee d'azione,
-		simile a quello di una maschera per la preservazione. Questo effetto può essere compensato
-		tramite una maschera per l'eliminazione.
-		</div>
-	</dd>
-	<dt>Funzione gradiente</dt>
-	<dd>
-		È possibile scegliere quale funzione deve essere utilizzata per calcolare
-		la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti
-		orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro
-		primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina
-		quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e
-		quali sono irrileventi e possono essere scartati.
-		Usando la funzione <i>Zero</i>, unitamente alla preservazione manuale dei
-		contenuti, è possibile soppiantare completamento il riconoscimento
-		automatico dei contenuti; l'utente può così generare la propria mappa dell'
-		energia (per es. con un altro plugin).
-	</dd>
-	</dl>
-	<h4>Controllo delle operazioni</h4>
-        <p>
-                <img title="Controllo delle operazioni" alt="Controllo delle operazioni" src="../images/dialog4_it.jpg">
-        </p>
-	<dl>
-	<dt>Max ingrandimento per passo</dt>
-	<dd>
-		Questa opzione imposta il massimo ingrandimento (in percentuale) che può essere
-		effettuato in una sola volta. Se le dimensioni finali superano questa soglia,
-		il plug-in si arresterà e ripartirà automaticamente tutte le volte necessarie.
-		È possibile che dobbiate ridurre questo valore se avete delle maschere per la
-		preservazione dei contenuti molto grandi.
-	</dd>
-	<dt>Ordine del ridimensionamento</dt>
-	<dd>
-		Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere
-		se procedere prima in orizzontale e poi in verticale, o viceversa.
-	</dd>
-	<dt>Non eliminare i contenuti quando si allarga</dt>
-	<dd>
-		L'effetto di una maschera per l'eliminazione dei contenuti è invertito quanto
-		il plugin viene utilizzato per allargare un'immagine; dal momento che ciò
-		non è normalmente l'effetto voluto, la maschera è ignorata per default
-		quando si allarga lungo la prima direzione di ridimensionamento (in tali casi,
-		una piccola icona di avvertimento compare nella sezione <i>"Maschera per
-		i contenuti da eliminare"</i>).
-		Disattivate questa opzione per disabilitare questa verifica.
-		Nota che questa opzione viene ignorata in modalità interattiva.
-	</dd>
-	</dl>
-        <a name="GAP"></a>
-	<h3>Utilizzo del plugin per l'editing di video e animazioni</h3>
-	<h4>Utilizzo del plugin con GAP</h4>
-	<p>
-		  Il plugin può essere utilizzato assieme al GIMP Animation Package (GAP) per l'editing
-		  video, così da applicare il riscalamento liquido a tutti i frames di un video
-		  (consultate la documentazione di GAP per informazioni riguardo all'editing video con GIMP).
-	</p>
-	<p>
-		  Tuttavia, gli strumenti di GAP permettono di selezionare in maniera diretta soltanto
-		  il livello su cui lavorare, mentre il liquid rescale plugin necessita di utilizzare
-		  dei livelli ausiliarî per sfruttare tutto il suo potenziale.
-		  Per aggirare il problema, i livelli ausiliarî vengono selezionati in base al loro nome:
-		  perciò, se volete usare una maschera per la preservazione dei contenuti in ogni frame,
-		  per esempio, dovrete chiamare allo stesso modo tutti i livelli che intendete usare come
-		  tali. Lo stesso vale per le maschere per la preservazione dei contenuti e le maschere per
-		  la rigidezza.
-	</p>
-	<p>
-		  <div>
-		  Per applicare il riscalamento liquido su tutti i frames, selezionate <i>"Modifica frame"</i>
-		  dal menu <i>"Video"</i>; si aprirà una finestra di dialogo: nella sezione
-		  <i>"Funzione"</i> selezionate <i>"Applica filtri ai livelli"</i>, quindi impostate
-		  le regole appropriate per la selezione dei livelli e dei frames e cliccate OK.
-		  Comparirà una nuova finestra di dialogo, nella quale bisogna scegliere un filtro:
-		  selezionate <i>"plug-in-lqr"</i>, poi scegliete <i>"Applica costante"</i>
-		  oppure <i>"Applica variabile"</i>.
-		  </div><div>
-		  In quest'ultimo caso, la finestra di dialogo del liquid rescale plugin vi verrà
-		  presentata due volte, una per il primo frame e una per l'ultimo: queste impostano
-		  i valori estremi per tutti i parametri graduali (come le dimensioni, le intensità,
-		  la rigidità ecc.), e valori intermedî di questi verranno usati per i frames intermedî
-		  (per esempio, impostando a 100% la larghezza nel primo frame e 110% nell'ultimo, e
-		  supponendo che i frames in tutto siano 11, i frames intermedî avranno larghezza
-		  101%, 102%, 103% e così via).
-		  Tutte le opzioni non graduali, invece, come l'ordine di ridimensionamento, il
-		  nome dei livelli ausiliarî ecc., vengono prese dell'<u>ultima</u> finestra di dialogo
-		  per i livelli intermedî.
-		  </div>
-	</p>
-	<h4>Applicare il plugin su tutti i livelli (ad es. per le animazioni)</h4>
-	<p>
-		  È anche possibile applicare il plugin a tutti i livelli di una data immagine (per
-		  esempio quando si lavora su un'animazione), usando l'opzione <i>"Filtra tutti i
-		  livelli..."</i> dal menu <i>"Filtri"</i> e scegliendo <i>"plug-in-lqr"</i> nella
-		  finestra di dialogo che compare.
-		  Le regole usate sono le stesse descritte nella sezione per l'utilizzo di GAP;
-		  tuttavia, incontrerete dei problemi in questo caso se usate dei livelli ausiliarî come
-		  maschere, poiché il plugin viene applicato anche a questi.
-	</p>
+          <h3>Avanzate</h3>
+          <p>
+          <div>
+            Questa linguetta contiene alcune opzioni che permettono un controllo avanzato
+            dell'algoritmo di ridimensionamento.
+          </div>
+          </p>
+          <h4>Impostazioni linee d'azione</h4>
+          <p>
+          <img title="Impostazioni linee d'azione" alt="Impostazioni linee d'azione" src="../images/dialog3_it.jpg">
+          </p>
+          <p>
+          <div>
+            <dl>
+              <dt>Massimo passo trasverso</dt>
+              <dd>
+              <div>
+                Questa opzione permette di impostare il massimo passo trasvero ammesso
+                tra due pixel successivi delle linee d'azione. L'algoritmo standard usa
+                un passo = 1, che significa che ogni pixel di una linea può essere
+                spostato al massimo di un pixel rispetto ai suoi vicini. Questo
+                comporta che le linee d'azione possono formare un angolo massimo di 45 gradi
+                rispetto alla loro base.
+              </div>
+              <div>
+                Aumentare il valore del passo massimo è l'unico modo di superare questo limite,
+                tuttavia può portare all'introduzione di errori visibili. Per bilanciare
+                questo effetto è consigliabile agire sul parametro di rigidità.
+              </div>
+              </dd>
+              <dt>Rigidità globale</dt>
+              <dd>
+              <div>
+                Usando questo valore si assegna una penalizzazione alle linee d'azione meno diritte.
+                Può risultare utile per ridurre le distorsioni in certi casi, o per evitare
+                di introdurre gli errori derivanti da un valore troppo alto del passo (è consigliabile
+                usare valori bassi in questo caso). Questo valore viene utilizzato su tutta l'immagine
+                se non è specificata una maschera per la rigidità.
+              </div>
+              <div>
+                <i>[Dettagli tecnici: la penalizzazione è proporzionale alla somma delle differenze di coordinate trasversali
+                  (passo) per ogni coppia di punti successivi della linea, elevate alla potenza di 1,5.]</i>
+              </div>
+              </dd>
+              <dt>Usa una maschera per la rigidità</dt>
+              <dd>
+              <div>
+                È possibile specificare diversi valori di rigidità per le diverse aree dell'immagine,
+                usando un livello ausiliario, e seguendo la stessa procedura usata per specificare le
+                maschere per i contenuti (il colore di default in modalità "Modifica della maschera" in
+                questo caso è il blu).
+                Quando si imposta una maschera per la rigidità, il valore in ogni pixel (calcolato
+                allo stesso modo che per le maschere per i contenuti) viene utilizzato come coefficiente
+                di rigidità e moltiplicato al valore globale.
+              </div>
+              <div>
+                Nota #1: le aree trasparenti (o nere) di una maschera per la rigidità corrispondono sempre
+                a un valore di rigidità 0, indipendentemente dal valore globale.
+              </div>
+              <div>
+                Nota #2: le aree più rigide hanno un leggero effetto repulsivo rispetto alle linee d'azione,
+                simile a quello di una maschera per la preservazione. Questo effetto può essere compensato
+                tramite una maschera per l'eliminazione.
+              </div>
+              </dd>
+              <dt>Funzione gradiente</dt>
+              <dd>
+              È possibile scegliere quale funzione deve essere utilizzata per calcolare
+              la mappa dell'energia dell'immagine. Per ogni pixel nell'immagine, le componenti
+              orizzontale e verticale del gradiente vengono calcolate a partire dai suoi quattro
+              primi vicini. La mappa dell'energia dipende dal gradiente, e a sua volta determina
+              quali elementi dell'immagine sono rilevanti, e dovrebbero essere preservati, e
+              quali sono irrileventi e possono essere scartati.
+              Usando la funzione <i>Zero</i>, unitamente alla preservazione manuale dei
+              contenuti, è possibile soppiantare completamento il riconoscimento
+              automatico dei contenuti; l'utente può così generare la propria mappa dell'
+              energia (per es. con un altro plugin).
+              </dd>
+            </dl>
+          </div>
+          </p>
+          <h4>Controllo delle operazioni</h4>
+          <p>
+          <img title="Controllo delle operazioni" alt="Controllo delle operazioni" src="../images/dialog4_it.jpg">
+          </p>
+          <p>
+          <div>
+            <dl>
+              <dt>Max ingrandimento per passo</dt>
+              <dd>
+              Questa opzione imposta il massimo ingrandimento (in percentuale) che può essere
+              effettuato in una sola volta. Se le dimensioni finali superano questa soglia,
+              il plug-in si arresterà e ripartirà automaticamente tutte le volte necessarie.
+              È possibile che dobbiate ridurre questo valore se avete delle maschere per la
+              preservazione dei contenuti molto grandi.
+              </dd>
+              <dt>Ordine del ridimensionamento</dt>
+              <dd>
+              Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere
+              se procedere prima in orizzontale e poi in verticale, o viceversa.
+              </dd>
+              <dt>Non eliminare i contenuti quando si allarga</dt>
+              <dd>
+              L'effetto di una maschera per l'eliminazione dei contenuti è invertito quanto
+              il plugin viene utilizzato per allargare un'immagine; dal momento che ciò
+              non è normalmente l'effetto voluto, la maschera è ignorata per default
+              quando si allarga lungo la prima direzione di ridimensionamento (in tali casi,
+              una piccola icona di avvertimento compare nella sezione <i>"Maschera per
+                i contenuti da eliminare"</i>).
+              Disattivate questa opzione per disabilitare questa verifica.
+              Nota che questa opzione viene ignorata in modalità interattiva.
+              </dd>
+            </dl>
+          </div>
+          </p>
+          <a name="GAP"></a>
+          <h3>Utilizzo del plugin per l'editing di video e animazioni</h3>
+          <h4>Utilizzo del plugin con GAP</h4>
+          <p>
+          <div>
+            Il plugin può essere utilizzato assieme al GIMP Animation Package (GAP) per l'editing
+            video, così da applicare il riscalamento liquido a tutti i frames di un video
+            (consultate la documentazione di GAP per informazioni riguardo all'editing video con GIMP).
+          </div>
+          </p>
+          <p>
+          <div>
+            Tuttavia, gli strumenti di GAP permettono di selezionare in maniera diretta soltanto
+            il livello su cui lavorare, mentre il liquid rescale plugin necessita di utilizzare
+            dei livelli ausiliarî per sfruttare tutto il suo potenziale.
+            Per aggirare il problema, i livelli ausiliarî vengono selezionati in base al loro nome:
+            perciò, se volete usare una maschera per la preservazione dei contenuti in ogni frame,
+            per esempio, dovrete chiamare allo stesso modo tutti i livelli che intendete usare come
+            tali. Lo stesso vale per le maschere per la preservazione dei contenuti e le maschere per
+            la rigidezza.
+          </div>
+          </p>
+          <p>
+          <div>
+            Per applicare il riscalamento liquido su tutti i frames, selezionate <i>"Modifica frame"</i>
+            dal menu <i>"Video"</i>; si aprirà una finestra di dialogo: nella sezione
+            <i>"Funzione"</i> selezionate <i>"Applica filtri ai livelli"</i>, quindi impostate
+            le regole appropriate per la selezione dei livelli e dei frames e cliccate OK.
+            Comparirà una nuova finestra di dialogo, nella quale bisogna scegliere un filtro:
+            selezionate <i>"plug-in-lqr"</i>, poi scegliete <i>"Applica costante"</i>
+            oppure <i>"Applica variabile"</i>.
+            </div><div>
+            In quest'ultimo caso, la finestra di dialogo del liquid rescale plugin vi verrà
+            presentata due volte, una per il primo frame e una per l'ultimo: queste impostano
+            i valori estremi per tutti i parametri graduali (come le dimensioni, le intensità,
+            la rigidità ecc.), e valori intermedî di questi verranno usati per i frames intermedî
+            (per esempio, impostando a 100% la larghezza nel primo frame e 110% nell'ultimo, e
+            supponendo che i frames in tutto siano 11, i frames intermedî avranno larghezza
+            101%, 102%, 103% e così via).
+            Tutte le opzioni non graduali, invece, come l'ordine di ridimensionamento, il
+            nome dei livelli ausiliarî ecc., vengono prese dell'<u>ultima</u> finestra di dialogo
+            per i livelli intermedî.
+          </div>
+          </p>
+          <h4>Applicare il plugin su tutti i livelli (ad es. per le animazioni)</h4>
+          <p>
+          <div>
+            È anche possibile applicare il plugin a tutti i livelli di una data immagine (per
+            esempio quando si lavora su un'animazione), usando l'opzione <i>"Filtra tutti i
+              livelli..."</i> dal menu <i>"Filtri"</i> e scegliendo <i>"plug-in-lqr"</i> nella
+            finestra di dialogo che compare.
+            Le regole usate sono le stesse descritte nella sezione per l'utilizzo di GAP;
+            tuttavia, incontrerete dei problemi in questo caso se usate dei livelli ausiliarî come
+            maschere, poiché il plugin viene applicato anche a questi.
+          </div>
+          </p>
 
-      <a name="interactive"></a>
-      <h2>Descrizione dell'interfaccia utente (modalità interattiva)</h2>
-      <p>
-              <img title="Interfaccia interattiva" alt="Interfaccia interattiva" src="../images/dialog_interactive_it.jpg">
-      </p>
-      <p>
-      		La modalità interattiva viene attivata premendo il pulsante corrispondente nella finestra di
-		dialogo principale: le impostazioni correnti (incluse quelle sulle dimensioni) vengono
-		applicate, e viene mostrata una nuova finestra di dialogo ridotta.
-		In questa modalità è possibile modificare solamente le dimensioni (e le modifiche vengono
-		immediatamente applicate); inoltre alcune opzioni vengono ignorate:
-		<ul>
-			<li>Mostra le linee d'azione (bisogna farlo manualmente, vedi sotto)</li>
-			<li>Riporta alle dimensioni originali</li>
-			<li>Non eliminare i contenuti quando si allarga</li>
-		</ul>
-		Il pulsante <i>"Indietro"</i> riporta alla finestra di dialogo principale.
-      </p>
-      <h3>Selezionare le dimensioni</h3>
-      <p>
-      		Questa sezione contiene i controlli per le dimensioni del livello. L'applicazione delle modifiche è quasi,
-		immediata, ma solo dopo che i pulsanti sono stati rilasciati: questo significa che, se avete attivato
-		il pulsante a catena per preservare le proporzioni del livello, il risultato sarà diverso a seconda che
-		il ridimansionamento avvenga in diversi piccoli passi o tutto in una volta.
-		Il pulsante di reset sulla destra riporta le dimensioni al valore iniziale: se la mappa non è mai stata
-		reimpostata, il risultato è uguale all'immagine di partenza, altrimenti sarà diversa (vedi anche la sezione
-		sulla mappa qui sotto).
-      </p>
-      <h3>Map</h3>
-      <p>
-      		La sezione addizionale <i>"Mappa"</i> nella finestra di dialogo interattiva riguarda la mappa delle
-		linee d'azione che il plugin usa internamente. Le mappe hanno un'orientamento (che dipende dalla
-		dimensione del ridimensionamento), un valore di riferimento (quello di inizializzazione della mappa)
-		e un intervallo d'azione. Le mappe permettono di ridimensionare quasi in tempo reale lungo la loro direzione
-		e all'interno del loro intervallo d'azione; quando si oltrepassano i limiti dell'intervallo le mappe
-		vengono aggiornate.
-		Le mappe contengono tutta l'informazione relativa al proprio intervallo d'azione: dunque, se si ritorna
-		al valore di riferimento di una mappa, si riottiene l'immagine originale. Tuttavia, ogni volta che
-		la direzione di ridimensionamento cambia, o quando si supera il massimo ingrandimento per passo, la mappa
-		viene automaticamente reinizializzata; quando ciò accade, tutte le informazioni precedenti sono perdute.
-		Ci sono tre pulsanti in questa sezione:
-		<dl>
-			<dt>Pulsante info</dt>
-			<dd>
-			Mostra o nasconde le informazioni sulla mappa interna
-			</dd>
-			<dt>Pulsante reset</dt>
-			<dd>
-			Reimposta la mappa manualmente. Questo è equivalente a far ripartire il plugin dalla situazione attuale.
-			Per esempio, se premete questo pulsante dopo aver modificato le
-			dimensioni, e poi premete il pulsante reset nella sezione per le dimensioni, otterrete un risultato
-			equivalente a quello che otterreste usando l'opzione <i>"Riporta alle dimensioni originali"</i>
-			(impostata su <i>"liquid rescale"</i>) in modalità non-interattiva.
-			</dd>
-			<dt>Pulsante visualizza</dt>
-			<dd>
-			Mostra la mappa attualmente in uso. Funziona allo stesso modo dell'opzione <i>"Mostra le linee d'azione"</i>
-			della modalità interattiva, solo che si fa manualmente e quindi mostra una sola mappa alla volta.
-			In ogni sessione, la prima volta che si preme questo pulsante viene creato un nuovo livello sul quale
-			la mappa viene visualizzata, mentre le volte successive la nuova mappa viene sostituita alla vecchia.
-			Per leggere il risultato bisogna riportare il livello su cui si sta lavorando alle dimensioni di referimento,
-			e sovrapporvi la mappa.
-			Questo pulsante è utilizzabile solo con immagini di tipo RGB.
-			</dd>
-		</dl>
-      </p>
+          <a name="interactive"></a>
+          <h2>Descrizione dell'interfaccia utente (modalità interattiva)</h2>
+          <p>
+          <img title="Interfaccia interattiva" alt="Interfaccia interattiva" src="../images/dialog_interactive_it.jpg">
+          </p>
+          <p>
+          <div>
+            La modalità interattiva viene attivata premendo il pulsante corrispondente nella finestra di
+            dialogo principale: le impostazioni correnti (incluse quelle sulle dimensioni) vengono
+            applicate, e viene mostrata una nuova finestra di dialogo ridotta.
+            In questa modalità è possibile modificare solamente le dimensioni (e le modifiche vengono
+            immediatamente applicate); inoltre alcune opzioni vengono ignorate:
+            <ul>
+              <li>Mostra le linee d'azione (bisogna farlo manualmente, vedi sotto)</li>
+              <li>Riporta alle dimensioni originali</li>
+              <li>Non eliminare i contenuti quando si allarga</li>
+            </ul>
+            Il pulsante <i>"Indietro"</i> riporta alla finestra di dialogo principale.
+          </div>
+          </p>
+          <h3>Selezionare le dimensioni</h3>
+          <p>
+          <div>
+            Questa sezione contiene i controlli per le dimensioni del livello. L'applicazione delle modifiche è quasi,
+            immediata, ma solo dopo che i pulsanti sono stati rilasciati: questo significa che, se avete attivato
+            il pulsante a catena per preservare le proporzioni del livello, il risultato sarà diverso a seconda che
+            il ridimansionamento avvenga in diversi piccoli passi o tutto in una volta.
+            Il pulsante di reset sulla destra riporta le dimensioni al valore iniziale: se la mappa non è mai stata
+            reimpostata, il risultato è uguale all'immagine di partenza, altrimenti sarà diversa (vedi anche la sezione
+            sulla mappa qui sotto).
+          </div>
+          </p>
+          <h3>Map</h3>
+          <p>
+          <div>
+            La sezione addizionale <i>"Mappa"</i> nella finestra di dialogo interattiva riguarda la mappa delle
+            linee d'azione che il plugin usa internamente. Le mappe hanno un'orientamento (che dipende dalla
+            dimensione del ridimensionamento), un valore di riferimento (quello di inizializzazione della mappa)
+            e un intervallo d'azione. Le mappe permettono di ridimensionare quasi in tempo reale lungo la loro direzione
+            e all'interno del loro intervallo d'azione; quando si oltrepassano i limiti dell'intervallo le mappe
+            vengono aggiornate.
+            Le mappe contengono tutta l'informazione relativa al proprio intervallo d'azione: dunque, se si ritorna
+            al valore di riferimento di una mappa, si riottiene l'immagine originale. Tuttavia, ogni volta che
+            la direzione di ridimensionamento cambia, o quando si supera il massimo ingrandimento per passo, la mappa
+            viene automaticamente reinizializzata; quando ciò accade, tutte le informazioni precedenti sono perdute.
+            Ci sono tre pulsanti in questa sezione:
+            <dl>
+              <dt>Pulsante info</dt>
+              <dd>
+              Mostra o nasconde le informazioni sulla mappa interna
+              </dd>
+              <dt>Pulsante reset</dt>
+              <dd>
+              Reimposta la mappa manualmente. Questo è equivalente a far ripartire il plugin dalla situazione attuale.
+              Per esempio, se premete questo pulsante dopo aver modificato le
+              dimensioni, e poi premete il pulsante reset nella sezione per le dimensioni, otterrete un risultato
+              equivalente a quello che otterreste usando l'opzione <i>"Riporta alle dimensioni originali"</i>
+              (impostata su <i>"liquid rescale"</i>) in modalità non-interattiva.
+              </dd>
+              <dt>Pulsante visualizza</dt>
+              <dd>
+              Mostra la mappa attualmente in uso. Funziona allo stesso modo dell'opzione <i>"Mostra le linee d'azione"</i>
+              della modalità interattiva, solo che si fa manualmente e quindi mostra una sola mappa alla volta.
+              In ogni sessione, la prima volta che si preme questo pulsante viene creato un nuovo livello sul quale
+              la mappa viene visualizzata, mentre le volte successive la nuova mappa viene sostituita alla vecchia.
+              Per leggere il risultato bisogna riportare il livello su cui si sta lavorando alle dimensioni di referimento,
+              e sovrapporvi la mappa.
+              Questo pulsante è utilizzabile solo con immagini di tipo RGB.
+              </dd>
+            </dl>
+          </div>
+          </p>
 
-        <a name="batch"></a>
-        <h2>Utilizzo del plugin in modalità batch</h2>
-        <p>
-		Il plugin viene distribuito assieme a degli script che aiutano ad utilizzarlo dalla linea di comando.
-		Per averne una descrizione, utilizzate il <i>"Navigatore di procedure"</i> dal menu <i>"Aiuto"</i> di
-		GIMP, e cercate <i>batch-gimp-lqr</i>, <i>batch-gimp-lqr-full</i> e <i>batch-gimp-lqr-full-use-id</i>;
-		il significato delle opzioni dovrebbe risultare ovvio, sapendo come funziona l'interfaccia standard.
-        </p>
-        <h3>Esempio</h3>
-	<p>
-		Ecco un esempio di come si usa il più semplice tra gli script, <i>batch-gimp-lqr</i>, dalla linea di
-		comando di Linux / BSD / Mac OS X:
-	</p>
-	<p>
-		<code>
-		gimp -i -f -b "(batch-gimp-lqr \"my_image.xcf\" 400 300 \"Backgound\" \"\" \"disc. mask\")" -b "(gimp-quit 0)"
-		</code>
-	</p>
-	<p>
-		Questo comando riscalerà il livello "Background" del file "my_image.xcf" alla dimensione di 400x300 pixel, usando
-		il livello chiamato "disc. mask" come maschera per l'eliminazione e senza usare alcuna maschera per la preservazione
-		(si noti la coppia di apici vuota dopo "Background").
-	</p>
-	<p>
-		Su Windows il comando è uguale, ma bisogna sostituire a <code>gimp</code> qualcosa
-		come <code>%ProgramFiles%/GIMP-2.0/bin/gimp-2.6.exe</code> (il comando esatto dipende da che versione di GIMP
-		avete installato e dalla cartella di installazione).
-	</p>
+          <a name="batch"></a>
+          <h2>Utilizzo del plugin in modalità batch</h2>
+          <p>
+          <div>
+            Il plugin viene distribuito assieme a degli script che aiutano ad utilizzarlo dalla linea di comando.
+            Per averne una descrizione, utilizzate il <i>"Navigatore di procedure"</i> dal menu <i>"Aiuto"</i> di
+            GIMP, e cercate <i>batch-gimp-lqr</i>, <i>batch-gimp-lqr-full</i> e <i>batch-gimp-lqr-full-use-id</i>;
+            il significato delle opzioni dovrebbe risultare ovvio, sapendo come funziona l'interfaccia standard.
+          </div>
+          </p>
+          <h3>Esempio</h3>
+          <p>
+          <div>
+            Ecco un esempio di come si usa il più semplice tra gli script, <i>batch-gimp-lqr</i>, dalla linea di
+            comando di Linux / BSD / Mac OS X:
+          </div>
+          </p>
+          <p>
+          <div>
+            <code>
+              gimp -i -f -b "(batch-gimp-lqr \"my_image.xcf\" 400 300 \"Backgound\" \"\" \"disc. mask\")" -b "(gimp-quit 0)"
+            </code>
+          </div>
+          </p>
+          <p>
+          <div>
+            Questo comando riscalerà il livello "Background" del file "my_image.xcf" alla dimensione di 400x300 pixel, usando
+            il livello chiamato "disc. mask" come maschera per l'eliminazione e senza usare alcuna maschera per la preservazione
+            (si noti la coppia di apici vuota dopo "Background").
+          </div>
+          </p>
+          <p>
+          <div>
+            Su Windows il comando è uguale, ma bisogna sostituire a <code>gimp</code> qualcosa
+            come <code>%ProgramFiles%/GIMP-2.0/bin/gimp-2.6.exe</code> (il comando esatto dipende da che versione di GIMP
+            avete installato e dalla cartella di installazione).
+          </div>
+          </p>
 
-        <a name="seam_carving"></a>
-	<h2>Appendice: La tecnica del <i>seam carving</i></h2>
-	<p>
-		Il funzionamento del plugin si basa sulla ricerca dei cosiddetti "seams", o "linee d'azione" di un'immagine,
-		ovvero delle linee continue che attraversano a zig-zag tutta l'immagine ta sopra a sotto (nel caso di linee
-		d'azione "verticali"), o da sinistra a destra (per le linee d'azione orizzontali). Se una di queste linee
-		d'azione, una di quelle verticali poniamo, viene rimossa dall'immagine (l'operazione che prende il nome di
-		"carving"), la larghezza dell'immagine si riduce di un pixel. Rimuovendo linee d'azione orizzontali si riduce
-		invece l'altezza. Reiterando queste operazioni (cioè la ricerca di una linea d'azione e la sua rimozione),
-		l'immagine può essere ridotta a piacimento. L'insieme di tutte le linee d'azione, prese nell'ordine in cui
-		sono state applicate, costituisce una cosiddetta "mappa delle linee d'azione".
-	</p>
-	<p>
-		L'operazione opposta al carving, cioè l'<i>inserimento</i> di linee d'azione addizionali accanto a quelle
-		che ha trovato l'algoritmo, si possono invece allargare le immagini. In tal caso, il significato della mappa
-		delle linee d'azione è invertito.
-	</p>
-	<p>
-		Per poter ottenere buoni risultati con questa tecnica, il problema principale è di scegliere come individuare
-		le linee d'azione più adatte per l'inserimento o la rimozione. Se lo scopo del ridimensionmento è semplicemente
-		quello di modificare le proporzioni di un'immagine senza alterarne troppo i contenuti, per esempio, allora
-		le linee d'azione "buone" saranno quelle che non attraversano parti importanti dell'immagine, passando piuttosto
-		sullo sfondo.
-	</p>
-	<p>
-		Per default, il plugin cerca di trovare le linee che attraversano le aree a minore contrasto (la specificazione
-		esatta di come viene calcolato il contrasto avviene tramite la scelta della funzione gradiente nella tab <i>"Avanzate"</i>).
-		Perciò, ad ogni pixel dell'immagine viene associato un cosiddetto "valore energetico": più è elevato il
-		contrasto, più è alta l'energia, e le linee d'azione tendono ad evitare le aree con alta energia.
-	</p>
-	<p>
-		Dal momento che, in molti casi, il semplice modello basato sul solo contrasto non è ottimale, è possibile
-		aggiungere dei termini all'energia di alcune aree e specificare quali dovrebbero avere un'energia maggiore
-		del normale (usando una maschera per la preservazione) e quali una minore (usando una maschera per
-		l'eliminazione). In pratica quindi in questo modo si possono controllare le linee d'azione e quindi tutto il
-		processo di riscalatura.
-	</p>
-	<p>
-		Le maschere per la rigidità funzionano in modo simile, ma la quantità di energia aggiuntiva che introduce
-		non dipende solamente dal valore associato ad ogni pixel, ma anche de quanto sono dritte le linee d'azione che
-		dovrebbero attraversare quel pixel.
-	</p>
-	<p>
-		In conclusione, per farsi un'idea intuitiva del processo, si consideri che le linee d'azione cercano di trovare
-		la via che gli permetta di raggiungere la parte opposta attraverando le zone ad energia minore; le maschere
-		per la preservazione hanno l'effetto di introdurre delle barriere che, se abbastanza alte, possono deviare
-		le linee d'azione e respingerle, mentre le maschere per l'eliminazione sono come vallate, che al contrario
-	        attraggono le linee d'azione. Le maschere per la rigidità hanno invece l'effetto di aggiungere delle
-		barriere ai lati delle linee d'azione, in modo da renderle più dritte.
-	</p>
-
-	</td>
+          <a name="seam_carving"></a>
+          <h2>Appendice: La tecnica del <i>seam carving</i></h2>
+          <p>
+          <div>
+            Il funzionamento del plugin si basa sulla ricerca dei cosiddetti "seams", o "linee d'azione" di un'immagine,
+            ovvero delle linee continue che attraversano a zig-zag tutta l'immagine ta sopra a sotto (nel caso di linee
+            d'azione "verticali"), o da sinistra a destra (per le linee d'azione orizzontali). Se una di queste linee
+            d'azione, una di quelle verticali poniamo, viene rimossa dall'immagine (l'operazione che prende il nome di
+            "carving"), la larghezza dell'immagine si riduce di un pixel. Rimuovendo linee d'azione orizzontali si riduce
+            invece l'altezza. Reiterando queste operazioni (cioè la ricerca di una linea d'azione e la sua rimozione),
+            l'immagine può essere ridotta a piacimento. L'insieme di tutte le linee d'azione, prese nell'ordine in cui
+            sono state applicate, costituisce una cosiddetta "mappa delle linee d'azione".
+          </div>
+          </p>
+          <p>
+          <div>
+            L'operazione opposta al carving, cioè l'<i>inserimento</i> di linee d'azione addizionali accanto a quelle
+            che ha trovato l'algoritmo, si possono invece allargare le immagini. In tal caso, il significato della mappa
+            delle linee d'azione è invertito.
+          </div>
+          </p>
+          <p>
+          <div>
+            Per poter ottenere buoni risultati con questa tecnica, il problema principale è di scegliere come individuare
+            le linee d'azione più adatte per l'inserimento o la rimozione. Se lo scopo del ridimensionmento è semplicemente
+            quello di modificare le proporzioni di un'immagine senza alterarne troppo i contenuti, per esempio, allora
+            le linee d'azione "buone" saranno quelle che non attraversano parti importanti dell'immagine, passando piuttosto
+            sullo sfondo.
+          </div>
+          </p>
+          <p>
+          <div>
+            Per default, il plugin cerca di trovare le linee che attraversano le aree a minore contrasto (la specificazione
+            esatta di come viene calcolato il contrasto avviene tramite la scelta della funzione gradiente nella tab <i>"Avanzate"</i>).
+            Perciò, ad ogni pixel dell'immagine viene associato un cosiddetto "valore energetico": più è elevato il
+            contrasto, più è alta l'energia, e le linee d'azione tendono ad evitare le aree con alta energia.
+          </div>
+          </p>
+          <p>
+          <div>
+            Dal momento che, in molti casi, il semplice modello basato sul solo contrasto non è ottimale, è possibile
+            aggiungere dei termini all'energia di alcune aree e specificare quali dovrebbero avere un'energia maggiore
+            del normale (usando una maschera per la preservazione) e quali una minore (usando una maschera per
+            l'eliminazione). In pratica quindi in questo modo si possono controllare le linee d'azione e quindi tutto il
+            processo di riscalatura.
+          </div>
+          </p>
+          <p>
+          <div>
+            Le maschere per la rigidità funzionano in modo simile, ma la quantità di energia aggiuntiva che introduce
+            non dipende solamente dal valore associato ad ogni pixel, ma anche de quanto sono dritte le linee d'azione che
+            dovrebbero attraversare quel pixel.
+          </div>
+          </p>
+          <p>
+          <div>
+            In conclusione, per farsi un'idea intuitiva del processo, si consideri che le linee d'azione cercano di trovare
+            la via che gli permetta di raggiungere la parte opposta attraverando le zone ad energia minore; le maschere
+            per la preservazione hanno l'effetto di introdurre delle barriere che, se abbastanza alte, possono deviare
+            le linee d'azione e respingerle, mentre le maschere per l'eliminazione sono come vallate, che al contrario
+            attraggono le linee d'azione. Le maschere per la rigidità hanno invece l'effetto di aggiungere delle
+            barriere ai lati delle linee d'azione, in modo da renderle più dritte.
+          </div>
+          </p>
+        </td>
       </tr>
     </table>
-
   </body>
 </html>

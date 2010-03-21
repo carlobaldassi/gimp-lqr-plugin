@@ -91,6 +91,7 @@ Questa linguetta contiene alcune opzioni che permettono un controllo avanzato de
 * //Max ingrandimento per passo.// Questa opzione imposta il massimo ingrandimento (in percentuale) che può essere effettuato in una sola volta. Se le dimensioni finali superano questa soglia, il plug-in si arresterà e ripartirà automaticamente tutte le volte necessarie. È possibile che dobbiate ridurre questo valore se avete delle maschere per la preservazione dei contenuti molto grandi.
 * //Ordine del ridimensionamento.// Quando si riscalano entrambe le direzioni in una sola volta, è possibile scegliere se procedere prima in orizzontale e poi in verticale, o viceversa.
 * //Non eliminare i contenuti quando si allarga.// L'effetto di una maschera per l'eliminazione dei contenuti è invertito quanto il plugin viene utilizzato per allargare un'immagine; dal momento che ciò non è normalmente l'effetto voluto, la maschera è ignorata per default quando si allarga lungo la prima direzione di ridimensionamento (in tali casi, una piccola icona di avvertimento compare nella sezione //"Maschera per i contenuti da eliminare"//). Disattivate questa opzione per disabilitare questa verifica. Nota che questa opzione viene ignorata in modalità interattiva.
+
 [[# GAP]]
 +++ Utilizzo del plugin per l'editing di video e animazioni
 
@@ -107,6 +108,7 @@ In quest'ultimo caso, la finestra di dialogo del liquid rescale plugin vi verrà
 ++++ Applicare il plugin su tutti i livelli (ad es. per le animazioni)
 
 È anche possibile applicare il plugin a tutti i livelli di una data immagine (per esempio quando si lavora su un'animazione), usando l'opzione //"Filtra tutti i livelli..."// dal menu //"Filtri"// e scegliendo //"plug-in-lqr"// nella finestra di dialogo che compare. Le regole usate sono le stesse descritte nella sezione per l'utilizzo di GAP; tuttavia, incontrerete dei problemi in questo caso se usate dei livelli ausiliarî come maschere, poiché il plugin viene applicato anche a questi.
+
 [[# interactive]]
 ++ Descrizione dell'interfaccia utente (modalità interattiva)
 
@@ -154,6 +156,7 @@ qualcosa come
 %ProgramFiles%/GIMP-2.0/bin/gimp-2.6.exe
 [[/code]]
 (il comando esatto dipende da che versione di GIMP avete installato e dalla cartella di installazione).
+
 [[# seam_carving]]
 ++ Appendice: La tecnica del //seam carving//
 
@@ -170,4 +173,5 @@ Dal momento che, in molti casi, il semplice modello basato sul solo contrasto no
 Le maschere per la rigidità funzionano in modo simile, ma la quantità di energia aggiuntiva che introduce non dipende solamente dal valore associato ad ogni pixel, ma anche de quanto sono dritte le linee d'azione che dovrebbero attraversare quel pixel.
 
 In conclusione, per farsi un'idea intuitiva del processo, si consideri che le linee d'azione cercano di trovare la via che gli permetta di raggiungere la parte opposta attraverando le zone ad energia minore; le maschere per la preservazione hanno l'effetto di introdurre delle barriere che, se abbastanza alte, possono deviare le linee d'azione e respingerle, mentre le maschere per l'eliminazione sono come vallate, che al contrario attraggono le linee d'azione. Le maschere per la rigidità hanno invece l'effetto di aggiungere delle barriere ai lati delle linee d'azione, in modo da renderle più dritte.
+
 

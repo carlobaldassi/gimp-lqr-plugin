@@ -91,6 +91,7 @@ This tab has some options which can be used to tweak the plugin behavior.
 * //Max enlargement per step.// This option sets the maximum enlargement (in percent) which will be performed in a single rescale step. When the final size is greater than this, the plugin will automatically stop and restart the rescaling as many times as needed. You might need to reduce this value if you have large preservation masks (but then the same areas will be affected over and over by the rescaling).
 * //Rescale order.// When rescaling in both directions at the same time, it can be chosen whether to resize first in the horizontal and then in the vertical direction, or vice versa.
 * //Ignore dicard mask when enlarging.// The effect of the discard mask is reversed when the plugin is used for enlarging an image; as this is normally undesirable, they are ignored by default when the first scaling direction is to be enlarged (in such cases, a small warning icon will appear in the //"Feature discard mask"// section). Unset this option if you want to override this behaviour. Note that this option is ignored in interactive mode.
+
 [[# GAP]]
 +++ Using the plugin for video and animation editing
 
@@ -107,6 +108,7 @@ In the latter case, you will be presented the liquidrescale plugin dialog twice,
 ++++ Applying the plugin to all layers (e.g. for animations)
 
 It is also possible to apply the plugin to all the layers in a given image (for example when editing an animation), using the option //"Filter all layers..."// from the //"Filters"// menu and choosing //"plug-in-lqr"// in the dialog which appears. Operations follow the rules explained in the GAP section; however, you will run into problems if using auxiliary layers as masks, since the plugin will be applied to those as well.
+
 [[# interactive]]
 ++ User interface description (interactive mode)
 
@@ -154,6 +156,7 @@ with something like
 %ProgramFiles%/GIMP-2.0/bin/gimp-2.6.exe
 [[/code]]
 (the exact command depends on which version of GIMP you have installed and its installation folder).
+
 [[# seam_carving]]
 ++ Appendix: The seam carving technique in brief
 
@@ -170,4 +173,5 @@ Since in many cases this simple contrast-based method is not optimal, the energy
 Rigidity masks work in a similar way, but the energy bias that they add does not only depend on the mask value over each pixel, but also on how much the seams which try to cross that pixel are straight.
 
 One intuitive picture is as such: the seams try to get from one side to the other of the image keeping on a path with an energy as low as possible; preservation masks have the effect of putting a barrier on their path, which, if high enough, deviates the seams away from it; discard mask, on the other hand, are like valleys which attract seams. Rigidity masks have the effect of putting barriers besides each seam, which tend to make it straighter.
+
 
