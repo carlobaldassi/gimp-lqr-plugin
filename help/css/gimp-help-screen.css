@@ -1,0 +1,728 @@
+/* This file is part of gimp-help-2. It is copyrighted under the GNU
+   Free Documentation License Version 1.1 which you can get from
+   http://www.gnu.org 
+   
+   Browser wrangling and typographic design by
+     Oyvind Kolas / pippin@gimp.org
+
+   Thanks to:
+     Liam R. E. Quin
+     William Skaggs
+     Jakub Steiner
+
+    Version history:
+    2007-08-26 lexa: changed color scheme to the one of the 2.4 GIMP.org page
+    2007-07-10 ude: recolored variablelists within glossary
+    2007-05-16 ude: added glossary quicklinks
+    2007-05-14 ude: recolored very nested variablelists; left-aligned biblioentry
+    2007-04-01 lexa: applied a suggestion from pierre to center images and
+               captions instead of left aligning them
+    2007-03-01 ude: recolored variablelists within a variablelist
+*/
+@media screen {
+body {
+  font-family: sans-serif;
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
+}
+.book,.section,div.sect1,div.sect2,div.sect3,.simplesect,.chapter,.part,.preface,.glossary,.bibliography,.reference,.refentry,.appendix,.index
+{
+  max-width: 55em;
+  min-width: 15em;
+  margin: 0 auto;
+  margin-bottom: 2em;
+  padding: 0 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  clear: both;
+}
+h1 {
+  font-weight: bold;
+  font-size: 166%;
+  text-align: left;
+  clear: both;
+  padding: 0;
+  margin: 2em 0 0em 0em;
+}
+h2 {
+  margin: 2em 0 0.66em 0em;
+  padding: 0.5em 0 0em 0em;
+  font-size: 142.14%;
+  font-weight: normal;
+}
+h2.subtitle {
+  margin: 0.10 0 3.0em 0;
+  padding: 0;
+  width: 80%;
+  padding-left: 20%;
+  font-weight: normal;
+  font-style: italic;
+  text-align: right;
+}
+h3 {
+  margin: 1em 0 0.5em 0em;
+  padding: 1em 0 0em 0em;
+  font-size: 140%;
+  font-weight: normal;
+}
+h3.subtitle {
+  margin: 0 0em 1em 0em;
+  padding: 0;
+  font-size: 142.14%;
+  font-weight: normal;
+  text-align: right;
+}
+h4 {
+  margin: 1em 0 0.5em 0em;
+  padding: 1em 0 0em 0em;
+  font-size: 120%;
+  font-weight: normal;
+}
+h5 {
+  margin: 1em 0 0.5em 0em;
+  padding: 1em 0 0em 0em;
+  font-size: 110.000%;
+  border-bottom: 1px solid black;
+}
+h6 {
+  margin: 1.5em 0 1.0em 0em;
+  padding: 0;
+  font-size: 105%;
+  font-weight: bolder;
+}
+.authorgroup {
+  float: right;
+}
+h3.author {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+.author tt.email {
+  font-size: 66%;
+}
+.titlepage hr {
+  width: 0;
+  clear: both;
+}
+.toc,.list-of-tables,.list-of-examples,.list-of-figures {
+  padding: 1.33em 0 2.5em 0em;
+}
+.toc p,.list-of-tables p,.list-of-figures p,.list-of-examples p {
+  padding: 0;
+  padding: 0 0em 0.3em;
+  margin: 1.5em 0 0 0;
+}
+.toc p b,.list-of-tables p b,.list-of-figures p b,.list-of-examples p b
+{
+  font-weight: bold;
+}
+.toc dl,.list-of-tables dl,.list-of-figures dl,.list-of-examples dl {
+  margin: 0 0 0.5em 0;
+  padding: 0;
+}
+.toc dt {
+  margin: 0;
+  padding: 0;
+}
+.toc dd {
+  margin: 0 0em 0em 2.6em;
+  padding: 0;
+}
+div.glossary dl,div.variablelist dl {
+
+}
+.glossary dl dt,.variablelist dl dt span.term {
+  font-weight: normal;
+}
+.glossary dl dd,.variablelist dl dd {
+  margin-left: 2.6em;
+}
+.glossary dd p,.variablelist dd p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+div.calloutlist table {
+  margin-top: 1em;
+}
+div.calloutlist table td {
+  padding: 0;
+  margin: 0;
+}
+div.calloutlist table td p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+div.calloutlist table td img {
+  margin-left: 2em;
+}
+div p.copyright {
+  text-align: left;
+}
+div.legalnotice p.legalnotice-title {
+  margin-bottom: 0;
+}
+p {
+  text-align: justify;
+  line-height: 142%;
+  margin: 1em 0;
+}
+.biblioentry p {
+  text-align: left;
+}
+dl {
+  padding-top: 0;
+}
+hr {
+  border: solid 1px;
+}
+.mediaobject,.mediaobjectco,div.navheader table th {
+  text-align: center;
+} /* only enabled if the containing block is dimensioned  */
+img {
+  border: none;
+}
+.mediaobject {
+  width: 600px;
+}
+/* this class must be dimensioned to allow a children positioning */
+/* in the relevant containing block */
+.mediaobject img,.mediaobjectco img {
+  max-width: 36em;
+}
+/*
+ * align two mediaobjects in a figure besides each other
+ */
+.figure .mediaobject {
+  display: table-cell;
+  padding: 0.5em;
+}
+ul {
+  padding: 0 0 0 1.5em;
+}
+ul li {
+  padding: 0;
+}
+ul li p {
+  text-align: left;
+}
+table {
+  width: 100%;
+}
+th {
+  padding: 0.25em;
+  text-align: left;
+  font-weight: normal;
+  vertical-align: top;
+}
+td {
+  padding: 0.25em;
+  vertical-align: top;
+}
+p a [id],p a [id]:hover,p a [id]:visited {
+  margin: 0;
+  padding: 0;
+  display: inline;
+  background-image: none;
+}
+p a,p a:hover,p a:visited {
+  margin-left: 5px;
+  padding-left: 10px;
+  background-image: url("../images/common/link.png");
+  background-repeat: no-repeat;
+  background-position: center left;
+}
+/* suppress creating link icons and (Konqueror!) linebreaks */
+p > a.indexterm, p > a[id], li > a[id] {
+  display: none;
+}
+pre {
+  overflow: auto;
+}
+div.informalfigure,div.informalexample,div.informaltable,div.figure,div.table,div.example
+{
+  margin: 1em 0;
+  padding: 1em;
+  page-break-inside: avoid;
+}
+div.informalfigure p.title b,div.informalexample p.title b,div.informaltable p.title b,div.figure p.title b,div.example p.title b,div.table p.title b
+{
+  padding-top: 0;
+  margin-top: 0;
+  font-weight: normal;
+}
+div.informalequation {
+  padding-left: 4em;
+}
+/* TODO/CHECK: padding twice, is this correct/intended? */
+.mediaobject .caption,.mediaobject .caption p {
+  text-align: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.simplesect .mediaobject {
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+}
+.simplesect .mediaobject .caption {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.simplesect .mediaobject .caption p {
+  padding-top: 1em;
+  padding-bottom: 0;
+}
+/* avoid a large gap */
+.simplesect .mediaobject + p {
+  margin-top: 0;
+}
+.epigraph {
+  padding-left: 55%;
+  margin-bottom: 1em;
+}
+.epigraph p {
+  text-align: left;
+}
+.epigraph .quote {
+  font-style: italic;
+}
+.epigraph .attribution {
+  font-style: normal;
+  text-align: right;
+}
+span.application {
+  font-style: italic;
+}
+.programlisting {
+  font-family: monospace;
+  font-size: 80%;
+  white-space: pre;
+  margin: 1.33em 0;
+  padding: 1.33em;
+}
+.tip .programlisting {
+  white-space: pre-line; /* preserve newlines, but not spaces*/
+  margin: 1em 0;
+  padding: 0 0 0 4em;
+}
+
+.literallayout {
+  padding-left: 4em;
+}
+.literallayout .userinput {
+  padding-left: 0;
+}
+.tip,.warning,.caution,.note,.important {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+/* force full width of table within div */
+.tip table,.warning table,.caution table,.note table,.important table {
+  border: none;
+  width: 100%;
+}
+.tip table th,.warning table th,.caution table th,.note table th,.important table th {
+  padding: 0.8em 0.0 0.0em 0.0em;
+  margin: 0;
+}
+.tip p,.warning p,.caution p,.note p,.important p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-right: 1em;
+  text-align: left;
+  color: #335522; /* IE fix */
+}
+.acronym {
+  text-transform: uppercase;
+}
+b.keycap,.keycap {
+  padding: 0.09em 0.3em;
+  margin: 0;
+}
+.mousebutton {
+  padding: 0.09em 0.3em;
+  margin: 0;
+  border: 1px solid;
+  -moz-border-radius: 0.3em;
+}
+div.segmentedlist .segtitle {
+  color: #eeeeec;
+  background-color: #4d4d4d; /* grey30 */
+}
+.itemizedlist li {
+  clear: none;
+}
+.filename {
+  font-size: medium;
+  font-family: Courier, monospace;
+}
+div.navheader,div.heading {
+  background-color: #f57900;
+  width: 100%;
+}
+div.navfooter,div.footing {
+  background-color: #f57900;
+  width: 100%;
+}
+div.navheader table {
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  width: 100%;
+}
+div.navfooter table {
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  width: 100%;
+}
+div.navheader table td a,div.navfooter table td a {
+  color: #0e2426;
+  text-decoration: none;
+}
+/* normal text in the footer */
+div.navfooter table td {
+  color: #0e2426;
+}
+div.navheader table td a:visited,div.navfooter table td a:visited {
+  color: #0e2426;
+}
+/* links in header and footer */
+div.navheader table td a:hover,div.navfooter table td a:hover {
+  text-decoration: underline;
+  background-color: transparent;
+}
+div.navheader hr,div.navfooter hr {
+  display: none;
+}
+.qandaset tr.question td p {
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+.qandaset tr.answer td p {
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+.answer td {
+  padding-bottom: 1.5em;
+}
+.emphasis {
+  text-weight: bold;
+}
+/* glossary quicklinks */
+a[id="glossary-quicklinks"]+table[class="simplelist"] {
+  font-size: smaller;
+}
+a[id="glossary-quicklinks"]+table[class="simplelist"] td {
+  padding: 0.7ex;
+  float: left;
+}
+.glossary dl dt,.variablelist dl dt,.variablelist dl dt span.term {
+  font-weight: bolder;
+}
+/* variablelist within glossary entry */
+.glossdiv .variablelist dl dt span.term {
+  font-weight: bolder;
+}
+/* Nested variablelist */
+.variablelist .variablelist dl dt,.variablelist .variablelist dl dt span.term
+{
+  font-weight: normal;
+  font-style: italic;
+}
+.variablelist .variablelist .variablelist dl dt,.variablelist .variablelist .variablelist dl dt span.term
+{
+  font-weight: normal;
+  font-style: italic;
+}
+/************* /
+/ decorations  /
+/ *************/
+.titlepage {
+
+}
+.part .title {
+
+}
+.subtitle {
+  border: none;
+}
+h1 {
+  border: none;
+}
+h2 {
+  border-top: solid 0.2em;
+  border-bottom: solid 0.06em;
+}
+h3 {
+  border-top: 0;
+  border-bottom: solid 0.06em;
+}
+h4 {
+  border: 0;
+  border-bottom: solid 0.06em;
+}
+h5 {
+  border: 0;
+}
+.programlisting {
+  border: solid 1px;
+}
+div.figure,div.table,div.informalfigure,div.informaltable,div.informalexample,div.example
+{
+  border: 1px solid;
+}
+div.figure div.informalfigure
+{
+  border: 0;
+}
+.tip,.warning,.caution,.note,.important {
+  border: 1px solid;
+}
+.tip table th,.warning table th,.caution table th,.note table th,.important table th {
+  border-bottom: 1px solid;
+  color: #335522;
+}
+.question td {
+  border-top: 1px solid black;
+}
+.answer {
+
+}
+b.keycap,.keycap {
+  border: 1px solid;
+}
+div.navheader,div.heading {
+  border-bottom: 1px solid;
+}
+div.navfooter,div.footing {
+  border-top: 1px solid;
+}
+/********* /
+/  colors  /
+/ *********/
+body {
+  color: #eeeeec;
+  background: #2e3436;
+}
+a {
+  color: #f57900;
+  text-decoration: underline;
+}
+a:hover,a:visited {
+  color: #fcaf3e;
+  background: transparent;
+}
+h1,h2,h3,h4,h5,h6 {
+  background-color: transparent;
+}
+h1,h2,h3,h4,h5,div.toc {
+  color: #999
+}
+h6 {
+  color: #99b;
+}
+hr {
+  border-color: #eeeeec;
+}
+.tip,.warning,.caution,.note,.important {
+  border-color: #111;
+}
+.tip table th,.warning table th,.caution table th,.note table th,.important table th {
+  border-bottom-color: #2e3436;
+}
+.warning {
+  color: #510;
+  background-color: #fba;
+}
+.caution {
+  color: #510;
+  background-color: #fba;
+}
+.tip {
+  color: #445;
+  background-color: #eef;
+}
+.note {
+  color: #352;
+  background-color: #dfc;
+}
+.important {
+  color: #352;
+  background-color: #feb;
+}
+.glossary dl dt,.variablelist dl dt,.variablelist dl dt span.term {
+  color: #99b;
+}
+/* variablelist within glossary entry */
+.glossdiv .variablelist dl dt span.term {
+  color: #99b;
+}
+/* Nested variablelist */
+.variablelist .variablelist dl dt,.variablelist .variablelist dl dt span.term
+{
+  color: #99c;
+}
+.variablelist .variablelist .variablelist dl dt,.variablelist .variablelist .variablelist dl dt span.term
+{
+  color: #8ae;
+}
+/* glossary quicklinks */
+a[id="glossary-quicklinks"]+table[class="simplelist"] a {
+  color: #7f7f7f; /* grey50 */
+  text-decoration: none;
+}
+a[id="glossary-quicklinks"]+table[class="simplelist"] a:link {
+  color: #7f7f7f; /* grey50 */
+  text-decoration: none;
+}
+a[id="glossary-quicklinks"]+table[class="simplelist"] a:visited {
+  color: #7f7f7f; /* grey50 */
+  text-decoration: none;
+}
+a[id="glossary-quicklinks"]+table[class="simplelist"] a:hover {
+  text-decoration: none;
+  color: eeeeec;
+  background-color: blue;
+}
+div.figure,div.table,div.example,div.informalfigure,div.informaltable,div.informalexample
+{
+  border-color: #eeeeec;
+}
+pre.programlisting {
+  color: black;
+  background-color: #eeeeec;
+  border-color: #eeeeec;
+}
+.tip pre.programlisting {
+  background-color: inherit;
+  border: 0;
+}
+
+.guimenu,.guisubmenu,.guimenuitem,.guilabel {
+  color: #0e2426;
+  border-color: #eeeeec;
+  background-color: #999;
+}
+/* these elements typically contain text and/or <img> */
+.guibutton,.guiicon {
+  color: inherit;
+  background-color: transparent;
+  font-style: italic;
+  font-weight: bolder;
+  white-space: nowrap;
+}
+/* For text only (<guiicon><inlinemediaobject><textobject>) */
+.guiicon .inlinemediaobject span {
+  color: #0e2426;
+  background-color: #f0ffff;    /* azure */
+  border: 1px solid #999999;    /* grey60 */
+  font-style: italic;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+b.keycap,.keycap {
+  color: #0e2426;
+  background-color: #eeeeec;
+  border-color: #999;
+}
+.mousebutton {
+  color: #0e2426;
+  background-color: #eeeeec;
+  border-color: #999;
+}
+div.navheader {
+  color: #0e2426;
+  border-color: black;
+}
+div.navfooter {
+  color: #0e2426;
+  border-color: black;
+}
+/*********** /
+/  graphics  /
+/ ***********/ /*
+body {
+background-image: url("images/body_bg.jpg");
+background-attachment: fixed;
+  }
+
+    .navheader,
+    .note,
+    .tip {
+    background-image: url("images/note_bg.jpg");
+    background-attachment: fixed;
+  }
+
+    .warning,
+    .caution {
+    background-image: url("images/warning_bg.jpg");
+    background-attachment: fixed;
+  }
+
+    .figure,
+    .informalfigure,
+    .example,
+    .informalexample,
+    .table,
+    .informaltable {
+      background-image: url("images/figure_bg.jpg");
+      background-attachment: fixed;
+  }
+
+                */
+div.preface .titlepage .title,div.colophon .title,div.chapter .titlepage .title
+{
+  background-image: url("../images/common/title-bg.png");
+  background-position: bottom;
+  background-repeat: repeat-x;
+}
+div.section div.section .titlepage .title,div.sect2 .titlepage .title {
+  background: none;
+}
+h1.title {
+  background-color: transparent;
+  background-image: none;
+}
+h2.subtitle {
+  background-color: transparent;
+  background-image: none;
+}
+/*************************************** /
+/  gimp-help-2 specific alterations      /
+/ ***************************************/
+/* titlepage */
+div.book .titlepage {
+  padding-top: 400px; /* height of the splash image */
+  background-image: url("../images/common/gimp-splash.png");
+  background-repeat: no-repeat;
+}
+/* revhistory */
+div.revhistory {
+  margin-left: 0.5em;
+  float: right;
+  border: 1px dotted #aaa;
+}
+div.revhistory table {
+  width: auto;
+  border: 0;
+}
+div.revhistory table tr th,div.revhistory table tr td {
+  border: 0;
+}
+div.revhistory table tr th,div.revhistory table tr td {
+  color: #aaa;
+  font-size: small;
+}
+/**************************************** /
+/ mozilla vendor specific css extensions  /
+/ ****************************************/
+div.figure,div.table,div.informalfigure,div.informaltable,div.informalexample,div.example,.tip,.warning,.caution,.note,.important
+{
+  -moz-border-radius: 0.5em;
+}
+b.keycap,.keycap {
+  -moz-border-radius: 0.3em;
+}
+}

@@ -1,0 +1,114 @@
+/* This file is part of gimp-help-2. It is copyrighted under the GNU
+   Free Documentation License Version 1.1 which you can get from
+   http://www.gnu.org */
+  
+body
+{
+  font-family: sans-serif;
+  font-size: small;
+}
+
+dd {
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+
+hr {
+  border: 0px;
+  border-top: 1px dotted black;
+  margin-top: 20px;
+  padding-bottom: 10px;
+}
+
+h1, h2 {
+  font-size: x-large;
+}
+
+h3, h4, h5, p.title {
+  font-weight: bold;
+  border-bottom: 1px solid black;
+  letter-spacing: 2px;
+  margin-top: 30px;
+  font-size: medium;
+  text-decoration: none;
+}
+
+h3, h4 {
+  border: 0;
+  letter-spacing: normal;
+}
+
+a:hover {
+  background: lightblue;
+  color: black;
+}
+
+div.toc {
+  padding: 0px 10px;
+  color: black;
+  margin-bottom: 1cm;
+}
+
+div.toc b { font-size: 140%; }
+
+title { margin: 0px; }
+
+p {
+  display: block;
+  margin: 0 20px;
+}
+
+
+div.toc a {
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+div.sect1 {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+div.sect2 { margin-top: 10px; }
+
+.warning, .caution, .tip, .note {
+  max-width: 40em;
+  padding: 0 0 0 10px;
+}
+
+.warning {
+  border: 1px solid darkred;
+  background-color: #ff9999;
+}
+
+.caution {
+  border: 1px solid #827206;
+  background-color: #ffdd00;
+}
+
+.tip {
+  border: 1px solid darkblue;
+  background-color: #c3d4de;
+}
+
+.note {
+    border: 1px solid darkgreen;
+    background-color: #b0e1a9;  
+}
+
+.guilabel, .guimenu, .guisubmenu, .guimenuitem .guibutton {
+  background-color: #eeeee6;
+  padding: 2px;
+}
+
+b.keycap, .keycap {
+  background-color: #eeeee6;
+  padding: 1px 5px;
+  border: 1px solid #999999;
+  margin: 0;
+}
+
+.acronym { text-transform: uppercase; }
+
+.accel { text-decoration: underline; }
+
