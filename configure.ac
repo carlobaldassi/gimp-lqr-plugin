@@ -159,6 +159,7 @@ help/en/Makefile
 help/it/Makefile
 help/ru/Makefile
 help/images/Makefile
+help/css/Makefile
 ])
 
 AC_OUTPUT
