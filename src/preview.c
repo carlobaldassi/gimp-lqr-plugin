@@ -107,7 +107,7 @@ preview_data_create(gint32 image_ID, gint32 layer_ID, PreviewData * p_data)
 
   preview_init_mem (p_data);
 
-  p_data->base_pixbuf = gimp_drawable_get_thumbnail(layer_ID, p_data->width, p_data->height, GIMP_PIXBUF_SMALL_CHECKS); 
+  p_data->base_pixbuf = gimp_drawable_get_thumbnail(layer_ID, p_data->width, p_data->height, GIMP_PIXBUF_SMALL_CHECKS);
   p_data->width = gdk_pixbuf_get_width(p_data->base_pixbuf);
   p_data->height = gdk_pixbuf_get_height(p_data->base_pixbuf);
 }

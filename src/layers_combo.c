@@ -119,7 +119,7 @@ combo_get_active (GtkWidget * combo, PreviewData * p_data,
 
       size_info_scale(size_info, p_data->factor);
 
-      *pixbuf_add = gimp_drawable_get_thumbnail(*layer_ID_add, size_info->width, size_info->height, GIMP_PIXBUF_KEEP_ALPHA); 
+      *pixbuf_add = gimp_drawable_get_thumbnail(*layer_ID_add, size_info->width, size_info->height, GIMP_PIXBUF_KEEP_ALPHA);
     }
   preview_build_pixbuf (p_data);
   gtk_widget_queue_draw (p_data->area);

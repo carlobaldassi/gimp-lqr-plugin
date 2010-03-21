@@ -473,7 +473,7 @@ dialog_I (PlugInImageVals * image_vals,
           {
             case OUTPUT_TARGET_NEW_LAYER:
             case OUTPUT_TARGET_NEW_IMAGE:
-              state->output_target = OUTPUT_TARGET_SAME_LAYER; 
+              state->output_target = OUTPUT_TARGET_SAME_LAYER;
               break;
             case OUTPUT_TARGET_SAME_LAYER:
             default:

@@ -1,7 +1,7 @@
 /* This file is part of gimp-help-2. It is copyrighted under the GNU
    Free Documentation License Version 1.1 which you can get from
-   http://www.gnu.org 
-   
+   http://www.gnu.org
+
    This  CSS file is (nearly) equivalent to
            gimp-help-screen.css, SVN revision 2043,
    (just before we switched to the new color scheme  at 2007-08-26).
@@ -450,7 +450,7 @@
 		border-top: 1px solid black;
 	}
 	.answer {
-		
+
 	}
 	b.keycap,.keycap {
 		border: 1px solid;
@@ -592,7 +592,7 @@
 	}
 	/*********** /
 	/  graphics  /
-	/ ***********/ 
+	/ ***********/
 	div.preface .titlepage .title,div.colophon .title,div.chapter .titlepage .title
 	{
 		background-image: url("images/title-bg.png");

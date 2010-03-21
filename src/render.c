@@ -860,7 +860,7 @@ static gboolean copy_aux_layer_to_new_image (gint32 image_ID, gint32 * layer_ID_
       new_layer_ID = gimp_layer_new_from_drawable (old_layer_ID, image_ID);
       gimp_image_add_layer (image_ID, new_layer_ID, -1);
       /* gimp_drawable_offsets (old_layer_ID, &aux_x_off, &aux_y_off); */
-      gimp_layer_translate (new_layer_ID, -x_off, -y_off);  
+      gimp_layer_translate (new_layer_ID, -x_off, -y_off);
     }
   else
     {

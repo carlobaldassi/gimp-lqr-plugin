@@ -1,7 +1,7 @@
 /* This file is part of gimp-help-2. It is copyrighted under the GNU
    Free Documentation License Version 1.1 which you can get from
    http://www.gnu.org */
-  
+
 body
 {
   font-family: sans-serif;
@@ -92,8 +92,8 @@ div.sect2 { margin-top: 10px; }
 }
 
 .note {
-    border: 1px solid darkgreen;
-    background-color: #b0e1a9;  
+  border: 1px solid darkgreen;
+  background-color: #b0e1a9;
 }
 
 .guilabel, .guimenu, .guisubmenu, .guimenuitem .guibutton {
