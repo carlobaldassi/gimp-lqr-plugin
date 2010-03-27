@@ -21,6 +21,8 @@
 
 #include <string.h>
 
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 #include <lqr.h>
@@ -44,6 +46,8 @@ static void retrieve_vals_use_aux_layers_names (gint32 image_ID);
 static void noninteractive_read_vals (const GimpParam * param);
 static void install_custom_signals();
 static void cancel_work_on_aux_layer(void);
+static gboolean user_manual_is_installed (gchar *help_path);
+
 static void query (void);
 static void run (const gchar * name,
                  gint nparams,
@@ -200,6 +204,8 @@ MAIN ()
 
 static void query (void)
 {
+  gchar *help_offline_path;
+  gchar *help_online_path;
   gchar *help_path;
   gchar *help_uri;
 
@@ -207,11 +213,26 @@ static void query (void)
 
   gimp_plugin_domain_register (GETTEXT_PACKAGE, LOCALEDIR);
 
-  help_path = g_build_filename (PLUGIN_DATADIR, "help", NULL);
-  help_uri = g_filename_to_uri (help_path, NULL, NULL);
-  g_free (help_path);
+  help_offline_path = g_build_filename (PLUGIN_DATADIR, "help", NULL);
+  help_online_path = g_build_filename (PLUGIN_DATADIR, "help-online", NULL);
 
-  gimp_plugin_help_register ("plug-in-lqr-help", help_uri);
+  if (user_manual_is_installed(help_offline_path))
+    {
+      printf("FOUND!\n"); fflush(stdout);
+      help_path = help_offline_path;
+    }
+  else
+    {
+      printf("NOT FOUND!\n"); fflush(stdout);
+      help_path = help_online_path;
+    }
+  help_uri = g_filename_to_uri (help_path, NULL, NULL);
+  g_free (help_offline_path);
+  g_free (help_online_path);
+
+  gimp_plugin_help_register ("plug-in-lqr-help", help_uri); 
+  printf("help_uri=%s\n", help_uri);
+  g_free (help_uri); 
 
   gimp_install_procedure (PLUG_IN_NAME,
                           N_("scaling which keeps layer features (or removes them)"),
@@ -591,5 +612,46 @@ cancel_work_on_aux_layer(void)
     {
       gimp_image_remove_layer(image_vals.image_ID, ui_vals.layer_on_edit_ID);
     }
+}
+
+
+static gboolean
+user_manual_is_installed (gchar *help_path)
+{
+  gboolean  found = FALSE;
+
+  /*  if GIMP2_HELP_URI is set, assume that the manual can be found there  */
+  /* if (g_getenv ("GIMP2_HELP_URI")) */
+    /* return TRUE; */
+
+  if (g_file_test (help_path, G_FILE_TEST_IS_DIR))
+    {
+      const gchar * const *locales = g_get_language_names ();
+      gint i = 0;
+
+      while (locales[i] != NULL && ! found)
+        {
+          gchar *path;
+
+          path = g_build_filename (help_path, locales[i], "gimp-help.xml", NULL);
+
+          found = g_file_test (path, G_FILE_TEST_IS_REGULAR);
+
+          g_free (path);
+
+          i++;
+        }
+
+      if (! found)
+        {
+          gchar *path = g_build_filename (help_path, "en", "gimp-help.xml", NULL);
+
+          found = g_file_test (path, G_FILE_TEST_IS_REGULAR);
+
+          g_free (path);
+        }
+    }
+
+  return found;
 }
 

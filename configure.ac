@@ -102,7 +102,7 @@ if test "$DATADIRNAME" = "lib"; then
 fi
 AC_SUBST(LOCALEDIR)
 
-PLUGIN_DATADIR="${datadir}/plugin_name"
+PLUGIN_DATADIR="${datadir}/plugin_name-plugin_major_version.plugin_minor_version"
 AC_SUBST(PLUGIN_DATADIR)
 
 SCRIPTSDIR="${GIMP_DATADIR}/scripts"
@@ -160,6 +160,10 @@ help/it/Makefile
 help/ru/Makefile
 help/images/Makefile
 help/css/Makefile
+help-online/Makefile
+help-online/en/Makefile
+help-online/it/Makefile
+help-online/css/Makefile
 ])
 
 AC_OUTPUT

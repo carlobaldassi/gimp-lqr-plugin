@@ -6270,7 +6270,7 @@ if test "$DATADIRNAME" = "lib"; then
 fi
 
 
-PLUGIN_DATADIR="${datadir}/gimp-lqr-plugin"
+PLUGIN_DATADIR="${datadir}/gimp-lqr-plugin-0.7"
 
 
 SCRIPTSDIR="${GIMP_DATADIR}/scripts"
@@ -6337,7 +6337,7 @@ else
 $as_echo "no" >&6; }
 fi
 
-ac_config_files="$ac_config_files Makefile src/Makefile gap/Makefile batch/Makefile po/Makefile.in help/Makefile help/en/Makefile help/it/Makefile help/ru/Makefile help/images/Makefile help/css/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile gap/Makefile batch/Makefile po/Makefile.in help/Makefile help/en/Makefile help/it/Makefile help/ru/Makefile help/images/Makefile help/css/Makefile help-online/Makefile help-online/en/Makefile help-online/it/Makefile help-online/css/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -7064,6 +7064,10 @@ do
     "help/ru/Makefile") CONFIG_FILES="$CONFIG_FILES help/ru/Makefile" ;;
     "help/images/Makefile") CONFIG_FILES="$CONFIG_FILES help/images/Makefile" ;;
     "help/css/Makefile") CONFIG_FILES="$CONFIG_FILES help/css/Makefile" ;;
+    "help-online/Makefile") CONFIG_FILES="$CONFIG_FILES help-online/Makefile" ;;
+    "help-online/en/Makefile") CONFIG_FILES="$CONFIG_FILES help-online/en/Makefile" ;;
+    "help-online/it/Makefile") CONFIG_FILES="$CONFIG_FILES help-online/it/Makefile" ;;
+    "help-online/css/Makefile") CONFIG_FILES="$CONFIG_FILES help-online/css/Makefile" ;;
     "po/stamp-it") CONFIG_COMMANDS="$CONFIG_COMMANDS po/stamp-it" ;;
 
   *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
