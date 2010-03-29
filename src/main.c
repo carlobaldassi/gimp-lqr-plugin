@@ -213,17 +213,15 @@ static void query (void)
 
   gimp_plugin_domain_register (GETTEXT_PACKAGE, LOCALEDIR);
 
-  help_offline_path = g_build_filename (PLUGIN_DATADIR, "help", NULL);
+  help_offline_path = g_build_filename (PLUGIN_DATADIR, "help-offline", NULL);
   help_online_path = g_build_filename (PLUGIN_DATADIR, "help-online", NULL);
 
   if (user_manual_is_installed(help_offline_path))
     {
-      printf("FOUND!\n"); fflush(stdout);
       help_path = help_offline_path;
     }
   else
     {
-      printf("NOT FOUND!\n"); fflush(stdout);
       help_path = help_online_path;
     }
   help_uri = g_filename_to_uri (help_path, NULL, NULL);
@@ -231,7 +229,6 @@ static void query (void)
   g_free (help_online_path);
 
   gimp_plugin_help_register ("plug-in-lqr-help", help_uri); 
-  printf("help_uri=%s\n", help_uri);
   g_free (help_uri); 
 
   gimp_install_procedure (PLUG_IN_NAME,
@@ -259,14 +256,15 @@ run (const gchar * name,
   GimpRunMode run_mode;
   GimpPDBStatusType status = GIMP_PDB_SUCCESS;
 
-  *nreturn_vals = 1;
-  *return_vals = values;
   gboolean run_dialog = TRUE;
   gboolean run_render = TRUE;
   gint dialog_resp;
   gint dialog_I_resp;
   gint dialog_aux_resp;
   gboolean render_success = FALSE;
+
+  *nreturn_vals = 1;
+  *return_vals = values;
 
   /*  Initialize i18n support  */
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);

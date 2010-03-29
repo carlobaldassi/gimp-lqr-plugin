@@ -205,7 +205,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = po src gap batch help help-online
+SUBDIRS = po src gap batch help-online
 EXTRA_DIST = \
 	BUGS			\
 	autogen.sh		\
