@@ -154,12 +154,6 @@ src/Makefile
 gap/Makefile
 batch/Makefile
 po/Makefile.in
-help/Makefile
-help/en/Makefile
-help/it/Makefile
-help/ru/Makefile
-help/images/Makefile
-help/css/Makefile
 help-online/Makefile
 help-online/en/Makefile
 help-online/it/Makefile
