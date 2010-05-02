@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-13 18:07+0100\n"
+"POT-Creation-Date: 2010-05-02 16:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,30 +182,30 @@ msgstr ""
 msgid "Discard"
 msgstr ""
 
-#: ../src/interface.c:1210
+#: ../src/interface.c:1183
 msgid "Feature masks"
 msgstr ""
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1221
+#: ../src/interface.c:1194
 #, c-format
 msgid "%s pres mask"
 msgstr ""
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1231
+#: ../src/interface.c:1204
 #, c-format
 msgid "%s disc mask"
 msgstr ""
 
 #. Feature preservation
-#: ../src/interface.c:1265
+#: ../src/interface.c:1238
 msgid "Feature preservation mask"
 msgstr ""
 
-#: ../src/interface.c:1270
+#: ../src/interface.c:1243
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -214,55 +214,55 @@ msgid ""
 "Note that painting in black has no effect"
 msgstr ""
 
-#: ../src/interface.c:1304
+#: ../src/interface.c:1277
 msgid "Preserve features"
 msgstr ""
 
-#: ../src/interface.c:1320
+#: ../src/interface.c:1293
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr ""
 
-#: ../src/interface.c:1336 ../src/interface.c:1600 ../src/interface.c:2069
+#: ../src/interface.c:1309 ../src/interface.c:1573 ../src/interface.c:2042
 msgid "Edit"
 msgstr ""
 
-#: ../src/interface.c:1341
+#: ../src/interface.c:1314
 msgid "Edit the currently selected preservation layer"
 msgstr ""
 
-#: ../src/interface.c:1357 ../src/interface.c:1621 ../src/interface.c:2090
+#: ../src/interface.c:1330 ../src/interface.c:1594 ../src/interface.c:2063
 msgid "New"
 msgstr ""
 
-#: ../src/interface.c:1362
+#: ../src/interface.c:1335
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr ""
 
-#: ../src/interface.c:1409
+#: ../src/interface.c:1382
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:1440 ../src/interface.c:1703 ../src/interface.c:2171
+#: ../src/interface.c:1413 ../src/interface.c:1676 ../src/interface.c:2144
 msgid "Layer:"
 msgstr ""
 
-#: ../src/interface.c:1468
+#: ../src/interface.c:1441
 #, c-format
 msgid "Overall coefficient for feature preservation intensity"
 msgstr ""
 
-#: ../src/interface.c:1478 ../src/interface.c:1743
+#: ../src/interface.c:1451 ../src/interface.c:1716
 msgid "Strength:"
 msgstr ""
 
 #. Feature discard
-#: ../src/interface.c:1516
+#: ../src/interface.c:1489
 msgid "Feature discard mask"
 msgstr ""
 
-#: ../src/interface.c:1521
+#: ../src/interface.c:1494
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -271,17 +271,17 @@ msgid ""
 "Note that painting in black has no effect"
 msgstr ""
 
-#: ../src/interface.c:1553
+#: ../src/interface.c:1526
 msgid "Discard features"
 msgstr ""
 
-#: ../src/interface.c:1570
+#: ../src/interface.c:1543
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
 msgstr ""
 
-#: ../src/interface.c:1580
+#: ../src/interface.c:1553
 msgid ""
 "Warning: the discard mask information will be ignored with the current "
 "settings.\n"
@@ -289,68 +289,68 @@ msgid ""
 "the corrensponding option in the \"Advanced\" tab)"
 msgstr ""
 
-#: ../src/interface.c:1605
+#: ../src/interface.c:1578
 msgid "Edit the currently selected discard layer"
 msgstr ""
 
-#: ../src/interface.c:1626
+#: ../src/interface.c:1599
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 
-#: ../src/interface.c:1672
+#: ../src/interface.c:1645
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:1732
+#: ../src/interface.c:1705
 #, c-format
 msgid "Overall coefficient for feature discard intensity"
 msgstr ""
 
 #. Auto-size buttons
-#: ../src/interface.c:1798
+#: ../src/interface.c:1771
 msgid "Auto size:"
 msgstr ""
 
 #. Width auto-size button
-#: ../src/interface.c:1809
+#: ../src/interface.c:1782
 msgid "Width"
 msgstr ""
 
-#: ../src/interface.c:1823
+#: ../src/interface.c:1796
 msgid ""
 "Try to set the final width as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
 #. Height auto-size button
-#: ../src/interface.c:1833
+#: ../src/interface.c:1806
 msgid "Height"
 msgstr ""
 
-#: ../src/interface.c:1847
+#: ../src/interface.c:1820
 msgid ""
 "Try to set the final height as needed to remove the masked areas.\n"
 "Only use with simple masks"
 msgstr ""
 
-#: ../src/interface.c:1898
+#: ../src/interface.c:1871
 msgid "Advanced"
 msgstr ""
 
-#: ../src/interface.c:1909
+#: ../src/interface.c:1882
 #, c-format
 msgid "%s rigidity mask"
 msgstr ""
 
 #. Seams control
 #. Please keep the <b> and </b> tags in translations
-#: ../src/interface.c:1942
+#: ../src/interface.c:1915
 msgid "<b>Seams control</b>"
 msgstr ""
 
-#: ../src/interface.c:1955
+#: ../src/interface.c:1928
 #, c-format
 msgid ""
 "Extra layers are needed to be used as rigidity masks.\n"
@@ -359,122 +359,122 @@ msgid ""
 "Note that painting in black has no effect"
 msgstr ""
 
-#: ../src/interface.c:1979
+#: ../src/interface.c:1952
 msgid "Max transversal step:"
 msgstr ""
 
-#: ../src/interface.c:1982
+#: ../src/interface.c:1955
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
 msgstr ""
 
-#: ../src/interface.c:1992
+#: ../src/interface.c:1965
 msgid "Overall rigidity:"
 msgstr ""
 
-#: ../src/interface.c:1995
+#: ../src/interface.c:1968
 msgid "Increasing this value results in straighter seams"
 msgstr ""
 
-#: ../src/interface.c:2026
+#: ../src/interface.c:1999
 msgid "Use a rigidity mask"
 msgstr ""
 
-#: ../src/interface.c:2053
+#: ../src/interface.c:2026
 msgid "Use an extra layer to mark areas where seams should be straighter"
 msgstr ""
 
-#: ../src/interface.c:2074
+#: ../src/interface.c:2047
 msgid "Edit the currently selected rigidity mask layer"
 msgstr ""
 
-#: ../src/interface.c:2095
+#: ../src/interface.c:2068
 msgid "Creates a new transparent layer ready to be used as a rigidity mask"
 msgstr ""
 
-#: ../src/interface.c:2140
+#: ../src/interface.c:2113
 msgid ""
 "Layer to be used as a mask for rigidity settings.\n"
 "Use the \"Refresh\" button to update the list"
 msgstr ""
 
-#: ../src/interface.c:2213
+#: ../src/interface.c:2186
 msgid ""
 "This affects the automatic feature recognition.\n"
 "It's the filter which will be used to determine the relevance of each pixel"
 msgstr ""
 
-#: ../src/interface.c:2223
+#: ../src/interface.c:2196
 msgid "Feature recog.:"
 msgstr ""
 
-#: ../src/interface.c:2228
+#: ../src/interface.c:2201
 msgid "Transversal grad. (bright.) "
 msgstr ""
 
-#: ../src/interface.c:2229
+#: ../src/interface.c:2202
 msgid "Grad. sum (bright.)"
 msgstr ""
 
-#: ../src/interface.c:2230
+#: ../src/interface.c:2203
 msgid "Grad. norm (bright.)"
 msgstr ""
 
-#: ../src/interface.c:2231
+#: ../src/interface.c:2204
 msgid "Transversal grad. (luma) "
 msgstr ""
 
-#: ../src/interface.c:2232
+#: ../src/interface.c:2205
 msgid "Grad. sum (luma)"
 msgstr ""
 
-#: ../src/interface.c:2233
+#: ../src/interface.c:2206
 msgid "Grad. norm (luma)"
 msgstr ""
 
 #. Null can be translated as Zero
-#: ../src/interface.c:2235
+#: ../src/interface.c:2208
 msgid "Null"
 msgstr ""
 
 #. Operations control
 #. Please keep the <b> and </b> tags in translations
-#: ../src/interface.c:2246
+#: ../src/interface.c:2219
 msgid "<b>Operations control</b>"
 msgstr ""
 
-#: ../src/interface.c:2274
+#: ../src/interface.c:2247
 msgid "Max enlargement per step:"
 msgstr ""
 
-#: ../src/interface.c:2277
+#: ../src/interface.c:2250
 msgid ""
 "When enlarging beyond the value set here the rescaling will be performed in "
 "multiple steps."
 msgstr ""
 
-#: ../src/interface.c:2292
+#: ../src/interface.c:2265
 msgid "This controls the order of operations if rescaling in both directions"
 msgstr ""
 
-#: ../src/interface.c:2300
+#: ../src/interface.c:2273
 msgid "Rescale order:"
 msgstr ""
 
-#: ../src/interface.c:2305
+#: ../src/interface.c:2278
 msgid "Horizontal first"
 msgstr ""
 
-#: ../src/interface.c:2306
+#: ../src/interface.c:2279
 msgid "Vertical first"
 msgstr ""
 
-#: ../src/interface.c:2318
+#: ../src/interface.c:2291
 msgid "Ignore discard mask when enlarging"
 msgstr ""
 
-#: ../src/interface.c:2324
+#: ../src/interface.c:2297
 msgid ""
 "This will have the same effect as setting the strenght to 0 in the discard "
 "mask when the first rescale step is an image enlargment (which normally is "
@@ -487,21 +487,21 @@ msgid "GIMP LqR Plug-In - Mask editor mode"
 msgstr ""
 
 #. Note for translators: remember to split the line with \n so that the window dialog won't be too large
-#: ../src/interface_aux.c:136
+#: ../src/interface_aux.c:135
 msgid ""
 "Paint the preservation mask\n"
 "on the current layer, then press OK"
 msgstr ""
 
 #. Note for translators: remember to split the line with \n so that the window dialog won't be too large
-#: ../src/interface_aux.c:140
+#: ../src/interface_aux.c:139
 msgid ""
 "Paint the discard mask\n"
 "on the current layer, then press OK"
 msgstr ""
 
 #. Note for translators: remember to split the line with \n so that the window dialog won't be too large
-#: ../src/interface_aux.c:144
+#: ../src/interface_aux.c:143
 msgid ""
 "Paint the rigidity mask\n"
 "on the current layer, then press OK"
@@ -559,19 +559,19 @@ msgstr ""
 msgid "Next step at"
 msgstr ""
 
-#: ../src/main.c:209
+#: ../src/main.c:235
 msgid "scaling which keeps layer features (or removes them)"
 msgstr ""
 
-#: ../src/main.c:213
+#: ../src/main.c:239
 msgid "Li_quid rescale..."
 msgstr ""
 
-#: ../src/main.h:133
+#: ../src/main.h:134
 msgid "Error: invalid image"
 msgstr ""
 
-#: ../src/main.h:144
+#: ../src/main.h:145
 msgid "Error: invalid layer"
 msgstr ""
 

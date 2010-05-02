@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-13 18:07+0100\n"
+"POT-Creation-Date: 2010-05-02 16:33+0200\n"
 "PO-Revision-Date: 2008-08-04 03:10+0200\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@gmail.com>\n"
 "Language-Team: Italian <carlobaldassi@gmail.com>\n"
@@ -199,30 +199,30 @@ msgstr "Applica"
 msgid "Discard"
 msgstr "Elimina"
 
-#: ../src/interface.c:1210
+#: ../src/interface.c:1183
 msgid "Feature masks"
 msgstr "Maschere per i contenuti"
 
 #. The name of a newly created layer for preservation
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1221
+#: ../src/interface.c:1194
 #, c-format
 msgid "%s pres mask"
 msgstr "%s (maschera pres.)"
 
 #. The name of a newly created layer for discard
 #. (here "%s" represents the selected layer's name)
-#: ../src/interface.c:1231
+#: ../src/interface.c:1204
 #, c-format
 msgid "%s disc mask"
 msgstr "%s (maschera elim.)"
 
 #. Feature preservation
-#: ../src/interface.c:1265
+#: ../src/interface.c:1238
 msgid "Feature preservation mask"
 msgstr "Maschera per i contenuti da preservare"
 
-#: ../src/interface.c:1270
+#: ../src/interface.c:1243
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature preservation.\n"
@@ -235,35 +235,35 @@ msgstr ""
 "premi il pulsante \"Aggiorna\"\n"
 "Nota che dipingere in nero non ha alcun effetto"
 
-#: ../src/interface.c:1304
+#: ../src/interface.c:1277
 msgid "Preserve features"
 msgstr "Preserva contenuti"
 
-#: ../src/interface.c:1320
+#: ../src/interface.c:1293
 msgid "Use an extra layer to preserve selected areas from distortion"
 msgstr ""
 "Utilizza un livello aggiuntivo per specificare le aree da preservare dalla "
 "distorsione"
 
-#: ../src/interface.c:1336 ../src/interface.c:1600 ../src/interface.c:2069
+#: ../src/interface.c:1309 ../src/interface.c:1573 ../src/interface.c:2042
 msgid "Edit"
 msgstr "Modifica"
 
-#: ../src/interface.c:1341
+#: ../src/interface.c:1314
 msgid "Edit the currently selected preservation layer"
 msgstr "Modifica il livello per la preservazione attualmente selezionato"
 
-#: ../src/interface.c:1357 ../src/interface.c:1621 ../src/interface.c:2090
+#: ../src/interface.c:1330 ../src/interface.c:1594 ../src/interface.c:2063
 msgid "New"
 msgstr "Nuovo"
 
-#: ../src/interface.c:1362
+#: ../src/interface.c:1335
 msgid "Creates a new transparent layer ready to be used as a preservation mask"
 msgstr ""
 "Crea un nuovo livello trasparente, pronto per essere usato come maschera per "
 "la preservazione"
 
-#: ../src/interface.c:1409
+#: ../src/interface.c:1382
 msgid ""
 "Layer to be used as a mask for feature preservation.\n"
 "Use the \"Refresh\" button to update the list"
@@ -271,25 +271,25 @@ msgstr ""
 "Livello da utilizzare come maschera per la preservazione dei contenuti.\n"
 "Usa il pulsante \"Aggiorna\" per aggiornare la lista"
 
-#: ../src/interface.c:1440 ../src/interface.c:1703 ../src/interface.c:2171
+#: ../src/interface.c:1413 ../src/interface.c:1676 ../src/interface.c:2144
 msgid "Layer:"
 msgstr "Livello:"
 
-#: ../src/interface.c:1468
+#: ../src/interface.c:1441
 #, c-format
 msgid "Overall coefficient for feature preservation intensity"
 msgstr "Coefficiente globale per l'intensità della preservazione dei contenuti"
 
-#: ../src/interface.c:1478 ../src/interface.c:1743
+#: ../src/interface.c:1451 ../src/interface.c:1716
 msgid "Strength:"
 msgstr "Intensità:"
 
 #. Feature discard
-#: ../src/interface.c:1516
+#: ../src/interface.c:1489
 msgid "Feature discard mask"
 msgstr "Maschera per i contenuti da eliminare"
 
-#: ../src/interface.c:1521
+#: ../src/interface.c:1494
 #, c-format
 msgid ""
 "Extra layers are needed to activate feature discard.\n"
@@ -302,11 +302,11 @@ msgstr ""
 "premi il pulsante \"Aggiorna\"\n"
 "Nota che dipingere in nero non ha alcun effetto"
 
-#: ../src/interface.c:1553
+#: ../src/interface.c:1526
 msgid "Discard features"
 msgstr "Elimina contenuti"
 
-#: ../src/interface.c:1570
+#: ../src/interface.c:1543
 msgid ""
 "Use an extra layer to treat selected areas as if they were meaningless "
 "(useful to remove parts of the image when shrinking)"
@@ -315,7 +315,7 @@ msgstr ""
 "significative (utile per rimuovere parti dell'immagine mediante il "
 "restringimento)"
 
-#: ../src/interface.c:1580
+#: ../src/interface.c:1553
 msgid ""
 "Warning: the discard mask information will be ignored with the current "
 "settings.\n"
@@ -327,17 +327,17 @@ msgstr ""
 "(Se sai quello che stai facendo puoi modificare questo comportamento "
 "deselezionando l'opzione corrispondente nella linguetta \"Avanzate\")"
 
-#: ../src/interface.c:1605
+#: ../src/interface.c:1578
 msgid "Edit the currently selected discard layer"
 msgstr "Modifica il livello per l'eliminazione attualmente selezionato"
 
-#: ../src/interface.c:1626
+#: ../src/interface.c:1599
 msgid "Creates a new transparent layer ready to be used as a discard mask"
 msgstr ""
 "Crea un nuovo livello trasparente, pronto per essere usato come maschera per "
 "l'eliminazione"
 
-#: ../src/interface.c:1672
+#: ../src/interface.c:1645
 msgid ""
 "Layer to be used as a mask for feature discard.\n"
 "Use the \"Refresh\" button to update the list"
@@ -345,22 +345,22 @@ msgstr ""
 "Livello da utilizzare come maschera per l'eliminazione dei contenuti.\n"
 "Usa il pulsante \"Aggiorna\" per aggiornare la lista"
 
-#: ../src/interface.c:1732
+#: ../src/interface.c:1705
 #, c-format
 msgid "Overall coefficient for feature discard intensity"
 msgstr "Coefficiente globale per l'intensità dell'eliminazione dei contenuti"
 
 #. Auto-size buttons
-#: ../src/interface.c:1798
+#: ../src/interface.c:1771
 msgid "Auto size:"
 msgstr "Auto dimensionamento:"
 
 #. Width auto-size button
-#: ../src/interface.c:1809
+#: ../src/interface.c:1782
 msgid "Width"
 msgstr "Larghezza"
 
-#: ../src/interface.c:1823
+#: ../src/interface.c:1796
 msgid ""
 "Try to set the final width as needed to remove the masked areas.\n"
 "Only use with simple masks"
@@ -370,11 +370,11 @@ msgstr ""
 "Da usare solo con maschere semplici."
 
 #. Height auto-size button
-#: ../src/interface.c:1833
+#: ../src/interface.c:1806
 msgid "Height"
 msgstr "Altezza"
 
-#: ../src/interface.c:1847
+#: ../src/interface.c:1820
 msgid ""
 "Try to set the final height as needed to remove the masked areas.\n"
 "Only use with simple masks"
@@ -383,22 +383,22 @@ msgstr ""
 "la rimozione.\n"
 "Da usare solo con maschere semplici."
 
-#: ../src/interface.c:1898
+#: ../src/interface.c:1871
 msgid "Advanced"
 msgstr "Avanzate"
 
-#: ../src/interface.c:1909
+#: ../src/interface.c:1882
 #, c-format
 msgid "%s rigidity mask"
 msgstr "%s (maschera rigid.)"
 
 #. Seams control
 #. Please keep the <b> and </b> tags in translations
-#: ../src/interface.c:1942
+#: ../src/interface.c:1915
 msgid "<b>Seams control</b>"
 msgstr "<b>Impostazioni linee d'azione</b>"
 
-#: ../src/interface.c:1955
+#: ../src/interface.c:1928
 #, c-format
 msgid ""
 "Extra layers are needed to be used as rigidity masks.\n"
@@ -411,11 +411,11 @@ msgstr ""
 "premi il pulsante \"Aggiorna\"\n"
 "Nota che dipingere in nero non ha alcun effetto"
 
-#: ../src/interface.c:1979
+#: ../src/interface.c:1952
 msgid "Max transversal step:"
 msgstr "Passo trasverso max:"
 
-#: ../src/interface.c:1982
+#: ../src/interface.c:1955
 msgid ""
 "Maximum displacement along a seam. Increasing this value allows to overcome "
 "the 45 degrees bound"
@@ -423,36 +423,36 @@ msgstr ""
 "Massimo spostamento trasversale lungo una linea d'azione. Aumentare questo "
 "valore permette di superare il limite di inclinazione  di 45 gradi."
 
-#: ../src/interface.c:1992
+#: ../src/interface.c:1965
 msgid "Overall rigidity:"
 msgstr "Rigidità globale"
 
-#: ../src/interface.c:1995
+#: ../src/interface.c:1968
 msgid "Increasing this value results in straighter seams"
 msgstr "Aumentando questo valore si ottengono linee d'azione più dritte"
 
-#: ../src/interface.c:2026
+#: ../src/interface.c:1999
 msgid "Use a rigidity mask"
 msgstr "Usa una maschera per la rigidità"
 
-#: ../src/interface.c:2053
+#: ../src/interface.c:2026
 msgid "Use an extra layer to mark areas where seams should be straighter"
 msgstr ""
 "Utilizza un livello aggiuntivo per differenziare la rigidità delle diverse "
 "aree dell'immagine"
 
-#: ../src/interface.c:2074
+#: ../src/interface.c:2047
 msgid "Edit the currently selected rigidity mask layer"
 msgstr ""
 "Modifica il livello per la maschera di rigidità attualmente selezionato"
 
-#: ../src/interface.c:2095
+#: ../src/interface.c:2068
 msgid "Creates a new transparent layer ready to be used as a rigidity mask"
 msgstr ""
 "Crea un nuovo livello trasparente, pronto per essere usato come maschera per "
 "la rigidità"
 
-#: ../src/interface.c:2140
+#: ../src/interface.c:2113
 msgid ""
 "Layer to be used as a mask for rigidity settings.\n"
 "Use the \"Refresh\" button to update the list"
@@ -460,7 +460,7 @@ msgstr ""
 "Livello da utilizzare come maschera per la rigidità.\n"
 "Usa il pulsante \"Aggiorna\" per aggiornare la lista"
 
-#: ../src/interface.c:2213
+#: ../src/interface.c:2186
 msgid ""
 "This affects the automatic feature recognition.\n"
 "It's the filter which will be used to determine the relevance of each pixel"
@@ -468,50 +468,50 @@ msgstr ""
 "Questa opzione influenza il riconoscimento automatico dei contenuti.\n"
 "È il filtro che viene applicato per determinare la rilevanza di ciascun pixel"
 
-#: ../src/interface.c:2223
+#: ../src/interface.c:2196
 msgid "Feature recog.:"
 msgstr "Riconoscim. autom."
 
-#: ../src/interface.c:2228
+#: ../src/interface.c:2201
 msgid "Transversal grad. (bright.) "
 msgstr "Grad. trasverso (luminosità)"
 
-#: ../src/interface.c:2229
+#: ../src/interface.c:2202
 msgid "Grad. sum (bright.)"
 msgstr "Somma grad. (luminosità)"
 
-#: ../src/interface.c:2230
+#: ../src/interface.c:2203
 msgid "Grad. norm (bright.)"
 msgstr "Norma grad. (luminosità)"
 
-#: ../src/interface.c:2231
+#: ../src/interface.c:2204
 msgid "Transversal grad. (luma) "
 msgstr "Grad. trasverso (luma)"
 
-#: ../src/interface.c:2232
+#: ../src/interface.c:2205
 msgid "Grad. sum (luma)"
 msgstr "Somma grad. (luma)"
 
-#: ../src/interface.c:2233
+#: ../src/interface.c:2206
 msgid "Grad. norm (luma)"
 msgstr "Norma grad. (luma)"
 
 #. Null can be translated as Zero
-#: ../src/interface.c:2235
+#: ../src/interface.c:2208
 msgid "Null"
 msgstr "Zero"
 
 #. Operations control
 #. Please keep the <b> and </b> tags in translations
-#: ../src/interface.c:2246
+#: ../src/interface.c:2219
 msgid "<b>Operations control</b>"
 msgstr "<b>Controllo delle operazioni</b>"
 
-#: ../src/interface.c:2274
+#: ../src/interface.c:2247
 msgid "Max enlargement per step:"
 msgstr "Max ingrand. per passo:"
 
-#: ../src/interface.c:2277
+#: ../src/interface.c:2250
 msgid ""
 "When enlarging beyond the value set here the rescaling will be performed in "
 "multiple steps."
@@ -519,29 +519,29 @@ msgstr ""
 "Quando si ingrandisce oltre il valore impostato qui il ridimensionamento "
 "viene effettuato in più passi."
 
-#: ../src/interface.c:2292
+#: ../src/interface.c:2265
 msgid "This controls the order of operations if rescaling in both directions"
 msgstr ""
 "Qui si può decidere l'ordine delle operazioni se si riscala in entrambe le "
 "direzioni"
 
-#: ../src/interface.c:2300
+#: ../src/interface.c:2273
 msgid "Rescale order:"
 msgstr "Ordine del ridimens.:"
 
-#: ../src/interface.c:2305
+#: ../src/interface.c:2278
 msgid "Horizontal first"
 msgstr "Prima in orizzontale"
 
-#: ../src/interface.c:2306
+#: ../src/interface.c:2279
 msgid "Vertical first"
 msgstr "Prima in verticale"
 
-#: ../src/interface.c:2318
+#: ../src/interface.c:2291
 msgid "Ignore discard mask when enlarging"
 msgstr "Non eliminare i contenuti quando si allarga"
 
-#: ../src/interface.c:2324
+#: ../src/interface.c:2297
 msgid ""
 "This will have the same effect as setting the strenght to 0 in the discard "
 "mask when the first rescale step is an image enlargment (which normally is "
@@ -558,7 +558,7 @@ msgid "GIMP LqR Plug-In - Mask editor mode"
 msgstr "GIMP LqR Plug-In - Modifica della maschera"
 
 #. Note for translators: remember to split the line with \n so that the window dialog won't be too large
-#: ../src/interface_aux.c:136
+#: ../src/interface_aux.c:135
 msgid ""
 "Paint the preservation mask\n"
 "on the current layer, then press OK"
@@ -567,7 +567,7 @@ msgstr ""
 "sul livello corrente, quindi premere OK"
 
 #. Note for translators: remember to split the line with \n so that the window dialog won't be too large
-#: ../src/interface_aux.c:140
+#: ../src/interface_aux.c:139
 msgid ""
 "Paint the discard mask\n"
 "on the current layer, then press OK"
@@ -576,7 +576,7 @@ msgstr ""
 "sul livello corrente, quindi premere OK"
 
 #. Note for translators: remember to split the line with \n so that the window dialog won't be too large
-#: ../src/interface_aux.c:144
+#: ../src/interface_aux.c:143
 msgid ""
 "Paint the rigidity mask\n"
 "on the current layer, then press OK"
@@ -636,19 +636,19 @@ msgstr "Intervallo"
 msgid "Next step at"
 msgstr "Prossimo passo a"
 
-#: ../src/main.c:209
+#: ../src/main.c:235
 msgid "scaling which keeps layer features (or removes them)"
 msgstr "scala il livello mantenendo i contenuti (o rimuovendoli)"
 
-#: ../src/main.c:213
+#: ../src/main.c:239
 msgid "Li_quid rescale..."
 msgstr "Li_quid rescale..."
 
-#: ../src/main.h:133
+#: ../src/main.h:134
 msgid "Error: invalid image"
 msgstr "Errore: immagine non valida"
 
-#: ../src/main.h:144
+#: ../src/main.h:145
 msgid "Error: invalid layer"
 msgstr "Errore: livello non valido"
 
