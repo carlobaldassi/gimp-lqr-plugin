@@ -1,18 +1,78 @@
 #! /bin/bash
 
-NOPO=0
-ALL=1
+# Functions
+#{{{
+function usage() {
+	cat << EOF
+Usage: $(basename $0) [ options ] [ <languages list> ]
+
+Create bzip2 tarball for distribution, optionally updates po files before.
+
+Options:
+    --all-po		update all languages
+    -f, --force		force overwriting existing files
+    -h, --help		this help
+EOF
+}
+
+function err_mess() {
+	echo "$(basename $0): error: $1" > /dev/stderr;
+}
+#}}}
+
+# Init costants & parameters
+#{{{
+NOPO=1
+ALL=0
+FORCE=0
+#}}}
+
+# Parse command line
+#{{{
+PARAMETERS=$(getopt -a -o "hf" -l "help, all-po, force" -- "$@")
+
+[ $? -ne 0 ] && { usage; exit 1; }
+
+eval set -- "$PARAMETERS"
+
+while true
+do
+	case "$1" in
+		--force)
+			FORCE=1
+			shift
+			;;
+		--all)
+			NOPO=0
+			ALL=1
+			shift;
+			;;
+		--)
+			shift;
+			break;
+			;;
+		-h|--help)
+			usage;
+			exit 0;
+			;;
+		*)
+			usage;
+			exit 1;
+			;;
+	esac
+done
+
 if [ -n "$1" ]
 then
-	if [ "$1" == "--nopo" ]
-	then
-		NOPO=1
-	else
-		ALL=0
-		LANGS="$@"
-	fi
+	[ $ALL -eq 1 ] && { err_mess "use either --all or specify languages"; exit 1; }
+	ALL=0
+	NOPO=0
+	LANGS="$@"
 fi
+#}}}
 
+# Complete (and check) parameter initialization
+#{{{
 [ -f "Makefile" ] || { echo "error: makefile not found"; exit 1; }
 [ -f "configure.ac" ] || { echo "error: configure.ac not found"; exit 1; }
 
@@ -29,10 +89,17 @@ MICRO_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_micro_version\], 
 
 PLUGIN_NAME="${NAME}-${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}"
 #NEW_PLUGIN_NAME="${PLUGIN_NAME}-${REL_SUB_VER}"
-TGZ_NAME="${PLUGIN_NAME}.tar.gz"
+#TGZ_NAME="${PLUGIN_NAME}.tar.gz"
 TBZ2_NAME="${PLUGIN_NAME}.tar.bz2"
 
-NEW_TBZ2_NAME="${NEW_PLUGIN_NAME}.tar.bz2"
+#NEW_TBZ2_NAME="${NEW_PLUGIN_NAME}.tar.bz2"
+
+[ $FORCE -eq 0 ] && [ -f "$TBZ2_NAME" ] && { err_mess "file exists, use --force to force writing"; exit 1; }
+
+#}}}
+
+# Main
+#{{{
 
 if [ "${NOPO}" -eq 0 ]
 then
@@ -43,7 +110,7 @@ then
 		cd po || exit 1
 		for LL in $LANGS
 		do
-			../intltool-update $LL || exit 1
+			intltool-update $LL || exit 1
 		done
 		cd .. || exit 1
 	fi
@@ -54,3 +121,4 @@ make dist-bzip2 || exit 1
 #mv "${TBZ2_NAME}" "${NEW_TBZ2_NAME}" || exit 1
 
 #echo $REL_SUB_VER > release_subv_src;
+#}}}
