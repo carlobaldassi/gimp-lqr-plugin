@@ -7,3 +7,4 @@ src/main.c
 src/main.h
 src/render.c
 src/io_functions.c
+src/preview.c

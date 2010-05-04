@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-02 16:33+0200\n"
+"POT-Creation-Date: 2010-05-04 04:48+0200\n"
 "PO-Revision-Date: 2008-01-15 07:40+0100\n"
 "Last-Translator: Marco Wollkopf <marco.wollkopf@t-online.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -651,6 +651,33 @@ msgstr "Änderungen anwenden ..."
 #: ../src/io_functions.c:221
 msgid "Drawing seam map..."
 msgstr "Zeichne die Nähtekarte ..."
+
+#: ../src/preview.c:209
+#, c-format
+msgid "Layer in use as preservation mask: "
+msgstr ""
+
+#: ../src/preview.c:220
+msgid "No preservation mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:228
+#, c-format
+msgid "Layer in use as discard mask: "
+msgstr ""
+
+#: ../src/preview.c:240
+msgid "No discard mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:246
+#, c-format
+msgid "Layer in use as rigidity mask: "
+msgstr ""
+
+#: ../src/preview.c:258
+msgid "No rigidity mask is currently in use"
+msgstr ""
 
 #~ msgid "Output on a new layer"
 #~ msgstr "Ausgabe auf einer neuen Ebene"

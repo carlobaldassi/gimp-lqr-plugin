@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-02 16:33+0200\n"
+"POT-Creation-Date: 2010-05-04 04:52+0200\n"
 "PO-Revision-Date: 2007-10-10 19:53+EEST\n"
 "Last-Translator: Alexandru Ciobanu <alex@tvtransilvania.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -637,6 +637,33 @@ msgstr "Se aplică modificările..."
 #: ../src/io_functions.c:221
 msgid "Drawing seam map..."
 msgstr "Se desenează harta margini..."
+
+#: ../src/preview.c:209
+#, c-format
+msgid "Layer in use as preservation mask: "
+msgstr ""
+
+#: ../src/preview.c:220
+msgid "No preservation mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:228
+#, c-format
+msgid "Layer in use as discard mask: "
+msgstr ""
+
+#: ../src/preview.c:240
+msgid "No discard mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:246
+#, c-format
+msgid "Layer in use as rigidity mask: "
+msgstr ""
+
+#: ../src/preview.c:258
+msgid "No rigidity mask is currently in use"
+msgstr ""
 
 #~ msgid "Output on a new layer"
 #~ msgstr "Producţie pe strat nou"

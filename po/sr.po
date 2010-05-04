@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-02 16:33+0200\n"
+"POT-Creation-Date: 2010-05-04 04:53+0200\n"
 "PO-Revision-Date: 2007-10-04 02:41+0200\n"
 "Last-Translator: Vladimir Savic <vladimir.firefly.savic@gmail.com>\n"
 "Language-Team:  <en@li.org>\n"
@@ -619,6 +619,33 @@ msgstr "Примењујем промене:"
 
 #: ../src/io_functions.c:221
 msgid "Drawing seam map..."
+msgstr ""
+
+#: ../src/preview.c:209
+#, c-format
+msgid "Layer in use as preservation mask: "
+msgstr ""
+
+#: ../src/preview.c:220
+msgid "No preservation mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:228
+#, c-format
+msgid "Layer in use as discard mask: "
+msgstr ""
+
+#: ../src/preview.c:240
+msgid "No discard mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:246
+#, c-format
+msgid "Layer in use as rigidity mask: "
+msgstr ""
+
+#: ../src/preview.c:258
+msgid "No rigidity mask is currently in use"
 msgstr ""
 
 #, fuzzy

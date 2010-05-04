@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-02 16:33+0200\n"
+"POT-Creation-Date: 2010-05-04 04:46+0200\n"
 "PO-Revision-Date: 2008-08-04 03:10+0200\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@gmail.com>\n"
 "Language-Team: Italian <carlobaldassi@gmail.com>\n"
@@ -691,6 +691,33 @@ msgstr "Sto applicando i cambiamenti..."
 #: ../src/io_functions.c:221
 msgid "Drawing seam map..."
 msgstr "Sto disegnando le linee d'azione..."
+
+#: ../src/preview.c:209
+#, c-format
+msgid "Layer in use as preservation mask: "
+msgstr "Maschera per la preservazione attualmente in uso: "
+
+#: ../src/preview.c:220
+msgid "No preservation mask is currently in use"
+msgstr "Nessuna maschera per la preservazione è in uso al momento"
+
+#: ../src/preview.c:228
+#, c-format
+msgid "Layer in use as discard mask: "
+msgstr "Maschera per l'eliminazione attualmente in uso: "
+
+#: ../src/preview.c:240
+msgid "No discard mask is currently in use"
+msgstr "Nessuna maschera per l'eliminazione è in uso al momento"
+
+#: ../src/preview.c:246
+#, c-format
+msgid "Layer in use as rigidity mask: "
+msgstr "Maschera per la rigidità attualmente in uso: "
+
+#: ../src/preview.c:258
+msgid "No rigidity mask is currently in use"
+msgstr "Nessuna maschera per la rigidità è in uso al momento"
 
 #~ msgid "Output on a new layer"
 #~ msgstr "Risultato su un nuovo livello"

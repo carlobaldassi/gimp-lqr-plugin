@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-02 16:33+0200\n"
+"POT-Creation-Date: 2010-05-04 04:49+0200\n"
 "PO-Revision-Date: 2007-10-14 18:57+0100\n"
 "Last-Translator: Diego Ruiz <diego.ruiz@opentrends.net>\n"
 "Language-Team:  <es_ES@li.org>\n"
@@ -642,6 +642,33 @@ msgstr "Aplicando cambios..."
 #: ../src/io_functions.c:221
 msgid "Drawing seam map..."
 msgstr "Dibujando mapa de las líneas de acción..."
+
+#: ../src/preview.c:209
+#, c-format
+msgid "Layer in use as preservation mask: "
+msgstr ""
+
+#: ../src/preview.c:220
+msgid "No preservation mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:228
+#, c-format
+msgid "Layer in use as discard mask: "
+msgstr ""
+
+#: ../src/preview.c:240
+msgid "No discard mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:246
+#, c-format
+msgid "Layer in use as rigidity mask: "
+msgstr ""
+
+#: ../src/preview.c:258
+msgid "No rigidity mask is currently in use"
+msgstr ""
 
 #~ msgid "Output on a new layer"
 #~ msgstr "Salida en nueva capa"

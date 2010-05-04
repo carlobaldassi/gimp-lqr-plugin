@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-02 16:33+0200\n"
+"POT-Creation-Date: 2010-05-04 04:51+0200\n"
 "PO-Revision-Date: 2008-10-10 00:23-0300\n"
 "Last-Translator: Joao S. O. Bueno <gwidion@mpc.com.br>\n"
 "Language-Team: Brazilian Portuguese <GNOME-l10n-br <Gnome-l10n-BR@listas."
@@ -671,6 +671,33 @@ msgstr "Aplicando alterações..."
 #: ../src/io_functions.c:221
 msgid "Drawing seam map..."
 msgstr "Desenhando mapa de costuras..."
+
+#: ../src/preview.c:209
+#, c-format
+msgid "Layer in use as preservation mask: "
+msgstr ""
+
+#: ../src/preview.c:220
+msgid "No preservation mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:228
+#, c-format
+msgid "Layer in use as discard mask: "
+msgstr ""
+
+#: ../src/preview.c:240
+msgid "No discard mask is currently in use"
+msgstr ""
+
+#: ../src/preview.c:246
+#, c-format
+msgid "Layer in use as rigidity mask: "
+msgstr ""
+
+#: ../src/preview.c:258
+msgid "No rigidity mask is currently in use"
+msgstr ""
 
 #~ msgid "Output on a new layer"
 #~ msgstr "Saída em uma nova camada"
