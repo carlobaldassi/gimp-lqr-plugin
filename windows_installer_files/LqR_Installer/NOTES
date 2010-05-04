@@ -1,0 +1,9 @@
+This directory contins a script for NSIS to create a Windows
+installer.
+
+The directory should be placed under $DESKTOP and the script
+should be compiled after running the bash script winpack.sh
+fomr MSYS. 
+
+Most parameters (e.g. version numbers) must be edited by
+hand.

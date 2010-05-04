@@ -1,0 +1,14 @@
+The winpack.sh script in this directory is used to compile
+the GIMP Liquid Rescale Plug-In on Windows and to prepare
+the creation of a Windows installer with NSIS.
+
+It is meant to be run under MinGW/MSYS. It needs to find
+liblqr and GIMP already compiled under MinGW.
+
+Most parameters (e.g. version numbers, installation
+locations, user names etc.) need to be adjusted by hand, by
+editing the script.
+
+If successful, it creates a directory structure under
+$DESKTOP/LqR_installer, which can be used by the NSIS
+configuration script gimp-lqr-plugin-installer.nsi.
