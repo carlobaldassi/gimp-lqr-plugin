@@ -10,7 +10,6 @@
 ;--------------------------------
 ;General
 
-  Var GIMP_InstDir
   Var FileList
 
   !define P_NAME "Gimp Liquid Rescale Plug-In"
@@ -23,18 +22,14 @@
   !define INPUT_FILE_LIST "file_list.log"
   !define INPUT_ICON "LqR_icon.ico"
 
-  !include "${INPUT_DIR}\lqr_file_list.nsh"
+  !include "${INPUT_DIR}\lqr_file_list-PortableApps.nsh"
 
   LangString UninstLogMissing ${LANG_ENGLISH} "${INPUT_FILE_LIST} not found!$\r$\nUninstallation cannot proceed!"
 
-
-  ;Windows uninstall key
-  !define REG_UNINSTALL "Software\Microsoft\Windows\CurrentVersion\Uninstall\GimpLqRPlugIn"
-
-  !define InstFile "gimp-lqr-plugin_${P_VERSION}-liblqr_${LIB_VERSION}_win32_setup.exe"
+  !define InstFile "gimp-lqr-plugin_${P_VERSION}-liblqr_${LIB_VERSION}_win32_PortableApps_setup.exe"
 
   ;Name and file
-  Name "GIMP LqR Plug-In"
+  Name "GIMPPortable LqR Plug-In"
   OutFile "${InstFile}"
 
   ;Default installation folder
@@ -44,7 +39,7 @@
   !define MUI_ICON "${INPUT_SHARE_DIR}\${INPUT_ICON}"
 
   ;Request application privileges for Windows Vista
-  RequestExecutionLevel admin
+  RequestExecutionLevel user
 
   ;Set compression
   SetCompressor /SOLID lzma
@@ -84,6 +79,8 @@
 "This wizard will guide you through the installation of GIMP \
 Liquid Rescale Plug-In, version ${P_VERSION}.$\n\
 $\n\
+This installer is intended for the PortableApps version of GIMP (GIMPPortable).$\n\
+$\n\
 You are strongly encouraged to uninstall any previous installation of the plugin before continuing.$\n\
 $\n\
 The GIMP Liquid Rescale plug-in aims at resizing pictures non uniformly \
@@ -94,26 +91,26 @@ Since version 0.6 it also supports real-time interactive scaling.$\n\
 $\n\
 Click Next to continue."
 
-  !define MUI_DIRECTORYPAGE_TITLE "Choose GIMP Install Location" ; NOTE: customized, see above
-  !define MUI_DIRECTORYPAGE_SUBTITLE "Choose the folder in which GIMP is installed." ; NOTE: customized, see above
+  !define MUI_DIRECTORYPAGE_TITLE "Choose GIMPPortable Install Location" ; NOTE: customized, see above
+  !define MUI_DIRECTORYPAGE_SUBTITLE "Choose the folder in which GIMPPortable is installed." ; NOTE: customized, see above
 
   !define MUI_DIRECTORYPAGE_TEXT \
-"Setup found a GIMP installation at the specified folder. \
-If you want to choose a different GIMP installation folder \
-under which to install $(^NameDA), click Browse and select another folder."
+"Please, choose the folder in which you have installed GIMPPortable. \
+Usually it is located under PortableApps\GIMPPortable in the drive where \
+you installed PortableApps. Click Browse to select a folder."
 
-  !define MUI_DIRECTORYPAGE_SUBTEXT "Selected GIMP installation Folder"
-  !define MUI_DIRECTORYPAGE_BROWSETEXT "Select the GIMP installation folder to install $(^NameDA) in:"
+  !define MUI_DIRECTORYPAGE_SUBTEXT "Selected GIMPPortable installation Folder"
+  !define MUI_DIRECTORYPAGE_BROWSETEXT "Select the GIMPPortable installation folder to install $(^NameDA) in:"
 
   DirText "${MUI_DIRECTORYPAGE_TEXT}" "${MUI_DIRECTORYPAGE_SUBTEXT}" "" "${MUI_DIRECTORYPAGE_BROWSETEXT}"
 
 
   !define MUI_FINISHPAGE_TEXT \
-"GIMP Liquid Rescale Plug-In has been installed on your system.$\n\
-To use the plug-in, open an image with GIMP and select 'Liquid Rescale...' from the \
+"GIMPPortable Liquid Rescale Plug-In has been installed on your PortableApps system.$\n\
+To use the plug-in, open an image with GIMPPortable and select 'Liquid Rescale...' from the \
 'Layer' menu.$\n\
 $\n\
-You need to restart GIMP if it's already running.$\n\
+You need to restart GIMPPortable if it's already running.$\n\
 $\n\
 Click Finish to close this wizard."
 
@@ -128,6 +125,7 @@ Click Finish to close this wizard."
   !insertmacro MUI_PAGE_FINISH
 
   !insertmacro MUI_UNPAGE_WELCOME
+  ;!insertmacro MUI_UNPAGE_DIRECTORY
   ;!insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
   !insertmacro MUI_UNPAGE_FINISH
@@ -144,48 +142,48 @@ Section "Base" Base
 SectionIn RO
   ;This section is required. It can't be removed.
 
-  CreateDirectory "$INSTDIR"
+  CreateDirectory "$INSTDIR\App\gimp"
 
   !insertmacro InstallFiles
 
-  SetOutPath "$INSTDIR\${SHARE_DIR}"
+  SetOutPath "$INSTDIR\App\gimp\${SHARE_DIR}"
   File "${INPUT_SHARE_DIR}\${INPUT_FILE_LIST}"
 
   ;Create uninstaller
-  WriteUninstaller "$INSTDIR\${SHARE_DIR}\Uninstall.exe"
+  WriteUninstaller "$INSTDIR\App\gimp\${SHARE_DIR}\Uninstall.exe"
 
   ;Writing uninstall info to registry:
-  WriteRegStr HKLM "${REG_UNINSTALL}" "DisplayName" "GIMP LqR Plug-In"
-  WriteRegStr HKLM "${REG_UNINSTALL}" "DisplayIcon" "$INSTDIR\${SHARE_DIR}\${INPUT_ICON}"
-  WriteRegStr HKLM "${REG_UNINSTALL}" "DisplayVersion" "PlugIn: ${P_VERSION} - Lib: ${LIB_VERSION}"
-  WriteRegStr HKLM "${REG_UNINSTALL}" "Publisher" "Carlo Baldassi"
-  WriteRegStr HKLM "${REG_UNINSTALL}" "URLInfoAbout" "http://liquidrescale.wikidot.com"
-  WriteRegStr HKLM "${REG_UNINSTALL}" "InstallLocation" "$INSTDIR"
+  ;WriteRegStr HKLM "${REG_UNINSTALL}" "DisplayName" "GIMP LqR Plug-In"
+  ;WriteRegStr HKLM "${REG_UNINSTALL}" "DisplayIcon" "$INSTDIR\${SHARE_DIR}\${INPUT_ICON}"
+  ;WriteRegStr HKLM "${REG_UNINSTALL}" "DisplayVersion" "PlugIn: ${P_VERSION} - Lib: ${LIB_VERSION}"
+  ;WriteRegStr HKLM "${REG_UNINSTALL}" "Publisher" "Carlo Baldassi"
+  ;WriteRegStr HKLM "${REG_UNINSTALL}" "URLInfoAbout" "http://liquidrescale.wikidot.com"
+  ;WriteRegStr HKLM "${REG_UNINSTALL}" "InstallLocation" "$INSTDIR"
  
-  WriteRegDWord HKLM "${REG_UNINSTALL}" "NoModify" 1
-  WriteRegDWord HKLM "${REG_UNINSTALL}" "NoRepair" 1
-  WriteRegStr HKLM "${REG_UNINSTALL}" "UninstallString" '"$INSTDIR\${SHARE_DIR}\Uninstall.exe"'
-  WriteRegStr HKLM "${REG_UNINSTALL}" "QuietUninstallString" '"$INSTDIR\${SHARE_DIR}\Uninstall.exe" /S'
+  ;WriteRegDWord HKLM "${REG_UNINSTALL}" "NoModify" 1
+  ;WriteRegDWord HKLM "${REG_UNINSTALL}" "NoRepair" 1
+  ;WriteRegStr HKLM "${REG_UNINSTALL}" "UninstallString" '"$INSTDIR\${SHARE_DIR}\Uninstall.exe"'
+  ;WriteRegStr HKLM "${REG_UNINSTALL}" "QuietUninstallString" '"$INSTDIR\${SHARE_DIR}\Uninstall.exe" /S'
 
 SectionEnd
 
 Function .onInit
-  ReadRegStr $GIMP_InstDir HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WinGimp-2.0_is1" "InstallLocation"
+  ;ReadRegStr $GIMP_InstDir HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WinGimp-2.0_is1" "InstallLocation"
   ;MessageBox MB_OK $GIMP_InstDir
 
   ; Check for GIMP installation existence
-  StrCmp $GIMP_InstDir "" 0 NoAbortInst
-         MessageBox MB_OK "GIMP installation was not found. Please install GIMP before runing this installer."
-         Abort ; abort if APP installation is not found
-  NoAbortInst:
+  ;StrCmp $GIMP_InstDir "" 0 NoAbortInst
+  ;       MessageBox MB_OK "GIMP installation was not found. Please install GIMP before runing this installer."
+  ;       Abort ; abort if APP installation is not found
+  ;NoAbortInst:
 
-  StrCpy $INSTDIR "$GIMP_InstDir"
+  StrCpy $INSTDIR "F:\PortableApps\GIMPPortable"
 
 FunctionEnd
 
 Function .onVerifyInstDir
-  IfFileExists $INSTDIR\bin\gimp-*.exe PathGood
-    Abort ; if $INSTDIR is not a GIMP directory, don't let us install there
+  IfFileExists $INSTDIR\App\gimp\bin\gimp-*.exe PathGood
+    Abort ; if $INSTDIR is not a GIMPPortable directory, don't let us install there
   PathGood:
 FunctionEnd
 
@@ -203,17 +201,33 @@ Section -closelogfile
  SetFileAttributes "$INSTDIR\${SHARE_DIR}\${INPUT_FILE_LIST}" READONLY|SYSTEM|HIDDEN
 SectionEnd
 
+Function un.onInit
+  ;ReadRegStr $GIMP_InstDir HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WinGimp-2.0_is1" "InstallLocation"
+  ;MessageBox MB_OK $GIMP_InstDir
+
+  ; Check for GIMP installation existence
+  ;StrCmp $GIMP_InstDir "" 0 NoAbortInst
+  ;       MessageBox MB_OK "GIMP installation was not found. Please install GIMP before runing this installer."
+  ;       Abort ; abort if APP installation is not found
+  ;NoAbortInst:
+
+  ;StrCpy $INSTDIR "F:\PortableApps\GIMPPortable"
+
+FunctionEnd
+
 Section "Uninstall"
 
   DetailPrint "*** Opening uninstall file..."
 
-  ReadRegStr $INSTDIR HKLM "${REG_UNINSTALL}" "InstallLocation" 
+  ;ReadRegStr $INSTDIR HKLM "${REG_UNINSTALL}" "InstallLocation" 
+  ;StrCpy $INSTDIR "F:\PortableApps\GIMPPortable"
+  StrCpy $INSTDIR "$INSTDIR\..\.."
 
   ; Can't uninstall if uninstall log is missing!
   IfFileExists "$INSTDIR\${SHARE_DIR}\${INPUT_FILE_LIST}" +3
    MessageBox MB_OK|MB_ICONSTOP "$(UninstLogMissing)"
     Abort
-  
+
   Push $R0
   Push $R1
   SetFileAttributes "$INSTDIR\${SHARE_DIR}\${INPUT_FILE_LIST}" NORMAL
@@ -258,8 +272,8 @@ Section "Uninstall"
   DetailPrint "*** Removing installation directory..."
   RMDir "$INSTDIR\${SHARE_DIR}"
 
-  DetailPrint "*** Cleaning up Windows register..."
-  DeleteRegKey HKLM "${REG_UNINSTALL}"
+  ;DetailPrint "*** Cleaning up Windows register..."
+  ;DeleteRegKey HKLM "${REG_UNINSTALL}"
 
 
 SectionEnd

@@ -1,10 +1,9 @@
 #!/bin/sh
 
-# USAGE: winpack.sh [ --with-dll ] [ --skip-compile ] [ --portable ]
+# USAGE: winpack.sh [ --with-dll ] [ --skip-compile ]
 
 set -e
 
-P_VERSION_M="0.7"
 P_VERSION="0.7.0"
 LIB_VERSION="0.4.1"
 
@@ -22,7 +21,6 @@ ICONFILE="LqR_icon.ico"
 
 WITHDLL=0
 SKIPCOMPILE=0
-PORTABLE=0
 
 if [ "$1" == "--with-dll" ]
 then
@@ -36,24 +34,13 @@ then
 	shift;
 fi
 
-if [ "$1" == "--portable" ]
-then
-	PORTABLE=1
-	shift;
-fi
-
 if [ -n "$1" ]
 then
 	echo "error: unknown option $1" > /dev/stderr
 	exit 1;
 fi
 
-if [ $PORTABLE -eq 0 ]
-then
-	SUFFIX="_win32"
-else
-	SUFFIX="_win32-PortableApps"
-fi
+SUFFIX="_win32"
 
 OUTDIR="${P_NAME}-${LIB_NAME}${SUFFIX}"
 [ -d "$OUTDIR" ] && rm -r "$OUTDIR"
@@ -65,25 +52,12 @@ else
 	ADDCF="-O2 -g"
 fi
 
-if [ $PORTABLE -eq 0 ]
-then
-	PREFIX="//ROGRA~1/GIMP-2.0"
-	SUBSCRIPT="${PWD}/subscript.vim"
-else
-	PREFIX="//ortableApps/GIMPPortable/App/gimp"
-	SUBSCRIPT="${PWD}/subscript_PortableApps.vim"
-fi
-
 pushd ~/gimp-lqr-plugin-${P_VERSION}
 if [ $SKIPCOMPILE -eq 0 ]
 then
-	configure --prefix="$PREFIX"
+	configure --prefix="${FR_DIR}/${OUTDIR}"
 	make clean
 	make CFLAGS="$ADDCF"
-	pushd src
-	vim -b -s $SUBSCRIPT gimp-lqr-plugin.exe
-	popd
-	configure --prefix="${FR_DIR}/${OUTDIR}"
 fi
 make install
 popd
@@ -101,7 +75,7 @@ SCRIPTSDIR="share/gimp/2.0/scripts"
 OUT_SCRIPTSDIR="${OUTDIR}/${SCRIPTSDIR}"
 SCRIPTS="batch-gimp-lqr.scm"
 
-SHAREDIR="share/gimp-lqr-plugin-${P_VERSION_M}"
+SHAREDIR="share/gimp-lqr-plugin"
 OUT_SHAREDIR="${OUTDIR}/${SHAREDIR}"
 
 mkdir -p "$OUT_PLUGINSDIR"
@@ -124,9 +98,10 @@ cp "$ICONFILE" "$OUT_SHAREDIR"
 
 FILE_LIST="file_list.log"
 NSIS_MACRO="lqr_file_list.nsh"
+NSIS_MACRO_PORTABLE="lqr_file_list-PortableApps.nsh"
 
 tar -cf "$OUTDIR.tar" "$OUTDIR"
-tar -tf "$OUTDIR.tar" | sort | sed "s@^[^/]\+/@@" | sed "s@/@\\\\@g" | awk '{ORS="\r\n"} (length($0)>0){print}' > "${OUT_SHAREDIR}/${FILE_LIST}"
+tar -tf "$OUTDIR.tar" | sed "s@^[^/]\+/@@" | sed "s@\([^/]\+\)/@zzz_\1 @g"| sort | sed "s@zzz_\([^ ]\+\) @\1\\\\@g" | awk '{ORS="\r\n"} (length($0)>0){print}' > "${OUT_SHAREDIR}/${FILE_LIST}"
 rm "$OUTDIR.tar"
 
 awk '
@@ -143,6 +118,21 @@ awk '
 	END {
 		print "!macroend"
 	}' "${OUT_SHAREDIR}/${FILE_LIST}" > "${OUTDIR}/${NSIS_MACRO}"
+
+awk '
+	BEGIN {
+		print "!macro InstallFiles"
+	}
+	{
+		if ($0 ~ /\\$/) {
+			printf "  SetOutPath \"\$INSTDIR\\App\\gimp\\%s\"\n", $0
+		} else {
+			printf "  File \"${INPUT_DIR}\\%s\"\n", $0
+		}
+	}
+	END {
+		print "!macroend"
+	}' "${OUT_SHAREDIR}/${FILE_LIST}" > "${OUTDIR}/${NSIS_MACRO_PORTABLE}"
 
 if [ -d "${DESTDIR}/${OUTDIR}" ]
 then
