@@ -1,0 +1,605 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+    <title>Help Page for gimp-lqr-plugin</title>
+    <link rel="stylesheet" href="../css/gimp-help-plain.css" type="text/css" />
+    <link rel="stylesheet" href="../css/gimp-help-screen.css" type="text/css" />
+    <link rel="stylesheet" href="../css/gimp-help-custom.css" type="text/css" />
+    <link rel="alternate stylesheet" href="../css/gimp22.css" type="text/css" title="gimp22" />
+  </head>
+
+  <body text="#000000" bgcolor="#FFFFFF" link="#0000FF"
+    vlink="#FF0000" alink="#000088">
+
+    <div class="book">
+      <div>
+        <h1>Liquid Rescale GIMP Plug-In version 0.7 help page</h1>
+      </div>
+      <p>
+      <div>
+        The Liquid Rescale GIMP Plug-In is an implementation of the content-aware resizing by
+        seam carving algorithm by Shai Avidan and Ariel Shamir.
+      </div>
+      </p>
+      <p>
+      <div>
+        It aims at resizing pictures non uniformly while preserving the features of the picture,
+        i.e. avoiding distortion of the important parts of the picture.
+        It can also be used to remove portions of the picture in a consistent way.
+      </div>
+      </p>
+      <p>
+      <div>
+        It works both ways, shrinking and enlaging (enlarging is performed in successive steps), and
+        it can use extra layers as masks to select which features of the image should be
+        preserved and which should be discarded.
+      </div>
+      </p>
+      <p>
+      <div>
+        See also <a href="#seam_carving">Appendix: The seam carving technique in brief</a> at the end
+        of this page for an introduction to seam carving concepts.
+      </div>
+      </p>
+      <p>
+      <div>
+        The plugin works on the active layer or floating selection. It can also operate on multiple layers
+        through the <i>"Filter all layers"</i> plugin and using the GIMP Animation Package facilities for
+        video editing (see <a href="#GAP">this section</a> for details).
+      </div>
+      </p>
+      <p>
+      <div>
+        The plugin only works on whole layers, if a selection is present it is saved to a channel and removed.
+        If the layer has a transparency mask, an option is given to select the behaviour (apply/discard).
+      </div>
+      </p>
+      <p>
+      <div>
+        The plugin can also be operated in batch mode from the command line, see
+        <a href="#batch">this section</a> for details.
+      </div>
+      </p>
+
+      <h2>User interface description (non-interactive mode)</h2>
+      <p>
+      <img title="Dialog example" alt="Dialog example" src="images/dialog1.png">
+      </p>
+
+      <h3>Select new width and height</h3>
+      <p>
+      <div>
+        In this section it is possible to choose the final size.
+        It is advisable to rescale always in one direction at a time. If both
+        the width and the height are changed, rescaling is performed by default on the
+        width first, then on the height. This can be changed in the <i>"Advanced"</i> tab.
+      </div>
+      <div>
+        The two small buttons on the right can be used to reset the size parameters
+        to the image size (top) or set them to the last used values (bottom), while the
+        bigger button to the right switches to the interactive mode (see the
+        <a href="#interactive">corresponding section</a> for more details).
+      </div>
+      </p>
+      <p>
+      <div>
+        Note that the final size can be set automatically when removing objects, see below.
+      </div>
+      </p>
+
+
+      <h3>Feature masks</h3>
+      <h4>Quick guide</h4>
+      <p>
+      <div>
+        The easiest way to manually select the features of the image that you want to protect
+        or discard is the following:
+        <ul>
+          <li>
+          Select the layer you want to resize (not a floating selection) and invoke the plugin
+          </li>
+          <li>
+          Press the <i>"New"</i> button in the <b>"Feature preservation mask"</b> section
+          (this will create a transparent layer, with 50% opacity, and pick an appropriate
+          colour; also, the plugin main dialog will be substituted by a small dialog).
+          </li>
+          <li>
+          Paint on the areas of the image you want to preserve, e.g. with the paintbrush
+          </li>
+          <li>
+          When you're done, press OK in the small window: the main dialog will appear again.
+          </li>
+          <li>
+          Repeat everything for the features you want to discard
+          </li>
+        </ul>
+      </div>
+      </p>
+      <p>
+      <div>
+        If you want to remove portions of the image, you can press one of the two
+        buttons besides the <i>"Auto size"</i> label to determine
+        the final size automatically (this is only reliable when dealing with very simple
+        masks).
+      </div>
+      </p>
+      <p>
+      <div>
+        <b>Note #1:</b> object removal is only possible when shrinking. By default,
+        feature discard masks are ignored when enlarging, because in that case the masked
+        areas would be inflated rather then removed. If you actually want to get this effect,
+        you need to unset the corresponding option in the <i>"Advanced"</i> tab (or use
+        interactive mode).
+      </div>
+      </p>
+      <p>
+      <div>
+        <b>Note #2:</b> preservation of features is not possible if enlarging too much,
+        because the inflation process is the exact reverse of the shrinking process,
+        so the maximum amount of pixels you can add to a layer corresponds to the
+        amount of pixels which are not protected. For example, if you have a 1000 pixel
+        wide image and you have marked a 800 pixel wide area for protection, the final
+        width should be less than 1200 pixels. If you want to enlarge more, do it in
+        steps, or set the <i>"Max enlargment per step"</i> option in the advanced settings
+        to an appropriate value.
+      </div>
+      </p>
+
+
+      <h4>Full description</h4>
+      <p>
+      <div>
+        In the <b>"Feature preservation mask"</b> section
+        it is possible to specify if there are regions of the image which
+        should be preserved from modification, by checking the <i>"Activate feature preservation"</i>
+        box, and by choosing a layer among the ones which belong to the current image (excluding the active one)
+        in the <i>"Available layers"</i> menu.
+        The <i>"New"</i> button creates a transparent layer with 50% opacity and an appropriate name,
+        sets it as the selected layer mask and switches to a "mask editor" mode, in which there only is a reduced,
+        always-on-top dialog, and in which the foregroud colour is set to green. When you exit the "mask editor" mode,
+        the previous foreground colour is restored and the plugin main dialog is presented again with the updated
+        information.
+        The <i>"Edit"</i> button invokes the "mask editor" mode over the currently selected preservation mask.
+        Note that the "mask editor" mode is useless if the plugin is invoked on a floating selection unless a new layer
+        is created from it, because GIMP does not allow to work on other layers in such case.
+      </div>
+      <div>
+        The intensity of the effect of the mask on each pixel is obtained as
+        the average on the pixel's colour channels, multiplied by the alpha channel. Thus, for an RGB layer
+        with an alpha channel, the maximum value is achieved on white pixels, while black ones
+        and transparent ones are ignored.
+        In general, it is advisable to use a single colour for each mask, and, if needed, fine-tune the strenght
+        of the mask for different areas by using the transparency value, instead of lightness or saturation.
+      </div>
+      <div>
+        The size and position of the selected layer can be arbitrary, the plugin will only use
+        those portions which overlap with the active layer.
+        The <i>"Strength"</i> scale can be used as a global parameter to modulate the feature preservation.
+        Note that thinner selection areas (in the sense of the resizing) need higher strength values, and
+        vice-versa.
+      </div>
+      <div>
+        When a preservation mask is selected, the small green icon under the layer thumbnail on the left will
+        become active, and its tooltip will give you the name of the selected preservation layer. The remaining two
+        icons serve the same purpose for the discard mask (red) and the rigidity mask (blue).
+      </div>
+      </p>
+      <p>
+      <div>
+        The <b>Feature discard selection</b> section is nearly identical to the previous one,
+        but the effect is reversed, and the default colour for the <i>"New"</i> and <i>"Edit"</i> buttons is red instead of green.
+      </div>
+      <div>
+        Furthermore, there are two additional buttons besides the <i>"Auto size:"</i> label, which can be used for
+        "quick &amp; dirty" object removals. When one of these buttons is pressed, the plug-in tries to compute the exact
+        amount of rescaling which is needed in order to remove the areas of the image marked by the current discard mask,
+        and sets the final size accordingly (in the <b>"Select new width and height"</b> section).
+        These buttons will always produce a single-direction rescale: the <i>"Width"</i> button changes just the width
+        and sets the height to its original value, the <i>"Height"</i> button does the opposite.
+      </div>
+      <div>
+        Note that this option is only suitable for naïve object removals, and it may fail if the masks are
+        non-trivial.
+      </div>
+      <div>
+        <i>[Technical information: the final size is determined by simply finding out the maximum number of
+          pixels in a line for which the mask value is above a given threshold, which is set to the 50% of a full
+          RGB colour (e.g. red in the default setting).]</i>
+      </div>
+      </p>
+
+      <h3>Output</h3>
+      <p>
+      <img title="Output" alt="Output" src="images/dialog2.png">
+      </p>
+      <p>
+      <div>
+        This tab has a number of options related to the output of the plugin.
+      </div>
+      </p>
+      <p>
+      <div>
+        <dl>
+          <dt>Output target</dt>
+          <dd>
+          Specifies if the resized image should be written on the currently selected layer, or on
+          a new one, or on a new image. In the latter case, the newly created image will contain all the
+          output from the plugin, including the rescaled auxiliary layers and the seams map (see below).
+          By default, it is set to the selected layer.
+          </dd>
+          <dt>Resize image canvas</dt>
+          <dd>
+          Specifies whether the image canvas should be resized to meet the new size of the active
+          layer. By default, it is on.
+          </dd>
+          <dt>Resize auxiliary layers</dt>
+          <dd>
+          Specifies whether the layers used to manually select the features of the image
+          or to specify a rigidity mask will be resized along with the active layer.
+          If this option is checked, those layers will be first cropped to the active layer's size,
+          then they will undergo the same seam carving and inserting process as the active layer.
+          By default, it is on, but it is only active when some layers are selected in
+          the <i>"Feature masks"</i> tab or if a rigidity mask is being used (see below).
+          </dd>
+          <dt>Output the seams on a new layer</dt>
+          <dd>
+          Specifies whether to create a new layer with the seams map in interactive mode.
+          The two buttons on the right of it let the user choose the seams colour range.
+          The seams are computed on the original layer as far as they are needed for the new size
+          (e.g. there will be 100 seams if reducing or enlarging by 100 pixels), the remaining
+          areas are transparent. In order to read the result, use this option with the
+          <i>"Output target"</i> set to <i>"new layer"</i>, and overlay the seams map to the original layer.
+          If you rescale in two directions at once, you will obtain two maps, but the second
+          one will be computed over an invisible intermediate image, so this is not very useful.
+          The same applies in the case you choose to rescale back to the original size with LqR,
+          or when the resizing goes beyond the limit set with <i>"Max enlargment per step"</i>.
+          Note that this option is ignored in interactive mode, except for the colours you choose,
+          which are used when dumping the seam maps manually.
+          </dd>
+          <dt>Scale back to the original size</dt>
+          <dd>
+          Specifies whether to perform a scale back operation after the liquid rescale operation
+          has been performed.
+          This can be useful for example for object removal and content enhancement.
+          If this option is checked, a menu appears below it to let the user
+          choose the details of the operations: it is possible to revert to the opriginal width
+          and height using either liquid rescale or the standard scaling algorithm, or it is
+          possible to perform a uniform scaling with the standard algorithm and reach back only
+          the original width, or only the original height.
+          Note that this option is ignored in interactive mode.
+          </dd>
+        </dl>
+      </div>
+      </p>
+      <h3>Advanced</h3>
+      <p>
+      <div>
+        This tab has some options which can be used to tweak the plugin behavior.
+      </div>
+      </p>
+      <h4>Seams control</h4>
+      <p>
+      <img title="Seams control" alt="Seams control" src="images/dialog3.png">
+      </p>
+      <p>
+      <div>
+        <dl>
+          <dt>Max transversal step</dt>
+          <dd>
+          <div>
+            This option lets you choose the maximum transversal step that the pixels in the seams can
+            take. In the standard algorithm, corresponding to the default value step = 1, each pixel
+            in a seam can be shifted by at most one pixel with respect to its neighbors.
+            This implies that the seams can form an angle of at most 45 degrees with respect
+            to their base line.
+          </div>
+          <div>
+            Increasing the step value lets you overcome this limit, but may lead to the
+            introduction of artifacts. In order to balance the situation, you can use
+            the rigidity setting.
+          </div>
+          </dd>
+          <dt>Overall rigidity</dt>
+          <dd>
+          <div>
+            Use this value to give a negative bias to the seams which are not straight. May be useful
+            to prevent distortions in some situations, or to avoid artifacts from pixel skipping
+            (it is better to use low values in such case). This setting applies to the whole
+            selected layer if no rigidity mask is used.
+          </div>
+          <div>
+            <i>[Technical information: the bias is proportional to the difference in the transversal
+              coordinate between each two successive points, elevated to the power of 1.5, and summed up
+              for the whole seam.]</i>
+          </div>
+          </dd>
+          <dt>Use a rigidity mask</dt>
+          <dd>
+          <div>
+            It is possible to specify different rigidity values for different areas of the image,
+            using an auxiliary layer, by following the same procedure used to specify the feature masks
+            (the default colour for the "Mask editor" mode is blue in this case).
+            If a rigidity mask is specified, its value at each pixel (computed in the same way as
+            for the feature masks) will be used as a rigidity coefficient, to be multiplied with the
+            overall one.
+          </div>
+          <div>
+            Note #1: transparent (or black) areas in the rigidity mask always correspond to
+            0 rigidity, no matter what the overall value is.
+          </div>
+          <div>
+            Note #2: rigid areas have a slight repulsive effect on seams, similar to that
+            of a preservation mask. In order to compensate for this, you may use a discard mask.
+          </div>
+          </dd>
+          <dt>Gradient function</dt>
+          <dd>
+          It is possible to choose which function
+          is to be used to calculate the energy map of the image. For each pixel in the image,
+          the x,y components of the gradient are computed from the pixel's four nearest neighbors.
+          The exact form of the energy map depends on the choice of the gradient function, and
+          this in turn determines which elements of the image are more important, and should
+          thus be preserved, and which are not, and can be removed (if shrinking) or inflated
+          (if enlarging). Using the <i>Null</i> function in conjunction with the feature preservation
+          mask can be used to override completely the automatic feature detection, thus
+          allowing the user to generate his own energy map (e.g. by another plugin).
+          </dd>
+        </dl>
+      </div>
+      </p>
+      <h4>Operations control</h4>
+      <p>
+      <img title="Operations control" alt="Operations control" src="images/dialog4.png">
+      </p>
+      <p>
+      <div>
+        <dl>
+          <dt>Max enlargement per step</dt>
+          <dd>
+          This option sets the maximum enlargement (in percent) which will be performed in a
+          single rescale step. When the final size is greater than this, the plugin will automatically
+          stop and restart the rescaling as many times as needed. You might need to reduce this
+          value if you have large preservation masks (but then the same areas will be affected
+          over and over by the rescaling).
+          </dd>
+          <dt>Rescale order</dt>
+          <dd>
+          When rescaling in both directions at the same time, it can be chosen whether to resize
+          first in the horizontal and then in the vertical direction, or vice versa.
+          </dd>
+          <dt>Ignore dicard mask when enlarging</dt>
+          <dd>
+          The effect of the discard mask is reversed when the plugin is used for enlarging an image;
+          as this is normally undesirable, they are ignored by default when the
+          first scaling direction is to be enlarged (in such cases, a small warning icon will
+          appear in the <i>"Feature discard mask"</i> section).
+          Unset this option if you want to override this behaviour.
+          Note that this option is ignored in interactive mode.
+          </dd>
+        </dl>
+      </div>
+      </p>
+      <a name="GAP">
+      </a>
+      <h3>Using the plugin for video and animation editing</h3>
+      <h4>Using the plugin with GAP</h4>
+      <p>
+      <div>
+        The plugin can take advantage of the GIMP Animation Package (GAP) for video editing,
+        making it possible to apply liquid rescaling to all the frames of a video (please refer
+        to the GAP documentation for instructions about video editing in GIMP).
+      </div>
+      </p>
+      <p>
+      <div>
+        Note however that the GAP facilities only allow to select the working layer, but the
+        liquid rescale plugin needs auxiliary layers as well to work at its full potential.
+        In order to work around this problem, auxiliary layers are set according to their names:
+        therefore, if you want to use a preservation mask in each frame, for example, you should
+        take care that all the layers which you intend to use as such have the same name in all
+        of the frames. The same applies to discard masks and rigidity masks.
+      </div>
+      </p>
+      <p>
+      <div>
+        In order to use liquid rescale on all frames, you need select <i>"Frame Modify"</i> in
+        the <i>"Video"</i> menu; this will open a dialog: in the <i>"Function"</i> section select <i>"Apply filter
+          on layer(s)"</i>, then set appropriate rules for layer selection and frame range and
+        click OK. Another dialog will appear, asking you to choose a filter: select
+        <i>plug-in-lqr</i>, then choose either <i>"Apply constant"</i> or <i>"Apply varying"</i>.
+      </div>
+      <div>
+        In the latter case, you will be presented the liquidrescale plugin dialog twice, once
+        for the first frame and once for the last one: these will set the extreme values for
+        all the graded parameters (such as sizes, strengths, rigidity etc.), and
+        intermediate values will be used in the intermediate frames (for example, if you set
+        the width to 100% for the first frame and 110% for the last one, and there are 11 frames
+        overall, intermediate frames will have widths of 101%, 102%, 103% and so on). However, all the
+        on/off options (such as the resize order, the auxiliary layer names etc.)
+        will be taken from the <u>last</u> dialog for all the intermediate frames.
+      </div>
+      </p>
+      <h4>Applying the plugin to all layers (e.g. for animations)</h4>
+      <p>
+      <div>
+        It is also possible to apply the plugin to all the layers in a given image (for example
+        when editing an animation), using the option <i>"Filter all layers..."</i> from the
+        <i>"Filters"</i> menu and choosing <i>"plug-in-lqr"</i> in the dialog which appears.
+        Operations follow the rules explained in the GAP section; however, you will run into
+        problems if using auxiliary layers as masks, since the plugin will be applied
+        to those as well.
+      </div>
+      </p>
+
+      <a name="interactive">
+      </a>
+      <h2>User interface description (interactive mode)</h2>
+      <p>
+      <img title="Interactive interface" alt="Interactive interface" src="images/dialog_interactive.png">
+      </p>
+      <p>
+      <div>
+        Pressing the interactive button in the main plugin dialog switches the plugin to interactive mode, and
+        applies the current settings, including the current size settings. In interactive mode only the size
+        can be modified (and modifications will be applied immidiately), and some options are ignored:
+        <ul>
+          <li>Output the seams (you have to do it manually, see below)</li>
+          <li>Scale back to the original size</li>
+          <li>Ignore discard mask when enlarging</li>
+        </ul>
+        Use the <i>"Back"</i> button to get back to the main dialog.
+      </div>
+      </p>
+      <h3>Select new width and height</h3>
+      <p>
+      <div>
+        This section includes the controls for the layer size. The application of the changes is almost immediate, but
+        only after the buttons are released; this means that, if you have activated the chain button to preserve the
+        aspect ratio, the results will be different if you do many small steps or you do the rescaling in one sweep.
+        The reset button on the right brings the size back to the initial value: this recovers the original image if
+        the map was never reset, but it will produce a different image otherwise (see also the Map section below).
+      </div>
+      </p>
+      <h3>Map</h3>
+      <p>
+      <div>
+        The additional <i>"Map"</i> section in the dialog is about the internal seam map which the plugin uses
+        for its computations. Any map has an orientation (depending on the scaling direction), a reference
+        value (the one it was initialized with) and a range. The map allows to rescale almost in real-time within
+        its given range and along its direction; going beyond the current range will produce the updating of the map.
+        The maps store all the scaling information about the specified range: therefore, going back to the reference
+        value will reproduce the initial image. However, a new map is generated automatically any time the direction
+        of the scaling is changed, or when the size exceeds the max enlargment per step; when this happens, all
+        previous information is lost.
+        There are three buttons in this section:
+        <dl>
+          <dt>Info button</dt>
+          <dd>Displays or hides information about the internal seam map</dd>
+          <dt>Reset button</dt>
+          <dd>
+          Force the map reset. This is like restarting the plugin from the current situation.
+          For example, if you change the size, then press this
+          button, then press the reset button in the size section, you will have the same result as using
+          the <i>"Scale back to the original size"</i> option (with the <i>"liquid rescale"</i> setting) in
+          non-interactive mode.
+          </dd>
+          <dt>Dump seam map button</dt>
+          <dd>
+          This button can be used to view the current seam map. Its effect is the same as that of
+          the <i>"Output the seams"</i> option in noninteractive mode, only you need to do it manually, and
+          it prints out one map at a time. The first time you press this button in a session, a new layer will
+          be crated to hold the map, but if you press it again the new map will take the place of the old one.
+          In order to make sense of the result, you have to bring the layer you're working on to its reference
+          size after the dump, and overlay the map on it.
+          This button is only active for RGB images.
+          </dd>
+        </dl>
+      </div>
+      </p>
+
+      <a name="batch">
+      </a>
+      <h2>Using the plugin in batch mode</h2>
+      <p>
+      <div>
+        The plugin comes with some convenience scripts which make it easy to operate it the on
+        files from the command line.
+        You can find a description of the scrits arguments by using the <i>"Procedure browser"</i> from
+        the <i>"Help"</i> menu in GIMP and looking for <i>batch-gimp-lqr</i>, <i>batch-gimp-lqr-full</i> and
+        <i>batch-gimp-lqr-full-use-id</i>; the meaning of the options should be obvious from knowing how the
+        standard interface works.
+      </div>
+      </p>
+      <h3>Example</h3>
+      <p>
+      <div>
+        This is an example of how you would invoke the simplest of the scripts, <i>batch-gimp-lqr</i>, from the
+        Linux / BSD / Mac OS X command line:
+      </div>
+      </p>
+      <p>
+      <div>
+        <code>
+          gimp -i -f -b "(batch-gimp-lqr \"my_image.xcf\" 400 300 \"Backgound\" \"\" \"disc. mask\")" -b "(gimp-quit 0)"
+        </code>
+      </div>
+      </p>
+      <p>
+      <div>
+        This will rescale the "Backgound" layer of the file "my_image.xcf" to 400x300 pixels, using the layer named "disc. mask" as
+        a discard mask and using no preservation masks (notice the empty pair of quotes after "Backgound").
+      </div>
+      </p>
+      <p>
+      <div>
+        On Windows, the command would be the same, but you should substitute <code>gimp</code> with something
+        like <code>%ProgramFiles%/GIMP-2.0/bin/gimp-2.6.exe</code> (the exact command depends on which version of GIMP you have
+        installed and its installation folder).
+      </div>
+      </p>
+
+      <a name="seam_carving">
+      </a>
+      <h2>Appendix: The seam carving technique in brief</h2>
+      <p>
+      <div>
+        The plugin works by finding so-called "seams" over an image, i.e. continuous, zig-zagged lines transversing
+        the image from top to bottom ("vertical" seams), or from left to right ("horizontal" seams). When one such seam,
+        say a vertical one, is removed from an image (the "carving" operation), the width of the image is reduced by one
+        pixel. Removing horizontal seams reduces the height. Iterating such operations (find a seam and remove it), one
+        can reduce the image size at will. Collecting together all the seams which were carved from an image, in their
+        respective order, constitutes what is called a "seams map".
+      </div>
+      </p>
+      <p>
+      <div>
+        Mirroring the carving process, by <i>inserting</i> additional seams besides the ones which are found
+        by the algorithm, instead of removing them, image enlargement can be obtained, too. The meaning of the seam
+        map is reversed in this case.
+      </div>
+      </p>
+      <p>
+      <div>
+        In order to get good results form this technique, the main issue is finding which are the most suitable seams
+        to carve or to insert. If the aim is simply to change the proportions of the image without affecting too much the
+        content, for example, "good" seams will be those which don't cross important features of the image, and instead pass
+        through a background landscape.
+      </div>
+      </p>
+      <p>
+      <div>
+        By default, the plugin tries to find the seams which cross the lowest-contrast areas
+        (how this happens exactly is specified by the gradient function choice in the <i>"Advanced"</i> tab).
+        Therefore, each pixel of the image is assigned a so-called "energy value": the higher the contrast, the higher
+        the energy, and seams are less likely to cross high-energy areas.
+      </div>
+      </p>
+      <p>
+      <div>
+        Since in many cases this simple contrast-based method is not optimal, the energy function can be "biased" by
+        the user, who can decide that some areas should have a higher energy (using a preservation masks) or, on the
+        contrary, that they should have a lower energy (using a discard mask), and therefore effectively "drive" the
+        seams and the whole process.
+      </div>
+      </p>
+      <p>
+      <div>
+        Rigidity masks work in a similar way, but the energy bias that they add does not only depend on the mask value
+        over each pixel, but also on how much the seams which try to cross that pixel are straight.
+      </div>
+      </p>
+      <p>
+      <div>
+        One intuitive picture is as such: the seams try to get from one side to the other of the image keeping on a
+        path with an energy as low as possible; preservation masks have the effect of putting a barrier on their path,
+        which, if high enough, deviates the seams away from it; discard mask, on the other hand, are like valleys which
+        attract seams. Rigidity masks have the effect of putting barriers besides each seam, which tend to make
+        it straighter.
+      </div>
+      </p>
+
+    </div>
+
+  </body>
+</html>

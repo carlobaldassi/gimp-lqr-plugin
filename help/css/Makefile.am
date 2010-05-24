@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-helpdatadir = $(PLUGIN_DATADIR)/help-online/css
+helpdatadir = $(PLUGIN_DATADIR)/help/css
 
 helpdata_DATA = \
 	gimp22.css		\

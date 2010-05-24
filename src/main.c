@@ -46,7 +46,9 @@ static void retrieve_vals_use_aux_layers_names (gint32 image_ID);
 static void noninteractive_read_vals (const GimpParam * param);
 static void install_custom_signals();
 static void cancel_work_on_aux_layer(void);
-static gboolean user_manual_is_installed (gchar *help_path);
+#if defined(G_OS_WIN32)
+static gchar * get_gimp_share_directory_on_windows();
+#endif
 
 static void query (void);
 static void run (const gchar * name,
@@ -204,29 +206,26 @@ MAIN ()
 
 static void query (void)
 {
-  gchar *help_offline_path;
-  gchar *help_online_path;
+#if defined(G_OS_WIN32)
+  gchar *gimp_share_directory;
+#endif
   gchar *help_path;
   gchar *help_uri;
 
   args_num = G_N_ELEMENTS (args);
 
+#if defined(G_OS_WIN32)
+  gimp_share_directory = get_gimp_share_directory_on_windows();
+#endif
+
+#if defined(G_OS_WIN32)
+  gimp_plugin_domain_register (GETTEXT_PACKAGE, gimp_locale_directory());
+  help_path = g_build_filename (gimp_share_directory, PACKAGE_NAME, "help", NULL); 
+#else 
   gimp_plugin_domain_register (GETTEXT_PACKAGE, LOCALEDIR);
-
-  help_offline_path = g_build_filename (PLUGIN_DATADIR, "help-offline", NULL);
-  help_online_path = g_build_filename (PLUGIN_DATADIR, "help-online", NULL);
-
-  if (user_manual_is_installed(help_offline_path))
-    {
-      help_path = help_offline_path;
-    }
-  else
-    {
-      help_path = help_online_path;
-    }
+  help_path = g_build_filename (PLUGIN_DATADIR, "help", NULL);
+#endif
   help_uri = g_filename_to_uri (help_path, NULL, NULL);
-  g_free (help_offline_path);
-  g_free (help_online_path);
 
   gimp_plugin_help_register ("plug-in-lqr-help", help_uri); 
   g_free (help_uri); 
@@ -267,7 +266,11 @@ run (const gchar * name,
   *return_vals = values;
 
   /*  Initialize i18n support  */
+#if defined(G_OS_WIN32)
+  bindtextdomain (GETTEXT_PACKAGE, gimp_locale_directory());
+#else
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+#endif
 #ifdef HAVE_BIND_TEXTDOMAIN_CODESET
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 #endif
@@ -610,46 +613,63 @@ cancel_work_on_aux_layer(void)
     {
       gimp_image_remove_layer(image_vals.image_ID, ui_vals.layer_on_edit_ID);
     }
+  gimp_displays_flush ();
 }
 
-
-static gboolean
-user_manual_is_installed (gchar *help_path)
+#if defined(G_OS_WIN32)
+static gchar *
+get_gimp_share_directory_on_windows()
 {
-  gboolean  found = FALSE;
+  gchar ** tokens;
+  gchar * str;
+  gchar * ret;
+  gint ind = 0;
+  gboolean found = FALSE;
 
-  /*  if GIMP2_HELP_URI is set, assume that the manual can be found there  */
-  /* if (g_getenv ("GIMP2_HELP_URI")) */
-    /* return TRUE; */
+  tokens = g_strsplit(gimp_data_directory(), "\\", 1000);
 
-  if (g_file_test (help_path, G_FILE_TEST_IS_DIR))
+  for (ind = 0; ind < 999; ++ind)
     {
-      const gchar * const *locales = g_get_language_names ();
-      gint i = 0;
-
-      while (locales[i] != NULL && ! found)
+      if (tokens[ind] == NULL)
         {
-          gchar *path;
-
-          path = g_build_filename (help_path, locales[i], "gimp-help.xml", NULL);
-
-          found = g_file_test (path, G_FILE_TEST_IS_REGULAR);
-
-          g_free (path);
-
-          i++;
+          break;
         }
+      str = g_ascii_strdown(tokens[ind], -1);
 
-      if (! found)
+      if (g_strcmp0(str, "share") == 0)
         {
-          gchar *path = g_build_filename (help_path, "en", "gimp-help.xml", NULL);
-
-          found = g_file_test (path, G_FILE_TEST_IS_REGULAR);
-
-          g_free (path);
+          found = TRUE;
+        }
+      g_free(str);
+      if (found)
+        {
+          break;
         }
     }
 
-  return found;
+  if (!found)
+    {
+      /* g_message("GIMP share directory not found, resorting to default\n"); */
+      ret = g_strdup_printf("C:\\Program Files\\GIMP-2.0\\share");
+      return ret;
+    }
+
+  g_strfreev(tokens + ind + 1);
+
+  tokens[ind + 1] = NULL;
+
+  ret = g_strjoinv("\\", tokens);
+
+  g_strfreev(tokens);
+
+  if (!g_file_test(ret, G_FILE_TEST_IS_DIR))
+    {
+      /* g_message("GIMP share directory found but test for it failed, resorting to default\n"); */
+      g_free(ret);
+      ret = g_strdup_printf("C:\\Program Files\\GIMP-2.0\\share");
+    }
+
+  return ret;
 }
+#endif
 

@@ -8,7 +8,7 @@ m4_define([plugin_name], [gimp-lqr-plugin])
 dnl These three define the plug-in version number
 m4_define([plugin_major_version], [0])
 m4_define([plugin_minor_version], [7])
-m4_define([plugin_micro_version], [0git])
+m4_define([plugin_micro_version], [0])
 
 m4_define([plugin_version],
           [plugin_major_version.plugin_minor_version.plugin_micro_version])
@@ -102,7 +102,7 @@ if test "$DATADIRNAME" = "lib"; then
 fi
 AC_SUBST(LOCALEDIR)
 
-PLUGIN_DATADIR="${datadir}/plugin_name-plugin_major_version.plugin_minor_version"
+PLUGIN_DATADIR="${datadir}/plugin_name"
 AC_SUBST(PLUGIN_DATADIR)
 
 SCRIPTSDIR="${GIMP_DATADIR}/scripts"
@@ -154,10 +154,14 @@ src/Makefile
 gap/Makefile
 batch/Makefile
 po/Makefile.in
-help-online/Makefile
-help-online/en/Makefile
-help-online/it/Makefile
-help-online/css/Makefile
+help/Makefile
+help/en/Makefile
+help/en/images/Makefile
+help/it/Makefile
+help/it/images/Makefile
+help/ru/Makefile
+help/ru/images/Makefile
+help/css/Makefile
 ])
 
 AC_OUTPUT

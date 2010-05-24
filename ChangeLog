@@ -1,3 +1,9 @@
+2010-05-23 Carlo Baldassi <carlobaldassi@gmail.com>
+	* modified: put back help files
+	* bugfix: fixed Windows localization
+	* bugfix: flush displays when cancelling
+	  unfinished work on aux layers
+
 2010-03-30 Carlo Baldassi <carlobaldassi@gmail.com>
 	* modified: stripped offline help files
 
@@ -12,7 +18,7 @@
 
 2010-03-20 Carlo Baldassi <carlobaldassi@gmail.com>
 	* bugfix: thumbnail creation error under some
-	circumstances (preview.c)
+	  circumstances (preview.c)
 
 2010-03-14 Carlo Baldassi <carlobaldassi@gmail.com>
 	* bugfix: removed legacy liblqr macro call
