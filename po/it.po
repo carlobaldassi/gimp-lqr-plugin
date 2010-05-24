@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp22-lqr-plugin 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-04 04:46+0200\n"
+"POT-Creation-Date: 2010-05-24 02:18+0200\n"
 "PO-Revision-Date: 2008-08-04 03:10+0200\n"
 "Last-Translator: Carlo Baldassi <carlobaldassi@gmail.com>\n"
 "Language-Team: Italian <carlobaldassi@gmail.com>\n"
@@ -636,11 +636,11 @@ msgstr "Intervallo"
 msgid "Next step at"
 msgstr "Prossimo passo a"
 
-#: ../src/main.c:235
+#: ../src/main.c:234
 msgid "scaling which keeps layer features (or removes them)"
 msgstr "scala il livello mantenendo i contenuti (o rimuovendoli)"
 
-#: ../src/main.c:239
+#: ../src/main.c:238
 msgid "Li_quid rescale..."
 msgstr "Li_quid rescale..."
 

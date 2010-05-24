@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP LiquidRescale Plug-In 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-04 04:53+0200\n"
+"POT-Creation-Date: 2010-05-24 02:18+0200\n"
 "PO-Revision-Date: 2010-02-26 07:35+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team:  <gnome-cyr@lists.gnome.org>\n"
@@ -623,11 +623,11 @@ msgstr "Диапазон"
 msgid "Next step at"
 msgstr "Следующий шаг в"
 
-#: ../src/main.c:235
+#: ../src/main.c:234
 msgid "scaling which keeps layer features (or removes them)"
 msgstr "Масштабирование с сохранением или удалением объектов изображения"
 
-#: ../src/main.c:239
+#: ../src/main.c:238
 msgid "Li_quid rescale..."
 msgstr "_Избирательное масштабирование..."
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-04 04:54+0200\n"
+"POT-Creation-Date: 2010-05-24 02:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -559,11 +559,11 @@ msgstr ""
 msgid "Next step at"
 msgstr ""
 
-#: ../src/main.c:235
+#: ../src/main.c:234
 msgid "scaling which keeps layer features (or removes them)"
 msgstr ""
 
-#: ../src/main.c:239
+#: ../src/main.c:238
 msgid "Li_quid rescale..."
 msgstr ""
 

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-04 04:50+0200\n"
+"POT-Creation-Date: 2010-05-24 02:18+0200\n"
 "PO-Revision-Date: 2009-02-13 15:05+0100\n"
 "Last-Translator: François Collard <francois.collard@free.fr>\n"
 "Language-Team: Français <fr@li.org>\n"
@@ -629,11 +629,11 @@ msgstr "Intervalle"
 msgid "Next step at"
 msgstr "Ètape suivante à"
 
-#: ../src/main.c:235
+#: ../src/main.c:234
 msgid "scaling which keeps layer features (or removes them)"
 msgstr "Redimensionnement qui conserver les élements du calque (ou les enlève)"
 
-#: ../src/main.c:239
+#: ../src/main.c:238
 msgid "Li_quid rescale..."
 msgstr "Redimensionnement li_quide ..."
 
