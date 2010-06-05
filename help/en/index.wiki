@@ -1,8 +1,3 @@
-
-+ Help Page for gimp-lqr-plugin
-
-+ Liquid Rescale GIMP Plug-In version 0.7 help page
-
 The Liquid Rescale GIMP Plug-In is an implementation of the content-aware resizing by seam carving algorithm by Shai Avidan and Ariel Shamir.
 
 It aims at resizing pictures non uniformly while preserving the features of the picture, i.e. avoiding distortion of the important parts of the picture. It can also be used to remove portions of the picture in a consistent way.
