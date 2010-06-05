@@ -1,0 +1,90 @@
+#! /bin/bash
+
+# Functions
+#{{{
+function usage() {
+	cat << EOF
+Usage: $(basename $0) [ options ]
+
+Create zip file with .po files
+
+Options:
+    -f, --force		force overwriting existing files
+    -h, --help		this help
+EOF
+}
+
+function err_mess() {
+	echo "$(basename $0): error: $1" > /dev/stderr;
+}
+#}}}
+
+# Init costants & parameters
+#{{{
+FORCE=0
+#}}}
+
+# Parse command line
+#{{{
+PARAMETERS=$(getopt -a -o "hf" -l "help, force" -- "$@")
+
+[[ $? -ne 0 ]] && { usage; exit 1; }
+
+eval set -- "$PARAMETERS"
+
+while true
+do
+	case "$1" in
+		--force)
+			FORCE=1
+			shift
+			;;
+		--)
+			shift;
+			break;
+			;;
+		-h|--help)
+			usage;
+			exit 0;
+			;;
+		*)
+			usage;
+			exit 1;
+			;;
+	esac
+done
+
+[[ -n "$1" ]] && { err_mess "extra arguments in the command line"; usage; exit 1; }
+#}}}
+
+# Complete (and check) parameter initialization
+#{{{
+
+cd "$(dirname $0)"
+
+[[ -f "Makefile" ]] || { echo "error: makefile not found"; exit 1; }
+[[ -f "configure.ac" ]] || { echo "error: configure.ac not found"; exit 1; }
+
+NAME=$(head -n 50 configure.ac | grep "m4_define(\[plugin_name\], \[.*\])" | sed "s/m4_define(\[plugin_name\], \[\(.*\)\])/\1/")
+MAJOR_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_major_version\], \[.*\])" | sed "s/m4_define(\[plugin_major_version\], \[\(.*\)\])/\1/")
+MINOR_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_minor_version\], \[.*\])" | sed "s/m4_define(\[plugin_minor_version\], \[\(.*\)\])/\1/")
+MICRO_VER=$(head -n 50 configure.ac | grep "m4_define(\[plugin_micro_version\], \[.*\])" | sed "s/m4_define(\[plugin_micro_version\], \[\(.*\)\])/\1/")
+
+VER="${MAJOR_VER}.${MINOR_VER}.${MICRO_VER}"
+ZIP_NAME="po_${VER}.zip"
+
+[[ $FORCE -eq 0 ]] && [[ -f "$ZIP_NAME" ]] && { err_mess "file ${ZIP_NAME} exists, use --force to force writing"; exit 1; }
+
+[[ -d "po" ]] || { err_mess "po directory not found"; exit 1; }
+
+which zip > /dev/null || { err_mess "zip command not found"; exit 1; }
+
+#}}}
+
+# Main
+#{{{
+
+rm -f "${ZIP_NAME}"
+zip "${ZIP_NAME}" po po/*.po po/*.pot || exit 1
+
+#}}}
