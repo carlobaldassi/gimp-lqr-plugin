@@ -1,7 +1,7 @@
 # Italian translation for gimp22-lqr-plugin
 # Copyright (C) 2007 Carlo Baldassi
 # This file is distributed under the same license as the gimp22-lqr-plugin package.
-# Carlo Baldassi <carlobaldassi@yahoo.it>, 2007
+# Carlo Baldassi <carlobaldassi@gmail.com>, 2010
 #
 msgid ""
 msgstr ""
