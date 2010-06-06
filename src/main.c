@@ -621,9 +621,11 @@ static gchar *
 get_gimp_share_directory_on_windows()
 {
   gchar ** tokens;
+  gchar ** tokens2;
   gchar * str;
   gchar * ret;
   gint ind = 0;
+  gint ind2;
   gboolean found = FALSE;
 
   tokens = g_strsplit(gimp_data_directory(), "\\", 1000);
@@ -649,22 +651,25 @@ get_gimp_share_directory_on_windows()
 
   if (!found)
     {
-      /* g_message("GIMP share directory not found, resorting to default\n"); */
+      g_message("GIMP share directory not found, resorting to default\n"); 
       ret = g_strdup_printf("C:\\Program Files\\GIMP-2.0\\share");
       return ret;
     }
 
-  g_strfreev(tokens + ind + 1);
-
-  tokens[ind + 1] = NULL;
-
-  ret = g_strjoinv("\\", tokens);
-
+  tokens2 = g_new(gchar*, ind + 2);
+  for (ind2 = 0; ind2 <= ind; ++ind2)
+    {
+      tokens2[ind2] = g_strdup(tokens[ind2]);
+    }
+  tokens2[ind + 1] = NULL;
   g_strfreev(tokens);
 
+  ret = g_strjoinv("\\", tokens2);
+
+  g_strfreev(tokens2);
   if (!g_file_test(ret, G_FILE_TEST_IS_DIR))
     {
-      /* g_message("GIMP share directory found but test for it failed, resorting to default\n"); */
+      g_message("GIMP share directory found but test for it failed, resorting to default\n"); 
       g_free(ret);
       ret = g_strdup_printf("C:\\Program Files\\GIMP-2.0\\share");
     }

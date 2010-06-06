@@ -14,7 +14,7 @@
   Var FileList
 
   !define P_NAME "Gimp Liquid Rescale Plug-In"
-  !define P_VERSION 0.7.0
+  !define P_VERSION 0.8.0git
   !define LIB_VERSION 0.4.1
 
   !define INPUT_DIR "gimp-lqr-plugin_${P_VERSION}-liblqr_${LIB_VERSION}_win32"

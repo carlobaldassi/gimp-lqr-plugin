@@ -1,3 +1,7 @@
+2010-06-05 Carlo Baldassi <carlobaldassi@gmail.com>
+	* bugfix: fixed bug when detecting share dir
+	  on Windows
+
 2010-05-23 Carlo Baldassi <carlobaldassi@gmail.com>
 	* modified: put back help files
 	* bugfix: fixed Windows localization
