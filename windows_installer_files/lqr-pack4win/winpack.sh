@@ -4,7 +4,7 @@
 
 set -e
 
-P_VERSION="0.7.0"
+P_VERSION="0.7.1"
 LIB_VERSION="0.4.1"
 
 FR_DIR="${PWD}"
@@ -106,11 +106,12 @@ rm "$OUTDIR.tar"
 
 awk '
 	BEGIN {
+		RS="\r\n"
 		print "!macro InstallFiles"
 	}
 	{
 		if ($0 ~ /\\$/) {
-			printf "  SetOutPath \"\$INSTDIR\\%s\"\n", $0
+			printf "  SetOutPath \"$INSTDIR\\%s\"\n", $0
 		} else {
 			printf "  File \"${INPUT_DIR}\\%s\"\n", $0
 		}
@@ -121,11 +122,12 @@ awk '
 
 awk '
 	BEGIN {
+		RS="\r\n"
 		print "!macro InstallFiles"
 	}
 	{
 		if ($0 ~ /\\$/) {
-			printf "  SetOutPath \"\$INSTDIR\\App\\gimp\\%s\"\n", $0
+			printf "  SetOutPath \"$INSTDIR\\App\\gimp\\%s\"\n", $0
 		} else {
 			printf "  File \"${INPUT_DIR}\\%s\"\n", $0
 		}
