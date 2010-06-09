@@ -11,6 +11,8 @@
 ;General
 
   Var GIMP_InstDir
+  Var GIMP_NotFound
+  Var DirectoryPageText
   Var FileList
 
   !define P_NAME "Gimp Liquid Rescale Plug-In"
@@ -97,10 +99,7 @@ Click Next to continue."
   !define MUI_DIRECTORYPAGE_TITLE "Choose GIMP Install Location" ; NOTE: customized, see above
   !define MUI_DIRECTORYPAGE_SUBTITLE "Choose the folder in which GIMP is installed." ; NOTE: customized, see above
 
-  !define MUI_DIRECTORYPAGE_TEXT \
-"Setup found a GIMP installation at the specified folder. \
-If you want to choose a different GIMP installation folder \
-under which to install $(^NameDA), click Browse and select another folder."
+  !define MUI_DIRECTORYPAGE_TEXT $DirectoryPageText
 
   !define MUI_DIRECTORYPAGE_SUBTEXT "Selected GIMP installation Folder"
   !define MUI_DIRECTORYPAGE_BROWSETEXT "Select the GIMP installation folder to install $(^NameDA) in:"
@@ -170,16 +169,30 @@ SectionIn RO
 SectionEnd
 
 Function .onInit
+  StrCpy $GIMP_NotFound "false"
   ReadRegStr $GIMP_InstDir HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WinGimp-2.0_is1" "InstallLocation"
-  ;MessageBox MB_OK $GIMP_InstDir
 
   ; Check for GIMP installation existence
-  StrCmp $GIMP_InstDir "" 0 NoAbortInst
-         MessageBox MB_OK "GIMP installation was not found. Please install GIMP before runing this installer."
-         Abort ; abort if APP installation is not found
-  NoAbortInst:
+  StrCmp $GIMP_InstDir "" 0 GIMPDirFound
+
+    ReadRegStr $GIMP_InstDir HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\WinGimp-2.0_is1" "InstallLocation"
+
+    StrCmp $GIMP_InstDir "" 0 GIMPDirFound
+
+      StrCpy $GIMP_NotFound "true"
+      StrCpy $GIMP_InstDir "$PROGRAMFILES\GIMP-2.0"
+      MessageBox MB_ICONEXCLAMATION \
+"GIMP installation was not found. \
+You must install GIMP before runing this installer. \
+If you have GIMP installed, you may proceed, but you need to \
+specify the GIMP installtion folder manually."
+      ; MessageBox MB_ICONEXCLAMATION "GIMP installation was not found. Please install GIMP before runing this installer."
+      ; Abort ; abort if APP installation is not found
+  GIMPDirFound:
 
   StrCpy $INSTDIR "$GIMP_InstDir"
+
+  Call SetDirPageText
 
 FunctionEnd
 
@@ -263,3 +276,24 @@ Section "Uninstall"
 
 
 SectionEnd
+
+Function SetDirPageText
+
+  StrCmp $GIMP_NotFound "true" LabelGIMPNotFound LabelGIMPFound
+
+    LabelGIMPNotFound:
+    StrCpy $DirectoryPageText \
+"Setup could not find a GIMP installation. \
+If you have GIMP installed on your system, click Browse and select \
+its installation folder, otherwise press Cancel, install GIMP and start \
+this installer again."
+    Return
+
+    LabelGIMPFound:
+    StrCpy $DirectoryPageText \
+"Setup found a GIMP installation at the specified folder. \
+If you want to choose a different GIMP installation folder \
+under which to install $(^NameDA), click Browse and select another folder."
+    Return
+  
+FunctionEnd
