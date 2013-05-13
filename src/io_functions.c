@@ -227,7 +227,7 @@ write_vmap_to_layer (LqrVMap * vmap, gpointer data)
         gimp_layer_new (image_ID, name, w, h, GIMP_RGBA_IMAGE, 100,
                         GIMP_NORMAL_MODE);
       gimp_drawable_fill (seam_layer_ID, GIMP_TRANSPARENT_FILL);
-      gimp_image_add_layer (image_ID, seam_layer_ID, -1);
+      gimp_image_insert_layer (image_ID, seam_layer_ID, 0, -1);
       gimp_layer_translate (seam_layer_ID, x_off, y_off);
       if (seam_layer_p)
         {

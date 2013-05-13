@@ -172,7 +172,7 @@ render_init_carver (PlugInImageVals * image_vals,
     {
       g_snprintf (new_layer_name, LQR_MAX_NAME_LENGTH, "%s LqR", layer_name);
       layer_ID = gimp_layer_copy (layer_ID);
-      gimp_image_add_layer (image_ID, layer_ID, -1);
+      gimp_image_insert_layer (image_ID, layer_ID, 0, -1);
       gimp_drawable_set_name (layer_ID, new_layer_name);
       gimp_drawable_set_visible (layer_ID, FALSE);
     }
@@ -181,7 +181,7 @@ render_init_carver (PlugInImageVals * image_vals,
       image_ID = gimp_image_new (old_width, old_height, gimp_image_base_type(image_ID));
       gimp_image_undo_group_start(image_ID);
       layer_ID = gimp_layer_new_from_drawable (layer_ID, image_ID);
-      gimp_image_add_layer (image_ID, layer_ID, -1);
+      gimp_image_insert_layer (image_ID, layer_ID, 0, -1);
       gimp_layer_translate(layer_ID, -x_off, -y_off);
       gimp_drawable_set_visible (layer_ID, TRUE);
       if (vals->resize_aux_layers)
@@ -858,7 +858,7 @@ static gboolean copy_aux_layer_to_new_image (gint32 image_ID, gint32 * layer_ID_
   if (old_layer_ID)
     {
       new_layer_ID = gimp_layer_new_from_drawable (old_layer_ID, image_ID);
-      gimp_image_add_layer (image_ID, new_layer_ID, -1);
+      gimp_image_insert_layer (image_ID, new_layer_ID, 0, -1);
       /* gimp_drawable_offsets (old_layer_ID, &aux_x_off, &aux_y_off); */
       gimp_layer_translate (new_layer_ID, -x_off, -y_off);
     }
