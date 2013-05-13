@@ -199,7 +199,7 @@ callback_new_mask_button (GtkWidget * button, gpointer data)
     gimp_layer_new (p_data->image_ID, nl_data->name,
 		    p_data->old_width, p_data->old_height,
 		    image_type, 50, GIMP_NORMAL_MODE);
-  gimp_image_add_layer (p_data->image_ID, layer_ID, -1);
+  gimp_image_insert_layer (p_data->image_ID, layer_ID, 0, -1);
   gimp_drawable_fill (layer_ID, GIMP_TRANSPARENT_FILL);
   gimp_layer_translate (layer_ID, p_data->x_off, p_data->y_off);
   gimp_image_undo_group_end (p_data->image_ID);
