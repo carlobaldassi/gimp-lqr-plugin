@@ -125,8 +125,8 @@ extern const PlugInDrawableVals default_drawable_vals;
 extern const PlugInUIVals default_ui_vals;
 extern const PlugInColVals default_col_vals;
 
+
 /* Convenience macros for checking */
-;
 
 #define IMAGE_CHECK_ACTION(image_ID, action, ret_val) G_STMT_START { \
   if (!gimp_image_is_valid (image_ID)) \

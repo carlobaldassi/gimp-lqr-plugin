@@ -41,11 +41,7 @@
 
 /***  Constants  ***/
 
-//#define SCALE_WIDTH         (80)
 #define SPIN_BUTTON_WIDTH   (75)
-//#define MAX_COEFF	  (3000)
-//#define MAX_RIGIDITY      (1000)
-//#define MAX_DELTA_X         (10)
 #define SIZE_CHANGE_DELAY  (400)
 #define READER_INTERVAL     (20)
 
@@ -55,19 +51,15 @@
 /* Callbacks */
 static void callback_dialog_I_response (GtkWidget * dialog, gint response_id,
 				      gpointer data);
-//static void callback_noninter_button (GtkWidget * button, gpointer data);
-
 static void callback_resetvalues_button (GtkWidget * button, gpointer data);
 static void callback_flatten_button (GtkWidget * button, gpointer data);
 static void callback_dump_button (GtkWidget * button, gpointer data);
 static void callback_show_info_button (GtkWidget * button, gpointer data);
 
-//static void callback_set_disc_warning (GtkWidget * dummy, gpointer data);
 static gboolean check_size_changes(gpointer dummy);
 static void callback_size_changed (GtkWidget * size_entry, gpointer data);
 static void set_info_label_text (InterfaceIData * p_data);
 static void callback_alarm_triggered (GtkWidget * size_entry, gpointer data);
-//static void callback_res_order_changed (GtkWidget * res_order, gpointer data);
 
 /***  Local variables  ***/
 
@@ -78,10 +70,8 @@ PlugInVals *state;
 PlugInDialogVals *dialog_state;
 gboolean features_are_sensitive;
 InterfaceIData interface_I_data;
-//volatile sig_atomic_t interface_locked = 0;
 
 GtkWidget *dlg;
-/* GtkTooltips *dlg_tips; */
 GtkWidget *coordinates;
 
 gulong size_changed = 0;
@@ -112,7 +102,6 @@ dialog_I (PlugInImageVals * image_vals,
   GtkWidget *pres_use_image;
   GtkWidget *disc_use_image;
   GtkWidget *rigmask_use_image;
-  //GtkWidget *noninter_button;
   GtkWidget *resetvalues_event_box;
   GtkWidget *resetvalues_button;
   GtkWidget *resetvalues_icon;
@@ -126,10 +115,6 @@ dialog_I (PlugInImageVals * image_vals,
   GtkWidget *dump_event_box;
   GtkWidget *dump_button;
   GtkWidget *dump_icon;
-  //GtkWidget *lastvalues_event_box;
-  //GtkWidget *lastvalues_button;
-  //GtkWidget *lastvalues_icon;
-  gboolean has_mask = FALSE;
   GimpUnit unit;
   gdouble xres, yres;
   GtkWidget * v_separator;
@@ -161,15 +146,8 @@ dialog_I (PlugInImageVals * image_vals,
 
   reader_go = TRUE;
 
-  if (gimp_layer_get_mask (layer_ID) != -1)
-    {
-      has_mask = TRUE;
-    }
-
   dlg = gtk_dialog_new_with_buttons (_("GIMP LiquidRescale Plug-In"),
 			 NULL, 0,
-			 //GIMP_STOCK_RESET, RESPONSE_RESET,
-			 //GTK_STOCK_REFRESH, RESPONSE_REFRESH,
 			 GTK_STOCK_GO_BACK, RESPONSE_NONINTERACTIVE,
 			 GTK_STOCK_CLOSE, GTK_RESPONSE_OK, NULL);
 
@@ -179,15 +157,12 @@ dialog_I (PlugInImageVals * image_vals,
 
   if (dialog_state->has_pos)
     {
-      //printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       gtk_window_move (GTK_WINDOW(dlg), dialog_state->x, dialog_state->y);
       dialog_state->has_pos = FALSE;
     }
 
   g_signal_connect (dlg, "response", G_CALLBACK (callback_dialog_I_response),
 		    (gpointer) (NULL));
-
-  /* dlg_tips = gtk_tooltips_new (); */
 
   main_hbox = gtk_hbox_new (FALSE, 12);
   gtk_container_set_border_width (GTK_CONTAINER (main_hbox), 12);
@@ -408,28 +383,14 @@ dialog_I (PlugInImageVals * image_vals,
   interface_I_data.dump_button = dump_button;
 
   info_label = gtk_label_new("");
-  //set_info_label_text (info_label, orig_width, orig_height, 0, 0, state->enl_step / 100);
   gtk_label_set_selectable(GTK_LABEL(info_label), TRUE);
-  //gtk_container_add (GTK_CONTAINER (info_frame), info_label);
   gtk_box_pack_start (GTK_BOX (hbox), info_label, TRUE, TRUE, 0);
   gtk_label_set_justify(GTK_LABEL (info_label), GTK_JUSTIFY_LEFT);
   gtk_widget_show (info_label);
 
-  //interface_I_data.info_frame = info_frame;
   interface_I_data.info_label = info_label;
 
   callback_show_info_button(show_info_button, (gpointer) &interface_I_data);
-
-
-  /*
-  noninter_button = gtk_button_new_with_mnemonic ("_Non-interactive");
-
-  g_signal_connect (GTK_BUTTON (noninter_button), "clicked",
-                    G_CALLBACK (callback_noninter_button), (gpointer) dlg);
-
-  gtk_box_pack_start (GTK_BOX (vbox2), noninter_button, FALSE, FALSE, 0);
-  gtk_widget_show (noninter_button);
-  */
 
   /* Initialize the carver */
 
@@ -450,7 +411,6 @@ dialog_I (PlugInImageVals * image_vals,
 
   set_info_label_text (&interface_I_data);
 
-  //set_alarm (ALARM_DELAY);
   size_changed = 1;
 
   /* register size reader */
@@ -508,7 +468,6 @@ dialog_I (PlugInImageVals * image_vals,
 static void
 callback_dialog_I_response (GtkWidget * dialog, gint response_id, gpointer data)
 {
-  //ResponseData * r_data = RESPONSE_DATA (data);
   switch (response_id)
     {
       case RESPONSE_NONINTERACTIVE:
@@ -530,13 +489,11 @@ callback_size_changed (GtkWidget * size_entry, gpointer data)
 static gboolean
 check_size_changes(gpointer dummy)
 {
-  //printf("."); fflush(stdout);
   if (size_changed > 0)
     {
       size_changed++;
       if ((size_changed - 1) * READER_INTERVAL > SIZE_CHANGE_DELAY)
         {
-          //printf("RENDER!\n"); fflush(stdout);
           g_signal_emit_by_name (coordinates, "coordinates-alarm");
           size_changed = 0;
         }
@@ -551,7 +508,6 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   gboolean render_success;
   InterfaceIData *p_data = INTERFACE_I_DATA (data);
   CarverData *c_data = p_data->carver_data;
-  //gtk_widget_set_sensitive (p_data->size_frame, FALSE);
 
   new_width =
     ROUND (alt_size_entry_get_refval (ALT_SIZE_ENTRY (size_entry), 0));
@@ -562,7 +518,6 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   gimp_image_undo_group_start (c_data->image_ID);
   render_success = render_interactive (state, p_data->carver_data);
   gimp_image_undo_group_end (c_data->image_ID);
-  /* p_data->drawable_vals->layer_ID = c_data->layer_ID; */
   if (!render_success)
     {
       dialog_I_response = RESPONSE_FATAL;
@@ -571,14 +526,9 @@ callback_alarm_triggered (GtkWidget * size_entry, gpointer data)
   gimp_displays_flush();
 
   set_info_label_text (p_data);
-  //set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
-  //gtk_widget_set_sensitive (p_data->dump_button, (c_data->depth != 0));
-  //gtk_widget_set_sensitive (p_data->size_frame, TRUE);
-
 }
 
 static void
-//set_info_label_text (GtkWidget * label, gint ref_w, gint ref_h, gint orientation, gint depth, gfloat enl_step)
 set_info_label_text (InterfaceIData * p_data)
 {
   gchar label_text[MAX_STRING_SIZE];
@@ -631,11 +581,9 @@ set_info_label_text (InterfaceIData * p_data)
           text_enl_step, esmax,
           text_size_tag_close
           );
-  //label_text[MAX_STRING_SIZE - 1] = '\0';
 
   gtk_label_set_markup(GTK_LABEL(p_data->info_label), label_text);
   gtk_widget_set_sensitive (p_data->dump_button, (c_data->depth != 0) && (c_data->base_type == GIMP_RGB));
-
 }
 
 static void
@@ -682,7 +630,6 @@ callback_flatten_button (GtkWidget * button, gpointer data)
   gimp_displays_flush();
 
   set_info_label_text (p_data);
-  //set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
 }
 
 
@@ -702,26 +649,4 @@ callback_dump_button (GtkWidget * button, gpointer data)
       gtk_main_quit();
     }
   gimp_displays_flush();
-
-  //set_info_label_text (p_data->info_label, c_data->ref_w, c_data->ref_h, c_data->orientation, c_data->depth, c_data->enl_step);
-
 }
-
-#if 0
-static void
-callback_res_order_changed (GtkWidget * res_order, gpointer data)
-{
-  gint order;
-  PreviewData *p_data = PREVIEW_DATA (data);
-  gimp_int_combo_box_get_active (GIMP_INT_COMBO_BOX (res_order), &order);
-  p_data->vals->res_order = order;
-  callback_set_disc_warning (NULL, data);
-}
-
-static void
-callback_noninter_button (GtkWidget * button, gpointer data)
-{
-  gtk_dialog_response (GTK_DIALOG (data), RESPONSE_NONINTERACTIVE);
-}
-#endif
-

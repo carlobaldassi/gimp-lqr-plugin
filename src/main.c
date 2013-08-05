@@ -249,7 +249,6 @@ run (const gchar * name,
 {
   static GimpParam values[1];
   gint32 layer_ID;
-  //gint32 active_channel_ID;
 
   gint32 image_ID;
   GimpRunMode run_mode;
@@ -500,7 +499,7 @@ save_vals (void)
 static void
 retrieve_vals (void)
 {
-  /*  Possibly retrieve data  */
+  /* Possibly retrieve data  */
   gimp_get_data (DATA_KEY_VALS, &vals);
   gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
   gimp_get_data (DATA_KEY_COL_VALS, &col_vals);
@@ -509,7 +508,7 @@ retrieve_vals (void)
 static void
 retrieve_vals_use_aux_layers_names (gint32 image_ID)
 {
-  /*  Possibly retrieve data and set aux layers from names */
+  /* Possibly retrieve data and set aux layers from names */
   retrieve_vals();
 
   vals.pres_layer_ID = layer_from_name(image_ID, vals.pres_layer_name);
@@ -588,9 +587,6 @@ noninteractive_read_vals (const GimpParam * param)
     {
       ui_vals.rigmask_status = TRUE;
     }
-  //printf("RNIN: lid=%i pres=%i disc=%i rmask=%i\n", aux_selected_layer_ID, aux_pres_layer_ID, aux_disc_layer_ID, aux_rigmask_layer_ID); fflush(stdout);
-  //printf("RNIN: lid=%i pres=%i disc=%i rmask=%i\n", drawable_vals.layer_ID, vals.pres_layer_ID, vals.disc_layer_ID, vals.rigmask_layer_ID); fflush(stdout);
-
 }
 
 static void
@@ -677,4 +673,3 @@ get_gimp_share_directory_on_windows()
   return ret;
 }
 #endif
-

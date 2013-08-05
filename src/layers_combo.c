@@ -36,10 +36,9 @@ extern GtkWidget * dlg;
 gint
 count_extra_layers (gint32 image_ID)
 {
-  gint32 *layer_array;
   gint num_layers;
 
-  layer_array = gimp_image_get_layers (image_ID, &num_layers);
+  gimp_image_get_layers (image_ID, &num_layers);
   return num_layers - 1;
 }
 
@@ -391,5 +390,3 @@ guess_new_size (GtkWidget * button, PreviewData * p_data, GuessDir direction)
 
   return new_size;
 }
-
-

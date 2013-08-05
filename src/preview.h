@@ -103,4 +103,3 @@ update_info_aux_use_icons(PlugInVals *vals, PlugInUIVals *ui_vals,
     GtkWidget *pres_use_image, GtkWidget *disc_use_image, GtkWidget *rigmask_use_image);
 
 #endif /* __PREVIEW_H__ */
-

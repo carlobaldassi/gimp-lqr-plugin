@@ -34,11 +34,10 @@
 
 
 #if 0
-#define __CLOCK_IT__
+#  define __CLOCK_IT__
 #endif
 
 /* Convenience macros for checking and general cleanup */
-;
 
 #define MEM_CHECK_N(x) if ((x) == NULL) { g_message(_("Not enough memory")); return NULL; }
 #define MEM_CHECK1_N(x) if ((x) == LQR_NOMEM) { g_message(_("Not enough memory")); return NULL; }
@@ -694,7 +693,6 @@ render_dump_vmap (PlugInVals * vals,
   gint32 layer_ID;
   gchar layer_name[LQR_MAX_NAME_LENGTH];
   gchar vmap_name[LQR_MAX_NAME_LENGTH];
-  gint old_width, old_height;
   gint x_off, y_off;
   GimpRGB colour_start, colour_end;
 #ifdef __CLOCK_IT__
@@ -717,9 +715,6 @@ render_dump_vmap (PlugInVals * vals,
 
   g_snprintf (layer_name, LQR_MAX_NAME_LENGTH, "%s",
             gimp_drawable_get_name (layer_ID));
-
-  old_width = gimp_drawable_width (layer_ID);
-  old_height = gimp_drawable_height (layer_ID);
 
   gimp_drawable_offsets (layer_ID, &x_off, &y_off);
 
@@ -758,7 +753,6 @@ render_dump_vmap (PlugInVals * vals,
   printf ("[ finish: %g ]\n\n", clock3 - clock2);
 #endif /* __CLOCK_IT__ */
 
-  //gimp_drawable_set_visible (layer_ID, TRUE);
   gimp_image_set_active_layer (image_ID, layer_ID);
 
   return TRUE;
@@ -852,14 +846,12 @@ static gboolean copy_aux_layer_to_new_image (gint32 image_ID, gint32 * layer_ID_
 {
   gint32 old_layer_ID;
   gint32 new_layer_ID;
-  /* gint aux_x_off, aux_y_off; */
 
   old_layer_ID = *layer_ID_p;
   if (old_layer_ID)
     {
       new_layer_ID = gimp_layer_new_from_drawable (old_layer_ID, image_ID);
       gimp_image_insert_layer (image_ID, new_layer_ID, 0, -1);
-      /* gimp_drawable_offsets (old_layer_ID, &aux_x_off, &aux_y_off); */
       gimp_layer_translate (new_layer_ID, -x_off, -y_off);
     }
   else

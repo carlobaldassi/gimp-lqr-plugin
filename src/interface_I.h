@@ -25,7 +25,6 @@
 typedef struct
 {
 	GtkWidget * coordinates;
-        //GtkWidget * size_frame;
         GtkWidget * info_label;
         GtkWidget * dump_button;
         PlugInColVals * col_vals;
