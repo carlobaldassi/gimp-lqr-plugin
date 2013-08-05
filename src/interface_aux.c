@@ -43,7 +43,6 @@ extern GimpRGB default_gray_col;
 /* Callbacks */
 static void callback_dialog_aux_response (GtkWidget * dialog, gint response_id,
 				      gpointer data);
-//static void callback_noninter_button (GtkWidget * button, gpointer data);
 
 /***  Local variables  ***/
 
@@ -112,7 +111,6 @@ dialog_aux (PlugInImageVals * image_vals,
 
   if (dialog_state->has_pos)
     {
-      //printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       gtk_window_move (GTK_WINDOW(dlg), dialog_state->x, dialog_state->y);
       dialog_state->has_pos = FALSE;
     }

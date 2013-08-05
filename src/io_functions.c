@@ -312,35 +312,3 @@ write_all_vmaps (LqrVMapList * list, gint32 image_ID, gchar * orig_name,
   return lqr_vmap_list_foreach (list, write_vmap_to_layer,
                                 (gpointer) (&data));
 }
-
-
-/* plot the energy (at current size / visibility) to a file
- * (greyscale) */
-LqrRetVal
-write_energy (LqrCarver * r /*, pngwriter& output */ )
-{
-  int x, y;
-  //double e;
-
-  /* external_resize(r->w, r->h); */
-
-  lqr_carver_scan_reset (r);
-  for (y = 1; y <= lqr_carver_get_height(r); y++)
-    {
-      for (x = 1; x <= lqr_carver_get_width(r); x++)
-        {
-          //e = r->en[r->c->now];
-          if (lqr_carver_scan_by_row(r))
-            {
-              /* external_write(x, y, e, e, e); */
-            }
-          else
-            {
-              /* external_write(y, x, e, e, e); */
-            }
-          //lqr_carver_read_next (r);
-        }
-    }
-
-  return LQR_OK;
-}

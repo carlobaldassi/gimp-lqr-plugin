@@ -98,7 +98,6 @@ GtkWidget *nrg_func_combo_box;
 GtkWidget *res_order_combo_box;
 
 GtkWidget *dlg;
-/* GtkTooltips *dlg_tips; */
 
 
 /***  Public functions  ***/
@@ -120,7 +119,6 @@ dialog (PlugInImageVals * image_vals,
   GtkWidget *vbox2;
   GtkWidget *vbox3;
   GtkWidget *hbox;
-  //GtkWidget *hbox2;
   GtkWidget *frame;
   GtkWidget *notebook;
   gfloat wfactor, hfactor;
@@ -141,8 +139,6 @@ dialog (PlugInImageVals * image_vals,
   GtkWidget *interactive_hbox;
   GtkWidget *interactive_icon;
   GtkWidget *interactive_label;
-  //GtkWidget *v_separator;
-  //GtkWidget *h_separator;
   GtkWidget *scaleback_mode_alignment;
   GtkWidget *scaleback_mode_event_box;
   GtkWidget *scaleback_mode_label;
@@ -267,7 +263,6 @@ dialog (PlugInImageVals * image_vals,
 
   if (dialog_state->has_pos)
     {
-      //printf("move window, x,y=%i,%i\n", dialog_state->x, dialog_state->y); fflush(stdout);
       gtk_window_move (GTK_WINDOW(dlg), dialog_state->x, dialog_state->y);
       dialog_state->has_pos = FALSE;
     }
@@ -321,7 +316,6 @@ dialog (PlugInImageVals * image_vals,
 
   preview_area = preview_area_create(&preview_data);
 
-  //gtk_container_add (GTK_CONTAINER (frame), preview_area);
   gtk_box_pack_start (GTK_BOX (vbox2), preview_area, FALSE, FALSE, 0);
 
   gtk_widget_show (preview_area);
@@ -490,7 +484,6 @@ dialog (PlugInImageVals * image_vals,
   gtk_widget_show (interactive_hbox);
   interactive_icon =
     gtk_image_new_from_stock (GTK_STOCK_EXECUTE, GTK_ICON_SIZE_LARGE_TOOLBAR);
-  //gtk_container_add (GTK_CONTAINER (interactive_button), interactive_icon);
   gtk_box_pack_start (GTK_BOX(interactive_hbox), interactive_icon, TRUE, FALSE, 0);
   gtk_widget_show (interactive_icon);
   interactive_label = gtk_label_new_with_mnemonic (_("_Interactive"));
@@ -536,20 +529,6 @@ dialog (PlugInImageVals * image_vals,
   vbox = gtk_vbox_new (FALSE, 4);
   gtk_box_pack_start (GTK_BOX (thispage), vbox, FALSE, FALSE, 0);
   gtk_widget_show (vbox);
-
-  /*
-  new_layer_button =
-    gtk_check_button_new_with_label (_("Output on a new layer"));
-
-  gtk_box_pack_start (GTK_BOX (vbox), new_layer_button, FALSE, FALSE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (new_layer_button),
-				state->new_layer);
-  gtk_widget_show (new_layer_button);
-
-  gimp_help_set_help_data (new_layer_button,
-			   _("Outputs the resulting image "
-			     "on a new layer"), NULL);
-                             */
 
   output_target_event_box = gtk_event_box_new ();
   gtk_box_pack_start (GTK_BOX (vbox), output_target_event_box, FALSE, FALSE, 0);
@@ -1150,8 +1129,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *disc_frame_event_box2;
   GtkWidget *pres_combo_event_box;
   GtkWidget *disc_combo_event_box;
-  /* GtkTooltips *pres_frame_tips; */
-  /* GtkTooltips *disc_frame_tips; */
   gint32 old_layer_ID;
   GtkWidget *frame;
   GtkWidget *pres_vbox;
@@ -1245,9 +1222,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 	      "then press the \"Refresh\" button.\n"
 	      "Note that painting in black has no effect"));
 
-  /* pres_frame_tips = gtk_tooltips_new (); */
-
-
   pres_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_add (GTK_CONTAINER (frame), pres_vbox);
   gtk_widget_show (pres_vbox);
@@ -1268,9 +1242,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
       gtk_event_box_set_above_child (GTK_EVENT_BOX (pres_frame_event_box1),
 				     TRUE);
       gtk_widget_set_tooltip_text(pres_frame_event_box1, pres_inactive_tip_string);
-      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (pres_frame_tips),
-			    pres_frame_event_box1,
-			    pres_inactive_tip_string, NULL);*/
     }
 
 
@@ -1293,7 +1264,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Use an extra layer to preserve "
 			     "selected areas from distortion"), NULL);
 
-  //pres_edit_button = gtk_button_new_with_label (_("Edit"));
   pres_edit_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), pres_edit_button, FALSE, FALSE, 0);
   gtk_widget_show (pres_edit_button);
@@ -1303,7 +1273,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_widget_show (edit_hbox);
 
   edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-  //gtk_container_add (GTK_CONTAINER(pres_edit_button), edit_icon);
   gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
   gtk_widget_show (edit_icon);
   edit_label = gtk_label_new (_("Edit"));
@@ -1314,7 +1283,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Edit the currently selected preservation layer"),
 			   NULL);
 
-  //pres_new_button = gtk_button_new_with_label (_("New"));
   pres_new_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), pres_new_button, FALSE, FALSE, 0);
   gtk_widget_show (pres_new_button);
@@ -1324,7 +1292,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_widget_show (new_hbox);
 
   new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
-  //gtk_container_add (GTK_CONTAINER(pres_new_button), new_icon);
   gtk_box_pack_start (GTK_BOX(new_hbox), new_icon, TRUE, TRUE, 0);
   gtk_widget_show (new_icon);
   new_label = gtk_label_new (_("New"));
@@ -1361,9 +1328,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
       gtk_event_box_set_above_child (GTK_EVENT_BOX (pres_frame_event_box2),
 				     TRUE);
       gtk_widget_set_tooltip_text(pres_frame_event_box2, pres_inactive_tip_string);
-      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (pres_frame_tips),
-			    pres_frame_event_box2,
-			    pres_inactive_tip_string, NULL);*/
     }
 
   pres_vbox2 = gtk_vbox_new (FALSE, 4);
@@ -1496,8 +1460,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 	      "then press the \"Refresh\" button.\n"
 	      "Note that painting in black has no effect"));
 
-  /* disc_frame_tips = gtk_tooltips_new (); */
-
 
   disc_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_add (GTK_CONTAINER (frame), disc_vbox);
@@ -1518,9 +1480,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
       gtk_event_box_set_above_child (GTK_EVENT_BOX (disc_frame_event_box1),
 				     TRUE);
       gtk_widget_set_tooltip_text(disc_frame_event_box1, disc_inactive_tip_string);
-      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (disc_frame_tips),
-			    disc_frame_event_box1,
-			    disc_inactive_tip_string, NULL);*/
     }
 
   disc_button = gtk_check_button_new_with_label (_("Discard features"));
@@ -1567,7 +1526,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_widget_show (edit_hbox);
 
   edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-  //gtk_container_add (GTK_CONTAINER(disc_edit_button), edit_icon);
   gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
   gtk_widget_show (edit_icon);
   edit_label = gtk_label_new (_("Edit"));
@@ -1578,7 +1536,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Edit the currently selected discard layer"),
 			   NULL);
 
-  //disc_new_button = gtk_button_new_with_label (_("New"));
   disc_new_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), disc_new_button, FALSE, FALSE, 0);
   gtk_widget_show (disc_new_button);
@@ -1588,7 +1545,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_widget_show (new_hbox);
 
   new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
-  //gtk_container_add (GTK_CONTAINER(disc_new_button), new_icon);
   gtk_box_pack_start (GTK_BOX(new_hbox), new_icon, TRUE, TRUE, 0);
   gtk_widget_show (new_icon);
   new_label = gtk_label_new (_("New"));
@@ -1624,9 +1580,6 @@ features_page_new (gint32 image_ID, gint32 layer_ID)
       gtk_event_box_set_above_child (GTK_EVENT_BOX (disc_frame_event_box2),
 				     TRUE);
       gtk_widget_set_tooltip_text(disc_frame_event_box2, disc_inactive_tip_string);
-      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (disc_frame_tips),
-			    disc_frame_event_box2,
-			    disc_inactive_tip_string, NULL);*/
     }
 
   disc_vbox2 = gtk_vbox_new (FALSE, 4);
@@ -1842,7 +1795,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   GtkWidget *rigmask_frame_event_box1;
   GtkWidget *rigmask_frame_event_box2;
   GtkWidget *rigmask_combo_event_box;
-  /* GtkTooltips *rigmask_frame_tips; */
   gint32 old_layer_ID;
   GtkWidget *seams_control_expander;
   GtkWidget *operations_expander;
@@ -1895,7 +1847,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
     {
       ui_state->rigmask_status = FALSE;
       state->rigmask_layer_ID = 0;
-      /* preview_data.rigmask_combo_awaked = FALSE; */
     }
 
   thispage = gtk_vbox_new (FALSE, 12);
@@ -1914,7 +1865,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   /* Please keep the <b> and </b> tags in translations */
   seams_control_expander = gtk_expander_new (_("<b>Seams control</b>"));
   gtk_expander_set_use_markup (GTK_EXPANDER(seams_control_expander), TRUE);
-  //gtk_expander_set_expanded (GTK_EXPANDER(seams_control_expander), ui_state->seams_control_expanded);
   gtk_expander_set_expanded (GTK_EXPANDER(seams_control_expander), TRUE);
   g_signal_connect (seams_control_expander, "activate",
 		    G_CALLBACK
@@ -1929,9 +1879,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 	      "You can create one with the \"New\" button and paint on it, "
 	      "then press the \"Refresh\" button.\n"
 	      "Note that painting in black has no effect"));
-
-  /* rigmask_frame_tips = gtk_tooltips_new (); */
-
 
   rigmask_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_add (GTK_CONTAINER (seams_control_expander), rigmask_vbox);
@@ -1990,9 +1937,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
       gtk_event_box_set_above_child (GTK_EVENT_BOX (rigmask_frame_event_box1),
 				     TRUE);
       gtk_widget_set_tooltip_text(rigmask_frame_event_box1, rigmask_inactive_tip_string);
-      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (rigmask_frame_tips),
-			    rigmask_frame_event_box1,
-			    rigmask_inactive_tip_string, NULL);*/
     }
 
 
@@ -2026,7 +1970,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 			   ("Use an extra layer to mark areas where seams should be straighter"),
 			   NULL);
 
-  //rigmask_edit_button = gtk_button_new_with_label (_("Edit"));
   rigmask_edit_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), rigmask_edit_button, FALSE, FALSE, 0);
   gtk_widget_show (rigmask_edit_button);
@@ -2036,7 +1979,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_widget_show (edit_hbox);
 
   edit_icon = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-  //gtk_container_add (GTK_CONTAINER(rigmask_edit_button), edit_icon);
   gtk_box_pack_start (GTK_BOX(edit_hbox), edit_icon, TRUE, TRUE, 0);
   gtk_widget_show (edit_icon);
   edit_label = gtk_label_new (_("Edit"));
@@ -2047,7 +1989,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
 			   _("Edit the currently selected rigidity mask layer"),
 			   NULL);
 
-  //rigmask_new_button = gtk_button_new_with_label (_("New"));
   rigmask_new_button = gtk_button_new ();
   gtk_box_pack_end (GTK_BOX (hbox), rigmask_new_button, FALSE, FALSE, 0);
   gtk_widget_show (rigmask_new_button);
@@ -2057,7 +1998,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   gtk_widget_show (new_hbox);
 
   new_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
-  //gtk_container_add (GTK_CONTAINER(rigmask_new_button), new_icon);
   gtk_box_pack_start (GTK_BOX(new_hbox), new_icon, TRUE, TRUE, 0);
   gtk_widget_show (new_icon);
   new_label = gtk_label_new (_("New"));
@@ -2092,9 +2032,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
       gtk_event_box_set_above_child (GTK_EVENT_BOX (rigmask_frame_event_box2),
 				     TRUE);
       gtk_widget_set_tooltip_text(rigmask_frame_event_box2, rigmask_inactive_tip_string);
-      /*gtk_tooltips_set_tip (GTK_TOOLTIPS (rigmask_frame_tips),
-			    rigmask_frame_event_box2,
-			    rigmask_inactive_tip_string, NULL);*/
     }
 
   rigmask_vbox2 = gtk_vbox_new (FALSE, 4);
@@ -2218,7 +2155,6 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   /* Please keep the <b> and </b> tags in translations */
   operations_expander = gtk_expander_new (_("<b>Operations control</b>"));
   gtk_expander_set_use_markup (GTK_EXPANDER(operations_expander), TRUE);
-  //gtk_expander_set_expanded (GTK_EXPANDER(operations_expander), ui_state->operations_expanded);
   gtk_expander_set_expanded (GTK_EXPANDER(operations_expander), TRUE);
   g_signal_connect (operations_expander, "activate",
 		    G_CALLBACK
@@ -2316,6 +2252,5 @@ advanced_page_new (gint32 image_ID, gint32 layer_ID)
   callback_set_disc_warning (no_disc_on_enlarge_button,
 			     (gpointer) & preview_data);
 
-  //return thispage;
   return scrollwindow;
 }

@@ -39,7 +39,6 @@ typedef struct
   GtkWidget *guess_button_hor;
   GtkWidget *guess_button_ver;
   GtkWidget *edit_button;
-  //GtkWidget *guess_dir_combo;
 } ToggleData;
 
 #define TOGGLE_DATA(data) ((ToggleData*)data)
@@ -81,4 +80,3 @@ void callback_guess_button_ver (GtkWidget * button, gpointer data);
 gint guess_new_size (GtkWidget * button, PreviewData * data, GuessDir direction);
 
 #endif /* __COMBO_H__ */
-

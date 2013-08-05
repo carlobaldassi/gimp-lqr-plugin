@@ -51,7 +51,5 @@ LqrRetVal write_vmap_to_layer (LqrVMap * vmap, gpointer data);
 LqrRetVal write_all_vmaps (LqrVMapList * list, gint32 image_ID,
                            gchar * orig_name, gint x_off, gint y_off,
                            GimpRGB col_start, GimpRGB col_end);
-/* unimplemented */
-LqrRetVal write_energy (LqrCarver * r /*, pngwriter& output */ );  /* output the energy */
 
 #endif /* __IO_FUNCTIONS__ */

@@ -259,4 +259,3 @@ update_info_aux_use_icons(PlugInVals *vals, PlugInUIVals *ui_vals, GtkWidget *pr
                                NULL);
     }
 }
-
