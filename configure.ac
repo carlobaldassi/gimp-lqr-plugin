@@ -64,7 +64,6 @@ AC_SUBST(GIMP_LIBDIR)
 GIMP_DATADIR=`$PKG_CONFIG --variable=gimpdatadir gimp-2.0`
 AC_SUBST(GIMP_DATADIR)
 
-
 LQR_REQUIRED_VERSION=0.4.0
 
 PKG_CHECK_MODULES(LQR,
@@ -116,20 +115,19 @@ else
 fi
 AC_MSG_RESULT($have_gtk_2_12)
 
-if test "x$have_gtk_2_7" != "xyes"; then
+if test "x$have_gtk_2_12" != "xyes"; then
   CPPFLAGS="$CPPFLAGS -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 fi
 
-
-AC_MSG_CHECKING([if GIMP is version 2.4.0 or newer])
-if $PKG_CONFIG --atleast-version=2.4.0 gimp-2.0; then
-  have_gimp_2_4=yes
+AC_MSG_CHECKING([if GIMP is version 2.8.0 or newer])
+if $PKG_CONFIG --atleast-version=2.8.0 gimp-2.0; then
+  have_gimp_2_8=yes
 else
-  have_gimp_2_4=no
+  have_gimp_2_8=no
 fi
-AC_MSG_RESULT($have_gimp_2_4)
+AC_MSG_RESULT($have_gimp_2_8)
 
-if test "x$have_gimp_2_4" != "xyes"; then
+if test "x$have_gimp_2_8" != "xyes"; then
   CPPFLAGS="$CPPFLAGS -DGIMP_DISABLE_DEPRECATED"
 fi
 
