@@ -68,6 +68,18 @@ elif (automake-1.10 --version) < /dev/null > /dev/null 2>&1; then
 elif (automake-1.11 --version) < /dev/null > /dev/null 2>&1; then
    AUTOMAKE=automake-1.11
    ACLOCAL=aclocal-1.11
+elif (automake-1.12 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.12
+   ACLOCAL=aclocal-1.12
+elif (automake-1.13 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.13
+   ACLOCAL=aclocal-1.13
+elif (automake-1.14 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.14
+   ACLOCAL=aclocal-1.14
+elif (automake-1.15 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.15
+   ACLOCAL=aclocal-1.15
 elif (automake-1.6 --version) < /dev/null > /dev/null 2>&1; then
    AUTOMAKE=automake-1.6
    ACLOCAL=aclocal-1.6
