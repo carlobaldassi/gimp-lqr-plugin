@@ -12,8 +12,14 @@ PROJECT="GIMP Liquid Rescale Plug-In"
 TEST_TYPE=-f
 FILE=src/render.c
 
+ACLOCAL=${ACLOCAL-aclocal-1.9}
+AUTOCONF=${AUTOCONF-autoconf}
+AUTOHEADER=${AUTOHEADER-autoheader}
+AUTOMAKE=${AUTOMAKE-automake-1.9}
+LIBTOOLIZE=${LIBTOOLIZE-libtoolize}
+
 AUTOCONF_REQUIRED_VERSION=2.54
-AUTOMAKE_REQUIRED_VERSION=1.6
+AUTOMAKE_REQUIRED_VERSION=1.10
 GLIB_REQUIRED_VERSION=2.0.0
 INTLTOOL_REQUIRED_VERSION=0.17
 
@@ -53,41 +59,30 @@ else
 fi
 
 echo -n "checking for automake >= $AUTOMAKE_REQUIRED_VERSION ... "
-if (automake-1.7 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.7
-   ACLOCAL=aclocal-1.7
-elif (automake-1.8 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.8
-   ACLOCAL=aclocal-1.8
-elif (automake-1.9 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.9
-   ACLOCAL=aclocal-1.9
-elif (automake-1.10 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.10
-   ACLOCAL=aclocal-1.10
-elif (automake-1.11 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.11
-   ACLOCAL=aclocal-1.11
-elif (automake-1.12 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.12
-   ACLOCAL=aclocal-1.12
-elif (automake-1.13 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.13
-   ACLOCAL=aclocal-1.13
-elif (automake-1.14 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.14
-   ACLOCAL=aclocal-1.14
+if ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=$AUTOMAKE
+   ACLOCAL=$ACLOCAL
 elif (automake-1.15 --version) < /dev/null > /dev/null 2>&1; then
    AUTOMAKE=automake-1.15
    ACLOCAL=aclocal-1.15
-elif (automake-1.6 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.6
-   ACLOCAL=aclocal-1.6
+elif (automake-1.14 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.14
+   ACLOCAL=aclocal-1.14
+elif (automake-1.13 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.13
+   ACLOCAL=aclocal-1.13
+elif (automake-1.12 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.12
+   ACLOCAL=aclocal-1.12
+elif (automake-1.11 --version) < /dev/null > /dev/null 2>&1; then
+   AUTOMAKE=automake-1.11
+   ACLOCAL=aclocal-1.11
 else
     echo
-    echo "  You must have automake 1.6 or newer installed to compile $PROJECT."
+    echo "  You must have automake $AUTOMAKE_REQUIRED_VERSION or newer installed to compile $PROJECT."
     echo "  Download the appropriate package for your distribution,"
     echo "  or get the source tarball at ftp://ftp.gnu.org/pub/gnu/automake/"
+    echo
     DIE=1
 fi
 
