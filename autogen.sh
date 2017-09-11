@@ -12,8 +12,14 @@ PROJECT="GIMP Liquid Rescale Plug-In"
 TEST_TYPE=-f
 FILE=src/render.c
 
+ACLOCAL=${ACLOCAL-aclocal-1.9}
+AUTOCONF=${AUTOCONF-autoconf}
+AUTOHEADER=${AUTOHEADER-autoheader}
+AUTOMAKE=${AUTOMAKE-automake-1.9}
+LIBTOOLIZE=${LIBTOOLIZE-libtoolize}
+
 AUTOCONF_REQUIRED_VERSION=2.54
-AUTOMAKE_REQUIRED_VERSION=1.6
+AUTOMAKE_REQUIRED_VERSION=1.10
 GLIB_REQUIRED_VERSION=2.0.0
 INTLTOOL_REQUIRED_VERSION=0.17
 
@@ -25,10 +31,10 @@ cd $srcdir
 check_version ()
 {
     if expr $1 \>= $2 > /dev/null; then
-	echo "yes (version $1)"
+        echo "yes (version $1)"
     else
-	echo "Too old (found version $1)!"
-	DIE=1
+        echo "Too old (found version $1)!"
+        DIE=1
     fi
 }
 
@@ -53,29 +59,30 @@ else
 fi
 
 echo -n "checking for automake >= $AUTOMAKE_REQUIRED_VERSION ... "
-if (automake-1.7 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.7
-   ACLOCAL=aclocal-1.7
-elif (automake-1.8 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.8
-   ACLOCAL=aclocal-1.8
-elif (automake-1.9 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.9
-   ACLOCAL=aclocal-1.9
-elif (automake-1.10 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.10
-   ACLOCAL=aclocal-1.10
+if ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=$AUTOMAKE
+    ACLOCAL=$ACLOCAL
+elif (automake-1.15 --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=automake-1.15
+    ACLOCAL=aclocal-1.15
+elif (automake-1.14 --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=automake-1.14
+    ACLOCAL=aclocal-1.14
+elif (automake-1.13 --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=automake-1.13
+    ACLOCAL=aclocal-1.13
+elif (automake-1.12 --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=automake-1.12
+    ACLOCAL=aclocal-1.12
 elif (automake-1.11 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.11
-   ACLOCAL=aclocal-1.11
-elif (automake-1.6 --version) < /dev/null > /dev/null 2>&1; then
-   AUTOMAKE=automake-1.6
-   ACLOCAL=aclocal-1.6
+    AUTOMAKE=automake-1.11
+    ACLOCAL=aclocal-1.11
 else
     echo
-    echo "  You must have automake 1.6 or newer installed to compile $PROJECT."
+    echo "  You must have automake $AUTOMAKE_REQUIRED_VERSION or newer installed to compile $PROJECT."
     echo "  Download the appropriate package for your distribution,"
     echo "  or get the source tarball at ftp://ftp.gnu.org/pub/gnu/automake/"
+    echo
     DIE=1
 fi
 
@@ -114,7 +121,7 @@ fi
 if test "$DIE" -eq 1; then
     echo
     echo "Please install/upgrade the missing tools and call me again."
-    echo	
+    echo  
     exit 1
 fi
 
@@ -147,9 +154,9 @@ if test -z "$ACLOCAL_FLAGS"; then
 
     for file in $m4list
     do
-	if [ ! -f "$acdir/$file" ]; then
-	    echo
-	    echo "WARNING: aclocal's directory is $acdir, but..."
+        if [ ! -f "$acdir/$file" ]; then
+            echo
+            echo "WARNING: aclocal's directory is $acdir, but..."
             echo "         no file $acdir/$file"
             echo "         You may see fatal macro warnings below."
             echo "         If these files are installed in /some/dir, set the ACLOCAL_FLAGS "
@@ -165,8 +172,8 @@ rm -rf autom4te.cache
 $ACLOCAL $ACLOCAL_FLAGS
 RC=$?
 if test $RC -ne 0; then
-   echo "$ACLOCAL gave errors. Please fix the error conditions and try again."
-   exit 1
+    echo "$ACLOCAL gave errors. Please fix the error conditions and try again."
+    exit 1
 fi
 
 # optionally feature autoheader
@@ -183,9 +190,9 @@ cd $ORIGDIR
 $srcdir/configure --enable-maintainer-mode $AUTOGEN_CONFIGURE_ARGS "$@"
 RC=$?
 if test $RC -ne 0; then
-  echo
-  echo "Configure failed or did not finish!"
-  exit $RC
+    echo
+    echo "Configure failed or did not finish!"
+    exit $RC
 fi
 
 echo
