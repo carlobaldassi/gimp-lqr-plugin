@@ -179,7 +179,7 @@ static GimpParamDef args[] = {
   {GIMP_PDB_INT32, "resize_aux_layers",
    "Whether to resize auxiliary layers"},
   {GIMP_PDB_INT32, "resize_canvas", "Whether to resize canvas"},
-  {GIMP_PDB_INT32, "output target", "Output target (same layer, new layer, new image)"},
+  {GIMP_PDB_INT32, "output_target", "Output target (same layer, new layer, new image)"},
   {GIMP_PDB_INT32, "seams", "Whether to output the seam map"},
   {GIMP_PDB_INT32, "nrg_func", "Energy function to use"},
   {GIMP_PDB_INT32, "res_order", "Resize order"},
