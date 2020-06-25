@@ -65,13 +65,13 @@ static void callback_alarm_triggered (GtkWidget * size_entry, gpointer data);
 
 gint dialog_I_response = GTK_RESPONSE_OK;
 
-PlugInUIVals *ui_state;
-PlugInVals *state;
-PlugInDialogVals *dialog_state;
-gboolean features_are_sensitive;
+extern PlugInUIVals *ui_state;
+extern PlugInVals *state;
+extern PlugInDialogVals *dialog_state;
+extern gboolean features_are_sensitive;
 InterfaceIData interface_I_data;
 
-GtkWidget *dlg;
+extern GtkWidget *dlg;
 GtkWidget *coordinates;
 
 gulong size_changed = 0;
