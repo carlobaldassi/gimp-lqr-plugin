@@ -48,11 +48,11 @@ static void callback_dialog_aux_response (GtkWidget * dialog, gint response_id,
 
 gint dialog_aux_response = GTK_RESPONSE_OK;
 
-PlugInUIVals *ui_state;
-PlugInVals *state;
-PlugInDialogVals *dialog_state;
+extern PlugInUIVals *ui_state;
+extern PlugInVals *state;
+extern PlugInDialogVals *dialog_state;
 
-GtkWidget *dlg;
+extern GtkWidget *dlg;
 
 /***  Public functions  ***/
 
