@@ -8,7 +8,7 @@ This package is a plug-in for GIMP 2.4 or newer. It is a frontend to
 the LiquidRescale Library (liblqr) which implements the algorithm
 described in the paper "Seam Carving for Content-Aware Image Resizing"
 by Shai Avidan and Ariel Shamir, which can be found at
-http://www.faculty.idc.ac.il/arik/imret.pdf
+https://faculty.idc.ac.il/arik/SCWeb/imret/imret.pdf
 
 Happy GIMPing,
 --Carlo
