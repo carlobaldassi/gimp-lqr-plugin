@@ -1,3 +1,13 @@
+#!/bin/sh
+
+# This script does all the magic calls to automake/autoconf and
+# friends that are needed to configure a cvs checkout.  You need a
+# couple of extra tools to run this script successfully.
+#
+# If you are compiling from a released tarball you don't need these
+# tools and you shouldn't use this script.  Just call ./configure
+# directly.
+
 PROJECT="GIMP Liquid Rescale Plug-In"
 TEST_TYPE=-f
 FILE=src/render.c
