@@ -62,6 +62,18 @@ echo -n "checking for automake >= $AUTOMAKE_REQUIRED_VERSION ... "
 if ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1; then
     AUTOMAKE=$AUTOMAKE
     ACLOCAL=$ACLOCAL
+elif (automake-1.19 --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=automake-1.19
+    ACLOCAL=aclocal-1.19
+elif (automake-1.18 --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=automake-1.18
+    ACLOCAL=aclocal-1.18
+elif (automake-1.17 --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=automake-1.17
+    ACLOCAL=aclocal-1.17
+elif (automake-1.16 --version) < /dev/null > /dev/null 2>&1; then
+    AUTOMAKE=automake-1.16
+    ACLOCAL=aclocal-1.16
 elif (automake-1.15 --version) < /dev/null > /dev/null 2>&1; then
     AUTOMAKE=automake-1.15
     ACLOCAL=aclocal-1.15
