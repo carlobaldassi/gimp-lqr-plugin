@@ -133,11 +133,11 @@ fi
 
 AC_MSG_CHECKING([if we are on Win32])
 AC_LANG([C])
-AC_PREPROC_IFELSE([[
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[
 		   #ifndef WIN32
 		   #error
 		   #endif
-		   ]], is_win32=yes, is_win32=no)
+		   ]])], is_win32=yes, is_win32=no)
 if test "x$is_win32" = "xyes"; then
   AC_MSG_RESULT([yes])
   CFLAGS="$CFLAGS -s"
