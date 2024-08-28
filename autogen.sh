@@ -30,11 +30,40 @@ cd $srcdir
 
 check_version ()
 {
-    if expr $1 \>= $2 > /dev/null; then
+    if _ge_version_recursive "$1" "$2"; then
         echo "yes (version $1)"
     else
         echo "Too old (found version $1)!"
         DIE=1
+    fi
+}
+
+_ge_version_recursive ()
+{
+    # echo "cmp $1 $2"
+    V1="$1"
+    V2="$2"
+    test -z "$V1" && V1=0
+    test -z "$V2" && V2=0
+    if expr "$V1" = "$V2" > /dev/null; then
+        return 0
+    fi
+    HEAD1=`echo $V1 | sed 's/^\([0-9]\+\).*/\1/'`
+    HEAD2=`echo $V2 | sed 's/^\([0-9]\+\).*/\1/'`
+    REST1=`echo $V1 | sed 's/^[0-9]\+\.\?\(.*\)/\1/'`
+    REST2=`echo $V2 | sed 's/^[0-9]\+\.\?\(.*\)/\1/'`
+    # echo "H1=$HEAD1 H2=$HEAD2"
+
+    if test "$HEAD1" -gt "$HEAD2"; then
+        # echo "$HEAD1 > $HEAD2"
+        return 0
+    elif test "$HEAD1" -lt "$HEAD2"; then
+        # echo "$HEAD1 < $HEAD2"
+        return 1
+    elif _ge_version_recursive "$REST1" "$REST2"; then
+        return 0
+    else
+        return 1
     fi
 }
 
