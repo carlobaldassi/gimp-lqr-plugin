@@ -12,10 +12,10 @@ PROJECT="GIMP Liquid Rescale Plug-In"
 TEST_TYPE=-f
 FILE=src/render.c
 
-ACLOCAL=${ACLOCAL-aclocal-1.9}
+ACLOCAL=${ACLOCAL-aclocal-1.19}
 AUTOCONF=${AUTOCONF-autoconf}
 AUTOHEADER=${AUTOHEADER-autoheader}
-AUTOMAKE=${AUTOMAKE-automake-1.9}
+AUTOMAKE=${AUTOMAKE-automake-1.19}
 LIBTOOLIZE=${LIBTOOLIZE-libtoolize}
 
 AUTOCONF_REQUIRED_VERSION=2.54
@@ -30,11 +30,40 @@ cd $srcdir
 
 check_version ()
 {
-    if expr $1 \>= $2 > /dev/null; then
+    if _ge_version_recursive "$1" "$2"; then
         echo "yes (version $1)"
     else
         echo "Too old (found version $1)!"
         DIE=1
+    fi
+}
+
+_ge_version_recursive ()
+{
+    # echo "cmp $1 $2"
+    V1="$1"
+    V2="$2"
+    test -z "$V1" && V1=0
+    test -z "$V2" && V2=0
+    if expr "$V1" = "$V2" > /dev/null; then
+        return 0
+    fi
+    HEAD1=`echo $V1 | sed 's/^\([0-9]\+\).*/\1/'`
+    HEAD2=`echo $V2 | sed 's/^\([0-9]\+\).*/\1/'`
+    REST1=`echo $V1 | sed 's/^[0-9]\+\.\?\(.*\)/\1/'`
+    REST2=`echo $V2 | sed 's/^[0-9]\+\.\?\(.*\)/\1/'`
+    # echo "H1=$HEAD1 H2=$HEAD2"
+
+    if test "$HEAD1" -gt "$HEAD2"; then
+        # echo "$HEAD1 > $HEAD2"
+        return 0
+    elif test "$HEAD1" -lt "$HEAD2"; then
+        # echo "$HEAD1 < $HEAD2"
+        return 1
+    elif _ge_version_recursive "$REST1" "$REST2"; then
+        return 0
+    else
+        return 1
     fi
 }
 
@@ -62,52 +91,35 @@ printf "checking for automake >= %s ... " "$AUTOMAKE_REQUIRED_VERSION"
 if ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1; then
     AUTOMAKE=$AUTOMAKE
     ACLOCAL=$ACLOCAL
-elif (automake-1.19 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.19
-    ACLOCAL=aclocal-1.19
-elif (automake-1.18 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.18
-    ACLOCAL=aclocal-1.18
-elif (automake-1.17 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.17
-    ACLOCAL=aclocal-1.17
-elif (automake-1.16 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.16
-    ACLOCAL=aclocal-1.16
-elif (automake-1.15 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.15
-    ACLOCAL=aclocal-1.15
-elif (automake-1.14 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.14
-    ACLOCAL=aclocal-1.14
-elif (automake-1.13 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.13
-    ACLOCAL=aclocal-1.13
-elif (automake-1.12 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.12
-    ACLOCAL=aclocal-1.12
-elif (automake-1.11 --version) < /dev/null > /dev/null 2>&1; then
-    AUTOMAKE=automake-1.11
-    ACLOCAL=aclocal-1.11
 else
-    echo
-    echo "  You must have automake $AUTOMAKE_REQUIRED_VERSION or newer installed to compile $PROJECT."
-    echo "  Download the appropriate package for your distribution,"
-    echo "  or get the source tarball at ftp://ftp.gnu.org/pub/gnu/automake/"
-    echo
-    DIE=1
+    amfound=0
+    for amver in 1.19 1.18 1.17 1.16 1.15 1.14 1.13 1.12 1.11; do
+        if (automake-$amver --version) < /dev/null > /dev/null 2>&1; then
+            AUTOMAKE=automake-$amver
+            ACLOCAL=aclocal-$amver
+            amfound=1
+            break
+        fi
+    done
+    if expr $amfound = 0 > /dev/null; then
+        echo
+        echo "  You must have automake $AUTOMAKE_REQUIRED_VERSION or newer installed to compile $PROJECT."
+        echo "  Download the appropriate package for your distribution,"
+        echo "  or get the source tarball at ftp://ftp.gnu.org/pub/gnu/automake/"
+        echo
+        DIE=1
+    fi
 fi
-
-if test x$AUTOMAKE != x; then
+if test x$AUTOMAKE != x -a $DIE = 0; then
     VER=`$AUTOMAKE --version \
-         | grep automake | sed "s/.* \([0-9.]*\)[-a-z0-9]*$/\1/"`
+         | grep automake | sed "s/.* \([0-9.]\+\)[-a-z0-9]*$/\1/"`
     check_version $VER $AUTOMAKE_REQUIRED_VERSION
 fi
 
 printf "checking for glib-gettextize >= %s ... " "$GLIB_REQUIRED_VERSION"
 if (glib-gettextize --version) < /dev/null > /dev/null 2>&1; then
     VER=`glib-gettextize --version \
-         | grep glib-gettextize | sed "s/.* \([0-9.]*\)/\1/"`
+         | grep glib-gettextize | sed "s/.* \([0-9.]\+\)/\1/"`
     check_version $VER $GLIB_REQUIRED_VERSION
 else
     echo
@@ -120,7 +132,7 @@ fi
 printf "checking for intltool >= %s ... " "$INTLTOOL_REQUIRED_VERSION"
 if (intltoolize --version) < /dev/null > /dev/null 2>&1; then
     VER=`intltoolize --version \
-         | grep intltoolize | sed "s/.* \([0-9.]*\)/\1/"`
+         | grep intltoolize | sed "s/.* \([0-9.]\+\)/\1/"`
     check_version $VER $INTLTOOL_REQUIRED_VERSION
 else
     echo
