@@ -28,8 +28,11 @@
   (let*
     (
       (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
-      (drawable (car (gimp-image-get-active-layer image)))
+      (layers-info (gimp-image-get-selected-layers image))
+      (layer-ids (cadr layers-info))
+      (drawable (car layer-ids))
     )
+
     (plug-in-lqr
        		RUN-NONINTERACTIVE	;(INT "run-mode" "Interactive, non-interactive")
 		image			;(IMAGE "image" "Input image")
@@ -208,8 +211,8 @@
           "2010"					; date created
           "RGB* GRAY*"					; image type that the script works on
 	  SF-STRING	"File name" ""
-	  SF-VALUE	"New width [INTEGER]" ""
-	  SF-VALUE	"New height [INTEGER]" ""
+	  SF-ADJUSTMENT "New width [INTEGER]" '(0 0 10000 1 10 0 1)
+	  SF-ADJUSTMENT "New height [INTEGER]" '(0 0 10000 1 10 0 1)
 	  SF-STRING	"Name of the layer to operate onto (empty for active layer)" ""
 	  SF-STRING	"Name of the preservation layer (empty for none)" ""
 	  SF-STRING	"Name of the discard layer (empty for none)" ""
@@ -227,26 +230,26 @@
           "RGB*, GRAY*"					; image type that the script works on
 	  SF-STRING	"Input file name" ""
 	  SF-STRING	"Output file name" ""
-	  SF-VALUE	"New width [INTEGER]" "0"
-	  SF-VALUE	"New height [INTEGER]" "0"
+	  SF-ADJUSTMENT "New width [INTEGER]" '(0 0 10000 1 10 0 1)
+	  SF-ADJUSTMENT "New height [INTEGER]" '(0 0 10000 1 10 0 1)
 	  SF-STRING	"Name of the layer to operate onto (empty for active layer)" ""
 	  SF-STRING	"Name of the preservation layer (empty for none)" ""
-	  SF-VALUE	"Preservation strength [INTEGER, default=1000]" "1000"
+	  SF-ADJUSTMENT "Preservation strength [INTEGER, default=1000]" '(1000 0 10000 1 10 0 0)
 	  SF-STRING	"Name of the discard layer (empty for none)" ""
-	  SF-VALUE	"Discard strength [INTEGER, default=1000]" "1000"
-	  SF-VALUE	"Rigidity [FLOAT, default=0.0]" "0.0"
+	  SF-ADJUSTMENT "Discard strength [INTEGER, default=1000]" '(1000 0 10000 1 10 0 0)
+	  SF-ADJUSTMENT "Rigidity [FLOAT, default=0.0]" '(0.0 0.0 1000.0 0.1 1.0 2 1)
 	  SF-STRING	"Name of the rigidity mask layer (empty for none)" ""
-	  SF-VALUE	"Max seam step [INTEGER, default=1]" "1"
-	  SF-VALUE	"Enlargement step (percentage) [FLOAT, default=150.0]" "150.0"
+	  SF-ADJUSTMENT "Max seam step [INTEGER, default=1]" '(1 0 100 1 10 0 0)
+	  SF-ADJUSTMENT "Enlargement step (percentage) [FLOAT, default=150.0]" '(150.0 0.0 1000.0 1.0 10.0 1 1)
 	  SF-TOGGLE	"Resize aux layer [BOOLEAN, default=TRUE]" TRUE
 	  SF-TOGGLE	"Resize canvas [BOOLEAN, default=TRUE]" TRUE
-	  SF-VALUE	"Output target ([0=Selected layer] 1=New layer)" "0"
+	  SF-ADJUSTMENT "Output target ([0=Selected layer] 1=New layer)" '(0 0 1 1 1 0 0)
 	  SF-TOGGLE	"Output the seam map(s) [BOOLEAN, default=FALSE]" FALSE
-	  SF-VALUE	"Gradient function [INTEGER, 0=Norm 2=SumAbs 3=xAbs 5=Null, default=3]" "3"
-	  SF-VALUE	"Resize order [INTEGER, 0=HorizontalFirst 1=VerticalFirst, default=0]" "0"
-	  SF-VALUE	"Mask behaviour [INTEGER, 0=Apply 1=Discard, default=0]" "0"
+	  SF-ADJUSTMENT "Gradient function [INTEGER, 0=Norm 2=SumAbs 3=xAbs 5=Null, default=3]" '(3 0 5 1 1 0 0)
+	  SF-ADJUSTMENT "Resize order [INTEGER, 0=HorizontalFirst 1=VerticalFirst, default=0]" '(0 0 1 1 1 0 0)
+	  SF-ADJUSTMENT "Mask behaviour [INTEGER, 0=Apply 1=Discard, default=0]" '(0 0 1 1 1 0 0)
 	  SF-TOGGLE	"Scale back whan done [BOOLEAN, default=FALSE]" FALSE
-	  SF-VALUE	"Scaleback mode [INTEGER, 0=LqR 1=Standard 2=StdW 3=StdH, default=0]" "0"
+	  SF-ADJUSTMENT "Scaleback mode [INTEGER, 0=LqR 1=Standard 2=StdW 3=StdH, default=0]" '(0 0 3 1 1 0 0)
 	  SF-TOGGLE	"Ignore discard layer upon enlargment [BOOLEAN, default=TRUE]" TRUE
 )
 
@@ -265,26 +268,26 @@
           "RGB*, GRAY*"					; image type that the script works on
 	  SF-STRING	"Input file name" ""
 	  SF-STRING	"Output file name" ""
-	  SF-VALUE	"New width [INTEGER]" "0"
-	  SF-VALUE	"New height [INTEGER]" "0"
+	  SF-ADJUSTMENT "New width [INTEGER]" '(0 0 10000 1 10 0 1)
+	  SF-ADJUSTMENT "New height [INTEGER]" '(0 0 10000 1 10 0 1)
 	  SF-DRAWABLE	"ID of the layer to operate onto (0 for active layer)" 0
 	  SF-DRAWABLE	"ID of the preservation layer (0 for none)" 0
-	  SF-VALUE	"Preservation strength [INTEGER, default=1000]" "1000"
+	  SF-ADJUSTMENT "Preservation strength [INTEGER, default=1000]" '(1000 0 10000 1 10 0 0)
 	  SF-DRAWABLE	"ID of the discard layer (0 for none)" 0
-	  SF-VALUE	"Discard strength [INTEGER, default=1000]" "1000"
-	  SF-VALUE	"Rigidity [FLOAT, default=0.0]" "0.0"
+	  SF-ADJUSTMENT "Discard strength [INTEGER, default=1000]" '(1000 0 10000 1 10 0 0)
+	  SF-ADJUSTMENT "Rigidity [FLOAT, default=0.0]" '(0.0 0.0 1000.0 0.1 1.0 2 1)
 	  SF-DRAWABLE	"ID of the rigidity mask layer (0 for none)" 0
-	  SF-VALUE	"Max seam step [INTEGER, default=1]" "1"
-	  SF-VALUE	"Enlargement step (percentage) [FLOAT, default=150.0]" "150.0"
+	  SF-ADJUSTMENT "Max seam step [INTEGER, default=1]" '(1 0 100 1 10 0 0)
+	  SF-ADJUSTMENT "Enlargement step (percentage) [FLOAT, default=150.0]" '(150.0 0.0 1000.0 1.0 10.0 1 1)
 	  SF-TOGGLE	"Resize aux layer [BOOLEAN, default=TRUE]" TRUE
 	  SF-TOGGLE	"Resize canvas [BOOLEAN, default=TRUE]" TRUE
-	  SF-VALUE	"Output target ([0=Selected layer] 1=New layer)" "0"
+	  SF-ADJUSTMENT "Output target ([0=Selected layer] 1=New layer)" '(0 0 1 1 1 0 0)
 	  SF-TOGGLE	"Output the seam map(s) [BOOLEAN, default=FALSE]" FALSE
-	  SF-VALUE	"Gradient function [INTEGER, 0=Norm 2=SumAbs 3=xAbs 5=Null, default=3]" "3"
-	  SF-VALUE	"Resize order [INTEGER, 0=HorizontalFirst 1=VerticalFirst, default=0]" "0"
-	  SF-VALUE	"Mask behaviour [INTEGER, 0=Apply 1=Discard, default=0]" "0"
+	  SF-ADJUSTMENT "Gradient function [INTEGER, 0=Norm 2=SumAbs 3=xAbs 5=Null, default=3]" '(3 0 5 1 1 0 0)
+	  SF-ADJUSTMENT "Resize order [INTEGER, 0=HorizontalFirst 1=VerticalFirst, default=0]" '(0 0 1 1 1 0 0)
+	  SF-ADJUSTMENT "Mask behaviour [INTEGER, 0=Apply 1=Discard, default=0]" '(0 0 1 1 1 0 0)
 	  SF-TOGGLE	"Scale back whan done [BOOLEAN, default=FALSE]" FALSE
-	  SF-VALUE	"Scaleback mode [INTEGER, 0=LqR 1=Standard 2=StdW 3=StdH, default=0]" "0"
+	  SF-ADJUSTMENT "Scaleback mode [INTEGER, 0=LqR 1=Standard 2=StdW 3=StdH, default=0]" '(0 0 3 1 1 0 0)
 	  SF-TOGGLE	"Ignore discard layer upon enlargment [BOOLEAN, default=TRUE]" TRUE
 )
 

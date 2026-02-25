@@ -19,21 +19,20 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
-typedef struct
-{
-  LqrCarver * carver;
-  gint32 image_ID;
-  gint32 layer_ID;
-  GimpImageBaseType base_type;
-  gboolean alpha_lock;
-  gboolean alpha_lock_pres;
-  gboolean alpha_lock_disc;
-  gboolean alpha_lock_rigmask;
-  gint ref_w;
-  gint ref_h;
-  gint orientation;
-  gint depth;
-  gfloat enl_step;
+typedef struct {
+    LqrCarver *carver;
+    gint32 image_ID;
+    gint32 layer_ID;
+    GimpImageBaseType base_type;
+    gboolean alpha_lock;
+    gboolean alpha_lock_pres;
+    gboolean alpha_lock_disc;
+    gboolean alpha_lock_rigmask;
+    gint ref_w;
+    gint ref_h;
+    gint orientation;
+    gint depth;
+    gfloat enl_step;
 } CarverData;
 
 #define CARVER_DATA(data) ((CarverData*)data)
@@ -42,28 +41,28 @@ typedef struct
 /* Functions  */
 
 CarverData *
-render_init_carver (PlugInImageVals * image_vals,
-        PlugInDrawableVals * drawable_vals,
-        PlugInVals * vals,
-        gboolean interactive);
+render_init_carver(PlugInImageVals *image_vals,
+                   PlugInDrawableVals *drawable_vals,
+                   PlugInVals *vals,
+                   gboolean interactive);
 
 gboolean
-render_noninteractive (PlugInVals * vals,
-        PlugInColVals * col_vals,
-        CarverData * carver_data);
+render_noninteractive(PlugInVals *vals,
+                      PlugInColVals *col_vals,
+                      CarverData *carver_data);
 
 gboolean
-render_interactive (PlugInVals * vals,
-        CarverData * carver_data);
+render_interactive(PlugInVals *vals,
+                   CarverData *carver_data);
 
 gboolean
-render_flatten (PlugInVals * vals,
-        CarverData * carver_data);
+render_flatten(PlugInVals *vals,
+               CarverData *carver_data);
 
 gboolean
-render_dump_vmap (PlugInVals * vals,
-        PlugInColVals * col_vals,
-        CarverData * carver_data,
-        gint32 * vmap_layer_ID_p);
+render_dump_vmap(PlugInVals *vals,
+                 PlugInColVals *col_vals,
+                 CarverData *carver_data,
+                 gint32 *vmap_layer_ID_p);
 
 #endif /* __RENDER_H__ */

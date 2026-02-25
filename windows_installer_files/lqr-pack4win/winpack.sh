@@ -64,7 +64,7 @@ popd
 
 
 SRCDIR="/mingw/"
-PLUGINSDIR="lib/gimp/2.0/plug-ins"
+PLUGINSDIR="lib/gimp/3.0/plug-ins"
 OUT_PLUGINSDIR="${OUTDIR}/${PLUGINSDIR}"
 BINFILES="gimp-lqr-plugin.exe plug_in_lqr_iter.exe"
 

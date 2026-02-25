@@ -20,37 +20,37 @@
 #ifndef __COMBO_H__
 #define __COMBO_H__
 
-typedef enum
-{
-  GUESS_DIR_HOR,
-  GUESS_DIR_VERT
+
+#include <lqr.h>
+
+typedef enum {
+    GUESS_DIR_HOR,
+    GUESS_DIR_VERT
 } GuessDir;
 
 /* Data structs for callbacks */
 
-typedef struct
-{
-  gboolean *ui_toggled;
-  GtkWidget *combo;
-  GtkWidget *combo_label;
-  GtkObject *scale;
-  gboolean *status;
-  GtkWidget *guess_label;
-  GtkWidget *guess_button_hor;
-  GtkWidget *guess_button_ver;
-  GtkWidget *edit_button;
+typedef struct {
+    gboolean *ui_toggled;
+    GtkWidget *combo;
+    GtkWidget *combo_label;
+    GtkAdjustment *scale;
+    gboolean *status;
+    GtkWidget *guess_label;
+    GtkWidget *guess_button_hor;
+    GtkWidget *guess_button_ver;
+    GtkWidget *edit_button;
 } ToggleData;
 
 #define TOGGLE_DATA(data) ((ToggleData*)data)
 
-typedef struct
-{
-  gint32 *layer_ID;
-  gboolean *status;
-  gchar name[LQR_MAX_NAME_LENGTH];
-  GimpRGB colour;
-  AuxLayerType layer_type;
-  PreviewData *preview_data;
+typedef struct {
+    gint32 *layer_ID;
+    gboolean *status;
+    gchar name[LQR_MAX_NAME_LENGTH];
+    GeglColor *colour;
+    AuxLayerType layer_type;
+    PreviewData *preview_data;
 } NewLayerData;
 
 #define NEW_LAYER_DATA(data) ((NewLayerData*)(data))
@@ -58,25 +58,36 @@ typedef struct
 
 /* Functions */
 
-gint count_extra_layers (gint32 image_ID);
-gboolean dialog_layer_constraint_func (gint32 image_ID,
-					      gint32 layer_ID, gpointer data);
+gint count_extra_layers(gint32 image_ID);
 
-void combo_get_active (GtkWidget * combo, PreviewData * data,
-			      gint32 * layer_ID_add, gboolean status,
-			      GdkPixbuf ** pixbuf_add, SizeInfo * size_info);
-void callback_pres_combo_get_active (GtkWidget * combo, gpointer data);
-void callback_disc_combo_get_active (GtkWidget * combo, gpointer data);
-void callback_rigmask_combo_get_active (GtkWidget * combo,
- 				       gpointer data);
+//gboolean dialog_layer_constraint_func (gint32 image_ID,
+//					      gint32 layer_ID, gpointer data);
+gboolean
+dialog_layer_constraint_func(GimpImage *image, GimpItem *item, gpointer data);
 
-void callback_combo_set_sensitive (GtkWidget * button, gpointer data);
-void callback_status_button (GtkWidget * button, gpointer data);
-void callback_new_mask_button (GtkWidget * button, gpointer data);
-void callback_edit_mask_button (GtkWidget * button, gpointer data);
+void combo_get_active(GtkWidget *combo, PreviewData *data,
+                      gint32 *layer_ID_add, gboolean status,
+                      GdkPixbuf **pixbuf_add, SizeInfo *size_info);
 
-void callback_guess_button_hor (GtkWidget * button, gpointer data);
-void callback_guess_button_ver (GtkWidget * button, gpointer data);
-gint guess_new_size (GtkWidget * button, PreviewData * data, GuessDir direction);
+void callback_pres_combo_get_active(GtkWidget *combo, gpointer data);
+
+void callback_disc_combo_get_active(GtkWidget *combo, gpointer data);
+
+void callback_rigmask_combo_get_active(GtkWidget *combo,
+                                       gpointer data);
+
+void callback_combo_set_sensitive(GtkWidget *button, gpointer data);
+
+void callback_status_button(GtkWidget *button, gpointer data);
+
+void callback_new_mask_button(GtkWidget *button, gpointer data);
+
+void callback_edit_mask_button(GtkWidget *button, gpointer data);
+
+void callback_guess_button_hor(GtkWidget *button, gpointer data);
+
+void callback_guess_button_ver(GtkWidget *button, gpointer data);
+
+gint guess_new_size(GtkWidget *button, PreviewData *data, GuessDir direction);
 
 #endif /* __COMBO_H__ */

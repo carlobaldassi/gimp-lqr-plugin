@@ -1,0 +1,11 @@
+option('gimp_plugindir',
+  type : 'string',
+  value : '',
+  description : 'Override plugin installation directory'
+)
+
+option('gimp_plugin_datadir',
+  type : 'string',
+  value : '',
+  description : 'Override plugin data installation directory'
+)

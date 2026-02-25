@@ -36,6 +36,14 @@ typedef struct
 
 /*  Preview data struct */
 
+/**
+ * PreviewData:
+ *
+ * @image_ID: The ID of the image being previewed.
+ * @orig_layer_ID: The original layer ID before any modifications.
+ * @layer_ID: The current layer ID being previewed.
+ * @type: The type of the image (e.g., RGB, GRAY).
+ */
 typedef struct
 {
   gint32 image_ID;
@@ -97,6 +105,13 @@ void preview_build_pixbuf (PreviewData * preview_data);
 void
 callback_preview_expose_event (GtkWidget * preview_area,
                                GdkEventExpose * event, gpointer data);
+
+gboolean
+callback_preview_draw(
+        GtkWidget *widget,
+        cairo_t *cr,
+        gpointer data
+);
 
 void
 update_info_aux_use_icons(PlugInVals *vals, PlugInUIVals *ui_vals,

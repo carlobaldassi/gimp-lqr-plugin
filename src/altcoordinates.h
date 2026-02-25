@@ -22,7 +22,7 @@
 #ifndef __ALT_COORDINATES_H__
 #define __ALT_COORDINATES_H__
 
-GtkWidget * alt_coordinates_new (GimpUnit         unit,
+GtkWidget * alt_coordinates_new (GimpUnit         *unit,
                       const gchar     *unit_format,
                       gboolean         menu_show_pixels,
                       gboolean         menu_show_percent,
